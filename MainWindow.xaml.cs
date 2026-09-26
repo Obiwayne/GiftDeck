@@ -85,6 +85,13 @@ public partial class MainWindow : Window
     void ProfileBox_Changed(object sender, SelectionChangedEventArgs e)
     {
         if (_loadingProfiles || ProfileBox.SelectedItem is not string name || name == Hub.Profiles.Active) return;
+        SwitchProfile(name);
+    }
+
+    // Switches profile with the loading animation. Used by the dropdown and the Profiles page.
+    public void SwitchProfile(string name)
+    {
+        if (name == Hub.Profiles.Active || SwitchOverlay.Busy) { RefreshProfiles(); return; }
         bool live = Hub.TikTok.Live || (Hub.TikFinity.Connected && Hub.TikFinity.TikTokLive == true);
         if (live && MessageBox.Show(this, $"You're LIVE. Switch to \"{name}\" now? Gifts will start doing what that profile says straight away.",
                 "GiftDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
@@ -92,12 +99,18 @@ public partial class MainWindow : Window
             RefreshProfiles(); // put the dropdown back
             return;
         }
-        Hub.Profiles.Switch(name);
-        var events = Hub.Rules.Rules.Count;
-        ProfileNote.Text = $"\u2713 Loaded {name}: {events} {(events == 1 ? "event" : "events")}, overlays, title and category";
-        ProfileNote.Foreground = (Brush)FindResource("SuccessBrush");
-        _noteTimer.Stop();
-        _noteTimer.Start();
+        SwitchOverlay.Play(name, () =>
+        {
+            Hub.Profiles.Switch(name);
+            var events = Hub.Rules.Rules.Count;
+            return $"{events} {(events == 1 ? "event" : "events")}, overlays, title and category loaded";
+        }, () =>
+        {
+            ProfileNote.Text = $"\u2713 Using {name}";
+            ProfileNote.Foreground = (Brush)FindResource("SuccessBrush");
+            _noteTimer.Stop();
+            _noteTimer.Start();
+        });
     }
 
     void ManageProfiles_Click(object sender, RoutedEventArgs e) => Navigate("profiles");

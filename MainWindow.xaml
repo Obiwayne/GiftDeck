@@ -9,7 +9,6 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition x:Name="SideColumn" Width="228"/>
             <ColumnDefinition Width="*" MinWidth="640"/>
-            <ColumnDefinition Width="6"/>
             <ColumnDefinition Width="620" MinWidth="420"/>
         </Grid.ColumnDefinitions>
 
@@ -52,7 +51,7 @@
 
         <DockPanel Grid.Column="1">
             <!-- Profile bar: always shows which profile is in use, and switches it from any page -->
-            <Border DockPanel.Dock="Top" Background="{StaticResource PanelBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="0,0,0,1" Padding="32,10">
+            <Border DockPanel.Dock="Top" Height="58" Background="{StaticResource PanelBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="0,0,0,1" Padding="32,0">
                 <DockPanel>
                     <Button DockPanel.Dock="Right" Style="{StaticResource Ghost}" Padding="10,5" Click="ManageProfiles_Click" VerticalAlignment="Center">
                         <StackPanel Orientation="Horizontal">
@@ -72,8 +71,9 @@
             <ContentControl x:Name="ContentHost"/>
         </DockPanel>
 
-        <!-- Drag to make the chat and gift columns wider or narrower -->
-        <GridSplitter Grid.Column="2" Width="6" HorizontalAlignment="Stretch" Background="Transparent" ResizeBehavior="PreviousAndNext" ResizeDirection="Columns"/>
-        <views:LivePanel Grid.Column="3"/>
+        <views:LivePanel Grid.Column="2"/>
+        <views:ProfileSwitchOverlay x:Name="SwitchOverlay" Grid.ColumnSpan="3" Panel.ZIndex="100"/>
+        <!-- Drag the panel's left edge to make chat and gifts wider or narrower -->
+        <GridSplitter Grid.Column="2" Width="5" HorizontalAlignment="Left" Background="Transparent" ResizeBehavior="PreviousAndCurrent" ResizeDirection="Columns" Cursor="SizeWE"/>
     </Grid>
 </Window>

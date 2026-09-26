@@ -168,10 +168,9 @@ public partial class GoLiveView : UserControl
             }
             if (_sceneUuid == null) { await Task.Delay(500); return; }
 
-            // Ask for about the size it's shown at (sharp on high-DPI screens without wasting transfer).
-            var dpi = VisualTreeHelper.GetDpi(this).DpiScaleX;
-            int width = (int)Math.Clamp(PreviewImage.ActualWidth * dpi, 240, vertical ? 720 : 1280);
-            var jpg = await Hub.Obs.GetScreenshotAsync(_sceneUuid, width);
+            // Always the same size: sizing it from the on-screen box made the box and the picture
+            // chase each other by a pixel every frame (the wobble on the right edge).
+            var jpg = await Hub.Obs.GetScreenshotAsync(_sceneUuid, vertical ? 540 : 960);
             var img = await Task.Run(() =>
             {
                 var b = new BitmapImage();

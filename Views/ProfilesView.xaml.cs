@@ -41,7 +41,7 @@ public partial class ProfilesView : UserControl
 
     static string Name(object sender) => (string)((FrameworkElement)sender).Tag;
 
-    void Switch_Click(object sender, RoutedEventArgs e) => Run(() => P.Switch(Name(sender)), $"Now using \"{Name(sender)}\".");
+    void Switch_Click(object sender, RoutedEventArgs e) => (Owner as MainWindow)?.SwitchProfile(Name(sender));
 
     void New_Click(object sender, RoutedEventArgs e)
     {
@@ -51,7 +51,7 @@ public partial class ProfilesView : UserControl
         {
             var created = P.Create(name);
             if (MessageBox.Show(Owner, $"Switch to \"{created}\" now? It starts empty: add events on the Events page.", "GiftDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                P.Switch(created);
+                Dispatcher.BeginInvoke(() => (Owner as MainWindow)?.SwitchProfile(created));
         }, $"Created \"{name}\".");
     }
 
