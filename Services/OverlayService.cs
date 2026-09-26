@@ -24,15 +24,29 @@ public class OverlayService
 
     public void Load()
     {
-        Config = Storage.Load<OverlayConfig>("overlays.json") ?? new OverlayConfig();
-        foreach (var c in Config.Countdowns)
-            if (c.Running && (c.EndsAt == null || c.EndsAt < DateTime.UtcNow)) { c.Running = false; c.EndsAt = null; }
+        LoadConfig();
         _timer = new Timer(_ => Tick(), null, 1000, 1000);
+    }
+
+    // Another profile was chosen: swap in its overlays and refresh the pages open in OBS.
+    public void Reload()
+    {
+        LoadConfig();
+        PushState();
+    }
+
+    void LoadConfig()
+    {
+        var cfg = Storage.Load<OverlayConfig>(Hub.Profiles.File("overlays.json")) ?? new OverlayConfig();
+        if (Config != null) cfg.Port = Config.Port; // the overlay server keeps running on the port it started with
+        foreach (var c in cfg.Countdowns)
+            if (c.Running && (c.EndsAt == null || c.EndsAt < DateTime.UtcNow)) { c.Running = false; c.EndsAt = null; }
+        Config = cfg;
     }
 
     public void Save()
     {
-        Storage.Save("overlays.json", Config);
+        Storage.Save(Hub.Profiles.File("overlays.json"), Config);
         _dirty = false;
         _lastSave = DateTime.Now;
     }

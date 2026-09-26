@@ -18,6 +18,9 @@ public partial class MainWindow : Window
         Hub.Spotify.StatusChanged += () => Dispatcher.BeginInvoke(UpdateStatus);
         UpdateStatus();
         BuildNav();
+        _noteTimer.Tick += (_, _) => { _noteTimer.Stop(); ProfileNote.Text = ""; };
+        RefreshProfiles();
+        Hub.Profiles.Changed += () => Dispatcher.BeginInvoke(OnProfilesChanged);
         ApplyCollapsed(Hub.Settings.SidebarCollapsed);
         Navigate("dashboard");
     }
@@ -28,6 +31,7 @@ public partial class MainWindow : Window
         ("dashboard", "Dashboard", "\uE80F"),
         ("golive", "Go LIVE", "\uE714"),
         ("setup", "Stream Setup", "\uE90F"),
+        ("profiles", "Profiles", "\uE8F1"),
         ("events", "Events", "\uE945"),
         ("overlays", "Overlays", "\uE7F4"),
         ("music", "Music", "\uE8D6"),
@@ -61,6 +65,53 @@ public partial class MainWindow : Window
             rb.Checked += Nav_Checked;
             NavPanel.Children.Add(rb);
         }
+    }
+
+    bool _loadingProfiles;
+    string _shownProfile;
+    string _currentPage = "dashboard";
+
+    void RefreshProfiles()
+    {
+        _loadingProfiles = true;
+        ProfileBox.ItemsSource = Hub.Profiles.List();
+        ProfileBox.SelectedItem = Hub.Profiles.Active;
+        _loadingProfiles = false;
+        _shownProfile ??= Hub.Profiles.Active;
+    }
+
+    readonly System.Windows.Threading.DispatcherTimer _noteTimer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromSeconds(6) };
+
+    void ProfileBox_Changed(object sender, SelectionChangedEventArgs e)
+    {
+        if (_loadingProfiles || ProfileBox.SelectedItem is not string name || name == Hub.Profiles.Active) return;
+        bool live = Hub.TikTok.Live || (Hub.TikFinity.Connected && Hub.TikFinity.TikTokLive == true);
+        if (live && MessageBox.Show(this, $"You're LIVE. Switch to \"{name}\" now? Gifts will start doing what that profile says straight away.",
+                "GiftDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+        {
+            RefreshProfiles(); // put the dropdown back
+            return;
+        }
+        Hub.Profiles.Switch(name);
+        var events = Hub.Rules.Rules.Count;
+        ProfileNote.Text = $"\u2713 Loaded {name}: {events} {(events == 1 ? "event" : "events")}, overlays, title and category";
+        ProfileNote.Foreground = (Brush)FindResource("SuccessBrush");
+        _noteTimer.Stop();
+        _noteTimer.Start();
+    }
+
+    void ManageProfiles_Click(object sender, RoutedEventArgs e) => Navigate("profiles");
+
+    // After a switch, pages that show the profile's events, overlays or title are rebuilt.
+    void OnProfilesChanged()
+    {
+        RefreshProfiles();
+        if (_shownProfile == Hub.Profiles.Active) return;
+        _shownProfile = Hub.Profiles.Active;
+        foreach (var key in new[] { "events", "overlays", "golive" }) _views.Remove(key);
+        if (key_is_current()) Show(_currentPage);
+
+        bool key_is_current() => _currentPage is "events" or "overlays" or "golive";
     }
 
     void Collapse_Click(object sender, RoutedEventArgs e)
@@ -113,6 +164,7 @@ public partial class MainWindow : Window
             {
                 "golive" => new GoLiveView(),
                 "setup" => new StreamSetupView(),
+                "profiles" => new ProfilesView(),
                 "events" => new EventsView(),
                 "overlays" => new OverlaysView(),
                 "music" => new MusicView(),
@@ -125,6 +177,7 @@ public partial class MainWindow : Window
             _views[key] = view;
         }
         ContentHost.Content = view;
+        _currentPage = key;
     }
 
     void UpdateStatus()

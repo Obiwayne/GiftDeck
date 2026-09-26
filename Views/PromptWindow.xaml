@@ -1,0 +1,15 @@
+<Window x:Class="GiftDeck.Views.PromptWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="GiftDeck" Width="420" SizeToContent="Height" ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner" Background="{StaticResource BgBrush}"
+        FontFamily="Segoe UI" TextOptions.TextFormattingMode="Display" ShowInTaskbar="False">
+    <StackPanel Margin="22">
+        <TextBlock x:Name="Question" Style="{StaticResource H2}" Margin="0,0,0,12"/>
+        <TextBox x:Name="Answer" KeyDown="Answer_KeyDown"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+            <Button Content="Cancel" Style="{StaticResource Ghost}" Click="Cancel_Click" Margin="0,0,8,0"/>
+            <Button x:Name="OkButton" Content="OK" Style="{StaticResource Primary}" Click="Ok_Click" MinWidth="80"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

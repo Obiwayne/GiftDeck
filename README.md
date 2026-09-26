@@ -29,6 +29,7 @@
 - [What you need](#what-you-need)
 - [First-time setup](#first-time-setup)
 - [Going live](#going-live)
+- [Profiles (one setup per game)](#profiles-one-setup-per-game)
 - [Events: triggers and actions](#events-triggers-and-actions)
 - [Overlays for OBS](#overlays-for-obs)
 - [Music](#music)
@@ -64,6 +65,9 @@ alerts, and a "what the gifts do" menu board built from your events.
 
 **Endless background music.** Free Creative Commons tracks from Jamendo, shuffled, with play/pause,
 skip, volume and style controls on the Go LIVE page.
+
+**Profiles.** One setup per game (events, overlays, title), switched from a dropdown at the top of
+every page, and shareable as a single file.
 
 **Keeps your keys hidden.** Tokens, stream keys, client IDs and passwords show as dots until you click
 the eye button.
@@ -173,6 +177,23 @@ The **● LIVE** light and timer also work when you go live some other way (e.g.
 because they follow what TikTok reports. **End LIVE** stops OBS, the relay, and closes the LIVE.
 
 > **Mature audience (18+)** limits who can see your LIVE. Leave it off unless you mean it.
+
+## Profiles (one setup per game)
+
+Keep a separate setup for each game or show, e.g. **GTA 5** and **Roblox**. The **PROFILE** dropdown at
+the top of every page shows which one you're using; pick another and GiftDeck loads that profile's:
+
+- **events** (what each gift, follow, like or chat command does)
+- **overlays** (the gift menu board and its pictures, goals, counters, countdowns)
+- **LIVE title and category**
+
+Your accounts, keys, OBS, music and sound library are shared by every profile. Switching while you're
+live asks first, because gifts start doing what the new profile says straight away.
+
+On the **Profiles** page you can create a blank profile, duplicate one to start a new game from it,
+rename, delete, and **Export** a profile as one `.giftdeck` file, including the sound files and board
+pictures it uses, to back it up or share it. **Import** adds someone's `.giftdeck` file as a new profile
+(check the key presses match your game's shortcuts).
 
 ## Events: triggers and actions
 

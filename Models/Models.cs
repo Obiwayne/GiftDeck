@@ -209,6 +209,7 @@ public class AppSettings
     public bool AutoLaunchTikFinity { get; set; } = false;
     public string BridgeUsername { get; set; } = "";
     public bool SidebarCollapsed { get; set; }
+    public string ActiveProfile { get; set; } = "";
     public bool StreakGiftsOnce { get; set; } = true;
 
     public bool FocusWindowBeforeKeys { get; set; } = false;

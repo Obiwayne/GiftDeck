@@ -18,14 +18,14 @@ public class RulesEngine
 
     public void Load()
     {
-        var list = Storage.Load<List<Rule>>("rules.json") ?? new List<Rule>();
+        var list = Storage.Load<List<Rule>>(Hub.Profiles.File("rules.json")) ?? new List<Rule>();
         Rules.Clear();
         foreach (var r in list) Rules.Add(r);
     }
 
     public void Save()
     {
-        Storage.Save("rules.json", Rules.ToList());
+        Storage.Save(Hub.Profiles.File("rules.json"), Rules.ToList());
         Hub.Overlays?.PushState(); // the gift menu board hides tiles for events that are switched off
     }
 

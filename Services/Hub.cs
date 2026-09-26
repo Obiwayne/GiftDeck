@@ -19,6 +19,7 @@ public static class Hub
     public static BridgeService Bridge { get; private set; }
     public static MusicService Music { get; private set; }
     public static RelayService Relay { get; private set; }
+    public static ProfileService Profiles { get; private set; }
 
     public static void Init()
     {
@@ -36,6 +37,9 @@ public static class Hub
         Tts = new TtsService();
         Tts.Apply();
 
+        Profiles = new ProfileService();
+        Profiles.Init();
+
         Rules = new RulesEngine();
         Rules.Load();
 
@@ -50,6 +54,7 @@ public static class Hub
 
         TikTok = new TikTokLiveService();
         TikTok.Load();
+        if (!File.Exists(Storage.PathFor(Profiles.File("stream.json")))) Profiles.SaveActive();
 
         Music = new MusicService();
         Relay = new RelayService();
@@ -75,8 +80,7 @@ public static class Hub
     public static void Shutdown()
     {
         try { SaveSettings(); } catch { }
-        try { Rules.Save(); } catch { }
-        try { Overlays?.Save(); } catch { }
+        try { Profiles.SaveActive(); } catch { }
         try { Web?.Stop(); } catch { }
         try { TikFinity?.Stop(); } catch { }
         try { Bridge?.Stop(); } catch { }

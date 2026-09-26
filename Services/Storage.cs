@@ -36,7 +36,7 @@ public static class Storage
     {
         try
         {
-            Directory.CreateDirectory(Dir);
+            Directory.CreateDirectory(Path.GetDirectoryName(PathFor(name)));
             var tmp = PathFor(name + ".tmp");
             File.WriteAllText(tmp, JsonSerializer.Serialize(value, Opts));
             File.Move(tmp, PathFor(name), true);
