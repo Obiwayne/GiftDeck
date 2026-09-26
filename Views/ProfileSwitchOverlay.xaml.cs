@@ -69,19 +69,21 @@ public partial class ProfileSwitchOverlay : UserControl
 
         // Do the switch while the bolt rests on the parcel (a brief pause there isn't noticeable).
         string summary = null;
+        bool failed = false;
         var at = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.47) };
         at.Tick += (_, _) =>
         {
             at.Stop();
             try { summary = doSwitch(); }
-            catch (Exception ex) { summary = "Couldn't switch: " + ex.Message; }
+            catch (Exception ex) { summary = ex.Message; failed = true; }
         };
         // "ready" when the bolt lands back in the middle
         var landed = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1.45) };
         landed.Tick += (_, _) =>
         {
             landed.Stop();
-            Caption.Text = $"{profile} ready ✓";
+            Caption.Text = failed ? $"Couldn't load {profile}" : $"{profile} ready ✓";
+            Caption.Foreground = (System.Windows.Media.Brush)FindResource(failed ? "DangerBrush" : "TextBrush");
             SubCaption.Text = summary ?? "";
         };
 

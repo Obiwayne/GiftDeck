@@ -50,7 +50,12 @@ public class ProfileService
 
     public void Switch(string name)
     {
-        if (name == Active || !Directory.Exists(DirOf(name))) return;
+        if (name == Active) return;
+        if (!Directory.Exists(DirOf(name)))
+        {
+            Changed?.Invoke(); // refresh lists that still show it
+            throw new Exception($"\"{name}\" isn't there any more (it was deleted or renamed outside GiftDeck). Still using \"{Active}\".");
+        }
         SaveActive();
         Hub.Settings.ActiveProfile = name;
         Hub.SaveSettings();

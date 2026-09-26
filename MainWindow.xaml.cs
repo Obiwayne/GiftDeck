@@ -106,11 +106,20 @@ public partial class MainWindow : Window
             return $"{events} {(events == 1 ? "event" : "events")}, overlays, title and category loaded";
         }, () =>
         {
+            RefreshProfiles();
+            if (Hub.Profiles.Active != name) return; // the switch failed; the overlay already said why
             ProfileNote.Text = $"\u2713 Using {name}";
             ProfileNote.Foreground = (Brush)FindResource("SuccessBrush");
             _noteTimer.Stop();
             _noteTimer.Start();
         });
+    }
+
+    // Re-read the list when the dropdown opens, but only swap it if profiles were added or removed meanwhile.
+    void ProfileBox_Opened(object sender, EventArgs e)
+    {
+        var shown = (ProfileBox.ItemsSource as IEnumerable<string>)?.ToList() ?? new List<string>();
+        if (!shown.SequenceEqual(Hub.Profiles.List())) RefreshProfiles();
     }
 
     void ManageProfiles_Click(object sender, RoutedEventArgs e) => Navigate("profiles");
