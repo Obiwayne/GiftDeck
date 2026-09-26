@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>GiftDeck gift menu</title>
+<style>
+  :root { --font: Impact; --header: #1D5FB4; --cols: 5; --tile: 150px; --line: #ffffff; --gap: 2px; }
+  html, body { height: 100%; }
+  body { margin: 0; background: #000; font-family: var(--font), 'Arial Black', 'Segoe UI', sans-serif; color: #fff; overflow: hidden; }
+  body.transparent, body.fixed { background: transparent; }
+  .board { display: flex; flex-direction: column; height: 100vh; box-sizing: border-box; }
+  /* Fixed square tiles: the board is exactly as big as its tiles, so the Browser Source can be any size. */
+  body.fixed .board { height: auto; width: max-content; background: #000; }
+  body.fixed.transparent .board { background: transparent; }
+  body.fixed .grid { flex: none; grid-template-columns: repeat(var(--cols), var(--tile)); grid-auto-rows: var(--tile); }
+  body.fixed .tile { width: var(--tile); height: var(--tile); box-sizing: border-box; }
+  body.fixed .head { font-size: calc(var(--tile) * 0.22); }
+  body.fixed .label { font-size: calc(var(--tile) * 0.14); }
+  body.fixed .sub { font-size: calc(var(--tile) * 0.09); }
+  body.fixed .pic .emoji { font-size: calc(var(--tile) * 0.4); }
+  body.fixed .pic img { height: 100%; width: auto; max-width: 94%; max-height: 100%; object-fit: contain; }
+  body.fixed .tile { padding: 4px 6px; }
+  .head { background: var(--header); color: #fff; text-align: center; font-size: 34px; line-height: 1.15; letter-spacing: .5px; padding: 6px 12px; text-transform: uppercase; text-shadow: 0 2px 4px rgba(0,0,0,.5); flex: none; }
+  .head:empty { display: none; }
+  .grid { flex: 1; display: grid; grid-template-columns: repeat(var(--cols), 1fr); grid-auto-rows: 1fr; gap: var(--gap); background: var(--line); min-height: 0; }
+  body.nolines .grid { gap: 0; background: transparent; }
+  body.transparent .grid { background: transparent; gap: 6px; padding: 6px; }
+  .tile { background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6px 8px; min-height: 0; overflow: hidden; }
+  body.transparent .tile { background: rgba(0,0,0,.78); border: var(--gap) solid var(--line); border-radius: 10px; }
+  body.transparent.nolines .tile { border: none; }
+  .pic { flex: 1; min-height: 0; width: 100%; display: flex; align-items: center; justify-content: center; }
+  .pic img { max-height: 100%; max-width: 70%; object-fit: contain; filter: drop-shadow(0 4px 8px rgba(0,0,0,.6)); }
+  .pic .emoji { font-size: 56px; font-family: 'Segoe UI Emoji', sans-serif; line-height: 1; }
+  .label { font-size: 22px; line-height: 1.1; text-transform: uppercase; text-align: center; margin-top: 4px; text-shadow: 0 2px 4px rgba(0,0,0,.7); flex: none; }
+  .sub { font-size: 14px; opacity: .8; text-transform: uppercase; margin-top: 2px; font-family: 'Segoe UI', sans-serif; font-weight: 600; flex: none; }
+  .empty { grid-column: 1 / -1; display: flex; align-items: center; justify-content: center; font-family: 'Segoe UI', sans-serif; font-size: 20px; color: #bbb; background: #000; }
+</style>
+</head>
+<body>
+<div class="board">
+  <div class="head" id="head"></div>
+  <div class="grid" id="grid"></div>
+</div>
+<script>
+  const $ = s => document.getElementById(s);
+  const emoji = { gift: '🎁', anygift: '🪙', follow: '❤️', like: '👍', share: '🔁', subscribe: '⭐', join: '👋', chat: '💬', custom: '🎁' };
+  function esc(t) { return String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+  let lastJson = '';
+  function render(s) {
+    const m = s.menu;
+    if (!m) return;
+    const json = JSON.stringify(m);
+    if (json === lastJson) return;
+    lastJson = json;
+    document.documentElement.style.setProperty('--font', "'" + (m.font || 'Impact') + "'");
+    document.documentElement.style.setProperty('--header', m.headerColor || '#1D5FB4');
+    document.documentElement.style.setProperty('--cols', m.columns || 5);
+    document.documentElement.style.setProperty('--tile', (m.tileSize > 0 ? m.tileSize : 150) + 'px');
+    document.body.classList.toggle('fixed', m.tileSize > 0);
+    document.documentElement.style.setProperty('--line', m.lineColor || '#ffffff');
+    document.documentElement.style.setProperty('--gap', (m.lineWidth || 2) + 'px');
+    document.body.classList.toggle('nolines', m.showLines === false);
+    document.body.classList.toggle('transparent', !!m.transparent);
+    $('head').textContent = m.title || '';
+    if (!m.tiles.length) { $('grid').innerHTML = '<div class="empty">Add tiles on the Overlays page in GiftDeck</div>'; return; }
+    $('grid').innerHTML = m.tiles.map(t => {
+      const pic = t.image ? '<img src="' + esc(t.image) + '?v=' + Date.now() + '" onerror="this.outerHTML=\'<div class=emoji>' + (emoji[t.kind] || emoji.custom) + '</div>\'">'
+                          : '<div class="emoji">' + (emoji[t.kind] || emoji.custom) + '</div>';
+      const sub = m.showSubtitle && t.subtitle ? '<div class="sub">' + esc(t.subtitle) + '</div>' : '';
+      return '<div class="tile"><div class="pic">' + pic + '</div><div class="label">' + esc(t.label) + '</div>' + sub + '</div>';
+    }).join('');
+  }
+  const es = new EventSource('/events');
+  es.onmessage = e => { const msg = JSON.parse(e.data); if (msg.type === 'state') render(msg); };
+</script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>GiftDeck alerts</title>
+<style>
+  :root { --accent: #7C5CFF; --font: 'Segoe UI'; }
+  body { margin: 0; background: transparent; font-family: var(--font), 'Segoe UI', sans-serif; color: #fff; overflow: hidden; }
+  .wrap { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+  .alert { display: flex; align-items: center; gap: 18px; padding: 16px 26px 16px 18px; background: rgba(15, 17, 23, .86); border-radius: 22px; box-shadow: 0 10px 40px rgba(0,0,0,.5), 0 0 0 2px var(--accent); max-width: 90%; opacity: 0; transform: translateY(30px) scale(.9); }
+  .alert.in { animation: pop .55s cubic-bezier(.2,.9,.3,1.2) forwards; }
+  .alert.out { animation: fade .4s ease-in forwards; }
+  @keyframes pop { to { opacity: 1; transform: translateY(0) scale(1); } }
+  @keyframes fade { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(-20px) scale(.95); } }
+  .img { width: 96px; height: 96px; object-fit: contain; filter: drop-shadow(0 6px 12px rgba(0,0,0,.6)); animation: wiggle 1.2s ease-in-out infinite; }
+  .img.avatar { border-radius: 50%; }
+  @keyframes wiggle { 0%, 100% { transform: rotate(-6deg) scale(1); } 50% { transform: rotate(6deg) scale(1.08); } }
+  .text { font-size: 30px; font-weight: 600; line-height: 1.25; text-shadow: 0 2px 8px rgba(0,0,0,.6); }
+  .text b { color: #fbbf24; }
+  .sub { font-size: 20px; opacity: .85; margin-top: 4px; }
+  .count { color: #22d3ee; font-weight: 800; }
+</style>
+</head>
+<body>
+<div class="wrap" id="wrap"></div>
+<script>
+  const $ = s => document.getElementById(s);
+  let seconds = 6, queue = [], busy = false;
+  function esc(t) { return String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+  function show(a) {
+    busy = true;
+    const el = document.createElement('div');
+    el.className = 'alert in';
+    let img = '';
+    if (a.image) img = '<img class="img" src="' + esc(a.image) + '">';
+    else if (a.avatar) img = '<img class="img avatar" src="' + esc(a.avatar) + '">';
+    let text, sub = '';
+    if (a.kind === 'gift') {
+      text = '<b>' + esc(a.user) + '</b> sent ' + esc(a.gift) + (a.count > 1 ? ' <span class="count">x' + a.count + '</span>' : '');
+      sub = a.coins.toLocaleString() + (a.coins === 1 ? ' coin' : ' coins') + ' — thank you!';
+    } else if (a.kind === 'follow') { text = '<b>' + esc(a.user) + '</b> just followed!'; sub = 'Welcome to the stream'; }
+    else if (a.kind === 'share') { text = '<b>' + esc(a.user) + '</b> shared the LIVE!'; sub = 'Thanks for spreading the word'; }
+    else text = esc(a.user);
+    el.innerHTML = img + '<div><div class="text">' + text + '</div>' + (sub ? '<div class="sub">' + esc(sub).replace('&amp;', '&') + '</div>' : '') + '</div>';
+    $('wrap').appendChild(el);
+    setTimeout(() => { el.classList.remove('in'); el.classList.add('out'); }, seconds * 1000);
+    setTimeout(() => { el.remove(); busy = false; next(); }, seconds * 1000 + 450);
+  }
+  function next() { if (!busy && queue.length) show(queue.shift()); }
+  const es = new EventSource('/events');
+  es.onmessage = e => {
+    const m = JSON.parse(e.data);
+    if (m.type === 'state') {
+      seconds = Math.max(2, m.style.alertSeconds || 6);
+      document.documentElement.style.setProperty('--accent', m.style.accent);
+      document.documentElement.style.setProperty('--font', "'" + m.style.font + "'");
+    } else if (m.type === 'alert') { queue.push(m); if (queue.length > 20) queue.shift(); next(); }
+  };
+</script>
+</body>
+</html>

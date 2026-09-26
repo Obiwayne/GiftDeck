@@ -1,0 +1,86 @@
+<UserControl x:Class="GiftDeck.Views.SpotifyView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:GiftDeck.Views">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="32,28,32,28" MaxWidth="900" HorizontalAlignment="Left">
+            <TextBlock Text="Spotify" Style="{StaticResource H1}"/>
+            <TextBlock Text="Let viewers queue songs and control the player from events." Style="{StaticResource Muted}" Margin="0,4,0,18"/>
+
+            <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                <StackPanel>
+                    <TextBlock Text="Link your account" Style="{StaticResource H2}" Margin="0,0,0,8"/>
+                    <TextBlock x:Name="LinkStatus" Text="Not linked." Margin="0,0,0,12"/>
+                    <TextBlock Text="One-time setup. Spotify Premium is needed to control playback." Style="{StaticResource Muted}" Margin="0,0,0,8"/>
+                    <TextBlock Style="{StaticResource Muted}" Margin="0,0,0,2" Text="1.  Open developer.spotify.com/dashboard, log in, and click Create app."/>
+                    <TextBlock Style="{StaticResource Muted}" Margin="0,0,0,2" Text="2.  Give it any name. Under Redirect URIs add exactly this address:"/>
+                    <StackPanel Orientation="Horizontal" Margin="24,4,0,6">
+                        <TextBox x:Name="RedirectBox" IsReadOnly="True" Width="300" FontFamily="Consolas"/>
+                        <Button Content="Copy" Style="{StaticResource Ghost}" Click="CopyRedirect_Click" Margin="6,0,0,0"/>
+                    </StackPanel>
+                    <TextBlock Style="{StaticResource Muted}" Margin="0,0,0,2" Text="3.  Tick Web API, save, then copy the Client ID from the app's settings page into the box below."/>
+                    <TextBlock Style="{StaticResource Muted}" Margin="0,0,0,12" Text="4.  Click Link Spotify. A browser tab opens so you can approve GiftDeck."/>
+
+                    <TextBlock Text="Client ID" Style="{StaticResource Label}"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <local:SecretBox x:Name="ClientIdBox" TextChanged="ClientId_Changed"/>
+                        <Button Grid.Column="1" x:Name="LinkButton" Content="Link Spotify" Style="{StaticResource Primary}" Click="Link_Click" Margin="8,0,0,0"/>
+                        <Button Grid.Column="2" x:Name="UnlinkButton" Content="Unlink" Style="{StaticResource Ghost}" Click="Unlink_Click" Margin="6,0,0,0"/>
+                    </Grid>
+                    <TextBlock x:Name="LinkError" Foreground="{StaticResource DangerBrush}" Margin="0,8,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                <StackPanel>
+                    <DockPanel Margin="0,0,0,8">
+                        <Button DockPanel.Dock="Right" Content="Refresh" Style="{StaticResource Ghost}" Click="Refresh_Click"/>
+                        <TextBlock Text="Player" Style="{StaticResource H2}" VerticalAlignment="Center"/>
+                    </DockPanel>
+                    <TextBlock x:Name="NowPlaying" Text="Nothing playing." Margin="0,0,0,12"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
+                        <Button Content="Previous" Click="Prev_Click" Margin="0,0,8,0"/>
+                        <Button Content="Play" Click="Play_Click" Margin="0,0,8,0"/>
+                        <Button Content="Pause" Click="Pause_Click" Margin="0,0,8,0"/>
+                        <Button Content="Next" Click="Next_Click"/>
+                    </StackPanel>
+                    <TextBlock Text="Volume" Style="{StaticResource Label}"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+                        <Slider x:Name="VolumeSlider" Minimum="0" Maximum="100" Value="50" ValueChanged="Volume_Changed"/>
+                        <TextBlock x:Name="VolumeText" Grid.Column="1" Text="50" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    </Grid>
+                    <TextBlock x:Name="PlayerError" Foreground="{StaticResource DangerBrush}" Margin="0,8,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Song requests from chat" Style="{StaticResource H2}" Margin="0,0,0,8"/>
+                    <CheckBox x:Name="ChatRequests" Content="Let viewers queue songs by typing a command in chat" Click="ChatRequests_Click" Margin="0,0,0,12"/>
+                    <TextBlock Text="Command" Style="{StaticResource Label}"/>
+                    <TextBox x:Name="CommandBox" Width="160" HorizontalAlignment="Left" TextChanged="Command_Changed"/>
+                    <TextBlock x:Name="CommandHint" Style="{StaticResource Muted}" Margin="0,5,0,14"/>
+                    <TextBlock Text="Try a request" Style="{StaticResource Label}"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="TryBox" Text="daft punk around the world"/>
+                        <Button Grid.Column="1" Content="Queue it" Click="TryRequest_Click" Margin="8,0,0,0"/>
+                    </Grid>
+                    <TextBlock x:Name="TryResult" Style="{StaticResource Muted}" Margin="0,8,0,0"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

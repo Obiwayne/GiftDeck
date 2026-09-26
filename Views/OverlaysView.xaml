@@ -1,0 +1,329 @@
+<UserControl x:Class="GiftDeck.Views.OverlaysView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:GiftDeck.Views"
+             xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="32,28,32,28" MaxWidth="1000" HorizontalAlignment="Left">
+            <TextBlock Text="Overlays" Style="{StaticResource H1}"/>
+            <TextBlock Text="Goal bars, live counters, countdown timers and gift alerts for OBS. Each one is a web page GiftDeck serves on this PC; add it to OBS as a Browser Source, or press Add to OBS and GiftDeck does it for you." Style="{StaticResource Muted}" Margin="0,4,0,18"/>
+
+            <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                <DockPanel>
+                    <Button DockPanel.Dock="Right" Content="Open in browser" Style="{StaticResource Ghost}" Click="OpenBrowser_Click"/>
+                    <StackPanel>
+                        <TextBlock x:Name="ServerStatus" Text="Overlay server" Style="{StaticResource H2}"/>
+                        <TextBlock x:Name="ServerUrl" Style="{StaticResource Muted}" FontFamily="Consolas" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <!-- Gift menu board -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                <StackPanel>
+                    <DockPanel Margin="0,0,0,6">
+                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                            <Button Content="Copy URL" Style="{StaticResource Small}" Click="CopyMenu_Click" Margin="0,0,6,0"/>
+                            <Button Content="Add to OBS" Style="{StaticResource Small}" Click="ObsMenu_Click"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Gift menu board" Style="{StaticResource H2}"/>
+                            <TextBlock Text="The 'what the gifts do' board: a header bar and a grid of tiles with the gift picture and a label. Built from your events, and it updates in OBS as you edit. Browser Source size 1250 x 700 works well; any size will do." Style="{StaticResource Muted}" Margin="0,3,0,0"/>
+                        </StackPanel>
+                    </DockPanel>
+
+                    <Grid Margin="0,10,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Margin="0,0,16,0">
+                            <TextBlock Text="Header text" Style="{StaticResource Label}"/>
+                            <TextBox x:Name="MenuTitle" LostFocus="Menu_Changed" Margin="0,0,0,10"/>
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="90"/>
+                                    <ColumnDefinition Width="110"/>
+                                    <ColumnDefinition Width="110"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Margin="0,0,10,0">
+                                    <TextBlock Text="Columns" Style="{StaticResource Label}"/>
+                                    <TextBox x:Name="MenuColumns" LostFocus="Menu_Changed"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                                    <TextBlock Text="Square size px" Style="{StaticResource Label}"/>
+                                    <TextBox x:Name="MenuTileSize" LostFocus="Menu_Changed" ToolTip="Size of each square tile. 0 stretches the tiles to fill the Browser Source instead."/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" Margin="0,0,10,0">
+                                    <TextBlock Text="Header colour" Style="{StaticResource Label}"/>
+                                    <TextBox x:Name="MenuHeaderColor" FontFamily="Consolas" LostFocus="Menu_Changed"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="3">
+                                    <TextBlock Text="Font" Style="{StaticResource Label}"/>
+                                    <TextBox x:Name="MenuFont" LostFocus="Menu_Changed"/>
+                                </StackPanel>
+                            </Grid>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <CheckBox x:Name="MenuShowSubtitle" Content="Show the coin value under each label" Click="Menu_Changed" Margin="0,0,20,0"/>
+                                <CheckBox x:Name="MenuTransparent" Content="See-through background" Click="Menu_Changed"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <CheckBox x:Name="MenuShowLines" Content="Grid lines between tiles" Click="Menu_Changed" Margin="0,0,20,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="Line colour" Style="{StaticResource Label}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                <TextBox x:Name="MenuLineColor" Width="100" FontFamily="Consolas" LostFocus="Menu_Changed" Margin="0,0,16,0"/>
+                                <TextBlock Text="Thickness px" Style="{StaticResource Label}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                <TextBox x:Name="MenuLineWidth" Width="60" LostFocus="Menu_Changed"/>
+                            </StackPanel>
+                            <TextBlock x:Name="MenuSizeHint" Style="{StaticResource Muted}" Margin="0,8,0,0"/>
+                        </StackPanel>
+                        <Border Grid.Column="1" Width="400" Background="#000" BorderBrush="{StaticResource LineBrush}" BorderThickness="1" CornerRadius="8" VerticalAlignment="Top">
+                            <StackPanel>
+                                <wv2:WebView2 x:Name="Preview" Height="230" DefaultBackgroundColor="Black"/>
+                                <DockPanel Margin="8,4,8,6">
+                                    <Button DockPanel.Dock="Right" Content="Refresh" Style="{StaticResource Ghost}" Click="RefreshPreview_Click" Padding="8,3"/>
+                                    <TextBlock Text="Live preview" Style="{StaticResource Muted}" VerticalAlignment="Center"/>
+                                </DockPanel>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                    <Border Height="12"/>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <Button Content="+  Add tiles from events" Style="{StaticResource Primary}" Click="MenuFromEvents_Click" Margin="0,0,6,0"/>
+                        <Button Content="+  Add a custom tile" Click="MenuCustom_Click"/>
+                    </StackPanel>
+                    <TextBlock x:Name="NoTiles" Text="No tiles yet. Press Add tiles from events to build the board from your enabled events." Style="{StaticResource Muted}"/>
+                    <ItemsControl x:Name="TilesList">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource SubCard}" Margin="0,0,0,6" Padding="8">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="56"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="120"/>
+                                            <ColumnDefinition Width="1.4*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border Width="44" Height="44" Background="Black" CornerRadius="6" VerticalAlignment="Center" Margin="0,0,12,0">
+                                            <Image Source="{Binding Image}" Stretch="Uniform" Margin="4" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                        </Border>
+                                        <StackPanel Grid.Column="1" Margin="0,0,8,0">
+                                            <TextBlock Text="Label" Style="{StaticResource Label}"/>
+                                            <TextBox Text="{Binding Label, UpdateSourceTrigger=PropertyChanged}" LostFocus="Field_Changed"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2" Margin="0,0,8,0">
+                                            <TextBlock Text="Small text" Style="{StaticResource Label}"/>
+                                            <TextBox Text="{Binding Subtitle, UpdateSourceTrigger=PropertyChanged}" LostFocus="Field_Changed"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="3" Margin="0,0,8,0">
+                                            <TextBlock Text="Picture (blank = the gift's own picture)" Style="{StaticResource Label}"/>
+                                            <TextBox Text="{Binding ImageUrl, UpdateSourceTrigger=LostFocus}" LostFocus="Field_Changed"/>
+                                        </StackPanel>
+                                        <Button Grid.Column="4" Content="Browse" Style="{StaticResource Small}" Tag="{Binding}" Click="TileBrowse_Click" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
+                                        <StackPanel Grid.Column="5" Orientation="Horizontal" VerticalAlignment="Bottom">
+                                            <Button Content="▲" Style="{StaticResource Ghost}" Tag="{Binding}" Click="TileUp_Click" Padding="8,4"/>
+                                            <Button Content="▼" Style="{StaticResource Ghost}" Tag="{Binding}" Click="TileDown_Click" Padding="8,4"/>
+                                            <Button Content="✕" Style="{StaticResource Ghost}" Foreground="{StaticResource DangerBrush}" Tag="{Binding}" Click="TileRemove_Click" Padding="8,4"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <!-- Goals -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                <StackPanel>
+                    <DockPanel Margin="0,0,0,6">
+                        <Button DockPanel.Dock="Right" Content="+  Add goal" Click="AddGoal_Click"/>
+                        <StackPanel>
+                            <TextBlock Text="Goals" Style="{StaticResource H2}"/>
+                            <TextBlock Text="A progress bar that fills up as coins, likes, follows, shares or gifts come in. Browser Source size 800 x 140." Style="{StaticResource Muted}" Margin="0,3,0,0"/>
+                        </StackPanel>
+                    </DockPanel>
+                    <TextBlock x:Name="NoGoals" Text="No goals yet." Style="{StaticResource Muted}" Margin="0,8,0,0"/>
+                    <ItemsControl x:Name="GoalsList" Margin="0,10,0,0">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource SubCard}" Margin="0,0,0,8">
+                                    <StackPanel>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="130"/>
+                                                <ColumnDefinition Width="110"/>
+                                                <ColumnDefinition Width="110"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Margin="0,0,10,0">
+                                                <TextBlock Text="Title" Style="{StaticResource Label}"/>
+                                                <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" LostFocus="Field_Changed"/>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                                                <TextBlock Text="Counts" Style="{StaticResource Label}"/>
+                                                <ComboBox ItemsSource="{x:Static local:OverlaysView.Metrics}" SelectedItem="{Binding Metric}" SelectionChanged="Field_Changed"/>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="2" Margin="0,0,10,0">
+                                                <TextBlock Text="Target" Style="{StaticResource Label}"/>
+                                                <TextBox Text="{Binding Target, UpdateSourceTrigger=LostFocus}" LostFocus="Field_Changed"/>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="3">
+                                                <TextBlock Text="Progress" Style="{StaticResource Label}"/>
+                                                <TextBox Text="{Binding Progress, UpdateSourceTrigger=LostFocus}" LostFocus="Field_Changed"/>
+                                            </StackPanel>
+                                        </Grid>
+                                        <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                            <Button Content="Reset to 0" Style="{StaticResource Small}" Tag="{Binding}" Click="ResetGoal_Click" Margin="0,0,6,0"/>
+                                            <Button Content="Copy URL" Style="{StaticResource Small}" Tag="{Binding}" Click="CopyGoal_Click" Margin="0,0,6,0"/>
+                                            <Button Content="Add to OBS" Style="{StaticResource Small}" Tag="{Binding}" Click="ObsGoal_Click" Margin="0,0,6,0"/>
+                                            <Button Content="Remove" Style="{StaticResource SmallDanger}" Tag="{Binding}" Click="RemoveGoal_Click"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <!-- Countdowns -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                <StackPanel>
+                    <DockPanel Margin="0,0,0,6">
+                        <Button DockPanel.Dock="Right" Content="+  Add countdown" Click="AddCountdown_Click"/>
+                        <StackPanel>
+                            <TextBlock Text="Countdowns" Style="{StaticResource H2}"/>
+                            <TextBlock Text="A timer viewers can extend with gifts, follows, shares and likes. Browser Source size 500 x 150." Style="{StaticResource Muted}" Margin="0,3,0,0"/>
+                        </StackPanel>
+                    </DockPanel>
+                    <TextBlock x:Name="NoCountdowns" Text="No countdowns yet." Style="{StaticResource Muted}" Margin="0,8,0,0"/>
+                    <ItemsControl x:Name="CountdownsList" Margin="0,10,0,0">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource SubCard}" Margin="0,0,0,8">
+                                    <StackPanel>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Margin="0,0,16,0">
+                                                <TextBlock Text="Title" Style="{StaticResource Label}"/>
+                                                <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" LostFocus="Field_Changed"/>
+                                            </StackPanel>
+                                            <TextBlock Grid.Column="1" Text="{Binding RemainingText}" FontSize="34" FontWeight="Bold" VerticalAlignment="Bottom" FontFamily="Consolas"/>
+                                        </Grid>
+                                        <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                            <Button Content="{Binding StartPauseLabel}" Style="{StaticResource Primary}" Tag="{Binding}" Click="StartPause_Click" Margin="0,0,6,0" MinWidth="70"/>
+                                            <Button Content="+1 min" Style="{StaticResource Small}" Tag="{Binding}" Click="AddMinute_Click" Margin="0,0,6,0"/>
+                                            <Button Content="+10 min" Style="{StaticResource Small}" Tag="{Binding}" Click="AddTenMinutes_Click" Margin="0,0,14,0"/>
+                                            <TextBlock Text="Set to" VerticalAlignment="Center" Style="{StaticResource Muted}" Margin="0,0,6,0"/>
+                                            <TextBox Text="{Binding SetMinutes, UpdateSourceTrigger=PropertyChanged}" Width="60"/>
+                                            <TextBlock Text="minutes" VerticalAlignment="Center" Style="{StaticResource Muted}" Margin="6,0,6,0"/>
+                                            <Button Content="Set" Style="{StaticResource Small}" Tag="{Binding}" Click="SetCountdown_Click"/>
+                                        </StackPanel>
+                                        <TextBlock Text="Seconds added while running" Style="{StaticResource Label}" Margin="0,12,0,4"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="per coin" VerticalAlignment="Center" Style="{StaticResource Muted}" Margin="0,0,6,0"/>
+                                            <TextBox Text="{Binding SecondsPerCoin, UpdateSourceTrigger=LostFocus}" Width="55" LostFocus="Field_Changed" Margin="0,0,14,0"/>
+                                            <TextBlock Text="per follow" VerticalAlignment="Center" Style="{StaticResource Muted}" Margin="0,0,6,0"/>
+                                            <TextBox Text="{Binding SecondsPerFollow, UpdateSourceTrigger=LostFocus}" Width="55" LostFocus="Field_Changed" Margin="0,0,14,0"/>
+                                            <TextBlock Text="per share" VerticalAlignment="Center" Style="{StaticResource Muted}" Margin="0,0,6,0"/>
+                                            <TextBox Text="{Binding SecondsPerShare, UpdateSourceTrigger=LostFocus}" Width="55" LostFocus="Field_Changed" Margin="0,0,14,0"/>
+                                            <TextBlock Text="per 100 likes" VerticalAlignment="Center" Style="{StaticResource Muted}" Margin="0,0,6,0"/>
+                                            <TextBox Text="{Binding SecondsPer100Likes, UpdateSourceTrigger=LostFocus}" Width="55" LostFocus="Field_Changed"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                                            <Button Content="Copy URL" Style="{StaticResource Small}" Tag="{Binding}" Click="CopyCountdown_Click" Margin="0,0,6,0"/>
+                                            <Button Content="Add to OBS" Style="{StaticResource Small}" Tag="{Binding}" Click="ObsCountdown_Click" Margin="0,0,6,0"/>
+                                            <Button Content="Remove" Style="{StaticResource SmallDanger}" Tag="{Binding}" Click="RemoveCountdown_Click"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <!-- Counters -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                <StackPanel x:Name="CountersPanel">
+                    <DockPanel Margin="0,0,0,10">
+                        <Button DockPanel.Dock="Right" Content="Reset stream totals" Style="{StaticResource Danger}" Click="ResetStats_Click"/>
+                        <StackPanel>
+                            <TextBlock Text="Live counters" Style="{StaticResource H2}"/>
+                            <TextBlock Text="Big numbers for this stream. Browser Source size 400 x 100." Style="{StaticResource Muted}" Margin="0,3,0,0"/>
+                        </StackPanel>
+                    </DockPanel>
+                    <ItemsControl x:Name="CountersList">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="180"/>
+                                        <ColumnDefinition Width="90"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding Label}" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding Value}" FontWeight="Bold" FontSize="16" VerticalAlignment="Center"/>
+                                    <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                        <Button Content="Copy URL" Style="{StaticResource Small}" Tag="{Binding}" Click="CopyCounter_Click" Margin="0,0,6,0"/>
+                                        <Button Content="Add to OBS" Style="{StaticResource Small}" Tag="{Binding}" Click="ObsCounter_Click"/>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <!-- Alerts -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                <StackPanel>
+                    <TextBlock Text="Gift alerts" Style="{StaticResource H2}"/>
+                    <TextBlock Text="Pops up the gift picture, who sent it and how many. Browser Source size 800 x 250." Style="{StaticResource Muted}" Margin="0,3,0,12"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                        <Button Content="Copy URL" Click="CopyAlerts_Click" Margin="0,0,6,0"/>
+                        <Button Content="Add to OBS" Click="ObsAlerts_Click" Margin="0,0,6,0"/>
+                        <Button Content="Test alert" Style="{StaticResource Ghost}" Click="TestAlert_Click"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <StackPanel Margin="0,0,16,0">
+                            <TextBlock Text="Show for (seconds)" Style="{StaticResource Label}"/>
+                            <TextBox x:Name="AlertSeconds" Width="90" LostFocus="Style_Changed"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Only gifts worth at least (coins)" Style="{StaticResource Label}"/>
+                            <TextBox x:Name="AlertMinCoins" Width="90" LostFocus="Style_Changed"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <CheckBox x:Name="AlertFollows" Content="Also show new followers" Click="Style_Changed" Margin="0,0,0,6"/>
+                    <CheckBox x:Name="AlertShares" Content="Also show shares" Click="Style_Changed"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Style -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Look" Style="{StaticResource H2}" Margin="0,0,0,10"/>
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel Margin="0,0,16,0">
+                            <TextBlock Text="Accent colour (hex)" Style="{StaticResource Label}"/>
+                            <TextBox x:Name="AccentBox" Width="120" FontFamily="Consolas" LostFocus="Style_Changed"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Font" Style="{StaticResource Label}"/>
+                            <TextBox x:Name="FontBox" Width="220" LostFocus="Style_Changed"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <TextBlock x:Name="Status" Style="{StaticResource Muted}" Margin="0,12,0,0"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

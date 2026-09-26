@@ -1,0 +1,17 @@
+# Build output
+bin/
+obj/
+dist/
+*.user
+.vs/
+
+# Node
+bridge/node_modules/
+
+# Logs (the bridge's logs contain viewers' chat)
+*.log
+
+# Personal data never lives in this folder (it is in %APPDATA%\GiftDeck), but just in case:
+settings.json
+tiktok.json
+spotify.json

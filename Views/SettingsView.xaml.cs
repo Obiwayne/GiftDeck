@@ -1,0 +1,79 @@
+using System.Diagnostics;
+using System.Windows;
+using System.Windows.Controls;
+using GiftDeck.Services;
+
+namespace GiftDeck.Views;
+
+public partial class SettingsView : UserControl
+{
+    bool _loading = true;
+
+    public SettingsView()
+    {
+        InitializeComponent();
+        var s = Hub.Settings;
+        AutoLaunch.IsChecked = s.AutoLaunchTikFinity;
+        ExeBox.Text = s.TikFinityExe;
+        UrlBox.Text = s.TikFinityUrl;
+        StreakOnce.IsChecked = s.StreakGiftsOnce;
+        FocusWindow.IsChecked = s.FocusWindowBeforeKeys;
+        FocusTitle.Text = s.FocusWindowTitle;
+        HoldBox.Text = s.KeyHoldMs.ToString();
+        SoundVolume.Value = s.SoundVolume;
+        SoundLabel.Text = "Master volume: " + s.SoundVolume;
+        VersionText.Text = "GiftDeck " + (typeof(App).Assembly.GetName().Version?.ToString(3) ?? "") + ". Rides on TikFinity's local event feed; not affiliated with TikFinity or TikTok.";
+        DataFolder.Text = Storage.Dir;
+        _loading = false;
+    }
+
+    void Toggle_Click(object sender, RoutedEventArgs e)
+    {
+        var s = Hub.Settings;
+        s.AutoLaunchTikFinity = AutoLaunch.IsChecked == true;
+        s.StreakGiftsOnce = StreakOnce.IsChecked == true;
+        s.FocusWindowBeforeKeys = FocusWindow.IsChecked == true;
+        Hub.SaveSettings();
+        if (s.AutoLaunchTikFinity && !TikFinityService.IsProcessRunning()) Hub.TikFinity.Launch();
+    }
+
+    void Text_Changed(object sender, TextChangedEventArgs e)
+    {
+        if (_loading) return;
+        var s = Hub.Settings;
+        s.TikFinityExe = ExeBox.Text.Trim();
+        if (UrlBox.Text.Trim().StartsWith("ws")) s.TikFinityUrl = UrlBox.Text.Trim();
+        s.FocusWindowTitle = FocusTitle.Text.Trim();
+        if (int.TryParse(HoldBox.Text.Trim(), out int hold) && hold >= 10) s.KeyHoldMs = hold;
+        Hub.SaveSettings();
+    }
+
+    void SoundVolume_Changed(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (SoundLabel == null) return; // fires while the page is still being built
+        SoundLabel.Text = "Master volume: " + (int)e.NewValue;
+        if (_loading) return;
+        Hub.Settings.SoundVolume = (int)e.NewValue;
+        Hub.SaveSettings();
+    }
+
+    void BrowseExe_Click(object sender, RoutedEventArgs e)
+    {
+        var dlg = new Microsoft.Win32.OpenFileDialog { Filter = "TikFinity|TikFinity.exe|Programs|*.exe" };
+        if (dlg.ShowDialog() == true) ExeBox.Text = dlg.FileName;
+    }
+
+    void Launch_Click(object sender, RoutedEventArgs e) => Hub.TikFinity.Launch();
+
+    void OpenFolder_Click(object sender, RoutedEventArgs e)
+    {
+        Directory.CreateDirectory(Storage.Dir);
+        Process.Start(new ProcessStartInfo(Storage.Dir) { UseShellExecute = true });
+    }
+
+    void OpenLog_Click(object sender, RoutedEventArgs e)
+    {
+        var p = Storage.PathFor("log.txt");
+        if (File.Exists(p)) Process.Start(new ProcessStartInfo(p) { UseShellExecute = true });
+    }
+}

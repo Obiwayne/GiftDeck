@@ -1,0 +1,15 @@
+{
+  "name": "giftdeck-bridge",
+  "version": "1.0.0",
+  "description": "Reads a TikTok LIVE's chat, gifts, likes and viewer counts and serves them to GiftDeck on ws://localhost:21214",
+  "main": "bridge.js",
+  "scripts": {
+    "start": "node bridge.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "tiktok-live-connector": "^2.5.0",
+    "ws": "^8.22.0"
+  },
+  "private": true
+}

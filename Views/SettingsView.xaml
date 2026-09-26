@@ -1,0 +1,64 @@
+<UserControl x:Class="GiftDeck.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="32,28,32,28" MaxWidth="900" HorizontalAlignment="Left">
+            <TextBlock Text="Settings" Style="{StaticResource H1}"/>
+            <TextBlock Text="Changes are saved as you make them." Style="{StaticResource Muted}" Margin="0,4,0,18"/>
+
+            <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                <StackPanel>
+                    <TextBlock Text="TikFinity" Style="{StaticResource H2}" Margin="0,0,0,10"/>
+                    <CheckBox x:Name="AutoLaunch" Content="Start TikFinity automatically if it is not running" Click="Toggle_Click" Margin="0,0,0,12"/>
+                    <TextBlock Text="TikFinity program" Style="{StaticResource Label}"/>
+                    <Grid Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="ExeBox" TextChanged="Text_Changed"/>
+                        <Button Grid.Column="1" Content="Browse" Click="BrowseExe_Click" Margin="8,0,0,0"/>
+                        <Button Grid.Column="2" Content="Launch now" Style="{StaticResource Ghost}" Click="Launch_Click" Margin="6,0,0,0"/>
+                    </Grid>
+                    <TextBlock Text="Event feed address" Style="{StaticResource Label}"/>
+                    <TextBox x:Name="UrlBox" Width="320" HorizontalAlignment="Left" FontFamily="Consolas" TextChanged="Text_Changed" Margin="0,0,0,12"/>
+                    <CheckBox x:Name="StreakOnce" Content="Count streak gifts once, when the streak ends (recommended)" Click="Toggle_Click"/>
+                    <TextBlock Style="{StaticResource Muted}" Margin="48,4,0,0" Text="Switched off, a 10-rose streak fires the Rose event 10 times as it builds up."/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                <StackPanel>
+                    <TextBlock Text="Key presses" Style="{StaticResource H2}" Margin="0,0,0,10"/>
+                    <CheckBox x:Name="FocusWindow" Content="Bring a window to the front before pressing keys" Click="Toggle_Click" Margin="0,0,0,10"/>
+                    <TextBlock Text="Part of the window title to look for" Style="{StaticResource Label}"/>
+                    <TextBox x:Name="FocusTitle" Width="320" HorizontalAlignment="Left" TextChanged="Text_Changed" Margin="0,0,0,12"/>
+                    <TextBlock Text="How long to hold each key, in milliseconds" Style="{StaticResource Label}"/>
+                    <TextBox x:Name="HoldBox" Width="100" HorizontalAlignment="Left" TextChanged="Text_Changed"/>
+                    <TextBlock Style="{StaticResource Muted}" Margin="0,5,0,0" Text="Keys go to whatever window is in front, the same way TikFinity's shortcuts do. Games sometimes need a longer hold, such as 100."/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                <StackPanel>
+                    <TextBlock Text="Sounds" Style="{StaticResource H2}" Margin="0,0,0,10"/>
+                    <TextBlock x:Name="SoundLabel" Text="Master volume" Style="{StaticResource Label}"/>
+                    <Slider x:Name="SoundVolume" Minimum="0" Maximum="100" ValueChanged="SoundVolume_Changed" Width="320" HorizontalAlignment="Left"/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="About" Style="{StaticResource H2}" Margin="0,0,0,8"/>
+                    <TextBlock x:Name="VersionText" Style="{StaticResource Muted}" Margin="0,0,0,8"/>
+                    <TextBlock x:Name="DataFolder" Style="{StaticResource Muted}" FontFamily="Consolas" Margin="0,0,0,10"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Open data folder" Click="OpenFolder_Click" Margin="0,0,8,0"/>
+                        <Button Content="Open log" Style="{StaticResource Ghost}" Click="OpenLog_Click"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

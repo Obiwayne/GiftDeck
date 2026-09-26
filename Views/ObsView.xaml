@@ -1,0 +1,64 @@
+<UserControl x:Class="GiftDeck.Views.ObsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:GiftDeck.Views">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="32,28,32,28" MaxWidth="900" HorizontalAlignment="Left">
+            <TextBlock Text="OBS" Style="{StaticResource H1}"/>
+            <TextBlock Text="Switch scenes and show or hide sources when events fire." Style="{StaticResource Muted}" Margin="0,4,0,18"/>
+
+            <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                <StackPanel>
+                    <TextBlock Text="Connection" Style="{StaticResource H2}" Margin="0,0,0,8"/>
+                    <TextBlock x:Name="Status" Text="Not connected." Margin="0,0,0,12"/>
+                    <TextBlock Style="{StaticResource Muted}" Margin="0,0,0,12" Text="In OBS open Tools, then WebSocket Server Settings, and tick Enable WebSocket server. GiftDeck reads the port and password from OBS's own settings, so you usually only need to press Connect."/>
+                    <Grid Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="110"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Margin="0,0,8,0">
+                            <TextBlock Text="Host" Style="{StaticResource Label}"/>
+                            <TextBox x:Name="HostBox"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="0,0,8,0">
+                            <TextBlock Text="Port" Style="{StaticResource Label}"/>
+                            <TextBox x:Name="PortBox"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Password" Style="{StaticResource Label}"/>
+                            <local:SecretBox x:Name="PasswordBox"/>
+                        </StackPanel>
+                    </Grid>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                        <Button Content="Connect" Style="{StaticResource Primary}" Click="Connect_Click" Margin="0,0,8,0"/>
+                        <Button Content="Disconnect" Click="Disconnect_Click" Margin="0,0,8,0"/>
+                        <Button Content="Read settings from OBS" Style="{StaticResource Ghost}" Click="Detect_Click"/>
+                    </StackPanel>
+                    <CheckBox x:Name="AutoConnect" Content="Connect automatically whenever OBS is open" Click="AutoConnect_Click"/>
+                    <TextBlock x:Name="Error" Foreground="{StaticResource DangerBrush}" Margin="0,8,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                <StackPanel>
+                    <DockPanel Margin="0,0,0,8">
+                        <Button DockPanel.Dock="Right" Content="Refresh" Style="{StaticResource Ghost}" Click="Refresh_Click"/>
+                        <TextBlock x:Name="CanvasHeading" Text="Vertical canvas scenes" Style="{StaticResource H2}" VerticalAlignment="Center"/>
+                    </DockPanel>
+                    <TextBlock x:Name="CanvasHint" Text="Click a scene to switch the vertical canvas to it right now. Events use the action 'OBS: switch scene (vertical canvas)'." Style="{StaticResource Muted}" Margin="0,0,0,8"/>
+                    <ListBox x:Name="CanvasSceneList" ItemContainerStyle="{StaticResource FeedItem}" MaxHeight="320" SelectionChanged="CanvasScene_Selected"/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Main canvas scenes" Style="{StaticResource H2}" Margin="0,0,0,8"/>
+                    <TextBlock Text="Click a scene to switch the main (horizontal) canvas to it right now." Style="{StaticResource Muted}" Margin="0,0,0,8"/>
+                    <ListBox x:Name="SceneList" ItemContainerStyle="{StaticResource FeedItem}" MaxHeight="320" SelectionChanged="Scene_Selected"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

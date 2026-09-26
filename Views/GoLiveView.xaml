@@ -1,0 +1,117 @@
+<UserControl x:Class="GiftDeck.Views.GoLiveView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:GiftDeck.Views">
+    <Grid Margin="32,28,32,24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Margin="0,0,0,16">
+            <TextBlock Text="Go LIVE" Style="{StaticResource H1}"/>
+            <TextBlock Style="{StaticResource Muted}" Margin="0,4,0,0" Text="Your control room: go live, watch the stream, run the music and set the title. The vertical canvas and token are on Stream Setup."/>
+        </StackPanel>
+
+        <!-- Live bar -->
+        <Border Grid.Row="1" Style="{StaticResource Card}" Margin="0,0,0,14">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- The record light: grey when offline, pulsing red when live -->
+                <Border x:Name="LivePill" CornerRadius="22" Padding="16,9" Background="{StaticResource Panel2Brush}" VerticalAlignment="Center" Margin="0,0,18,0">
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse x:Name="RecDot" Width="14" Height="14" Fill="{StaticResource MutedBrush}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <TextBlock x:Name="LiveWord" Text="OFFLINE" FontSize="17" FontWeight="Bold" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="LiveTimer" Text="" FontSize="17" FontFamily="Consolas" VerticalAlignment="Center" Margin="12,0,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock x:Name="VerifyText" FontSize="14" FontWeight="SemiBold" Text="Not live"/>
+                    <TextBlock x:Name="LiveDetail" Style="{StaticResource Muted}" Margin="0,2,0,0"/>
+                    <TextBlock x:Name="Status" Style="{StaticResource Muted}" Margin="0,2,0,0"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button x:Name="GoLiveButton" Content="Go LIVE" Style="{StaticResource Primary}" Click="GoLive_Click" Padding="26,12" FontSize="16"/>
+                    <Button x:Name="EndLiveButton" Content="End LIVE" Style="{StaticResource Danger}" Click="EndLive_Click" Padding="26,12" FontSize="16" Visibility="Collapsed"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="400"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Preview of what OBS is sending -->
+            <Border Style="{StaticResource Card}" Padding="14" Margin="0,0,14,0">
+                <DockPanel>
+                    <DockPanel DockPanel.Dock="Top" Margin="0,0,0,10">
+                        <Button x:Name="PreviewButton" DockPanel.Dock="Right" Content="Pause preview" Style="{StaticResource Ghost}" Padding="8,3" Click="PreviewToggle_Click"/>
+                        <TextBlock Text="Preview" Style="{StaticResource H2}" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="PreviewSource" Style="{StaticResource Muted}" VerticalAlignment="Center" Margin="10,1,0,0"/>
+                    </DockPanel>
+                    <Border Background="Black" CornerRadius="8" ClipToBounds="True">
+                        <Grid>
+                            <TextBlock x:Name="PreviewHint" Text="Connecting to OBS" Style="{StaticResource Muted}" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" Margin="20"/>
+                            <Image x:Name="PreviewImage" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"/>
+                        </Grid>
+                    </Border>
+                </DockPanel>
+            </Border>
+
+            <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                        <StackPanel>
+                            <TextBlock Text="Music" Style="{StaticResource H2}" Margin="0,0,0,12"/>
+                            <local:MiniPlayer/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                        <StackPanel>
+                            <TextBlock Text="Stream details" Style="{StaticResource H2}" Margin="0,0,0,10"/>
+                            <local:StreamDetailsPanel/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Only while live: the key, in case it has to go into OBS by hand -->
+                    <Border x:Name="KeyPanel" Style="{StaticResource Card}" Visibility="Collapsed">
+                        <StackPanel>
+                            <TextBlock Text="Stream key" Style="{StaticResource H2}" Margin="0,0,0,4"/>
+                            <TextBlock Text="Only needed if OBS isn't set automatically." Style="{StaticResource Muted}" Margin="0,0,0,10"/>
+                            <TextBlock Text="Server URL" Style="{StaticResource Label}"/>
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <local:SecretBox x:Name="ServerBox" IsReadOnly="True"/>
+                                <Button Grid.Column="1" Content="Copy" Style="{StaticResource Ghost}" Click="CopyServer_Click" Margin="4,0,0,0"/>
+                            </Grid>
+                            <TextBlock Text="Stream key" Style="{StaticResource Label}"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <local:SecretBox x:Name="KeyBox" IsReadOnly="True"/>
+                                <Button Grid.Column="2" Content="Copy" Style="{StaticResource Ghost}" Click="CopyKey_Click"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</UserControl>

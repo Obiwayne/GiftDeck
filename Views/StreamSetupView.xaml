@@ -1,0 +1,59 @@
+<UserControl x:Class="GiftDeck.Views.StreamSetupView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:GiftDeck.Views">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="32,28,32,28" MaxWidth="900" HorizontalAlignment="Left">
+            <TextBlock Text="Stream Setup" Style="{StaticResource H1}"/>
+            <TextBlock Text="Your TikTok account, the vertical canvas and the Streamlabs login. Set these once; title and category are on the Go LIVE page." Style="{StaticResource Muted}" Margin="0,4,0,18"/>
+
+            <!-- TikTok account -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                <StackPanel>
+                    <TextBlock Text="Your TikTok account" Style="{StaticResource H2}" Margin="0,0,0,4"/>
+                    <TextBlock Text="The username whose LIVE GiftDeck reads chat, gifts and viewer counts from (the part after @ in your profile link)." Style="{StaticResource Muted}" Margin="0,0,0,10"/>
+                    <TextBlock Text="TikTok username" Style="{StaticResource Label}"/>
+                    <TextBox x:Name="UsernameBox" LostFocus="Username_Changed" local:Placeholder.Text="yourname"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Vertical canvas -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                <StackPanel>
+                    <TextBlock Text="Vertical canvas" Style="{StaticResource H2}" Margin="0,0,0,8"/>
+                    <CheckBox x:Name="VerticalBox" Content="Send the Aitum Vertical canvas (your TikTok layout) instead of OBS's main canvas" Click="Details_Changed" Margin="0,0,0,10"/>
+                    <TextBlock Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,0,0,8"
+                               Text="One-time setup in OBS: in Aitum Stream Suite's Outputs, edit the &quot;Vertical Stream&quot; output, choose Custom, and enter the server and stream key below. They never change; GiftDeck forwards that stream to each new LIVE's key for you."/>
+                    <TextBlock Text="Server" Style="{StaticResource Label}"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                        <TextBox x:Name="RelayServerBox" IsReadOnly="True" Width="320" FontFamily="Consolas"/>
+                        <Button Content="Copy" Style="{StaticResource Ghost}" Click="CopyRelayServer_Click" Margin="6,0,0,0"/>
+                    </StackPanel>
+                    <TextBlock Text="Stream key" Style="{StaticResource Label}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox x:Name="RelayKeyBox" IsReadOnly="True" Width="320" FontFamily="Consolas"/>
+                        <Button Content="Copy" Style="{StaticResource Ghost}" Click="CopyRelayKey_Click" Margin="6,0,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Token -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Streamlabs TikTok token" Style="{StaticResource H2}" Margin="0,0,0,4"/>
+                    <TextBlock Text="Lets GiftDeck open and close your TikTok LIVE and get its stream key. Log in once with your TikTok account through Streamlabs in your browser (Google sign-in works there). Your account needs Streamlabs TikTok LIVE access." Style="{StaticResource Muted}" Margin="0,0,0,10"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <Button x:Name="LoginButton" Content="Log in with TikTok" Style="{StaticResource Primary}" Click="Login_Click" Margin="0,0,6,0"/>
+                        <Button Content="Import from Stream Key Generator" Style="{StaticResource Ghost}" Click="Import_Click" Margin="0,0,6,0"/>
+                        <Button Content="Choose config.json" Style="{StaticResource Ghost}" Click="Browse_Click" Margin="0,0,6,0"/>
+                        <Button Content="Check account" Style="{StaticResource Ghost}" Click="Check_Click"/>
+                    </StackPanel>
+                    <TextBlock Text="Token (or paste one here)" Style="{StaticResource Label}"/>
+                    <local:SecretBox x:Name="TokenBox" TextChanged="Token_Changed" Margin="0,0,0,8"/>
+                    <TextBlock x:Name="AccountText" Style="{StaticResource Muted}"/>
+                    <TextBlock x:Name="TokenError" Foreground="{StaticResource DangerBrush}" Margin="0,6,0,0"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

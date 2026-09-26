@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>GiftDeck overlays</title>
+<style>
+  body { margin: 0; background: #0F1117; color: #E8EAF0; font-family: 'Segoe UI', sans-serif; padding: 32px; }
+  h1 { font-size: 24px; margin: 0 0 6px; }
+  p { color: #8B91A3; margin: 0 0 20px; }
+  a { color: #9075FF; }
+  li { margin: 6px 0; }
+</style>
+</head>
+<body>
+<h1>GiftDeck overlays</h1>
+<p>Add any of these to OBS as a Browser Source. The full list with copy buttons is on the Overlays page in GiftDeck.</p>
+<ul id="list"></ul>
+<script>
+  fetch('/state').then(r => r.json()).then(s => {
+    const li = ['<li><a href="/overlay/menu">Gift menu board</a></li>'];
+    s.goals.forEach(g => li.push('<li>Goal: <a href="/overlay/goal/' + g.id + '">' + g.title + '</a></li>'));
+    s.countdowns.forEach(c => li.push('<li>Countdown: <a href="/overlay/countdown/' + c.id + '">' + c.title + '</a></li>'));
+    ['follows', 'likes', 'shares', 'coins', 'gifts', 'viewers'].forEach(m => li.push('<li>Counter: <a href="/overlay/counter/' + m + '">' + m + '</a></li>'));
+    li.push('<li><a href="/overlay/alerts">Gift alerts</a></li>');
+    document.getElementById('list').innerHTML = li.join('');
+  });
+</script>
+</body>
+</html>

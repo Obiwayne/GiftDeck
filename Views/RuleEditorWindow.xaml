@@ -1,0 +1,105 @@
+<Window x:Class="GiftDeck.Views.RuleEditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:GiftDeck.Views"
+        Title="Event" Width="780" Height="740" MinWidth="660" MinHeight="540"
+        Background="{StaticResource BgBrush}" WindowStartupLocation="CenterOwner"
+        FontFamily="Segoe UI" TextOptions.TextFormattingMode="Display" UseLayoutRounding="True" ShowInTaskbar="False">
+    <DockPanel Margin="28,24,28,20">
+        <Grid DockPanel.Dock="Bottom" Margin="0,16,0,0">
+            <TextBlock x:Name="ErrorText" Foreground="{StaticResource DangerBrush}" VerticalAlignment="Center" Margin="0,0,220,0"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Cancel" Click="Cancel_Click" Margin="0,0,10,0"/>
+                <Button Content="Save event" Style="{StaticResource Primary}" Click="Save_Click"/>
+            </StackPanel>
+        </Grid>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="0,0,8,0">
+                <TextBlock x:Name="Heading" Text="New event" Style="{StaticResource H1}" Margin="0,0,0,16"/>
+
+                <TextBlock Text="Name" Style="{StaticResource Label}"/>
+                <TextBox x:Name="NameBox" Margin="0,0,0,18" local:Placeholder.Text="For example: Rose changes the car (left blank, it is named after the trigger)"/>
+
+                <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                    <StackPanel>
+                        <TextBlock Text="When this happens" Style="{StaticResource H2}" Margin="0,0,0,10"/>
+                        <ComboBox x:Name="TriggerCombo" DisplayMemberPath="Label" SelectionChanged="TriggerCombo_Changed" Margin="0,0,0,12"/>
+
+                        <StackPanel x:Name="GiftPanel">
+                            <TextBlock Text="Gift" Style="{StaticResource Label}"/>
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="200"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox x:Name="GiftFilter" TextChanged="GiftFilter_Changed" Margin="0,0,8,0" local:Placeholder.Text="Search gifts"/>
+                                <ComboBox Grid.Column="1" x:Name="GiftCombo" ItemTemplate="{StaticResource GiftItem}"/>
+                            </Grid>
+                            <TextBlock Text="Only fire when the total is at least this many coins (0 = any amount; 5 roses count as 5 coins)" Style="{StaticResource Label}"/>
+                            <TextBox x:Name="GiftMinCoins" Width="120" HorizontalAlignment="Left" Text="0"/>
+                        </StackPanel>
+
+                        <StackPanel x:Name="AnyGiftPanel" Orientation="Horizontal">
+                            <StackPanel Margin="0,0,16,0">
+                                <TextBlock Text="Minimum coins" Style="{StaticResource Label}"/>
+                                <TextBox x:Name="AnyMin" Width="120" Text="0"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="Maximum coins (0 = no limit)" Style="{StaticResource Label}"/>
+                                <TextBox x:Name="AnyMax" Width="120" Text="0"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel x:Name="LikePanel">
+                            <TextBlock Text="Fire each time a viewer's likes reach another multiple of" Style="{StaticResource Label}"/>
+                            <TextBox x:Name="LikeBox" Width="120" HorizontalAlignment="Left" Text="100"/>
+                        </StackPanel>
+
+                        <StackPanel x:Name="ChatPanel">
+                            <TextBlock Text="Command the message must start with (leave blank for every message)" Style="{StaticResource Label}"/>
+                            <TextBox x:Name="ChatBox" Width="220" HorizontalAlignment="Left" Text="!"/>
+                        </StackPanel>
+
+                        <StackPanel x:Name="ComboPanel" Margin="0,14,0,0">
+                            <CheckBox x:Name="RepeatBox" Content="Run the actions once for each gift in a combo (5 roses = 5 times)" Click="Repeat_Click"/>
+                            <StackPanel x:Name="CapPanel" Orientation="Horizontal" Margin="48,8,0,0">
+                                <TextBlock Text="But never more than" VerticalAlignment="Center" Style="{StaticResource Muted}" Margin="0,0,8,0"/>
+                                <TextBox x:Name="MaxRepeatsBox" Width="80" Text="10"/>
+                                <TextBlock Text="times per combo (0 = no limit)" VerticalAlignment="Center" Style="{StaticResource Muted}" Margin="8,0,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <TextBlock x:Name="TriggerHint" Style="{StaticResource Muted}" Margin="0,10,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                    <StackPanel>
+                        <DockPanel Margin="0,0,0,10">
+                            <Button DockPanel.Dock="Right" Content="+  Add action" Click="AddAction_Click"/>
+                            <TextBlock Text="Then do this" Style="{StaticResource H2}" VerticalAlignment="Center"/>
+                        </DockPanel>
+                        <TextBlock x:Name="NoActions" Text="No actions yet. Actions run one after another, top to bottom." Style="{StaticResource Muted}"/>
+                        <ItemsControl x:Name="ActionsList">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <local:ActionEditor Margin="0,0,0,8"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource Card}">
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel>
+                            <TextBlock Text="Cooldown in seconds (0 = none)" Style="{StaticResource Label}"/>
+                            <TextBox x:Name="CooldownBox" Width="120" Text="0"/>
+                        </StackPanel>
+                        <TextBlock Text="Stops this event firing again until the cooldown has passed." Style="{StaticResource Muted}" VerticalAlignment="Bottom" Margin="14,0,0,8"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</Window>

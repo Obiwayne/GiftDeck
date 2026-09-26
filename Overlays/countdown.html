@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>GiftDeck countdown</title>
+<style>
+  :root { --accent: #7C5CFF; --font: 'Segoe UI'; }
+  body { margin: 0; background: transparent; font-family: var(--font), 'Segoe UI', sans-serif; color: #fff; overflow: hidden; }
+  .card { display: inline-block; margin: 16px; padding: 12px 26px 14px; background: rgba(15, 17, 23, .82); border-radius: 18px; box-shadow: 0 6px 28px rgba(0,0,0,.45); border: 1px solid rgba(255,255,255,.08); text-align: center; position: relative; }
+  .title { font-size: 18px; font-weight: 600; opacity: .85; letter-spacing: .03em; }
+  .time { font-size: 56px; font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; text-shadow: 0 0 22px var(--accent), 0 2px 8px rgba(0,0,0,.6); }
+  .paused .time { opacity: .55; }
+  .paused .title::after { content: '  (paused)'; opacity: .7; font-weight: 400; }
+  .zero .time { color: #f87171; text-shadow: 0 0 22px #f87171; }
+  .plus { position: absolute; right: 18px; top: 8px; font-size: 22px; font-weight: 800; color: #34d399; opacity: 0; text-shadow: 0 2px 6px rgba(0,0,0,.7); }
+  .plus.show { animation: rise 1.6s ease-out; }
+  @keyframes rise { 0% { opacity: 0; transform: translateY(10px); } 15% { opacity: 1; } 100% { opacity: 0; transform: translateY(-34px); } }
+</style>
+</head>
+<body>
+<div class="card" id="card">
+  <div class="title" id="title">Loading</div>
+  <div class="time" id="time">0:00</div>
+  <div class="plus" id="plus"></div>
+</div>
+<script>
+  const id = location.pathname.split('/').filter(Boolean).pop();
+  const $ = s => document.getElementById(s);
+  let endsAt = 0, running = false, remaining = 0, lastRemaining = -1;
+  function fmt(sec) {
+    sec = Math.max(0, Math.round(sec));
+    const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60;
+    const mm = (h > 0 && m < 10 ? '0' : '') + m, ss = (s < 10 ? '0' : '') + s;
+    return h > 0 ? h + ':' + mm + ':' + ss : mm + ':' + ss;
+  }
+  function tick() {
+    const left = running ? Math.max(0, (endsAt - Date.now()) / 1000) : remaining;
+    $('time').textContent = fmt(left);
+    $('card').classList.toggle('zero', left <= 0);
+  }
+  setInterval(tick, 250);
+  function render(s) {
+    document.documentElement.style.setProperty('--accent', s.style.accent);
+    document.documentElement.style.setProperty('--font', "'" + s.style.font + "'");
+    const c = s.countdowns.find(x => x.id === id) || s.countdowns[0];
+    if (!c) { $('title').textContent = 'No countdown set up in GiftDeck'; return; }
+    $('title').textContent = c.title;
+    $('card').classList.toggle('paused', !c.running);
+    const localLeft = running ? Math.max(0, (endsAt - Date.now()) / 1000) : remaining;
+    const added = Math.round(c.remaining - localLeft);
+    if (lastRemaining >= 0 && added >= 2) {
+      const p = $('plus'); p.textContent = '+' + fmt(added); p.classList.remove('show'); void p.offsetWidth; p.classList.add('show');
+    }
+    running = c.running; remaining = c.remaining; endsAt = Date.now() + c.remaining * 1000; lastRemaining = c.remaining;
+    tick();
+  }
+  const es = new EventSource('/events');
+  es.onmessage = e => { const m = JSON.parse(e.data); if (m.type === 'state') render(m); };
+</script>
+</body>
+</html>

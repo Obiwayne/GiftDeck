@@ -1,0 +1,63 @@
+<UserControl x:Class="GiftDeck.Views.TtsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="32,28,32,28" MaxWidth="900" HorizontalAlignment="Left">
+            <TextBlock Text="Text to speech" Style="{StaticResource H1}"/>
+            <TextBlock Text="Uses the voices installed in Windows. Nothing is sent to the internet." Style="{StaticResource Muted}" Margin="0,4,0,18"/>
+
+            <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                <StackPanel>
+                    <TextBlock Text="Voice" Style="{StaticResource H2}" Margin="0,0,0,10"/>
+                    <TextBlock Text="Voice" Style="{StaticResource Label}"/>
+                    <ComboBox x:Name="VoiceCombo" SelectionChanged="Voice_Changed" Margin="0,0,0,14"/>
+                    <Grid Margin="0,0,0,14">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="24"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock x:Name="RateLabel" Text="Speed" Style="{StaticResource Label}"/>
+                            <Slider x:Name="RateSlider" Minimum="-10" Maximum="10" Value="0" ValueChanged="Rate_Changed"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock x:Name="VolumeLabel" Text="Volume" Style="{StaticResource Label}"/>
+                            <Slider x:Name="VolumeSlider" Minimum="0" Maximum="100" Value="100" ValueChanged="Volume_Changed"/>
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock Text="Try it" Style="{StaticResource Label}"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="TestBox" Text="Thanks for the rose, this is GiftDeck speaking."/>
+                        <Button Grid.Column="1" Content="Speak" Style="{StaticResource Primary}" Click="Speak_Click" Margin="8,0,0,0"/>
+                        <Button Grid.Column="2" Content="Stop" Style="{StaticResource Ghost}" Click="Stop_Click" Margin="6,0,0,0"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                <StackPanel>
+                    <TextBlock Text="Read chat aloud" Style="{StaticResource H2}" Margin="0,0,0,10"/>
+                    <CheckBox x:Name="ReadChat" Content="Read every chat message out loud" Click="ReadChat_Click" Margin="0,0,0,12"/>
+                    <TextBlock Text="How to say it" Style="{StaticResource Label}"/>
+                    <TextBox x:Name="TemplateBox" TextChanged="Template_Changed"/>
+                    <TextBlock Text="{}{user} is the viewer's name and {comment} is what they typed." Style="{StaticResource Muted}" Margin="0,5,0,14"/>
+                    <TextBlock Text="Cut messages off after this many characters" Style="{StaticResource Label}"/>
+                    <TextBox x:Name="MaxCharsBox" Width="100" HorizontalAlignment="Left" TextChanged="MaxChars_Changed"/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Want better voices?" Style="{StaticResource H2}" Margin="0,0,0,8"/>
+                    <TextBlock Style="{StaticResource Muted}" Text="Windows 11 has much more natural voices under Settings, Accessibility, Narrator, Add natural voices. Microsoft only lets Narrator use them, but the free NaturalVoiceSAPIAdapter project on GitHub makes them available to apps like this one. Once installed, they show up in the voice list above after a restart."/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

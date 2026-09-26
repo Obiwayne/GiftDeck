@@ -1,0 +1,97 @@
+<UserControl x:Class="GiftDeck.Views.MusicView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:GiftDeck.Views">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="32,28,32,28" MaxWidth="900" HorizontalAlignment="Left">
+            <TextBlock Text="Music" Style="{StaticResource H1}"/>
+            <TextBlock Text="Endless free background music from Jamendo, shuffled one track after another." Style="{StaticResource Muted}" Margin="0,4,0,18"/>
+
+            <!-- Player -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                <StackPanel>
+                    <DockPanel Margin="0,0,0,16">
+                        <Border DockPanel.Dock="Left" Width="104" Height="104" CornerRadius="10" Background="{StaticResource Panel2Brush}" Margin="0,0,18,0" ClipToBounds="True">
+                            <Grid>
+                                <TextBlock Text="♪" FontSize="40" Foreground="{StaticResource MutedBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <Image x:Name="Cover" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality"/>
+                            </Grid>
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock x:Name="TitleText" Text="Nothing playing" FontSize="20" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap"/>
+                            <TextBlock x:Name="ArtistText" Text="Press Play to start the music." Style="{StaticResource Muted}" FontSize="14" Margin="0,3,0,10"/>
+                            <Grid Margin="0,0,0,4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="44"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="44"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock x:Name="PosText" Text="0:00" Style="{StaticResource Muted}" VerticalAlignment="Center"/>
+                                <ProgressBar x:Name="Progress" Grid.Column="1" Height="5" Minimum="0" Maximum="1" Value="0"
+                                             Background="{StaticResource Panel3Brush}" Foreground="{StaticResource AccentBrush}" BorderThickness="0" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="LenText" Grid.Column="2" Text="0:00" Style="{StaticResource Muted}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                            </Grid>
+                            <TextBlock x:Name="LicenseText" Style="{StaticResource Muted}" FontSize="11.5"/>
+                        </StackPanel>
+                    </DockPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                        <Button x:Name="PlayButton" Content="Play" Style="{StaticResource Primary}" MinWidth="96" Click="PlayPause_Click" Margin="0,0,8,0"/>
+                        <Button x:Name="SkipButton" Content="Skip" MinWidth="80" Click="Skip_Click" Margin="0,0,8,0"/>
+                        <Button x:Name="OpenButton" Content="Open on Jamendo" Style="{StaticResource Ghost}" Click="Open_Click"/>
+                    </StackPanel>
+
+                    <TextBlock Text="Volume" Style="{StaticResource Label}"/>
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+                        <Slider x:Name="VolumeSlider" Minimum="0" Maximum="100" ValueChanged="Volume_Changed"/>
+                        <TextBlock x:Name="VolumeText" Grid.Column="1" Text="40" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="260"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Style of music" Style="{StaticResource Label}"/>
+                            <ComboBox x:Name="GenreBox" SelectionChanged="Genre_Changed"/>
+                        </StackPanel>
+                        <CheckBox x:Name="InstrumentalBox" Grid.Column="1" Content="Instrumental only (no singing, easier to talk over)" Click="Instrumental_Click" VerticalAlignment="Bottom" Margin="18,0,0,8"/>
+                    </Grid>
+                    <TextBlock x:Name="ErrorText" Foreground="{StaticResource DangerBrush}" Margin="0,10,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Setup -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                <StackPanel>
+                    <TextBlock Text="Jamendo setup" Style="{StaticResource H2}" Margin="0,0,0,8"/>
+                    <TextBlock x:Name="KeyStatus" Text="Not set up yet." Margin="0,0,0,12"/>
+                    <TextBlock Text="One-time setup, free, about two minutes." Style="{StaticResource Muted}" Margin="0,0,0,8"/>
+                    <TextBlock Style="{StaticResource Muted}" Margin="0,0,0,2" Text="1.  Open devportal.jamendo.com and sign up (or log in)."/>
+                    <TextBlock Style="{StaticResource Muted}" Margin="0,0,0,2" Text="2.  Go to My Applications and create a new app. Any name (e.g. GiftDeck) and any website address are fine."/>
+                    <TextBlock Style="{StaticResource Muted}" Margin="0,0,0,12" Text="3.  Copy the Client ID it shows you into the box below and click Save."/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <local:SecretBox x:Name="ClientIdBox"/>
+                        <Button Grid.Column="1" Content="Save" Style="{StaticResource Primary}" Click="SaveKey_Click" Margin="8,0,0,0"/>
+                        <Button Grid.Column="2" Content="Open Jamendo dev portal" Style="{StaticResource Ghost}" Click="Portal_Click" Margin="6,0,0,0"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource SubCard}">
+                <TextBlock Style="{StaticResource Muted}" TextWrapping="Wrap"
+                           Text="Jamendo tracks are free Creative Commons music, and the music plays through your PC's speakers, so OBS picks it up with desktop audio. Most tracks ask you to credit the artist, which the track and artist line above gives you. Many are licensed for non-commercial use, so if TikTok ever mutes a stream for a song, press Skip or switch style."/>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
