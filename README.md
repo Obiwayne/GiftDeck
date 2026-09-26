@@ -11,6 +11,11 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/Obiwayne/GiftDeck/releases/latest"><b>⬇&nbsp; Download GiftDeck for Windows</b></a>
+  &nbsp;·&nbsp; free &nbsp;·&nbsp; nothing else to install
+</p>
+
+<p align="center">
   <img src="docs/screenshots/go-live.png" alt="The Go LIVE control room">
 </p>
 
@@ -20,8 +25,8 @@
 
 - [What it does](#what-it-does)
 - [Screenshots](#screenshots)
+- [Download and install](#download-and-install)
 - [What you need](#what-you-need)
-- [Install](#install)
 - [First-time setup](#first-time-setup)
 - [Going live](#going-live)
 - [Events: triggers and actions](#events-triggers-and-actions)
@@ -73,16 +78,34 @@ the eye button.
 
 ![Overlays](docs/screenshots/overlays.png)
 
+## Download and install
+
+1. Go to **[Releases](https://github.com/Obiwayne/GiftDeck/releases/latest)** and download
+   **`GiftDeck-Setup-x.y.z.exe`** (about 80 MB).
+2. Double-click it and click through the installer. It installs just for you, so it doesn't ask for
+   an administrator password.
+3. Open **GiftDeck** from the Start menu or Desktop, then follow [First-time setup](#first-time-setup).
+
+Everything GiftDeck needs to run is inside the installer (including .NET and Node.js for the TikTok
+connection). The only extra, **ffmpeg** (for Go LIVE with a vertical canvas), is one click inside the
+app: *Stream Setup → Download ffmpeg*.
+
+> **"Windows protected your PC"?** GiftDeck isn't code-signed (certificates cost money), so Windows
+> SmartScreen may warn about a new download. Click **More info → Run anyway**. The installer is built
+> from this repository's source by `build-installer.ps1`.
+
+**Updating:** download the new installer and run it. Your settings and events are kept.
+**Uninstalling:** *Windows Settings → Apps → GiftDeck → Uninstall*. Your settings stay in
+`%APPDATA%\GiftDeck` in case you reinstall; delete that folder to remove them too.
+
 ## What you need
 
 | | Needed for | Notes |
 |---|---|---|
-| **Windows 10/11 (64-bit)** | everything | GiftDeck is a WPF desktop app |
-| **[.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0)** | everything | or the .NET 8 SDK if you build it yourself |
-| **[Node.js](https://nodejs.org) (LTS)** | chat, gifts, viewers | runs the bridge that reads your LIVE. `winget install OpenJS.NodeJS.LTS` |
+| **Windows 10/11 (64-bit)** | everything | everything else GiftDeck needs is in the installer |
 | **[OBS Studio](https://obsproject.com) 30+** | Go LIVE, preview, scene actions | turn on *Tools → WebSocket Server Settings → Enable* |
 | **[Aitum Stream Suite](https://aitum.tv)** (OBS plugin) | Go LIVE with a vertical canvas | optional; without it GiftDeck streams OBS's main canvas |
-| **[ffmpeg](https://ffmpeg.org)** | Go LIVE with the vertical canvas | `winget install Gyan.FFmpeg` |
+| **ffmpeg** | Go LIVE with the vertical canvas | one click in GiftDeck: *Stream Setup → Download ffmpeg* |
 | **TikTok account with Streamlabs LIVE access** | Go LIVE button | see below |
 | Free **[Jamendo](https://devportal.jamendo.com) Client ID** | Music page | optional |
 | **Spotify** Premium + a free developer app | Spotify actions | optional |
@@ -97,22 +120,6 @@ need Streamlabs Desktop or the Stream Key Generator installed. (If you already u
 What you *do* need is a TikTok account that has **LIVE access through Streamlabs**. That's granted to
 your account by TikTok/Streamlabs; no app can get round it. **Check account** on Stream Setup tells you
 whether yours has it.
-
-## Install
-
-1. Install the prerequisites above (at minimum the .NET 8 Desktop Runtime and Node.js).
-2. Download this repository (green **Code** button → **Download ZIP**, then unzip), or clone it:
-   ```powershell
-   git clone https://github.com/Obiwayne/GiftDeck.git
-   cd GiftDeck
-   ```
-3. Run the installer:
-   ```powershell
-   powershell -ExecutionPolicy Bypass -File install.ps1
-   ```
-   It builds `dist\GiftDeck.exe`, installs the bridge's Node packages, and adds GiftDeck to your
-   Desktop and Start menu. (Building needs the [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0).)
-4. Open **GiftDeck** from the Desktop.
 
 ## First-time setup
 
@@ -253,7 +260,7 @@ with the preview on, the bridge ~0% and ~65 MB, OBS about +1% for the preview.
 | Problem | Fix |
 |---|---|
 | Sidebar says **Waiting for your LIVE** while you're live | It connects within ~30 s of the LIVE starting. Check the username on Stream Setup. |
-| No chat or gifts at all | Is Node.js installed? Run `install.ps1` again. See `bridge\bridge.log`. |
+| No chat or gifts at all | Check the username on Stream Setup. Reinstalling repairs the bridge. Its log is `bridge\bridge.log` in GiftDeck's install folder. |
 | Bridge log says **rate limit** | The free signing service's limit; it waits and retries. A free [Euler Stream](https://www.eulerstream.com) API key raises it. |
 | Go LIVE: **"Vertical Stream output isn't set up"** | Do step 4 of setup (Aitum output → Custom, `rtmp://127.0.0.1:1936/live`, key `giftdeck`). |
 | **⚠ TikTok isn't showing you as LIVE after 90 seconds** | Check the TikTok app. Make sure LIVE Studio isn't also live on the same account. |
@@ -265,13 +272,22 @@ GiftDeck's own log is at `%APPDATA%\GiftDeck\log.txt`.
 
 ## Building from source
 
+For developers. You need the [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) and
+[Node.js](https://nodejs.org).
+
 ```powershell
-dotnet build -c Release          # build
-powershell -ExecutionPolicy Bypass -File install.ps1   # publish to dist\ and add shortcuts
-cd bridge; npm install           # bridge packages (install.ps1 does this too)
+git clone https://github.com/Obiwayne/GiftDeck.git
+cd GiftDeck
+
+# Run it from source (uses your installed Node.js for the bridge)
+powershell -ExecutionPolicy Bypass -File install.ps1      # builds dist\GiftDeck.exe, installs bridge packages, adds shortcuts
+
+# Build the downloadable installer (also needs Inno Setup 6: winget install JRSoftware.InnoSetup)
+powershell -ExecutionPolicy Bypass -File build-installer.ps1 -Version 1.0.0
+#   -> build\GiftDeck-Setup-1.0.0.exe: self-contained GiftDeck + the bridge with its own Node.js
 ```
 
-Requires the .NET 8 SDK. The only NuGet packages are `System.Speech` and `Microsoft.Web.WebView2`.
+The only NuGet packages are `System.Speech` and `Microsoft.Web.WebView2`.
 
 ## Project layout
 
@@ -284,7 +300,8 @@ GiftDeck/
 ├─ bridge/          bridge.js — reads your TikTok LIVE (Node)
 ├─ Assets/          app icon
 ├─ Theme.xaml       dark theme and the logo artwork
-└─ install.ps1      build + install
+├─ install.ps1      build + run from source
+└─ build-installer.ps1 / installer.iss   the downloadable installer
 ```
 
 ## Disclaimer
@@ -299,7 +316,8 @@ your own risk and within each service's terms.
 - [TikTok-Live-Connector](https://github.com/zerodytrash/TikTok-Live-Connector) (MIT) for reading LIVE events
 - [ws](https://github.com/websockets/ws) (MIT)
 - [obs-websocket](https://github.com/obsproject/obs-websocket) and [Aitum Stream Suite](https://aitum.tv)'s vendor requests
-- [ffmpeg](https://ffmpeg.org) for the relay (installed separately, not bundled)
+- [Node.js](https://nodejs.org) (MIT), bundled in the installer to run the bridge
+- [ffmpeg](https://ffmpeg.org) for the relay, downloaded on request from [gyan.dev](https://www.gyan.dev/ffmpeg/builds/) (not bundled)
 - The Streamlabs TikTok login and Go LIVE calls follow the same public web API as Streamlabs Desktop;
   GiftDeck's implementation is its own code.
 - Music from [Jamendo](https://www.jamendo.com) (each track's own Creative Commons licence applies)

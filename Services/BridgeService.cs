@@ -50,10 +50,10 @@ public class BridgeService
     void Launch()
     {
         var dir = FindBridgeDir();
-        var node = FindNode();
+        var node = dir != null && File.Exists(Path.Combine(dir, "node.exe")) ? Path.Combine(dir, "node.exe") : FindNode();
         if (dir == null || node == null)
         {
-            if (!_loggedMissing) Log.Write(dir == null ? "Bridge not found (bridge\\bridge.js next to GiftDeck)" : "Bridge needs Node.js, which was not found");
+            if (!_loggedMissing) Log.Write(dir == null ? "Bridge not found (bridge\\bridge.js next to GiftDeck)" : "Bridge needs Node.js, which was not found (reinstall GiftDeck, or install Node.js)");
             _loggedMissing = true;
             return;
         }

@@ -15,3 +15,7 @@ bridge/node_modules/
 settings.json
 tiktok.json
 spotify.json
+
+# Installer build output and download cache
+build/
+.buildcache/

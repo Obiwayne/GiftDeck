@@ -75,7 +75,10 @@ public partial class OverlaysView : UserControl
         if (_previewReady || !Hub.Web.Running) return;
         try
         {
-            await Preview.EnsureCoreWebView2Async();
+            // Keep WebView2's browser cache with GiftDeck's other local data, not next to the program.
+            var cacheDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GiftDeck", "WebView2");
+            var env = await Microsoft.Web.WebView2.Core.CoreWebView2Environment.CreateAsync(null, cacheDir);
+            await Preview.EnsureCoreWebView2Async(env);
             Preview.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false;
             Preview.CoreWebView2.Settings.IsStatusBarEnabled = false;
             Preview.CoreWebView2.Settings.AreDevToolsEnabled = false;

@@ -34,6 +34,17 @@
                         <TextBox x:Name="RelayKeyBox" IsReadOnly="True" Width="320" FontFamily="Consolas"/>
                         <Button Content="Copy" Style="{StaticResource Ghost}" Click="CopyRelayKey_Click" Margin="6,0,0,0"/>
                     </StackPanel>
+                    <Border Style="{StaticResource SubCard}" Margin="0,14,0,0">
+                        <DockPanel>
+                            <Button x:Name="FfmpegButton" DockPanel.Dock="Right" Content="Download ffmpeg (about 110 MB)" Click="DownloadFfmpeg_Click" VerticalAlignment="Center"/>
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,12,0">
+                                <TextBlock x:Name="FfmpegStatus" FontWeight="SemiBold"/>
+                                <TextBlock Style="{StaticResource Muted}" Text="The free tool that forwards the vertical stream to TikTok. Downloaded once from gyan.dev (the official Windows builds)."/>
+                                <ProgressBar x:Name="FfmpegProgress" Height="4" Minimum="0" Maximum="1" Margin="0,6,0,0" Visibility="Collapsed"
+                                             Background="{StaticResource Panel3Brush}" Foreground="{StaticResource AccentBrush}" BorderThickness="0"/>
+                            </StackPanel>
+                        </DockPanel>
+                    </Border>
                 </StackPanel>
             </Border>
 

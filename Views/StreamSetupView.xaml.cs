@@ -21,6 +21,7 @@ public partial class StreamSetupView : UserControl
         VerticalBox.IsChecked = s.SendVertical;
         RelayServerBox.Text = RelayService.LocalServer;
         RelayKeyBox.Text = RelayService.LocalKey;
+        UpdateFfmpeg();
         _loading = false;
     }
 
@@ -105,6 +106,39 @@ public partial class StreamSetupView : UserControl
             TokenError.Text = a.CanBeLive ? "" : "This account cannot go LIVE through Streamlabs yet. Apply for Streamlabs TikTok LIVE access first.";
         }
         catch (Exception ex) { AccountText.Text = ""; TokenError.Text = ex.Message; }
+    }
+
+    void UpdateFfmpeg()
+    {
+        var found = RelayService.FindFfmpeg();
+        FfmpegStatus.Text = found != null ? "ffmpeg is installed \u2713" : "ffmpeg isn't installed yet";
+        FfmpegStatus.Foreground = (System.Windows.Media.Brush)FindResource(found != null ? "SuccessBrush" : "WarnBrush");
+        FfmpegButton.Visibility = found != null ? Visibility.Collapsed : Visibility.Visible;
+    }
+
+    async void DownloadFfmpeg_Click(object sender, RoutedEventArgs e)
+    {
+        FfmpegButton.IsEnabled = false;
+        FfmpegProgress.Visibility = Visibility.Visible;
+        FfmpegStatus.Text = "Downloading ffmpeg\u2026";
+        try
+        {
+            await FfmpegDownloader.DownloadAsync(new Progress<double>(p =>
+            {
+                FfmpegProgress.Value = p;
+                FfmpegStatus.Text = $"Downloading ffmpeg\u2026 {p:P0}";
+            }));
+        }
+        catch (Exception ex)
+        {
+            FfmpegStatus.Text = "Download failed: " + ex.Message;
+            FfmpegButton.IsEnabled = true;
+            FfmpegProgress.Visibility = Visibility.Collapsed;
+            return;
+        }
+        FfmpegProgress.Visibility = Visibility.Collapsed;
+        FfmpegButton.IsEnabled = true;
+        UpdateFfmpeg();
     }
 
     void CopyRelayServer_Click(object sender, RoutedEventArgs e) { try { Clipboard.SetText(RelayService.LocalServer); } catch { } }

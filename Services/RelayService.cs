@@ -21,7 +21,7 @@ public class RelayService
     public void Start(string server, string key)
     {
         Stop();
-        var ffmpeg = FindFfmpeg() ?? throw new Exception("ffmpeg was not found. Install it with: winget install Gyan.FFmpeg");
+        var ffmpeg = FindFfmpeg() ?? throw new Exception("ffmpeg isn't installed yet. On Stream Setup, click Download ffmpeg.");
         var target = server.TrimEnd('/') + "/" + key;
         _lastError = null;
 
@@ -79,6 +79,7 @@ public class RelayService
 
     public static string FindFfmpeg()
     {
+        if (File.Exists(FfmpegDownloader.InstalledExe)) return FfmpegDownloader.InstalledExe;
         foreach (var dir in (Environment.GetEnvironmentVariable("PATH") ?? "").Split(';'))
         {
             try

@@ -212,6 +212,11 @@ public partial class GoLiveView : UserControl
 
     async void GoLive_Click(object sender, RoutedEventArgs e)
     {
+        if (Tt.State.AutoObs && Tt.State.SendVertical && RelayService.FindFfmpeg() == null)
+        {
+            Status.Text = "Not started. Going LIVE with the vertical canvas needs ffmpeg: on the Stream Setup page, click Download ffmpeg, then press Go LIVE again.";
+            return;
+        }
         if (Tt.State.AutoObs && Tt.State.SendVertical && AitumRelayConfigured(Tt.State.AitumOutput) == false)
         {
             Status.Text = $"Not started. Aitum's \"{Tt.State.AitumOutput}\" output in OBS isn't set up yet: edit it, choose Custom, Server {RelayService.LocalServer}, Stream key {RelayService.LocalKey} (also on the Stream Setup page). Then press Go LIVE again.";
