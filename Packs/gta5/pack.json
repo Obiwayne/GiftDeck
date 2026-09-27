@@ -83,7 +83,7 @@
     }
   ],
   "edits": [
-    { "file": "chaosmod/configs/config.json", "type": "json", "path": "NewEffectSpawnTime", "value": 99999 },
+    { "file": "chaosmod/configs/config.json", "type": "json", "path": "NewEffectSpawnTime", "value": 65535 },
     { "file": "chaosmod/configs/config.json", "type": "json", "path": "DisableTimerBarDraw", "value": true }
   ],
   "presets": [],

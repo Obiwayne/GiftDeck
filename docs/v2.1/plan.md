@@ -92,7 +92,7 @@ Packs/gta5/presets/*.giftdeck     (profile export: rules.json, overlays.json, fi
      "detectInstalled":"ScriptHookV.dll"},
     {"id":"chaosmod","name":"Chaos Mod V (GiftDeck build)", "source":{"type":"github","repo":"Obiwayne/ChaosModV-GiftDeck","asset":"\\.zip$"}, "extract":"zip","files":[{"from":"*","to":""}]}
   ],
-  "edits": [ {"file":"chaosmod/configs/config.json","type":"json","path":"NewEffectSpawnTime","value":99999} ],
+  "edits": [ {"file":"chaosmod/configs/config.json","type":"json","path":"NewEffectSpawnTime","value":65535} ],
   "presets": ["presets/doomsday.giftdeck"],
   "commands": "commands.json",
   "targets": ["gta5:chaosmod","gta5:giftdeck"]

@@ -139,6 +139,8 @@ public partial class GamesView : UserControl
 
     (string, string) CardStatus(GamePack p, PackStatus st)
     {
+        if (p.Server != null)
+            return Hub.GameLink.Find(p.Server.Target)?.Connected == true ? ("Server running ✓", "SuccessBrush") : ("Set up the server", "MutedBrush");
         if (Connected(p).Count > 0) return ("Connected in game ✓", "SuccessBrush");
         if (_busyPack == p) return ("Working…", "AccentBrush");
         if (st.AnyInstalledByUs && st.UpdateAvailable) return ("Update available", "AccentBrush");
@@ -195,10 +197,34 @@ public partial class GamesView : UserControl
         LinkDetail.Text = string.Join("\n", linked.Where(t => !string.IsNullOrWhiteSpace(t.Status)).Select(t => t.Name + ": " + t.Status));
         LinkDetail.Visibility = LinkDetail.Text.Length > 0 ? Visibility.Visible : Visibility.Collapsed;
 
-        RenderGame(p, st);
+        bool server = p.Server != null;
+        GameCard.Visibility = ModsCard.Visibility = server ? Visibility.Collapsed : Visibility.Visible;
+        ServerCard.Visibility = server ? Visibility.Visible : Visibility.Collapsed;
+        if (server) RenderServer(p);
+        else
+        {
+            RenderGame(p, st);
+            RenderMods(p, st);
+        }
         RenderRequirements(p, st);
-        RenderMods(p, st);
         RenderPresets(p);
+    }
+
+    // The server's own panel (start/stop, version, Java, EULA, console) is kept alive between refreshes.
+    void RenderServer(GamePack p)
+    {
+        JoinText.Text = string.IsNullOrWhiteSpace(p.Server.Join) ? "" : "How to join: " + p.Server.Join;
+        JoinText.Visibility = JoinText.Text.Length > 0 ? Visibility.Visible : Visibility.Collapsed;
+        if (p.Server.Panel == "MinecraftServerPanel")
+        {
+            if (ServerHost.Content is not MinecraftServerPanel)
+            {
+                var panel = new MinecraftServerPanel();
+                panel.StatusChanged += () => Refresh();
+                ServerHost.Content = panel;
+            }
+        }
+        else ServerHost.Content = new TextBlock { Text = "This version of GiftDeck can't run this kind of server yet.", Style = (Style)FindResource("Muted") };
     }
 
     void RenderGame(GamePack p, PackStatus st)

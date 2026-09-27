@@ -22,6 +22,8 @@ public class GamePack
     public List<string> Presets { get; set; } = new List<string>();
     public string Commands { get; set; } = "";
     public List<string> Targets { get; set; } = new List<string>();
+    // Packs that run a server on this PC instead of copying mods into a game (Minecraft): see plan.md section 5.
+    public PackServer Server { get; set; }
 
     [JsonIgnore] public string Dir { get; set; } = "";
     [JsonIgnore] public string CoverPath => string.IsNullOrWhiteSpace(Cover) ? null : Path.Combine(Dir, Cover);
@@ -29,6 +31,16 @@ public class GamePack
 
 // Where to look for the game: {"type":"steam","appId":271590}, {"type":"epic","appName":"…"},
 // {"type":"registry","key":"HKLM\\…","value":"InstallFolder"}.
+public class PackServer
+{
+    public string Type { get; set; } = "";           // "paper"
+    public string Target { get; set; } = "";         // GameLink target id, e.g. "minecraft:server"
+    public string Panel { get; set; } = "";          // the panel the Games page shows, e.g. "MinecraftServerPanel"
+    public string DefaultVersion { get; set; } = "";
+    public string EulaUrl { get; set; } = "";
+    public string Join { get; set; } = "";           // how to join, shown on the page
+}
+
 public class PackDetect
 {
     public string Type { get; set; } = "";

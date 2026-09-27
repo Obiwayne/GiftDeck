@@ -48,7 +48,7 @@
                 </Border>
 
                 <!-- Where the game is -->
-                <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                <Border x:Name="GameCard" Style="{StaticResource Card}" Margin="0,0,0,14">
                     <StackPanel>
                         <TextBlock Text="Your game" Style="{StaticResource H2}" Margin="0,0,0,10"/>
                         <StackPanel x:Name="GameRows"/>
@@ -63,8 +63,17 @@
                     </StackPanel>
                 </Border>
 
+                <!-- A pack that runs a server on this PC (Minecraft) shows the server's controls instead of mods -->
+                <Border x:Name="ServerCard" Style="{StaticResource Card}" Margin="0,0,0,14" Visibility="Collapsed">
+                    <StackPanel>
+                        <TextBlock Text="Your server" Style="{StaticResource H2}" Margin="0,0,0,4"/>
+                        <TextBlock x:Name="JoinText" Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,0,0,12"/>
+                        <ContentControl x:Name="ServerHost"/>
+                    </StackPanel>
+                </Border>
+
                 <!-- Mods -->
-                <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                <Border x:Name="ModsCard" Style="{StaticResource Card}" Margin="0,0,0,14">
                     <StackPanel>
                         <DockPanel Margin="0,0,0,4">
                             <Button x:Name="CheckButton" DockPanel.Dock="Right" Content="Check for updates" Style="{StaticResource Ghost}" FontSize="12" Click="Check_Click"/>
