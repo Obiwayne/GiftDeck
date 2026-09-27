@@ -12,7 +12,7 @@ namespace GiftDeck.Views;
 // It stays while anything is loading or broken, and hides a few seconds after everything is ready.
 public partial class LivePanel
 {
-    StatusRow _obsRow, _readerRow;
+    StatusRow _obsRow, _readerRow, _kickRow;
     DateTime? _allOkSince;
     const double HideAfterOkSeconds = 4;
 
@@ -22,6 +22,9 @@ public partial class LivePanel
         _readerRow = new StatusRow(this);
         StatusRows.Children.Add(_obsRow.Root);
         StatusRows.Children.Add(_readerRow.Root);
+        _kickRow = new StatusRow(this);
+        StatusRows.Children.Add(_kickRow.Root);
+        Hub.Kick.StatusChanged += () => Dispatcher.BeginInvoke(UpdateStatusStrip);
         var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
         timer.Tick += (_, _) => UpdateStatusStrip();
         timer.Start();
@@ -36,11 +39,15 @@ public partial class LivePanel
         var reader = StartupStatus.Reader();
         _obsRow.Set(obs.kind, obs.text);
         _readerRow.Set(reader.kind, reader.text);
+        var kick = StartupStatus.Kick();
+        _kickRow.Set(kick.kind, kick.text);
+        _kickRow.Root.Visibility = kick.kind == StatusKind.Off ? Visibility.Collapsed : Visibility.Visible;
         // OBS that GiftDeck doesn't run and isn't connected is the user's business, not a start-up step.
         _obsRow.Root.Visibility = obs.kind == StatusKind.Off ? Visibility.Collapsed : Visibility.Visible;
 
         bool busy = obs.kind is StatusKind.Loading or StatusKind.Error
-                 || reader.kind is StatusKind.Loading or StatusKind.Error;
+                 || reader.kind is StatusKind.Loading or StatusKind.Error
+                 || kick.kind is StatusKind.Loading or StatusKind.Error;
         if (busy) _allOkSince = null;
         else _allOkSince ??= DateTime.Now;
         bool show = busy || (DateTime.Now - _allOkSince.Value).TotalSeconds < HideAfterOkSeconds;

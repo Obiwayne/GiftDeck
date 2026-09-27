@@ -27,6 +27,7 @@ public static class Hub
     public static GamePackService Packs { get; private set; }
     public static SpinnerService Spinners { get; private set; }
     public static AlertService Alerts { get; private set; }
+    public static KickService Kick { get; private set; }
 
     public static void Init()
     {
@@ -95,9 +96,14 @@ public static class Hub
         TikFinity.GiftSeen += g => Gifts.Learn(g);
         TikFinity.EventReceived += e => Rules.Handle(e);
 
+        // Kick runs next to TikTok (streaming to both at once); its events go through the same rules.
+        Kick = new KickService(() => Settings.KickEnabled, () => Settings.KickChannel);
+        Kick.EventReceived += e => Rules.Handle(e);
+
         Log.Write("GiftDeck started");
         Web.Start();
         TikFinity.Start();
+        Kick.Start();
         Obs.StartAutoConnect();
         Engine.OnAppStart(); // managed OBS: starts it hidden in the background
     }
@@ -127,6 +133,7 @@ public static class Hub
         try { TikFinity?.Stop(); } catch { }
         try { TikFinity?.CloseIfHidden(); } catch { }
         try { Bridge?.Stop(); } catch { }
+        try { Kick?.Stop(); } catch { }
         step("Closing OBS and putting your own OBS setup back…");
         try { Engine?.OnAppExit(); } catch { } // needs the OBS connection (is it live?), so before disconnecting; at most 45s
         try { Obs?.DisconnectAsync().Wait(1000); } catch { }

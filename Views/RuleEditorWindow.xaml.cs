@@ -52,6 +52,9 @@ public partial class RuleEditorWindow : Window, IActionHost
         AnyMax.Text = rule.Trigger.MaxCoins.ToString();
         LikeBox.Text = rule.Trigger.MinLikes.ToString();
         ChatBox.Text = string.IsNullOrEmpty(rule.Trigger.ChatCommand) && rule.Trigger.Type != TriggerType.Chat ? "!" : rule.Trigger.ChatCommand;
+        // Kick: which platform's events fire this (only offered once Kick is switched on, or already set).
+        PlatformCombo.SelectedItem = PlatformCombo.Items.Cast<ComboBoxItem>().FirstOrDefault(i => (string)i.Tag == (rule.Trigger.Platform ?? "")) ?? PlatformCombo.Items[0];
+        PlatformPanel.Visibility = Hub.Settings.KickEnabled || !string.IsNullOrEmpty(rule.Trigger.Platform) ? Visibility.Visible : Visibility.Collapsed;
         CooldownBox.Text = rule.CooldownSeconds.ToString();
         RepeatBox.IsChecked = rule.RepeatPerGift;
         MaxRepeatsBox.Text = (rule.RepeatPerGift ? rule.MaxRepeats : 10).ToString();
@@ -132,7 +135,7 @@ public partial class RuleEditorWindow : Window, IActionHost
     void Save_Click(object sender, RoutedEventArgs e)
     {
         var r = new Rule { Id = _rule.Id, Enabled = _rule.Enabled, Name = NameBox.Text.Trim(), CooldownSeconds = Int(CooldownBox) };
-        var t = new RuleTrigger { Type = SelectedTrigger };
+        var t = new RuleTrigger { Type = SelectedTrigger, Platform = (PlatformCombo.SelectedItem as ComboBoxItem)?.Tag as string ?? "" };
         bool giftTrigger = t.Type == TriggerType.Gift || t.Type == TriggerType.AnyGift;
         r.RepeatPerGift = giftTrigger && RepeatBox.IsChecked == true;
         r.MaxRepeats = r.RepeatPerGift ? Int(MaxRepeatsBox) : 0;

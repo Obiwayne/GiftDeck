@@ -44,6 +44,11 @@
                                 <TextBox x:Name="UsernameBox" Width="320" HorizontalAlignment="Left" local:Placeholder.Text="yourname" KeyDown="UsernameBox_KeyDown"/>
                             </StackPanel>
 
+                            <StackPanel x:Name="KickPanel" Margin="0,18,0,0" Visibility="Collapsed">
+                                <TextBlock Text="Kick channel name" Style="{StaticResource Label}"/>
+                                <TextBox x:Name="KickBox" Width="320" HorizontalAlignment="Left" local:Placeholder.Text="yourname" KeyDown="KickBox_KeyDown"/>
+                            </StackPanel>
+
                             <StackPanel x:Name="ReadyRows" Margin="0,18,0,0" Visibility="Collapsed"/>
 
                             <StackPanel Orientation="Horizontal" Margin="0,18,0,0">

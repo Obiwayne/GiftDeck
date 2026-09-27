@@ -97,5 +97,26 @@ public static class StartupStatus
         return (StatusKind.Loading, t.ProcessRunning ? "Connecting to TikFinity…" : "Starting TikFinity…");
     }
 
+    static DateTime? _kickWaitingSince;
+
+    // Kick's line: Off (hidden) unless Kick is switched on in Stream Setup.
+    public static (StatusKind kind, string text) Kick()
+    {
+        var k = Hub.Kick;
+        if (k == null || !Hub.Settings.KickEnabled) { _kickWaitingSince = null; return (StatusKind.Off, "Kick is off"); }
+        if (string.IsNullOrWhiteSpace(k.ChannelName)) { _kickWaitingSince = null; return (StatusKind.Error, "Set your Kick channel name (Stream Setup)"); }
+        if (k.Connected)
+        {
+            _kickWaitingSince = null;
+            return (StatusKind.Ok, "Connected to kick.com/" + k.ChannelName + (k.Live == true ? " (live)" : ""));
+        }
+        bool slow = TooLong(ref _kickWaitingSince, true);
+        var err = k.LastError;
+        if (!string.IsNullOrWhiteSpace(err) && err.StartsWith("There's no Kick channel")) return (StatusKind.Error, err);
+        if (slow)
+            return (StatusKind.Error, "Something's wrong: GiftDeck can't connect to Kick" + (string.IsNullOrWhiteSpace(err) ? "." : " (" + err.TrimEnd('.') + ")."));
+        return (StatusKind.Loading, "Connecting to kick.com/" + k.ChannelName + "…");
+    }
+
     static string Reason(TikFinityService t) => string.IsNullOrWhiteSpace(t.LastError) ? "." : " (" + t.LastError.TrimEnd('.') + ").";
 }
