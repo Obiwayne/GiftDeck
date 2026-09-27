@@ -13,7 +13,7 @@ public partial class TtsView : UserControl
         InitializeComponent();
         var voices = Hub.Tts.Voices;
         VoiceCombo.ItemsSource = voices;
-        VoiceCombo.SelectedItem = voices.Contains(Hub.Settings.TtsVoice) ? Hub.Settings.TtsVoice : voices.FirstOrDefault();
+        VoiceCombo.SelectedItem = voices.Contains(Hub.Settings.TtsVoice) ? Hub.Settings.TtsVoice : voices.FirstOrDefault(v => !TtsService.IsOnline(v)) ?? voices.FirstOrDefault();
         RateSlider.Value = Hub.Settings.TtsRate;
         VolumeSlider.Value = Hub.Settings.TtsVolume;
         ReadChat.IsChecked = Hub.Settings.TtsReadChat;
