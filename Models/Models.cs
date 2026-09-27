@@ -49,6 +49,9 @@ public class RuleAction
     // GameCommand: the command's argument values as a JSON object (text values may use {user} etc.).
     public string Args { get; set; } = "";
 
+    // GameCommand: looks up a command's friendly name (target id, command id); set by GameLinkService.
+    public static Func<string, string, string> GameCommandName;
+
     public string Summary()
     {
         switch (Type)
@@ -64,7 +67,7 @@ public class RuleAction
             case ActionType.SpotifyRequest: return "Spotify song request";
             case ActionType.SpotifyControl: return "Spotify " + Text + (Text == "SetVolume" ? " " + Number : "");
             case ActionType.RunProgram: return "Run " + (string.IsNullOrWhiteSpace(Text) ? "(no program)" : System.IO.Path.GetFileName(Text));
-            case ActionType.GameCommand: return "Game: " + (string.IsNullOrWhiteSpace(Text2) ? "(no command chosen)" : Text2);
+            case ActionType.GameCommand: return "Game: " + (string.IsNullOrWhiteSpace(Text2) ? "(no command chosen)" : GameCommandName?.Invoke(Text, Text2) ?? Text2);
             case ActionType.SpinWheel: return "Spin the Gift Spinner" + (string.IsNullOrWhiteSpace(Text) ? "" : " " + Text);
             case ActionType.Alert: return "Show alert" + (string.IsNullOrWhiteSpace(Text) ? "" : " " + Text);
         }
