@@ -43,6 +43,13 @@ public class GamePackService
                     if (p == null) continue;
                     if (string.IsNullOrWhiteSpace(p.Id)) p.Id = Path.GetFileName(dir);
                     p.Dir = dir;
+                    // "bundled": files shipped inside the pack folder itself (e.g. the GiftDeck GTA script).
+                    foreach (var src in p.Components.SelectMany(c => c.AllSources))
+                        if (string.Equals(src.Type, "bundled", StringComparison.OrdinalIgnoreCase))
+                        {
+                            src.Type = "local";
+                            src.Path = Path.Combine(dir, src.Path ?? "");
+                        }
                     list.Add(p);
                 }
                 catch (Exception e) { Log.Write($"Game pack {Path.GetFileName(dir)} couldn't be read: {e.Message}"); }

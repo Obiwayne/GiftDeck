@@ -112,8 +112,8 @@ Game detection: Steam (`libraryfolders.vdf` + `appmanifest_<appId>.acf`), Epic
 - **Chaos Mod V, GiftDeck build** (fork of gta-chaos-mod/ChaosModV, GPL-3): a GameLink client in the
   mod: on connect sends `hello` with **every registered effect** (id, name, category), runs a
   `trigger` by effect id immediately (no voting, no timer), answers `result`. Separate repo
-  `C:\Users\wayne\ChaosModV-GiftDeck` (GPL stays in that repo; GiftDeck only downloads its release).
-- **GiftDeck GTA script** (ScriptHookVDotNet 3, net48, `C:\Users\wayne\GiftDeck\mods\gta5\GiftDeckGTA\`,
+  `%USERPROFILE%\ChaosModV-GiftDeck` (GPL stays in that repo; GiftDeck only downloads its release).
+- **GiftDeck GTA script** (ScriptHookVDotNet 3, net48, `mods\gta5\GiftDeckGTA\`,
   MIT): GameLink client `gta5:giftdeck` with the non-Chaos triggers (Spawn Vehicle by model, Spawn
   ramp, Jail Player, Give Weapon, ammo, time, weather, wanted +/-, money, attackers, skydive, teleports,
   random clothing, tuning, ...), green greeting text on load, **F10 menu** (status, connected, test

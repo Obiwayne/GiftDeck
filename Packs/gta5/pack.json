@@ -73,7 +73,8 @@
       "name": "GiftDeck GTA script",
       "license": "Free and open source (MIT), part of GiftDeck. Shows a green greeting in game; F10 opens its menu.",
       "sources": [
-        { "type": "local", "path": "%USERPROFILE%\\GiftDeck\\mods\\gta5\\GiftDeckGTA\\bin\\Release\\" }
+        { "type": "local", "path": "%USERPROFILE%\\GiftDeck\\mods\\gta5\\GiftDeckGTA\\bin\\Release\\" },
+        { "type": "bundled", "path": "files\\GiftDeckGTA\\" }
       ],
       "extract": "zip",
       "files": [
