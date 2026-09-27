@@ -150,6 +150,7 @@ public class ObsHost
         Log.Write($"OBS didn't close within {gracefulMs / 1000}s; ending it");
         try { p.Kill(); } catch { }
         await WaitForExitAsync(p, 5000);
+        for (int i = 0; i < 20 && IsRunning; i++) await Task.Delay(250);
 
         // A force-closed OBS 32 would ask about Safe Mode on the next start (with the WebSocket off, so GiftDeck
         // couldn't reach it). Remove only the marker of the run we just ended, and only if no other OBS is open.
@@ -331,11 +332,15 @@ public class ObsHost
                 var busyTask = BusyReasonAsync();
                 var busy = await Task.WhenAny(busyTask, Task.Delay(6000)) == busyTask ? busyTask.Result : "not answering in time";
                 if (busy != null) { Log.Write($"OBS left open: it is {busy}"); return; }
-                await StopAsync(force: true, allowKill: true, gracefulMs: 10000);
+                await StopAsync(force: true, allowKill: true, gracefulMs: 30000);
             }
-            if (!IsRunning) RestoreUserSetup();
+            // A closing (or just-killed) obs64 can linger for a moment; restoring while it's still listed is skipped,
+            // so wait for it to be really gone, then say what happened either way.
+            for (int i = 0; i < 20 && IsRunning; i++) await Task.Delay(250);
+            var result = RestoreUserSetup();
+            if (IsRunning) Log.Write("Couldn't put your OBS setup back: " + result);
         });
-        try { if (!work.Wait(20000)) Log.Write("Gave up waiting for OBS to close"); }
+        try { if (!work.Wait(45000)) Log.Write("Gave up waiting for OBS to close"); }
         catch (Exception e) { Log.Write("Closing OBS failed: " + (e.InnerException?.Message ?? e.Message)); }
     }
 

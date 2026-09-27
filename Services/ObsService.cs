@@ -76,7 +76,12 @@ public partial class ObsService
             LastError = null;
             Log.Write("Connected to OBS at " + url);
             StatusChanged?.Invoke();
-            try { Scenes = await GetScenesAsync(); } catch (Exception e) { Log.Write("Could not list OBS scenes: " + e.Message); }
+            for (int attempt = 1; ; attempt++)
+            {
+                try { Scenes = await GetScenesAsync(); break; }
+                catch (Exception e) when (attempt < 15 && e.Message.Contains("not ready")) { await Task.Delay(1000); } // still loading
+                catch (Exception e) { Log.Write("Could not list OBS scenes: " + e.Message); break; }
+            }
             await RefreshCanvasesAsync();
             StatusChanged?.Invoke();
         }
