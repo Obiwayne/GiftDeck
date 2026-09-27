@@ -40,6 +40,7 @@ public partial class StreamSetupView : UserControl
         var poll = new DispatcherTimer { Interval = TimeSpan.FromSeconds(3) };
         poll.Tick += (_, _) => { if (IsVisible) { UpdateEngine(); UpdateReader(); } };
         poll.Start();
+        InitKick();
         _loading = false;
     }
 

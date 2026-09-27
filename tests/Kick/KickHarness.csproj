@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Console checks for GiftDeck's Kick reader. Not part of GiftDeck.exe (GiftDeck.csproj excludes tests\**).
+       Run: KickHarness.exe unit [samples.jsonl]          parse real captured Kick payloads
+       or:  KickHarness.exe live <channel> [seconds]       read a live Kick channel (read-only) and print what it parses
+       Both write logs to a scratch GIFTDECK_DATA folder, never the user's GiftDeck data. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\GiftDeck.csproj" />
+    <None Include="samples.jsonl" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

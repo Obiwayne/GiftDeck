@@ -69,6 +69,7 @@ public partial class LivePanel : UserControl
                 Initial = char.ToUpperInvariant(who[0]).ToString(),
                 Message = e.Comment,
                 TimeText = time,
+                Platform = e.Platform,
                 Colour = NameColours[(int)((uint)StableHash(who) % NameColours.Length)],
             };
             bool atBottom = IsAtBottom(ChatList);
@@ -79,14 +80,16 @@ public partial class LivePanel : UserControl
         else
         {
             var count = Math.Max(1, e.RepeatCount);
-            var gift = Hub.Gifts.Find(e.GiftId, e.GiftName);
+            bool kick = e.Platform == "kick";
+            var gift = kick ? null : Hub.Gifts.Find(e.GiftId, e.GiftName);
             var row = new GiftRow
             {
                 Name = who,
                 Gift = gift,
                 GiftText = "sent " + (e.GiftName ?? gift?.Name ?? "a gift") + (count > 1 ? $" x{count}" : "") + "  ",
-                CoinText = e.Coins > 0 ? $"{e.Coins:N0} {(e.Coins == 1 ? "coin" : "coins")}" : "",
+                CoinText = e.Coins > 0 ? $"{e.Coins:N0} {(kick ? (e.Coins == 1 ? "Kick" : "Kicks") : e.Coins == 1 ? "coin" : "coins")}" : "",
                 TimeText = time,
+                Platform = e.Platform,
             };
             GiftList.Items.Insert(0, row);
             while (GiftList.Items.Count > MaxItems) GiftList.Items.RemoveAt(GiftList.Items.Count - 1);
@@ -142,7 +145,21 @@ public partial class LivePanel : UserControl
         UpdateEmpty();
     }
 
-    public class ChatRow
+    static readonly Brush KickGreen = (Brush)new BrushConverter().ConvertFromString("#53FC18");
+
+    // The small platform mark before a name: always on Kick rows; on TikTok rows only while Kick is switched on.
+    public abstract class Row
+    {
+        public string Platform { get; set; } = "tiktok";
+        bool IsKick => Platform == "kick";
+        public string Mark => IsKick ? "KICK" : "TikTok";
+        public string MarkTip => IsKick ? "From your Kick chat" : "From your TikTok LIVE";
+        public Brush MarkBackground => IsKick ? KickGreen : (Brush)Application.Current.FindResource("Panel3Brush");
+        public Brush MarkForeground => IsKick ? Brushes.Black : (Brush)Application.Current.FindResource("TextBrush");
+        public Visibility MarkVisibility => IsKick || Hub.Settings.KickEnabled ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    public class ChatRow : Row
     {
         public string Name { get; set; }
         public string Initial { get; set; }
@@ -151,7 +168,7 @@ public partial class LivePanel : UserControl
         public Brush Colour { get; set; }
     }
 
-    public class GiftRow
+    public class GiftRow : Row
     {
         public string Name { get; set; }
         public GiftInfo Gift { get; set; }

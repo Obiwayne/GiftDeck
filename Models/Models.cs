@@ -15,8 +15,12 @@ public class RuleTrigger
     public int MaxCoins { get; set; }
     public int MinLikes { get; set; } = 100;
     public string ChatCommand { get; set; } = "";
+    // Which platform's events fire this: "" = any (TikTok or Kick), "tiktok" or "kick".
+    public string Platform { get; set; } = "";
 
-    public string Summary()
+    public string Summary() => SummaryText() + (Platform == "kick" ? " (Kick only)" : Platform == "tiktok" ? " (TikTok only)" : "");
+
+    string SummaryText()
     {
         switch (Type)
         {
@@ -119,7 +123,7 @@ public class Rule
             Trigger = new RuleTrigger
             {
                 Type = Trigger.Type, GiftId = Trigger.GiftId, GiftName = Trigger.GiftName,
-                MinCoins = Trigger.MinCoins, MaxCoins = Trigger.MaxCoins, MinLikes = Trigger.MinLikes, ChatCommand = Trigger.ChatCommand
+                MinCoins = Trigger.MinCoins, MaxCoins = Trigger.MaxCoins, MinLikes = Trigger.MinLikes, ChatCommand = Trigger.ChatCommand, Platform = Trigger.Platform
             },
         };
         foreach (var a in Actions) r.Actions.Add(a.Clone());
@@ -130,6 +134,8 @@ public class Rule
 public class LiveEvent
 {
     public string Type { get; set; } = "";
+    // Where it came from: "tiktok" or "kick".
+    public string Platform { get; set; } = "tiktok";
     public string UserId { get; set; } = "";
     public string Nickname { get; set; } = "";
     public string PictureUrl { get; set; }
@@ -163,7 +169,7 @@ public class LiveEvent
             case "share": return $"{who} shared the stream";
             case "like": return $"{who} sent {LikeCount} likes";
             case "chat": return $"{who}: {Comment}";
-            case "subscribe": return $"{who} subscribed";
+            case "subscribe": return RepeatCount > 1 ? $"{who} gifted {RepeatCount} subs" : !string.IsNullOrEmpty(GiftName) ? $"{who} gifted a sub" : $"{who} subscribed";
             case "join": return $"{who} joined";
             default: return $"{who}: {Type}";
         }
@@ -228,6 +234,9 @@ public class AppSettings
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Programs", "tikfinity", "TikFinity.exe");
     public bool AutoLaunchTikFinity { get; set; } = false;
     public string BridgeUsername { get; set; } = "";
+    // Kick: also read this Kick channel's chat, subs, follows and Kicks gifts (read-only, no login).
+    public bool KickEnabled { get; set; }
+    public string KickChannel { get; set; } = "";
     public bool SidebarCollapsed { get; set; }
     // Go LIVE scene buttons: "small", "medium" or "large".
     public string SceneButtonSize { get; set; } = "small";

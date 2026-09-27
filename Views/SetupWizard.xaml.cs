@@ -16,7 +16,7 @@ namespace GiftDeck.Views;
 // Someone who's already set up only sees the ready check for a few seconds.
 public partial class SetupWizard : UserControl
 {
-    enum Step { Streamlabs, Obs, Aitum, Portrait, TikFinity, Username, Ready }
+    enum Step { Streamlabs, Obs, Aitum, Portrait, TikFinity, Username, Kick, Ready }
 
     static readonly (Step step, string title)[] Steps =
     {
@@ -26,6 +26,7 @@ public partial class SetupWizard : UserControl
         (Step.Portrait, "Portrait OBS"),
         (Step.TikFinity, "TikFinity"),
         (Step.Username, "TikTok username"),
+        (Step.Kick, "Kick channel"),
         (Step.Ready, "Ready check"),
     };
 
@@ -66,10 +67,14 @@ public partial class SetupWizard : UserControl
         Step.Portrait => SetupSteps.PortraitReady,
         Step.TikFinity => SetupSteps.TikFinityReady,
         Step.Username => SetupSteps.HasUsername,
+        Step.Kick => !string.IsNullOrWhiteSpace(Hub.Settings.KickChannel),
         _ => false,
     };
 
-    Step Current => Steps.Select(x => x.step).First(s => s == Step.Ready || !IsDone(s));
+    // The Kick step only shows for someone who has switched Kick on (in Stream Setup).
+    static (Step step, string title)[] VisibleSteps => Steps.Where(x => x.step != Step.Kick || Hub.Settings.KickEnabled).ToArray();
+
+    Step Current => VisibleSteps.Select(x => x.step).First(s => s == Step.Ready || !IsDone(s));
 
     void Tick()
     {
@@ -91,6 +96,11 @@ public partial class SetupWizard : UserControl
         // TikFinity installed: read the LIVE through it from now on (GiftDeck starts it hidden).
         if (step == Step.TikFinity && TikFinityInstaller.Installed && Hub.Settings.LiveReader != "tikfinity")
             TikFinityService.UseReader("tikfinity");
+        if (step == Step.Kick)
+        {
+            KickBox.Text = Hub.Settings.KickChannel;
+            Dispatcher.BeginInvoke(() => KickBox.Focus(), DispatcherPriority.Input);
+        }
         if (step == Step.Username)
         {
             var guess = (Hub.TikTok.State.AccountUsername ?? "").Trim().TrimStart('@');
@@ -104,11 +114,13 @@ public partial class SetupWizard : UserControl
     void Render(Step step)
     {
         RenderStepList(step);
-        int index = Array.FindIndex(Steps, x => x.step == step);
-        StepNumber.Text = step == Step.Ready ? "LAST STEP" : $"STEP {index + 1} OF {Steps.Length}";
+        var steps = VisibleSteps;
+        int index = Array.FindIndex(steps, x => x.step == step);
+        StepNumber.Text = step == Step.Ready ? "LAST STEP" : $"STEP {index + 1} OF {steps.Length}";
         UsernamePanel.Visibility = step == Step.Username ? Visibility.Visible : Visibility.Collapsed;
+        KickPanel.Visibility = step == Step.Kick ? Visibility.Visible : Visibility.Collapsed;
         ReadyRows.Visibility = step == Step.Ready ? Visibility.Visible : Visibility.Collapsed;
-        SkipButton.Visibility = step is Step.Ready or Step.Username || _busy ? Visibility.Collapsed : Visibility.Visible;
+        SkipButton.Visibility = step is Step.Ready or Step.Username or Step.Kick || _busy ? Visibility.Collapsed : Visibility.Visible;
         _pending.Clear();
 
         string status = null;
@@ -155,6 +167,12 @@ public partial class SetupWizard : UserControl
                 StepTitle.Text = "Your TikTok username";
                 StepBody.Text = "Which TikTok account do you go LIVE on? GiftDeck reads that LIVE's chat, gifts and viewers. It's the part after @ in your profile link.";
                 AddButton("Save", true, SaveUsername);
+                break;
+            case Step.Kick:
+                StepTitle.Text = "Your Kick channel";
+                StepBody.Text = "You've switched Kick on, so GiftDeck also reads your Kick chat, follows, subs and Kicks gifts. Which channel? It's the part after kick.com/ in your channel link.";
+                AddButton("Save", true, SaveKick);
+                AddButton("Don't use Kick", false, () => { Hub.Settings.KickEnabled = false; Hub.SaveSettings(); Hub.Kick.Restart(); Tick(); });
                 break;
             case Step.Ready: status = RenderReady(ref spinning); break;
         }
@@ -274,6 +292,21 @@ public partial class SetupWizard : UserControl
         Tick();
     }
 
+    void SaveKick()
+    {
+        var name = KickApi.CleanName(KickBox.Text);
+        if (name.Length == 0) { Say("Type your Kick channel name first.", true); return; }
+        Hub.Settings.KickChannel = name;
+        Hub.SaveSettings();
+        Hub.Kick.Restart();
+        Tick();
+    }
+
+    void KickBox_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter) { e.Handled = true; SaveKick(); }
+    }
+
     void UsernameBox_KeyDown(object sender, KeyEventArgs e)
     {
         if (e.Key == Key.Enter) { e.Handled = true; SaveUsername(); }
@@ -287,9 +320,11 @@ public partial class SetupWizard : UserControl
         ReadyRows.Children.Clear();
         if (obs.kind != StatusKind.Off) ReadyRows.Children.Add(StatusLine(obs.kind, obs.text));
         ReadyRows.Children.Add(StatusLine(reader.kind, reader.text));
+        var kick = StartupStatus.Kick();
+        if (kick.kind != StatusKind.Off) ReadyRows.Children.Add(StatusLine(kick.kind, kick.text));
 
-        bool ok = (obs.kind is StatusKind.Ok or StatusKind.Off) && reader.kind == StatusKind.Ok;
-        bool error = obs.kind == StatusKind.Error || reader.kind == StatusKind.Error;
+        bool ok = (obs.kind is StatusKind.Ok or StatusKind.Off) && reader.kind == StatusKind.Ok && (kick.kind is StatusKind.Ok or StatusKind.Off);
+        bool error = obs.kind == StatusKind.Error || reader.kind == StatusKind.Error || kick.kind == StatusKind.Error;
         if (ok)
         {
             StepTitle.Text = "You're ready to go LIVE ✓";
@@ -319,6 +354,7 @@ public partial class SetupWizard : UserControl
         if (!Hub.Obs.Connected) Hub.Engine.OnAppStart();
         if (Hub.Settings.LiveReader == "tikfinity" && !TikFinityService.IsProcessRunning()) Hub.TikFinity.Launch();
         Hub.TikFinity.Reconnect();
+        if (Hub.Settings.KickEnabled && !Hub.Kick.Connected) Hub.Kick.Restart();
         _readySince = DateTime.Now;
         Tick();
     }
@@ -343,7 +379,7 @@ public partial class SetupWizard : UserControl
     {
         StepList.Children.Clear();
         int i = 1;
-        foreach (var (step, title) in Steps)
+        foreach (var (step, title) in VisibleSteps)
         {
             bool skipped = _skipped.Contains(step);
             bool done = step != current && IsDone(step) && !skipped;

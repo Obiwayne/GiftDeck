@@ -52,6 +52,7 @@
                                     <StackPanel>
                                         <DockPanel>
                                             <TextBlock DockPanel.Dock="Right" Text="{Binding TimeText}" Style="{StaticResource Muted}" FontSize="11" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                            <Border DockPanel.Dock="Left" Visibility="{Binding MarkVisibility}" Background="{Binding MarkBackground}" CornerRadius="3" Padding="4,0" Margin="0,0,6,0" VerticalAlignment="Center" ToolTip="{Binding MarkTip}"><TextBlock Text="{Binding Mark}" Foreground="{Binding MarkForeground}" FontSize="9.5" FontWeight="Bold"/></Border>
                                             <TextBlock Text="{Binding Name}" Foreground="{Binding Colour}" FontWeight="SemiBold" FontSize="12.5" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap"/>
                                         </DockPanel>
                                         <TextBlock Text="{Binding Message}" FontSize="13"/>
@@ -85,6 +86,7 @@
                                     <StackPanel VerticalAlignment="Center">
                                         <DockPanel>
                                             <TextBlock DockPanel.Dock="Right" Text="{Binding TimeText}" Style="{StaticResource Muted}" FontSize="11" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                            <Border DockPanel.Dock="Left" Visibility="{Binding MarkVisibility}" Background="{Binding MarkBackground}" CornerRadius="3" Padding="4,0" Margin="0,0,6,0" VerticalAlignment="Center" ToolTip="{Binding MarkTip}"><TextBlock Text="{Binding Mark}" Foreground="{Binding MarkForeground}" FontSize="9.5" FontWeight="Bold"/></Border>
                                             <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="12.5" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap"/>
                                         </DockPanel>
                                         <TextBlock FontSize="12.5">

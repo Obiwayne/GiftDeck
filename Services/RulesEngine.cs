@@ -73,6 +73,7 @@ public class RulesEngine
     bool Matches(Rule rule, LiveEvent e)
     {
         var t = rule.Trigger;
+        if (!string.IsNullOrEmpty(t.Platform) && !string.Equals(t.Platform, e.Platform ?? "tiktok", StringComparison.OrdinalIgnoreCase)) return false;
         switch (t.Type)
         {
             case TriggerType.Gift:
@@ -328,7 +329,7 @@ public class RulesEngine
 
     public LiveEvent FakeEvent(RuleTrigger t)
     {
-        var e = new LiveEvent { UserId = "testuser", Nickname = "Test Viewer", IsTest = true };
+        var e = new LiveEvent { UserId = "testuser", Nickname = "Test Viewer", IsTest = true, Platform = t.Platform == "kick" ? "kick" : "tiktok" };
         switch (t.Type)
         {
             case TriggerType.Gift:

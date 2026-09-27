@@ -56,6 +56,23 @@
                 </StackPanel>
             </Border>
 
+            <!-- Kick (optional, alongside TikTok) -->
+            <Border x:Name="KickCard" Style="{StaticResource Card}" Margin="0,0,0,14">
+                <StackPanel>
+                    <TextBlock Text="Kick" Style="{StaticResource H2}" Margin="0,0,0,4"/>
+                    <TextBlock Text="Streaming on Kick too? GiftDeck can read your Kick chat, follows, subs and Kicks gifts and run the same events as TikTok. Nothing to log in to, and GiftDeck never writes in your Kick chat." Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,0,0,10"/>
+                    <CheckBox x:Name="KickEnabledBox" Content="Read my Kick channel as well" Click="KickEnabled_Changed" Margin="0,0,0,10"/>
+                    <TextBlock Text="Kick channel name (the part after kick.com/)" Style="{StaticResource Label}"/>
+                    <TextBox x:Name="KickChannelBox" Width="320" HorizontalAlignment="Left" LostFocus="KickChannel_Changed" KeyDown="KickChannel_KeyDown" local:Placeholder.Text="yourname"/>
+                    <Border Style="{StaticResource SubCard}" Margin="0,10,0,0">
+                        <StackPanel>
+                            <TextBlock x:Name="KickStatus" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                            <TextBlock x:Name="KickDetail" Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Border>
+
             <!-- OBS engine -->
             <Border x:Name="EngineCard" Style="{StaticResource Card}" Margin="0,0,0,14">
                 <StackPanel>
