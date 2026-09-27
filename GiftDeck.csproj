@@ -40,4 +40,12 @@
     <None Remove="mods\**" />
   </ItemGroup>
 
+  <!-- Test harnesses and tools (tests\*, tools\*) are separate projects too. -->
+  <ItemGroup>
+    <Compile Remove="tests\**;tools\**" />
+    <Page Remove="tests\**;tools\**" />
+    <None Remove="tests\**;tools\**" />
+    <EmbeddedResource Remove="tests\**;tools\**" />
+  </ItemGroup>
+
 </Project>

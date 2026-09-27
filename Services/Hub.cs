@@ -23,6 +23,7 @@ public static class Hub
     public static ProfileService Profiles { get; private set; }
     public static LivePageReader PageReader { get; private set; }
     public static GameLinkService GameLink { get; private set; }
+    public static MinecraftTarget Minecraft { get; private set; }
     public static GamePackService Packs { get; private set; }
     public static SpinnerService Spinners { get; private set; }
     public static AlertService Alerts { get; private set; }
@@ -51,6 +52,9 @@ public static class Hub
 
         GameLink = new GameLinkService();
         GameLink.Start();
+        Minecraft = MinecraftTarget.CreateDefault(); // the Minecraft pack's local server, reached over RCON
+        GameLink.Register(Minecraft);
+        Minecraft.Start();
         Packs = new GamePackService();
         Packs.Load();
         Spinners = new SpinnerService();
@@ -117,6 +121,8 @@ public static class Hub
         try { Profiles.SaveActive(); } catch { }
         try { Web?.Stop(); } catch { }
         try { GameLink?.Stop(); } catch { }
+        if (Minecraft?.Server.OwnsProcess == true && Minecraft.Settings.StopWithGiftDeck) step("Stopping the Minecraft server (saving the world)…");
+        try { Minecraft?.Shutdown(); } catch { }
         step("Stopping TikFinity and the TikTok connection…");
         try { TikFinity?.Stop(); } catch { }
         try { TikFinity?.CloseIfHidden(); } catch { }
