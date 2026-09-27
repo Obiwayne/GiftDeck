@@ -40,4 +40,11 @@
     <None Remove="mods\**" />
   </ItemGroup>
 
+  <!-- Developer tools (e.g. tools\GameLinkTestClient) are separate console apps built on their own. -->
+  <ItemGroup>
+    <Compile Remove="tools\**" />
+    <Page Remove="tools\**" />
+    <None Remove="tools\**" />
+  </ItemGroup>
+
 </Project>

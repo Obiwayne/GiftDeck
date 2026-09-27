@@ -2,11 +2,117 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!-- Supported games: find the game, install its mods in one click, load a ready-made preset.
-         Skeleton: filled in by the Game Packs package. -->
-    <Grid Margin="32,28,32,24">
-        <StackPanel>
+         The game cards and the rows inside the detail cards are built in code (GamesView.xaml.cs). -->
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="32,28,32,28" MaxWidth="960" HorizontalAlignment="Left">
             <TextBlock Text="Games" Style="{StaticResource H1}"/>
-            <TextBlock Style="{StaticResource Muted}" Margin="0,4,0,0" Text="Pick a game, install its mod in one click, and start from a ready-made set of events."/>
+            <TextBlock Style="{StaticResource Muted}" Margin="0,4,0,18" TextWrapping="Wrap"
+                       Text="Pick a game, install its mods in one click, and start from a ready-made set of events. GiftDeck finds the game by itself and backs up any file it replaces."/>
+
+            <WrapPanel x:Name="CardsPanel"/>
+            <TextBlock x:Name="EmptyText" Style="{StaticResource Muted}" Visibility="Collapsed" TextWrapping="Wrap"
+                       Text="No games here yet. Game packs live in the Packs folder next to GiftDeck."/>
+
+            <StackPanel x:Name="DetailPanel" Visibility="Collapsed" Margin="0,4,0,0">
+                <!-- The game -->
+                <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border CornerRadius="8" Width="224" Height="126" VerticalAlignment="Top" Margin="0,0,18,0" Background="{StaticResource Panel2Brush}">
+                            <Border.OpacityMask>
+                                <VisualBrush>
+                                    <VisualBrush.Visual>
+                                        <Border Width="224" Height="126" CornerRadius="8" Background="Black"/>
+                                    </VisualBrush.Visual>
+                                </VisualBrush>
+                            </Border.OpacityMask>
+                            <Image x:Name="CoverImage" Stretch="UniformToFill"/>
+                        </Border>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock x:Name="TitleText" FontSize="22" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                            <TextBlock x:Name="DescText" Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,6,0,0" LineHeight="19"/>
+                            <Border x:Name="WarningBorder" Style="{StaticResource SubCard}" Margin="0,12,0,0" Padding="10,8">
+                                <TextBlock x:Name="WarningText" Foreground="{StaticResource WarnBrush}" TextWrapping="Wrap"/>
+                            </Border>
+                            <Border x:Name="LinkBorder" Style="{StaticResource SubCard}" Margin="0,10,0,0" Padding="10,8">
+                                <StackPanel>
+                                    <TextBlock x:Name="LinkText" Foreground="{StaticResource SuccessBrush}" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                                    <TextBlock x:Name="LinkDetail" Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Where the game is -->
+                <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                    <StackPanel>
+                        <TextBlock Text="Your game" Style="{StaticResource H2}" Margin="0,0,0,10"/>
+                        <StackPanel x:Name="GameRows"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Before you install -->
+                <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                    <StackPanel>
+                        <TextBlock Text="Before you install" Style="{StaticResource H2}" Margin="0,0,0,10"/>
+                        <StackPanel x:Name="ReqRows"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Mods -->
+                <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                    <StackPanel>
+                        <DockPanel Margin="0,0,0,4">
+                            <Button x:Name="CheckButton" DockPanel.Dock="Right" Content="Check for updates" Style="{StaticResource Ghost}" FontSize="12" Click="Check_Click"/>
+                            <TextBlock Text="Mods" Style="{StaticResource H2}" VerticalAlignment="Center"/>
+                        </DockPanel>
+                        <TextBlock x:Name="ModsIntro" Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,0,0,12"/>
+                        <StackPanel x:Name="ComponentRows"/>
+
+                        <Border x:Name="ManualPanel" Style="{StaticResource SubCard}" Margin="0,4,0,12" Visibility="Collapsed">
+                            <StackPanel>
+                                <TextBlock x:Name="ManualTitle" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                                <TextBlock x:Name="ManualText" Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,4,0,10"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button x:Name="ManualOpenButton" Style="{StaticResource Primary}" Click="ManualOpen_Click" Margin="0,0,8,0"/>
+                                    <Button Content="I've downloaded it: choose the file…" Click="ManualPick_Click"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                            <Button x:Name="InstallButton" Style="{StaticResource Primary}" FontSize="15" MinHeight="44" Padding="30,0" Click="Install_Click" Margin="0,0,10,0"/>
+                            <Button x:Name="UninstallButton" Content="Uninstall" Style="{StaticResource Danger}" MinHeight="44" Click="Uninstall_Click"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                            <Ellipse x:Name="StatusSpinner" Width="14" Height="14" StrokeThickness="2" StrokeDashArray="5 3"
+                                     Stroke="{StaticResource AccentBrush}" RenderTransformOrigin="0.5,0.5" Margin="0,0,10,0"
+                                     VerticalAlignment="Center" Visibility="Collapsed">
+                                <Ellipse.RenderTransform>
+                                    <RotateTransform x:Name="StatusSpin"/>
+                                </Ellipse.RenderTransform>
+                            </Ellipse>
+                            <TextBlock x:Name="StatusText" FontSize="13" TextWrapping="Wrap" MaxWidth="820" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <ProgressBar x:Name="Bar" Height="5" Minimum="0" Maximum="1" Margin="0,10,0,0" Visibility="Collapsed"
+                                     Background="{StaticResource LineBrush}" Foreground="{StaticResource AccentBrush}" BorderThickness="0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Presets -->
+                <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                    <StackPanel>
+                        <TextBlock Text="Ready-made events" Style="{StaticResource H2}" Margin="0,0,0,4"/>
+                        <TextBlock Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,0,0,12"
+                                   Text="A preset is a profile with events and a gift board already set up for this game. Using one adds it as a new profile and switches to it; your other profiles aren't changed."/>
+                        <StackPanel x:Name="PresetRows"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
         </StackPanel>
-    </Grid>
+    </ScrollViewer>
 </UserControl>

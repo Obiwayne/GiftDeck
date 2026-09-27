@@ -28,6 +28,7 @@ public partial class ActionEditor : UserControl
         new Choice(ActionType.SpotifyRequest, "Spotify: queue a song"),
         new Choice(ActionType.SpotifyControl, "Spotify: control player"),
         new Choice(ActionType.RunProgram, "Run a program"),
+        new Choice(ActionType.GameCommand, "Run a game command"),
     };
 
     static readonly Choice[] SpotifyCommands =
@@ -71,9 +72,11 @@ public partial class ActionEditor : UserControl
 
     void OnLoaded(object sender, RoutedEventArgs e)
     {
+        SubscribeGameLink(true);
         if (_initialised) return;
         _initialised = true;
         Action = DataContext as RuleAction ?? new RuleAction();
+        Unloaded += (s, a) => SubscribeGameLink(false);
         _loading = true;
         Populate();
         _loading = false;
@@ -122,6 +125,9 @@ public partial class ActionEditor : UserControl
                 ProgramPath.Text = Action.Text;
                 ProgramArgs.Text = Action.Text2;
                 break;
+            case ActionType.GameCommand:
+                PopulateGame();
+                break;
         }
         UpdatePanels();
     }
@@ -139,6 +145,7 @@ public partial class ActionEditor : UserControl
         SpotifyRequestPanel.Visibility = t == ActionType.SpotifyRequest ? Visibility.Visible : Visibility.Collapsed;
         SpotifyControlPanel.Visibility = t == ActionType.SpotifyControl ? Visibility.Visible : Visibility.Collapsed;
         ProgramPanel.Visibility = t == ActionType.RunProgram ? Visibility.Visible : Visibility.Collapsed;
+        GamePanel.Visibility = t == ActionType.GameCommand ? Visibility.Visible : Visibility.Collapsed;
         if (t == ActionType.SpotifyControl)
         {
             var cmd = (SpotifyCmdCombo.SelectedItem as Choice)?.Value as string;
@@ -158,6 +165,7 @@ public partial class ActionEditor : UserControl
         Action.Text = "";
         Action.Text2 = "";
         Action.Number = 0;
+        Action.Args = "";
         switch (t)
         {
             case ActionType.Delay: Action.Number = 1000; break;
