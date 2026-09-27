@@ -36,6 +36,7 @@ public partial class App : Application
         var window = new MainWindow();
         MainWindow = window;
         window.Show();
+        Hub.PageReader.Start();
     }
 
     protected override void OnExit(ExitEventArgs e)

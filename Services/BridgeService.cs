@@ -72,14 +72,17 @@ public class BridgeService
             return;
         }
         _loggedNoUser = false;
-        _process = Process.Start(new ProcessStartInfo(node)
+        var psi = new ProcessStartInfo(node)
         {
             ArgumentList = { "bridge.js", user, Port.ToString() },
             WorkingDirectory = dir,
             UseShellExecute = false,
             CreateNoWindow = true,
-        });
-        Log.Write($"Started the TikTok bridge for @{user}");
+        };
+        bool page = Hub.Settings.LiveReader == "page";
+        if (page) psi.ArgumentList.Add("--page"); // decodes what GiftDeck's TikTok page receives, instead of connecting itself
+        _process = Process.Start(psi);
+        Log.Write($"Started the TikTok bridge for @{user}" + (page ? " (reading through the TikTok page)" : ""));
     }
 
     // The bridge folder sits in the GiftDeck source folder; walk up from wherever the exe runs (dist or bin).

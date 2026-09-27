@@ -18,6 +18,32 @@
                 </StackPanel>
             </Border>
 
+            <!-- Reading the LIVE -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                <StackPanel>
+                    <TextBlock Text="Reading your LIVE" Style="{StaticResource H2}" Margin="0,0,0,4"/>
+                    <TextBlock Text="Where GiftDeck gets your chat, gifts, likes and viewer counts from." Style="{StaticResource Muted}" Margin="0,0,0,10"/>
+                    <ComboBox x:Name="ReaderBox" Width="420" HorizontalAlignment="Left" SelectionChanged="Reader_Changed" Margin="0,0,0,8">
+                        <ComboBoxItem Tag="page" Content="GiftDeck's TikTok page (logged in, works with 18+)"/>
+                        <ComboBoxItem Tag="bridge" Content="The GiftDeck bridge (no login; no chat on 18+ LIVEs)"/>
+                        <ComboBoxItem Tag="tikfinity" Content="TikFinity"/>
+                    </ComboBox>
+                    <TextBlock x:Name="ReaderHelp" Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,0,0,10"/>
+                    <Border Style="{StaticResource SubCard}">
+                        <StackPanel>
+                            <TextBlock x:Name="ReaderStatus" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                            <TextBlock x:Name="ReaderDetail" Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                            <CheckBox x:Name="TikFinityHiddenBox" Content="Start TikFinity hidden in the background" Click="TikFinityHidden_Changed" Margin="0,10,0,0"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                <Button x:Name="TikTokLoginButton" Content="TikTok login" Style="{StaticResource Ghost}" Click="TikTokLogin_Click" Margin="0,0,6,0"/>
+                                <Button x:Name="ShowTikFinityButton" Content="Show TikFinity" Style="{StaticResource Ghost}" Click="ShowTikFinity_Click" Margin="0,0,6,0"/>
+                                <Button x:Name="HideTikFinityButton" Content="Hide TikFinity" Style="{StaticResource Ghost}" Click="HideTikFinity_Click"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Border>
+
             <!-- OBS engine -->
             <Border Style="{StaticResource Card}" Margin="0,0,0,14">
                 <StackPanel>

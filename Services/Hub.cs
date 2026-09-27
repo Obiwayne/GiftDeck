@@ -21,6 +21,7 @@ public static class Hub
     public static MusicService Music { get; private set; }
     public static RelayService Relay { get; private set; }
     public static ProfileService Profiles { get; private set; }
+    public static LivePageReader PageReader { get; private set; }
 
     public static void Init()
     {
@@ -73,6 +74,8 @@ public static class Hub
         Bridge = new BridgeService();
         Bridge.Start();
 
+        PageReader = new LivePageReader(); // started once the main window is up (its TikTok page belongs to it)
+
         TikFinity = new TikFinityService();
         TikFinity.GiftSeen += g => Gifts.Learn(g);
         TikFinity.EventReceived += e => Rules.Handle(e);
@@ -95,6 +98,7 @@ public static class Hub
         try { Profiles.SaveActive(); } catch { }
         try { Web?.Stop(); } catch { }
         try { TikFinity?.Stop(); } catch { }
+        try { TikFinity?.CloseIfHidden(); } catch { }
         try { Bridge?.Stop(); } catch { }
         try { Engine?.OnAppExit(); } catch { } // needs the OBS connection (is it live?), so before disconnecting; at most 20s
         try { Obs?.DisconnectAsync().Wait(1000); } catch { }

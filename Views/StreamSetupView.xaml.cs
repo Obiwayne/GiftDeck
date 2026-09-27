@@ -26,16 +26,112 @@ public partial class StreamSetupView : UserControl
         RelayServerBox.Text = RelayService.LocalServer;
         RelayKeyBox.Text = RelayService.LocalKey;
         UpdateFfmpeg();
+        foreach (ComboBoxItem item in ReaderBox.Items)
+            if ((string)item.Tag == Hub.Settings.LiveReader) ReaderBox.SelectedItem = item;
+        TikFinityHiddenBox.IsChecked = Hub.Settings.TikFinityHidden;
+        Hub.PageReader.StatusChanged += () => Dispatcher.BeginInvoke(UpdateReader);
+        Hub.TikFinity.StatusChanged += () => Dispatcher.BeginInvoke(UpdateReader);
+        Loaded += (_, _) => UpdateReader();
         ManagedBox.IsChecked = Hub.Settings.ObsManaged;
         UpdateEngine();
         Hub.Engine.StatusChanged += () => Dispatcher.BeginInvoke(UpdateEngine);
         Hub.Obs.StatusChanged += () => Dispatcher.BeginInvoke(UpdateEngine);
         // OBS can be opened or closed outside GiftDeck; a light check while the page is on screen.
         var poll = new DispatcherTimer { Interval = TimeSpan.FromSeconds(3) };
-        poll.Tick += (_, _) => { if (IsVisible) UpdateEngine(); };
+        poll.Tick += (_, _) => { if (IsVisible) { UpdateEngine(); UpdateReader(); } };
         poll.Start();
         _loading = false;
     }
+
+    // ---- Reading the LIVE ----
+
+    string Reader => (ReaderBox.SelectedItem as ComboBoxItem)?.Tag as string ?? Hub.Settings.LiveReader;
+    bool? _loggedIn;
+    bool _checkingLogin;
+
+    void Reader_Changed(object sender, SelectionChangedEventArgs e)
+    {
+        if (_loading) return;
+        var s = Hub.Settings;
+        s.LiveReader = Reader;
+        // The feed GiftDeck listens to: TikFinity's own, or the bridge (which reads the page or TikTok itself).
+        s.TikFinityUrl = Reader == "tikfinity" ? "ws://localhost:21213/" : "ws://localhost:" + BridgeService.Port + "/";
+        Hub.SaveSettings();
+        Log.Write("Reading the LIVE through: " + Reader);
+        Hub.Bridge.Restart();      // page mode or not (and not needed at all for TikFinity)
+        Hub.TikFinity.Reconnect(); // listen to the new feed now
+        Hub.PageReader.CheckSoon();
+        if (Reader == "tikfinity" && !TikFinityService.IsProcessRunning()) Hub.TikFinity.Launch();
+        _loggedIn = null;
+        UpdateReader();
+    }
+
+    void UpdateReader()
+    {
+        var r = Reader;
+        ReaderHelp.Text = r switch
+        {
+            "page" => "GiftDeck opens your LIVE in its own TikTok page, logged in as you, muted and out of sight, whenever you're live. Nothing else to install or run, and it works with 18+ LIVEs.",
+            "tikfinity" => "GiftDeck listens to TikFinity's feed. TikFinity has to be running and connected to your LIVE; GiftDeck can start it for you, hidden in the background.",
+            _ => "The bridge connects to your LIVE by itself without logging in. TikTok doesn't send chat or gifts to logged-out viewers of 18+ LIVEs, so use the TikTok page if your LIVE is 18+.",
+        };
+        TikTokLoginButton.Visibility = r == "page" ? Visibility.Visible : Visibility.Collapsed;
+        TikFinityHiddenBox.Visibility = ShowTikFinityButton.Visibility = HideTikFinityButton.Visibility = r == "tikfinity" ? Visibility.Visible : Visibility.Collapsed;
+
+        string status, detail = "", brush = "TextBrush";
+        var feed = Hub.TikFinity;
+        if (r == "tikfinity")
+        {
+            bool running = TikFinityService.IsProcessRunning();
+            status = !running ? "TikFinity isn't running" : feed.Connected ? "Connected to TikFinity \u2713" : "TikFinity is running; connecting\u2026";
+            brush = running && feed.Connected ? "SuccessBrush" : "WarnBrush";
+            if (running) detail = feed.WindowHidden ? "It's running hidden. Show it to log in or change its settings." : "Its window is showing.";
+            ShowTikFinityButton.IsEnabled = running && feed.WindowHidden;
+            HideTikFinityButton.IsEnabled = running && !feed.WindowHidden;
+        }
+        else if (r == "page")
+        {
+            if (_loggedIn == null && !_checkingLogin) _ = CheckLoginAsync();
+            status = _loggedIn == false ? "Not logged in to TikTok" : feed.TikTokLive == true ? "Reading your LIVE \u2713" : "Ready";
+            brush = _loggedIn == false ? "WarnBrush" : feed.TikTokLive == true ? "SuccessBrush" : "TextBrush";
+            detail = _loggedIn == false ? "Click TikTok login and log in with the account you stream from." : Hub.PageReader.Status;
+        }
+        else
+        {
+            status = feed.TikTokLive == true ? "Reading your LIVE \u2713" : feed.Connected ? "Bridge running" : "Starting the bridge\u2026";
+            brush = feed.TikTokLive == true ? "SuccessBrush" : "TextBrush";
+            if (Tt.State.Mature) { detail = "Your LIVE is set to 18+: the bridge won't see chat or gifts. Choose the TikTok page instead."; brush = "WarnBrush"; }
+        }
+        ReaderStatus.Text = status;
+        ReaderStatus.Foreground = (System.Windows.Media.Brush)FindResource(brush);
+        ReaderDetail.Text = detail;
+        ReaderDetail.Visibility = string.IsNullOrEmpty(detail) ? Visibility.Collapsed : Visibility.Visible;
+    }
+
+    async Task CheckLoginAsync()
+    {
+        _checkingLogin = true;
+        try { _loggedIn = await TikTokChatWindow.Instance.IsLoggedInAsync(); }
+        catch { _loggedIn = null; }
+        finally { _checkingLogin = false; }
+        UpdateReader();
+    }
+
+    async void TikTokLogin_Click(object sender, RoutedEventArgs e)
+    {
+        await TikTokChatWindow.Instance.ShowToLogInAsync();
+        _loggedIn = null; // looked at again on the next refresh
+        Hub.PageReader.CheckSoon();
+    }
+
+    void TikFinityHidden_Changed(object sender, RoutedEventArgs e)
+    {
+        Hub.Settings.TikFinityHidden = TikFinityHiddenBox.IsChecked == true;
+        Hub.SaveSettings();
+    }
+
+    void ShowTikFinity_Click(object sender, RoutedEventArgs e) { Hub.TikFinity.ShowWindow(); UpdateReader(); }
+    void HideTikFinity_Click(object sender, RoutedEventArgs e) { Hub.TikFinity.HideWindow(); UpdateReader(); }
 
     bool _engineBusy;
 

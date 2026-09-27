@@ -1,4 +1,6 @@
 using System.ComponentModel;
+using System.Net.WebSockets;
+using System.Text;
 using System.Text.Json;
 using System.Windows;
 using GiftDeck.Services;
@@ -6,8 +8,11 @@ using Microsoft.Web.WebView2.Core;
 
 namespace GiftDeck.Views;
 
-// Sends chat messages by typing them into TikTok's own LIVE page (TikTok has no public API for posting chat).
-// One instance for the app; it lives hidden and is shown only to log in.
+// TikTok's own LIVE page, logged in as the streamer, kept in a hidden window. It's used two ways:
+// - sending chat: typing into the page's comment box (TikTok has no public API for posting chat);
+// - reading the LIVE: the page receives chat, gifts, likes and viewer counts over its own WebSocket; those
+//   frames are passed to the bridge (in --page mode) to decode. Being logged in, this works for 18+ LIVEs too.
+// One instance for the app; shown only to log in.
 public partial class TikTokChatWindow : Window
 {
     static TikTokChatWindow _instance;
@@ -51,12 +56,109 @@ public partial class TikTokChatWindow : Window
         Web.CoreWebView2.Settings.AreDevToolsEnabled = false;
         Web.CoreWebView2.Settings.IsStatusBarEnabled = false;
         Web.CoreWebView2.IsMuted = true; // the stream's own sound must not play (it would echo into OBS)
+        await SetUpReadingAsync(env);
         if (offscreen)
         {
             Hide();
             ShowActivated = true;
             WindowStartupLocation = WindowStartupLocation.CenterOwner;
         }
+    }
+
+    // ---- Reading the LIVE through the page ----
+
+    readonly HashSet<string> _feedSockets = new HashSet<string>();
+    readonly SemaphoreSlim _sendLock = new SemaphoreSlim(1, 1);
+    ClientWebSocket _bridge;
+    public bool Reading { get; private set; }
+
+    async Task SetUpReadingAsync(CoreWebView2Environment env)
+    {
+        var cw = Web.CoreWebView2;
+        await cw.CallDevToolsProtocolMethodAsync("Network.enable", "{}");
+        // TikTok's LIVE event feed is the WebSocket under /webcast/ (others are direct messages etc.).
+        cw.GetDevToolsProtocolEventReceiver("Network.webSocketCreated").DevToolsProtocolEventReceived += (_, e) =>
+        {
+            var r = JsonDocument.Parse(e.ParameterObjectAsJson).RootElement;
+            if ((r.GetProperty("url").GetString() ?? "").Contains("/webcast/"))
+                lock (_feedSockets) _feedSockets.Add(r.GetProperty("requestId").GetString());
+        };
+        cw.GetDevToolsProtocolEventReceiver("Network.webSocketFrameReceived").DevToolsProtocolEventReceived += (_, e) =>
+        {
+            if (!Reading) return;
+            var r = JsonDocument.Parse(e.ParameterObjectAsJson).RootElement;
+            bool feed; lock (_feedSockets) feed = _feedSockets.Contains(r.GetProperty("requestId").GetString());
+            var resp = r.GetProperty("response");
+            if (feed && resp.GetProperty("opcode").GetInt32() == 2)
+                _ = ToBridgeAsync("frame", resp.GetProperty("payloadData").GetString());
+        };
+        // No video or animations: the page would otherwise download and play the stream (or the For You feed)
+        // in the background. The chat feed is a WebSocket, so it isn't affected.
+        cw.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.Media);
+        cw.AddWebResourceRequestedFilter("*.flv*", CoreWebView2WebResourceContext.All);
+        cw.AddWebResourceRequestedFilter("*.m3u8*", CoreWebView2WebResourceContext.All);
+        cw.WebResourceRequested += (_, e) => e.Response = env.CreateWebResourceResponse(null, 403, "Not needed in GiftDeck", "");
+    }
+
+    // Sends one message to the bridge over its local WebSocket, connecting when needed.
+    async Task ToBridgeAsync(string evt, object data)
+    {
+        await _sendLock.WaitAsync();
+        try
+        {
+            if (_bridge == null || _bridge.State != WebSocketState.Open)
+            {
+                _bridge?.Dispose();
+                _bridge = new ClientWebSocket();
+                using var cts = new CancellationTokenSource(3000);
+                await _bridge.ConnectAsync(new Uri($"ws://localhost:{BridgeService.Port}/"), cts.Token);
+                _ = DrainAsync(_bridge); // the bridge broadcasts events to every client; this one doesn't need them
+            }
+            var bytes = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new { @event = evt, data }));
+            await _bridge.SendAsync(bytes, WebSocketMessageType.Text, true, CancellationToken.None);
+        }
+        catch { try { _bridge?.Abort(); } catch { } } // bridge restarting: this frame is lost, the next one reconnects
+        finally { _sendLock.Release(); }
+    }
+
+    static async Task DrainAsync(ClientWebSocket ws)
+    {
+        var buffer = new byte[16384];
+        try { while (ws.State == WebSocketState.Open) await ws.ReceiveAsync(buffer, CancellationToken.None); } catch { }
+    }
+
+    // Opens the streamer's LIVE page and starts passing its feed to the bridge.
+    public async Task StartReadingAsync()
+    {
+        await EnsureReadyAsync();
+        Reading = true;
+        await ToBridgeAsync("page", new { open = true });
+        await OpenLiveAsync(force: true);
+        Log.Write("Reading your LIVE through the TikTok page");
+    }
+
+    // Stops passing the feed and parks the page, so it isn't doing anything while you're offline.
+    public async Task StopReadingAsync()
+    {
+        if (!Reading) return;
+        Reading = false;
+        await ToBridgeAsync("page", new { open = false });
+        await EnsureReadyAsync();
+        Web.CoreWebView2.Navigate("about:blank");
+        _openedFor = null;
+        Log.Write("Stopped reading the TikTok page");
+    }
+
+    async Task OpenLiveAsync(bool force = false)
+    {
+        var url = LiveUrl();
+        if (!force && _openedFor == url && (Web.CoreWebView2.Source ?? "").Contains("/live")) return;
+        var loaded = new TaskCompletionSource<bool>();
+        void Done(object s, CoreWebView2NavigationCompletedEventArgs e) { Web.CoreWebView2.NavigationCompleted -= Done; loaded.TrySetResult(e.IsSuccess); }
+        Web.CoreWebView2.NavigationCompleted += Done;
+        Web.CoreWebView2.Navigate(url);
+        await Task.WhenAny(loaded.Task, Task.Delay(20000));
+        _openedFor = url;
     }
 
     public async Task<bool> IsLoggedInAsync()
@@ -92,17 +194,8 @@ public partial class TikTokChatWindow : Window
         await EnsureReadyAsync();
         if (!await IsLoggedInAsync()) { await ShowToLogInAsync(); return "Log in to TikTok in the window that opened, then send again."; }
 
-        // Open (or reopen) the LIVE page for the current account and give it time to build its chat box.
-        var url = LiveUrl();
-        if (_openedFor != url || !(Web.CoreWebView2.Source ?? "").Contains("/live"))
-        {
-            var loaded = new TaskCompletionSource<bool>();
-            void Done(object s, CoreWebView2NavigationCompletedEventArgs e) { Web.CoreWebView2.NavigationCompleted -= Done; loaded.TrySetResult(e.IsSuccess); }
-            Web.CoreWebView2.NavigationCompleted += Done;
-            Web.CoreWebView2.Navigate(url);
-            await Task.WhenAny(loaded.Task, Task.Delay(20000));
-            _openedFor = url;
-        }
+        // Open the LIVE page for the current account if it isn't already (reading keeps it open).
+        await OpenLiveAsync();
 
         // The page builds its comment box a little after loading; try for a few seconds.
         for (int attempt = 0; attempt < 12; attempt++)

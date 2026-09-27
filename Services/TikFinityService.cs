@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Net.WebSockets;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 using GiftDeck.Models;
@@ -48,7 +49,9 @@ public class TikFinityService
         {
             _lastLaunch = DateTime.Now;
             Process.Start(new ProcessStartInfo(exe) { UseShellExecute = true, WorkingDirectory = Path.GetDirectoryName(exe) });
-            Log.Write("Launched TikFinity");
+            bool hidden = StartsHidden;
+            Log.Write(hidden ? "Launched TikFinity hidden" : "Launched TikFinity");
+            if (hidden) { _startedHidden = true; _ = Task.Run(HideWindowsAsync); }
             return true;
         }
         catch (Exception e)
@@ -58,6 +61,76 @@ public class TikFinityService
             StatusChanged?.Invoke();
             return false;
         }
+    }
+
+    // ---- TikFinity in the background ----
+
+    static bool StartsHidden => Hub.Settings.LiveReader == "tikfinity" && Hub.Settings.TikFinityHidden;
+    bool _startedHidden;
+
+    [DllImport("user32.dll")] static extern bool EnumWindows(EnumWindowsProc cb, IntPtr lParam);
+    [DllImport("user32.dll")] static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint pid);
+    [DllImport("user32.dll")] static extern bool IsWindowVisible(IntPtr hWnd);
+    [DllImport("user32.dll")] static extern int GetWindowTextLength(IntPtr hWnd);
+    [DllImport("user32.dll")] static extern IntPtr GetWindow(IntPtr hWnd, uint cmd);
+    [DllImport("user32.dll")] static extern bool ShowWindow(IntPtr hWnd, int cmd);
+    [DllImport("user32.dll")] static extern bool SetForegroundWindow(IntPtr hWnd);
+    delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
+
+    // TikFinity's own top-level windows (with a title and no owner, so not tooltips or menus).
+    static List<IntPtr> Windows(bool visibleOnly)
+    {
+        var pids = Process.GetProcessesByName("TikFinity").Select(p => (uint)p.Id).ToHashSet();
+        var found = new List<IntPtr>();
+        EnumWindows((h, _) =>
+        {
+            GetWindowThreadProcessId(h, out var pid);
+            if (pids.Contains(pid) && GetWindowTextLength(h) > 0 && GetWindow(h, 4 /* GW_OWNER */) == IntPtr.Zero
+                && (!visibleOnly || IsWindowVisible(h)))
+                found.Add(h);
+            return true;
+        }, IntPtr.Zero);
+        return found;
+    }
+
+    // TikFinity opens its window a few seconds after starting (and sometimes a second one): hide what appears.
+    async Task HideWindowsAsync()
+    {
+        var until = DateTime.Now.AddSeconds(45);
+        while (DateTime.Now < until && !_cts.IsCancellationRequested)
+        {
+            foreach (var h in Windows(visibleOnly: true)) ShowWindow(h, 0 /* SW_HIDE */);
+            await Task.Delay(250);
+        }
+    }
+
+    public bool WindowHidden => IsProcessRunning() && Windows(visibleOnly: true).Count == 0;
+
+    // Brings a hidden TikFinity back on screen (to log in or change its settings).
+    public bool ShowWindow()
+    {
+        var all = Windows(visibleOnly: false);
+        if (all.Count == 0) return false;
+        _startedHidden = false;
+        foreach (var h in all) ShowWindow(h, 5 /* SW_SHOW */);
+        ShowWindow(all[0], 9 /* SW_RESTORE */);
+        SetForegroundWindow(all[0]);
+        return true;
+    }
+
+    public void HideWindow()
+    {
+        foreach (var h in Windows(visibleOnly: true)) ShowWindow(h, 0);
+        _startedHidden = true;
+    }
+
+    // A TikFinity GiftDeck started hidden has no window to close it from, so it closes with GiftDeck.
+    public void CloseIfHidden()
+    {
+        if (!_startedHidden || !WindowHidden) return;
+        foreach (var p in Process.GetProcessesByName("TikFinity"))
+            try { p.Kill(entireProcessTree: true); } catch { }
+        Log.Write("Closed the hidden TikFinity");
     }
 
     async Task ProcessWatch()
@@ -73,7 +146,8 @@ public class TikFinityService
                     Log.Write(running ? "TikFinity is running" : "TikFinity is not running");
                     StatusChanged?.Invoke();
                 }
-                if (!running && Hub.Settings.AutoLaunchTikFinity && (DateTime.Now - _lastLaunch).TotalSeconds > 60)
+                bool wanted = Hub.Settings.AutoLaunchTikFinity || Hub.Settings.LiveReader == "tikfinity";
+                if (!running && wanted && (DateTime.Now - _lastLaunch).TotalSeconds > 60)
                     Launch();
             }
             catch (Exception e)
@@ -111,9 +185,18 @@ public class TikFinityService
         }
     }
 
+    ClientWebSocket _current;
+
+    // Drops the current feed connection; the loop reconnects to whatever address the settings now say.
+    public void Reconnect()
+    {
+        try { _current?.Abort(); } catch { }
+    }
+
     async Task RunOnce()
     {
         using var ws = new ClientWebSocket();
+        _current = ws;
         await ws.ConnectAsync(new Uri(Hub.Settings.TikFinityUrl), _cts.Token);
         Connected = true;
         LastError = null;

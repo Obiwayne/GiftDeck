@@ -212,6 +212,10 @@ public class AppSettings
     public string BridgeUsername { get; set; } = "";
     public bool SidebarCollapsed { get; set; }
     public string ActiveProfile { get; set; } = "";
+    // How GiftDeck reads the LIVE: "page" = its own logged-in TikTok page (works with 18+, no outside service),
+    // "bridge" = the bridge connecting anonymously, "tikfinity" = TikFinity's feed.
+    public string LiveReader { get; set; } = "bridge";
+    public bool TikFinityHidden { get; set; } = true;
     public bool StreakGiftsOnce { get; set; } = true;
 
     public bool FocusWindowBeforeKeys { get; set; } = false;

@@ -3,12 +3,17 @@
 // so GiftDeck can point at ws://localhost:21214/ instead of TikFinity's 21213.
 //
 //   node bridge.js [username] [port]
-const { TikTokLiveConnection, WebcastEvent, ControlEvent } = require('tiktok-live-connector');
+const { TikTokLiveConnection, WebcastEvent, ControlEvent, deserializeWebSocketMessage } = require('tiktok-live-connector');
 const { WebSocketServer } = require('ws');
 
-const username = (process.argv[2] || '').replace(/^@/, '');
-if (!username) { console.error('Usage: node bridge.js <tiktok-username> [port]'); process.exit(1); }
-const port = Number(process.argv[3] || 21214);
+// --page: don't connect to TikTok; decode the LIVE page's own feed, which GiftDeck forwards from its
+// logged-in TikTok page (works for 18+ LIVEs and needs no signing service).
+const args = process.argv.slice(2);
+const pageMode = args.includes('--page');
+const positional = args.filter(a => !a.startsWith('--'));
+const username = (positional[0] || '').replace(/^@/, '');
+if (!username) { console.error('Usage: node bridge.js <tiktok-username> [port] [--page]'); process.exit(1); }
+const port = Number(positional[1] || 21214);
 
 const wss = new WebSocketServer({ port });
 const fsLog = require('fs');
@@ -29,6 +34,7 @@ function send(event, data) {
 wss.on('connection', ws => {
   log('GiftDeck connected to the bridge');
   ws.send(JSON.stringify({ event: 'liveStatusChange', data: { isLive: live, source: 'bridge' } }));
+  if (pageMode) ws.on('message', msg => onPageMessage(msg).catch(e => log('Page frame not decoded:', e.message)));
 });
 
 // When TikTok stamped the message (ms since 1970), so GiftDeck can show how long it took to arrive.
@@ -177,5 +183,42 @@ async function run() {
   }
 }
 
-log(`Bridge serving on ws://localhost:${port}/ for @${username}`);
-run();
+// ---- page mode ----
+let pageConn = null;
+let lastFrame = 0;
+
+function setLive(on, why) {
+  if (live === on) return;
+  live = on;
+  log(on ? `Reading @${username}'s LIVE from the TikTok page` : `Not reading a LIVE (${why})`);
+  send('liveStatusChange', { isLive: on, source: 'page' });
+}
+
+async function onPageMessage(msg) {
+  const m = JSON.parse(msg.toString());
+  if (m.event === 'page') {
+    if (m.data && m.data.open) connectedAt = Date.now(); // ignore the recent-chat history the page loads with
+    else setLive(false, 'the LIVE page was closed');
+    return;
+  }
+  if (m.event !== 'frame' || !m.data) return;
+  lastFrame = Date.now();
+  const decoded = await deserializeWebSocketMessage(Buffer.from(m.data, 'base64'));
+  const result = decoded && decoded.protoMessageFetchResult;
+  if (!result || !result.messages || !result.messages.length) return;
+  setLive(true);
+  await pageConn.processProtoMessageFetchResult(result);
+}
+
+function runPageMode() {
+  connectedAt = Date.now(); // restarted mid-LIVE: nothing older than now is new
+  // Never connects: it's only used to turn decoded messages into the usual events (wired below).
+  pageConn = new TikTokLiveConnection(username, { enableExtendedGiftInfo: false, fetchRoomInfoOnConnect: false, processInitialData: false });
+  wire(pageConn);
+  pageConn.on(WebcastEvent.STREAM_END, () => setLive(false, 'the LIVE ended'));
+  // The page sends a heartbeat every few seconds; a long silence means the page or the LIVE is gone.
+  setInterval(() => { if (live && Date.now() - lastFrame > 90000) setLive(false, 'no data from the TikTok page for 90 s'); }, 15000);
+}
+
+log(`Bridge serving on ws://localhost:${port}/ for @${username}` + (pageMode ? ' (reading the LIVE through the GiftDeck TikTok page)' : ''));
+if (pageMode) runPageMode(); else run();
