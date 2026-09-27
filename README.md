@@ -6,13 +6,14 @@
 
 <p align="center">
   <b>Turn TikTok LIVE gifts into actions.</b><br>
-  A free Windows control room for TikTok streamers: unlimited gift events, live chat and gift feed,
-  viewer count, one-button Go LIVE with OBS, OBS overlays, background music and more.
+  A free, all-in-one Windows control room for TikTok (and Kick) streamers: unlimited gift events,
+  one-click game mods for GTA V and Minecraft, one-button Go LIVE with OBS running in the background,
+  overlays, alerts, a Gift Spinner, text to speech and music.
 </p>
 
 <p align="center">
   <a href="https://github.com/Obiwayne/GiftDeck/releases/latest"><b>⬇&nbsp; Download GiftDeck for Windows</b></a>
-  &nbsp;·&nbsp; free &nbsp;·&nbsp; nothing else to install
+  &nbsp;·&nbsp; free &nbsp;·&nbsp; no accounts, no price plans, no limits
 </p>
 
 <p align="center">
@@ -27,11 +28,14 @@
 - [Screenshots](#screenshots)
 - [Download and install](#download-and-install)
 - [What you need](#what-you-need)
-- [First-time setup](#first-time-setup)
+- [First start: the setup screen](#first-start-the-setup-screen)
 - [Going live](#going-live)
-- [Profiles (one setup per game)](#profiles-one-setup-per-game)
+- [Games: one-click mods](#games-one-click-mods)
 - [Events: triggers and actions](#events-triggers-and-actions)
-- [Overlays for OBS](#overlays-for-obs)
+- [Overlays, alerts and the Gift Spinner](#overlays-alerts-and-the-gift-spinner)
+- [Text to speech](#text-to-speech)
+- [Kick](#kick)
+- [Profiles (one setup per game)](#profiles-one-setup-per-game)
 - [Music](#music)
 - [How it works](#how-it-works)
 - [Your data and keys](#your-data-and-keys)
@@ -44,43 +48,43 @@
 ## What it does
 
 **Gift events with no limit.** When a viewer sends a gift, follows, shares, likes, chats or subscribes,
-GiftDeck runs the actions you set: press a keyboard shortcut (for example a Chaos Mod effect in GTA V),
-play a sound, switch an OBS scene, show or hide a source, speak text aloud, control Spotify or music,
-or run a program. Add as many events as you like.
+GiftDeck runs the actions you set: trigger an effect in your game, press a keyboard shortcut, play a
+sound, show an alert, spin the Gift Spinner, switch an OBS scene, speak text aloud, control Spotify, or
+run a program. Add as many events as you like.
 
-**A control room for going live.** One page with a red **● LIVE** light and timer, confirmation straight
-from TikTok that you really are live, a live preview of what OBS is sending, the stream title and
-category, and the music player. Chat, gifts and the viewer count sit alongside on every page.
+**Games, set up in one click.** The **Games** page finds your game (Steam, Epic or the game's own
+launcher), downloads and installs its mods, backs up every file it replaces, and loads a ready-made set
+of events. **GTA V** gets 416 triggers (every Chaos Mod V effect plus vehicles, weapons, money,
+teleports and more); **Minecraft** gets its own server on your PC with 50+ commands and three
+streamer-vs-viewers mini-games.
 
-**One-button Go LIVE.** GiftDeck opens your TikTok LIVE through Streamlabs, gets the stream key, and
-starts OBS streaming your vertical canvas (via Aitum Stream Suite) or your main canvas. End LIVE closes
-it all again.
+**One app, OBS in the background.** GiftDeck runs OBS for you, hidden, on a portrait 1080x1920 canvas
+made from your vertical layout. Switch scenes, toggle layers and mix audio from GiftDeck; press
+**Edit in OBS** when you want OBS's own window.
 
-**Reads your LIVE directly.** Chat, gifts, likes, follows and viewer counts come straight from TikTok
-through a small bundled bridge. No TikFinity login is required (TikFinity's feed still works if you
-prefer it).
+**One-button Go LIVE.** GiftDeck opens your TikTok LIVE through your Streamlabs login, gets the stream
+key and starts OBS. Change the title or category mid-stream and it restarts the LIVE with the new
+details in about 20 seconds.
 
-**Overlays for OBS.** Goal bars, live counters, countdown timers viewers can extend with gifts, gift
-alerts, and a "what the gifts do" menu board built from your events.
+**Overlays and alerts.** One **all-in-one overlay** link for TikTok LIVE Studio or OBS shows alerts,
+the Gift Spinner, goals and the top gifters. Alert videos can be plain green-screen clips: GiftDeck
+removes the green for you. Alerts can **interrupt**: other gifts wait until a jumpscare has played.
 
-**Endless background music.** Free Creative Commons tracks from Jamendo, shuffled, with play/pause,
-skip, volume and style controls on the Go LIVE page.
-
-**Profiles.** One setup per game (events, overlays, title), switched from a dropdown at the top of
-every page, and shareable as a single file.
-
-**Keeps your keys hidden.** Tokens, stream keys, client IDs and passwords show as dots until you click
-the eye button.
+**Checks everything before you start.** Every launch opens on a setup screen that walks new users
+through what's missing and waits until OBS and TikTok are connected. Closing GiftDeck shuts OBS down
+cleanly and puts your own OBS setup back.
 
 ## Screenshots
 
-| Dashboard | Events |
+| First start | Games |
 |---|---|
-| ![Dashboard](docs/screenshots/dashboard.png) | ![Events](docs/screenshots/events.png) |
-| **Stream Setup** | **Music** |
-| ![Stream Setup](docs/screenshots/stream-setup.png) | ![Music](docs/screenshots/music.png) |
+| ![The setup screen](docs/screenshots/setup-screen.png) | ![The Games page](docs/screenshots/games.png) |
+| **GTA V** | **Minecraft** |
+| ![GTA V game pack](docs/screenshots/game-gta5.png) | ![Minecraft game pack](docs/screenshots/game-minecraft.png) |
+| **Events** | **Text to speech** |
+| ![Events](docs/screenshots/events.png) | ![Text to speech](docs/screenshots/tts.png) |
 
-![Overlays](docs/screenshots/overlays.png)
+![Overlays: the all-in-one overlay](docs/screenshots/overlays.png)
 
 ## Download and install
 
@@ -88,17 +92,17 @@ the eye button.
    **`GiftDeck-Setup-x.y.z.exe`** (about 80 MB).
 2. Double-click it and click through the installer. It installs just for you, so it doesn't ask for
    an administrator password.
-3. Open **GiftDeck** from the Start menu or Desktop, then follow [First-time setup](#first-time-setup).
+3. Open **GiftDeck** from the Start menu or Desktop. The setup screen takes it from there.
 
-Everything GiftDeck needs to run is inside the installer (including .NET and Node.js for the TikTok
-connection). The only extra, **ffmpeg** (for Go LIVE with a vertical canvas), is one click inside the
-app: *Stream Setup → Download ffmpeg*.
+Everything GiftDeck needs to run is inside the installer (including .NET and Node.js). Anything else
+(OBS, Streamlabs, TikFinity, game mods, a Minecraft server, ffmpeg) is downloaded from its maker's own
+site when you press the button for it, never bundled.
 
 > **"Windows protected your PC"?** GiftDeck isn't code-signed (certificates cost money), so Windows
 > SmartScreen may warn about a new download. Click **More info → Run anyway**. The installer is built
 > from this repository's source by `build-installer.ps1`.
 
-**Updating:** download the new installer and run it. Your settings and events are kept.
+**Updating:** download the new installer and run it. Your settings, events and profiles are kept.
 **Uninstalling:** *Windows Settings → Apps → GiftDeck → Uninstall*. Your settings stay in
 `%APPDATA%\GiftDeck` in case you reinstall; delete that folder to remove them too.
 
@@ -106,111 +110,108 @@ app: *Stream Setup → Download ffmpeg*.
 
 | | Needed for | Notes |
 |---|---|---|
-| **Windows 10/11 (64-bit)** | everything | everything else GiftDeck needs is in the installer |
-| **[OBS Studio](https://obsproject.com) 30+** | Go LIVE, preview, scene actions | turn on *Tools → WebSocket Server Settings → Enable* |
-| **[Aitum Stream Suite](https://aitum.tv)** (OBS plugin) | Go LIVE with a vertical canvas | optional; without it GiftDeck streams OBS's main canvas |
-| **ffmpeg** | Go LIVE with the vertical canvas | one click in GiftDeck: *Stream Setup → Download ffmpeg* |
-| **TikTok account with Streamlabs LIVE access** | Go LIVE button | see below |
+| **Windows 10/11 (64-bit)** | everything | |
+| **[OBS Studio](https://obsproject.com)** 31+ | Go LIVE, scenes, preview | the setup screen downloads it for you |
+| **[Aitum Stream Suite](https://aitum.tv)** (OBS plugin) | your vertical (portrait) layout | the setup screen downloads it; GiftDeck turns its vertical scenes into a portrait setup |
+| **[Streamlabs Desktop](https://streamlabs.com)** login | the Go LIVE button | log in once with TikTok; GiftDeck picks up the login and you can close Streamlabs |
+| **TikTok account with Streamlabs LIVE access** | the Go LIVE button | granted by TikTok; GiftDeck tells you whether yours has it |
+| **[TikFinity](https://tikfinity.zerody.one)** | reading **18+** LIVEs | TikTok only sends 18+ chat and gifts to logged-in viewers; GiftDeck installs and runs TikFinity hidden |
+| A game from the **Games** page | game mods | GTA V (Legacy, Story Mode) or Minecraft: Java Edition |
 | Free **[Jamendo](https://devportal.jamendo.com) Client ID** | Music page | optional |
 | **Spotify** Premium + a free developer app | Spotify actions | optional |
 
-### Do I need Streamlabs or the Stream Key Generator?
+## First start: the setup screen
 
-**No.** GiftDeck logs in to Streamlabs itself: on **Stream Setup**, click **Log in with TikTok**, finish
-the login in your normal browser (Google sign-in works there), and GiftDeck saves the token. You don't
-need Streamlabs Desktop or the Stream Key Generator installed. (If you already use the generator,
-**Import from Stream Key Generator** reads its token instead.)
+GiftDeck opens on a setup screen that goes through, in order, only what's still missing:
 
-What you *do* need is a TikTok account that has **LIVE access through Streamlabs**. That's granted to
-your account by TikTok/Streamlabs; no app can get round it. **Check account** on Stream Setup tells you
-whether yours has it.
+1. **Streamlabs login.** Download and install Streamlabs Desktop (one button), log in with TikTok (the
+   QR code is quickest). GiftDeck spots the login by itself and offers to close Streamlabs.
+2. **OBS Studio** and 3. **Aitum Stream Suite**: download and install, one button each.
+4. **Portrait OBS.** GiftDeck makes a "GiftDeck Portrait" copy of your vertical scenes (your own OBS
+   setup isn't changed) and from then on runs OBS hidden on it.
+5. **TikFinity** (for 18+ LIVEs): install it, log in with the QR code, and switch off TikFinity's own
+   Events (GiftDeck runs your events; otherwise gifts would fire twice).
+6. **Your TikTok username**, filled in from your Streamlabs login.
+7. **Ready check.** Waits until OBS and your LIVE reader are connected, then opens the app.
 
-## First-time setup
+Someone who's already set up only sees the ready check for a few seconds. **Stream Setup** has the same
+steps as a checklist, plus the choice of how GiftDeck reads your LIVE:
 
-Everything below is on GiftDeck's own pages. Each takes a minute or two and you only do it once.
-
-### 1. Your TikTok username — *Stream Setup*
-GiftDeck needs to know whose LIVE to read. Until it does, the sidebar says **Set your TikTok username**.
-Logging in with TikTok (step 2) fills it in for you; otherwise type your username (the part after `@`).
-GiftDeck then reads that account's LIVE automatically whenever it's live: chat, gifts, likes, follows
-and the viewer count. Reading a LIVE only uses public information, so no login is needed for this part;
-if the username isn't the account you're logged in with, Stream Setup points that out.
-
-### 2. Streamlabs login — *Stream Setup* (for the Go LIVE button)
-Click **Log in with TikTok**, finish in the browser, then **Check account** to confirm LIVE access.
-
-### 3. OBS — *OBS page*
-In OBS: **Tools → WebSocket Server Settings → Enable WebSocket server**. GiftDeck reads the port and
-password from OBS's settings on the same PC and connects by itself.
-
-### 4. Vertical canvas (optional) — *Stream Setup*
-If you stream a vertical layout with **Aitum Stream Suite**, set up its output once:
-
-1. In OBS, open Aitum's **Outputs** and edit **Vertical Stream**.
-2. Choose **Custom**.
-3. Server: `rtmp://127.0.0.1:1936/live` — Stream key: `giftdeck`
-4. Save.
-
-These never change. At each Go LIVE, GiftDeck forwards that stream to the new LIVE's key (see
-[How it works](#how-it-works)). If Aitum isn't set up, Go LIVE tells you before opening anything on TikTok.
-
-### 5. Events — *Events page*
-Click **+ New event**, choose a trigger (e.g. *Gift: Rose*), add actions (e.g. *Press Ctrl+Shift+C*),
-save. **Test** fires it without going live.
-
-### 6. Music (optional) — *Music page*
-Create a free app at [devportal.jamendo.com](https://devportal.jamendo.com) (any name and website),
-paste its **Client ID**, click **Save**, press **Play**.
-
-### 7. Spotify (optional) — *Spotify page*
-Create an app at [developer.spotify.com/dashboard](https://developer.spotify.com/dashboard) with the
-redirect URI `http://127.0.0.1:8890/callback`, paste the Client ID, click **Link Spotify**. Spotify
-Premium is needed to control playback.
+- **The GiftDeck bridge** (no login): fine for normal LIVEs, but TikTok sends no chat or gifts from 18+
+  LIVEs to logged-out viewers.
+- **TikFinity** (logged in): works with 18+ LIVEs. GiftDeck starts it hidden and closes it with GiftDeck.
 
 ## Going live
 
-On **Go LIVE**, set the title and category, then press **Go LIVE**. GiftDeck:
+On **Go LIVE**, set the title and category, pick your scene, and press **Go LIVE**. GiftDeck opens the
+LIVE on TikTok, sends OBS the stream key, starts streaming, and shows **✓ TikTok confirms you're live**
+once TikTok shows it (or a clear warning after 90 seconds).
 
-1. opens the LIVE on TikTok through Streamlabs and gets its server and stream key,
-2. starts the relay and Aitum's **Vertical Stream** output (or OBS's main stream),
-3. asks TikTok every few seconds whether you're really live, and shows
-   **✓ TikTok confirms you're live** — or a clear warning if it isn't after 90 seconds.
+- **Scenes:** one button per scene (sizes S, M, L; a search box appears when you have lots), with the
+  live scene in red. The **Scenes** page adds thumbnails, layers and an audio mixer.
+- **Change the title or category while live:** TikTok can't edit a running LIVE, so GiftDeck offers
+  **Restart LIVE with these details**: it ends the LIVE and opens a new one straight away. Viewers have
+  to rejoin; GiftDeck's own totals keep counting.
+- **TTS on/muted** next to the Go LIVE button, and the music player.
+- **End LIVE** stops OBS and closes the LIVE. Closing GiftDeck shows *Shutting down GiftDeck* until OBS
+  has closed and your own OBS setup is back.
 
-The **● LIVE** light and timer also work when you go live some other way (e.g. TikTok LIVE Studio),
-because they follow what TikTok reports. **End LIVE** stops OBS, the relay, and closes the LIVE.
+> **Mature audience (18+)** limits who can see your LIVE, and means GiftDeck has to read it through TikFinity.
 
-> **Mature audience (18+)** limits who can see your LIVE. Leave it off unless you mean it.
+## Games: one-click mods
 
-## Profiles (one setup per game)
+Open **Games**, click a game, and press **Install**. GiftDeck finds the game, downloads each mod from
+its maker, **backs up every file it replaces** and refuses to change anything while the game is running.
+**Uninstall** puts the folder back exactly as it was. An **Installed** tag shows on games that are set up
+(including mods you installed yourself). Nothing changes until you press Install or pick a preset.
 
-Keep a separate setup for each game or show, e.g. **GTA 5** and **Roblox**. The **PROFILE** dropdown at
-the top of every page shows which one you're using; pick another and GiftDeck loads that profile's:
+### GTA V (Legacy, Story Mode only)
 
-- **events** (what each gift, follow, like or chat command does)
-- **overlays** (the gift menu board and its pictures, goals, counters, countdowns)
-- **LIVE title and category**
+Installs Script Hook V, Script Hook V .NET, **Chaos Mod V (GiftDeck build)** and the **GiftDeck GTA script**:
 
-Your accounts, keys, OBS, music and sound library are shared by every profile. Switching while you're
-live asks first, because gifts start doing what the new profile says straight away.
+- **416 triggers:** all 369 Chaos Mod effects (GiftDeck can start any of them, even ones switched off for
+  random picks) plus 47 of GiftDeck's own: spawn any vehicle, weapons, money, wanted level, attackers,
+  moto cops, animals, jail cage, ramps, teleports, skydive, drunk, earthquake and more.
+- In game: a green *GiftDeck GTA ready* greeting, **F10** menu (connection, pause, test any command), and
+  an on-screen note of who sent what.
+- A ready-made **GTA V Gift Chaos** preset: 22 events from a Rose (kickflip) to a Lion (Doomsday).
 
-On the **Profiles** page you can create a blank profile, duplicate one to start a new game from it,
-rename, delete, and **Export** a profile as one `.giftdeck` file, including the sound files and board
-pictures it uses, to back it up or share it. **Import** adds someone's `.giftdeck` file as a new profile
-(check the key presses match your game's shortcuts).
+> Never go Online with mods installed: Script Hook V closes the game if you try, and mods Online can get
+> your Rockstar account banned. Finish the prologue mission first.
+
+### Minecraft (Java Edition)
+
+GiftDeck sets up and runs a **Minecraft server on your PC** (PaperMC, the right Java downloaded if
+needed, the EULA accepted only by you). Join it at `localhost`; gifts summon mobs with the viewer's name,
+drop TNT, strike lightning, change the weather, give items and effects.
+
+**GiftDeck Games** mini-games (our free plugin, installed with the server):
+
+| Game | You | Gifts that hurt | Gifts that help |
+|---|---|---|---|
+| **Bedrock Box** | dig down 30 layers inside a bedrock box | TNT, sand, anvils, mobs | better pickaxe, haste, drill, heal |
+| **Sand Pour** | survive 3 minutes in a glass pit | sand, gravel, concrete, anvils | shovel, dig, haste, heal |
+| **Sheep Out** | keep the meadow clear for 3 minutes | coloured and rainbow sheep | better sword, smite, heal |
+
+Your items, position and health are saved when a game starts and given back after it. Each game has a
+ready-made preset, and the server panel has start/stop buttons.
 
 ## Events: triggers and actions
 
 **Triggers:** a specific gift (optionally a minimum coin total), any gift in a coin range, follow,
-share, every N likes, any chat message or a chat command (e.g. `!boom`), subscribe, join.
+share, every N likes, any chat message or a chat command (e.g. `!boom`), subscribe, join. With Kick on,
+each event can listen to TikTok, Kick, or both.
 
 **Actions** (as many as you like, run in order):
 
 | Action | Example |
 |---|---|
-| Press a key or shortcut | `Ctrl+Shift+C` into GTA V's Chaos Mod |
+| Run a game command | *Spawn vehicle: rhino* in GTA V, *Summon: zombie x5* in Minecraft (searchable list, with a Test button) |
+| Press a key or shortcut | `Ctrl+Shift+C` into a game |
 | Play a sound | an MP3 from disk, or search MyInstants from the built-in library |
-| Switch OBS scene / canvas scene | switch the Aitum Vertical canvas to *CAM* |
-| Show or hide an OBS source | flash a source for a few seconds |
+| Show an alert | a picture, GIF or video alert, optionally interrupting everything else |
+| Spin the Gift Spinner | a random event from a weighted pool |
+| Switch OBS scene / show or hide a source | flash a source for a few seconds |
 | Wait | pause between actions |
 | Text to speech | "`{user}` sent `{gift}`!" |
 | Spotify | queue a song request, skip, pause, set volume |
@@ -219,23 +220,47 @@ share, every N likes, any chat message or a chat command (e.g. `!boom`), subscri
 **Combos:** by default a combo (e.g. 15 Roses in a row) runs the event once when the combo ends. Per
 event you can instead run the actions once per gift, with a cap.
 
-## Overlays for OBS
+## Overlays, alerts and the Gift Spinner
 
-GiftDeck serves overlay pages at `http://localhost:21300`. On the **Overlays** page, use **Copy URL**
-or **Add to OBS** (which creates the Browser Source for you):
+GiftDeck serves overlay pages at `http://localhost:21300`. Use **Copy URL** or **Add to OBS** (which
+creates the Browser Source for you, sound included):
 
-- **Goal bar** — progress towards a coin/likes/follows goal
-- **Counters** — followers, likes, shares, coins, gifts, watching now
-- **Countdown** — a timer viewers extend with gifts, follows, shares and likes
-- **Alerts** — gift alerts with the gift picture
-- **Gift menu board** — the "what each gift does" grid, built from your events
+- **All-in-one overlay** (recommended): one link, added once to TikTok LIVE Studio (*Add source → Link*)
+  or OBS, showing alerts, the Gift Spinner, goals, the top 3 gifters and optionally the gift board or gift
+  list. Switch each part on or off and choose where it sits.
+- **Alerts:** gift alerts, plus your own alerts with a picture, GIF or video, a sound and text with
+  `{user}`, `{gift}`, `{count}`. Tick **Remove green background** and a normal green-screen MP4 plays
+  see-through (no editing apps needed). **Interrupt** makes other gifts wait until it has played.
+- **Gift Spinner:** a wheel that lands on one of your events. Give any event a chance on the wheel
+  (Common, Uncommon, Rare, Epic, Legendary) right in the event editor.
+- **Goal bars, counters, countdown timers** viewers extend with gifts, the **gift menu board**, a
+  **gift list** and a **top 3 gifters** strip, all built from your events and live stats.
+
+## Text to speech
+
+Speak chat messages and event text with a Windows voice or one of two **free Google voices (male and
+female, online)**. Each profile keeps its own voice, speed, volume and chat reading. The speaker button
+on the right-hand panel and on Go LIVE **mutes** everything at once (it stays muted after a restart, and
+the menu shows *Text to speech (muted)* so you don't forget).
+
+## Kick
+
+Switch Kick on in **Stream Setup** and type your channel name: Kick chat, subs, gifted subs and Kicks
+gifts (1 Kick = 1 coin) run the same events as TikTok, even while you're live on both. No login or Kick
+developer account is needed. Kick's public feed no longer says who followed, so follows only count when
+your channel has a follower goal, and show as "Someone".
+
+## Profiles (one setup per game)
+
+Keep a separate setup for each game or show. The **PROFILE** dropdown at the top of every page switches
+the events, overlays, LIVE title and category, and text-to-speech voice. On **Profiles** you can create,
+duplicate, rename, delete, **Export** a profile as one `.giftdeck` file (with its sounds and pictures) and
+**Import** someone else's. Switching while you're live asks first.
 
 ## Music
 
 The **Music** page (and the player on **Go LIVE**) streams free Creative Commons tracks from Jamendo,
-shuffled, one after another. Pick a style (chill, lo-fi, electronic, hip hop, rock, ...) and keep
-*Instrumental only* on to talk over it. Music plays through your PC's speakers, so OBS picks it up with
-desktop audio.
+shuffled, one after another. Pick a style and keep *Instrumental only* on to talk over it.
 
 > Many Jamendo tracks are licensed for non-commercial use, and a gift-earning LIVE may not count as
 > that. If TikTok ever mutes a moment, skip the track or change style.
@@ -244,53 +269,44 @@ desktop audio.
 
 ```mermaid
 flowchart LR
-    TT[TikTok LIVE] -- chat, gifts, likes, viewers --> BR[Bridge<br/>Node + TikTok-Live-Connector]
-    BR -- ws://localhost:21214 --> GD[GiftDeck]
-    GD -- key presses --> GAME[Game / Chaos Mod]
-    GD -- obs-websocket --> OBS[OBS Studio]
+    TT[TikTok LIVE] -- chat, gifts --> RD[Bridge or TikFinity]
+    KK[Kick] -- public chat feed --> GD
+    RD -- ws://localhost:21214 / 21213 --> GD[GiftDeck]
+    GD -- GameLink ws://127.0.0.1:21216 --> MODS[Game mods<br/>Chaos Mod, GiftDeck GTA]
+    GD -- RCON --> MC[Minecraft server]
+    GD -- obs-websocket --> OBS[OBS Studio<br/>hidden, portrait]
     GD -- overlays http://localhost:21300 --> OBS
     GD -- Streamlabs API: open/close LIVE, get key --> SL[Streamlabs]
-    OBS -- Aitum Vertical Stream<br/>rtmp://127.0.0.1:1936 --> RL[Relay<br/>ffmpeg, no re-encode]
-    RL -- rtmps + LIVE key --> TT
+    OBS -- stream --> TT
 ```
 
-- **Bridge (`bridge/bridge.js`).** Uses [TikTok-Live-Connector](https://github.com/zerodytrash/TikTok-Live-Connector)
-  to read a public LIVE without logging in, and re-sends each event on `ws://localhost:21214` in the
-  same format TikFinity uses. GiftDeck starts it, restarts it if it stops, and it only connects when
-  TikTok says you're live (it checks every 30 seconds) to stay within the free signing service's limits.
-- **Relay.** Aitum's remote controls can start and stop an output but can't change its stream key, and
-  TikTok gives a new key for every LIVE. So Aitum always sends to a fixed local address, and GiftDeck
-  starts `ffmpeg -c copy` to forward that stream to each LIVE's key. The video isn't re-encoded.
+- **Reading your LIVE:** the bundled bridge ([TikTok-Live-Connector](https://github.com/zerodytrash/TikTok-Live-Connector))
+  reads a public LIVE without logging in; for 18+ LIVEs GiftDeck listens to TikFinity's local feed instead.
+- **GameLink:** game mods connect to GiftDeck on `ws://127.0.0.1:21216`, send their list of commands,
+  and run the ones your events trigger. The protocol is in `docs/v2.1/plan.md`.
+- **OBS engine:** GiftDeck starts OBS hidden on its portrait setup, restarts it if it's closed, and puts
+  your own OBS scene collection and profile back when GiftDeck closes.
 - **Go LIVE** uses the same Streamlabs API as Streamlabs Desktop to open and close the LIVE.
-- **Preview.** Snapshots of the scene OBS is sending (about 20 per second), only while the Go LIVE page
-  is on screen.
-
-**Performance** (measured on a 16-core PC while streaming-ready): GiftDeck ~0.4% CPU and ~190 MB RAM
-with the preview on, the bridge ~0% and ~65 MB, OBS about +1% for the preview.
 
 ## Your data and keys
 
-- Nothing personal is stored in this folder. Settings, events, tokens and keys live in
-  `%APPDATA%\GiftDeck` on your PC and are never uploaded anywhere except to the service they belong to
-  (Streamlabs, Spotify, Jamendo).
+- Settings, events, tokens and keys live in `%APPDATA%\GiftDeck` on your PC and are never uploaded
+  anywhere except to the service they belong to (Streamlabs, Spotify, Jamendo).
 - In the app, tokens, stream keys, client IDs and passwords show as dots until you click the eye button.
 - The files in `%APPDATA%\GiftDeck` are plain JSON. Anyone with access to your Windows account can read
   them, so don't share that folder.
-- The bridge's debug dump (`raw.log`, which contains viewers' chat) is off unless you set
-  `GIFTDECK_BRIDGE_DEBUG=1`.
 
 ## Troubleshooting
 
 | Problem | Fix |
 |---|---|
-| Sidebar says **Waiting for your LIVE** while you're live | It connects within ~30 s of the LIVE starting. Check the username on Stream Setup. |
-| No chat or gifts at all | Check the username on Stream Setup. Reinstalling repairs the bridge. Its log is `bridge\bridge.log` in GiftDeck's install folder. |
-| Bridge log says **rate limit** | The free signing service's limit; it waits and retries. A free [Euler Stream](https://www.eulerstream.com) API key raises it. |
-| Go LIVE: **"Vertical Stream output isn't set up"** | Do step 4 of setup (Aitum output → Custom, `rtmp://127.0.0.1:1936/live`, key `giftdeck`). |
+| No chat or gifts on an **18+** LIVE | Choose **TikFinity** under *Stream Setup → Reading your LIVE*, and log in to TikFinity. |
+| Gifts fire twice | TikFinity's own Events are also on. Switch them off in TikFinity. |
+| Sidebar says **OBS: error** | Hover it for the reason. GiftDeck restarts OBS if it's closed; *Stream Setup → OBS engine* shows more. |
+| Closing OBS while editing | Fine: its X puts it back in the background. **Done editing** on Scenes does the same. |
 | **⚠ TikTok isn't showing you as LIVE after 90 seconds** | Check the TikTok app. Make sure LIVE Studio isn't also live on the same account. |
-| How fast do gifts arrive? | The Dashboard feed shows each gift's and chat message's delay from TikTok, e.g. `· 0.8 s`. Combo gifts (Rose etc.) also wait ~2–3 s for the combo to finish so a combo counts once; turn that off in Settings if you'd rather fire on every tap. |
-| Keys fire twice | TikFinity's own events are also on. Turn them off in TikFinity (Actions & Events). |
-| OBS not connected | Enable OBS's WebSocket server (Tools → WebSocket Server Settings). |
+| GTA: nothing happens | Games → GTA V should say **Connected in game**. Story Mode only, prologue finished, BattlEye off. |
+| Minecraft: commands do nothing | Join the server first (`localhost`); most commands need a player online. |
 | Music: **"didn't accept that Client ID"** | Copy the Jamendo Client ID again, all of it. |
 
 GiftDeck's own log is at `%APPDATA%\GiftDeck\log.txt`.
@@ -303,48 +319,61 @@ For developers. You need the [.NET 8 SDK](https://dotnet.microsoft.com/download/
 ```powershell
 git clone https://github.com/Obiwayne/GiftDeck.git
 cd GiftDeck
+dotnet build -c Debug                      # bin\Debug\net8.0-windows\GiftDeck.exe
 
-# Run it from source (uses your installed Node.js for the bridge)
-powershell -ExecutionPolicy Bypass -File install.ps1      # builds dist\GiftDeck.exe, installs bridge packages, adds shortcuts
-
-# Build the downloadable installer (also needs Inno Setup 6: winget install JRSoftware.InnoSetup)
-powershell -ExecutionPolicy Bypass -File build-installer.ps1 -Version 1.0.0
-#   -> build\GiftDeck-Setup-1.0.0.exe: self-contained GiftDeck + the bridge with its own Node.js
+# The downloadable installer (also needs Inno Setup 6: winget install JRSoftware.InnoSetup)
+powershell -ExecutionPolicy Bypass -File build-installer.ps1 -Version 2.1.0
+#   -> build\GiftDeck-Setup-2.1.0.exe: self-contained GiftDeck + the bridge with its own Node.js
 ```
 
-The only NuGet packages are `System.Speech` and `Microsoft.Web.WebView2`.
+Game mods are separate projects:
+
+- **GiftDeck GTA script** (`mods/gta5/GiftDeckGTA`, .NET Framework 4.8):
+  `dotnet build mods/gta5/GiftDeckGTA -c Release -p:ShvdnDir="<folder with ScriptHookVDotNet3.dll>"`
+  (a built copy ships in `Packs/gta5/files`).
+- **GiftDeck Games** Minecraft plugin (`mods/minecraft/GiftDeckGames`, Java 17+): `gradlew build`
+  (a built copy ships in `Packs/minecraft/plugins`).
+- **Chaos Mod V (GiftDeck build)** lives in its own repository:
+  [Obiwayne/ChaosModV-GiftDeck](https://github.com/Obiwayne/ChaosModV-GiftDeck) (GPL-3).
+
+Test harnesses are under `tests/` and `tools/`. The only NuGet packages are `System.Speech` and
+`Microsoft.Web.WebView2`.
 
 ## Project layout
 
 ```
 GiftDeck/
-├─ Services/        TikTok feed, bridge + relay control, rules engine, key sender, OBS (obs-websocket v5 + Aitum),
-│                   Streamlabs (Go LIVE + login), Spotify (PKCE), music (Jamendo), TTS, overlays server, storage
-├─ Views/           Dashboard, Go LIVE, Stream Setup, Events + editors, Overlays, Music, Spotify, TTS, OBS, Settings
-├─ Overlays/        the HTML overlay pages served to OBS
-├─ bridge/          bridge.js — reads your TikTok LIVE (Node)
-├─ Assets/          app icon
-├─ Theme.xaml       dark theme and the logo artwork
-├─ install.ps1      build + run from source
+├─ Services/        TikTok/Kick feeds, rules engine, OBS engine + obs-websocket, Go LIVE (Streamlabs),
+│                   GameLink, game packs installer, Minecraft server + RCON, overlays, spinner, alerts, TTS
+├─ Views/           the pages: Dashboard, Go LIVE, Scenes, Stream Setup, Games, Events, Profiles, Overlays, ...
+├─ Overlays/        the HTML overlay pages served to OBS / TikTok LIVE Studio
+├─ Packs/           game packs: pack.json, command lists, presets, bundled mods (gta5, minecraft)
+├─ mods/            source of GiftDeck's own game mods (GTA script, Minecraft plugin)
+├─ bridge/          bridge.js: reads your TikTok LIVE (Node)
+├─ docs/            screenshots and design notes (docs/v2.1)
+├─ tests/, tools/   test harnesses and developer tools
 └─ build-installer.ps1 / installer.iss   the downloadable installer
 ```
 
 ## Disclaimer
 
-GiftDeck is an independent project, **not affiliated with or endorsed by TikTok, ByteDance, Streamlabs,
-OBS, Aitum, TikFinity, Jamendo or Spotify**. Reading a LIVE and opening a LIVE through Streamlabs rely
-on unofficial, reverse-engineered interfaces that can change or stop working at any time. Use it at
-your own risk and within each service's terms.
+GiftDeck is an independent project, **not affiliated with or endorsed by TikTok, ByteDance, Kick,
+Streamlabs, OBS, Aitum, TikFinity, Rockstar Games, Take-Two, Mojang, Microsoft, Google, Jamendo or
+Spotify**. Reading a LIVE, opening a LIVE through Streamlabs, the free Google voices and Kick's chat feed
+rely on unofficial interfaces that can change or stop working at any time. Game mods are for single-player
+/ your own server only. Use it at your own risk and within each service's and game's terms.
 
 ## Credits and licence
 
-- [TikTok-Live-Connector](https://github.com/zerodytrash/TikTok-Live-Connector) (MIT) for reading LIVE events
-- [ws](https://github.com/websockets/ws) (MIT)
-- [obs-websocket](https://github.com/obsproject/obs-websocket) and [Aitum Stream Suite](https://aitum.tv)'s vendor requests
+- [TikTok-Live-Connector](https://github.com/zerodytrash/TikTok-Live-Connector) (MIT) and [ws](https://github.com/websockets/ws) (MIT)
+- [Chaos Mod V](https://github.com/gta-chaos-mod/ChaosModV) (GPL-3); GiftDeck's build is at
+  [Obiwayne/ChaosModV-GiftDeck](https://github.com/Obiwayne/ChaosModV-GiftDeck)
+- [Script Hook V](http://www.dev-c.com/gtav/scripthookv/) by Alexander Blade (downloaded from dev-c.com, not redistributed)
+  and [Script Hook V .NET](https://github.com/scripthookvdotnet/scripthookvdotnet)
+- [PaperMC](https://papermc.io) and [Eclipse Temurin](https://adoptium.net), downloaded on request
+- [obs-websocket](https://github.com/obsproject/obs-websocket) and [Aitum Stream Suite](https://aitum.tv)
 - [Node.js](https://nodejs.org) (MIT), bundled in the installer to run the bridge
-- [ffmpeg](https://ffmpeg.org) for the relay, downloaded on request from [gyan.dev](https://www.gyan.dev/ffmpeg/builds/) (not bundled)
-- The Streamlabs TikTok login and Go LIVE calls follow the same public web API as Streamlabs Desktop;
-  GiftDeck's implementation is its own code.
+- [ffmpeg](https://ffmpeg.org), downloaded on request from [gyan.dev](https://www.gyan.dev/ffmpeg/builds/) (not bundled)
 - Music from [Jamendo](https://www.jamendo.com) (each track's own Creative Commons licence applies)
 
-GiftDeck is released under the [MIT licence](LICENSE).
+GiftDeck, the GiftDeck GTA script and the GiftDeck Games plugin are released under the [MIT licence](LICENSE).
