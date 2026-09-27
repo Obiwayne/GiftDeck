@@ -19,3 +19,6 @@ spotify.json
 # Installer build output and download cache
 build/
 .buildcache/
+
+# Claude Code agent worktrees
+.claude/
