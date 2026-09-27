@@ -55,7 +55,7 @@
             <Border Style="{StaticResource Card}" Padding="14" Margin="0,0,14,0">
                 <DockPanel>
                     <DockPanel DockPanel.Dock="Top" Margin="0,0,0,10">
-                        <Button x:Name="PreviewButton" DockPanel.Dock="Right" Content="Pause preview" Style="{StaticResource Ghost}" Padding="8,3" Click="PreviewToggle_Click"/>
+                        <Button MinHeight="0" x:Name="PreviewButton" DockPanel.Dock="Right" Content="Pause preview" Style="{StaticResource Ghost}" Padding="8,3" Click="PreviewToggle_Click"/>
                         <TextBlock Text="Preview" Style="{StaticResource H2}" VerticalAlignment="Center"/>
                         <TextBlock x:Name="PreviewSource" Style="{StaticResource Muted}" VerticalAlignment="Center" Margin="10,1,0,0"/>
                     </DockPanel>

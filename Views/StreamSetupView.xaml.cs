@@ -5,7 +5,7 @@ using GiftDeck.Services;
 
 namespace GiftDeck.Views;
 
-// One-time setup for Go LIVE: the vertical canvas and the Streamlabs token.
+// One-time setup: the checklist, the TikTok account, how the LIVE is read, OBS, and the Streamlabs token.
 public partial class StreamSetupView : UserControl
 {
     bool _loading = true;
@@ -52,16 +52,7 @@ public partial class StreamSetupView : UserControl
     void Reader_Changed(object sender, SelectionChangedEventArgs e)
     {
         if (_loading) return;
-        var s = Hub.Settings;
-        s.LiveReader = Reader;
-        // The feed GiftDeck listens to: TikFinity's own, or the bridge (which reads the page or TikTok itself).
-        s.TikFinityUrl = Reader == "tikfinity" ? "ws://localhost:21213/" : "ws://localhost:" + BridgeService.Port + "/";
-        Hub.SaveSettings();
-        Log.Write("Reading the LIVE through: " + Reader);
-        Hub.Bridge.Restart();      // page mode or not (and not needed at all for TikFinity)
-        Hub.TikFinity.Reconnect(); // listen to the new feed now
-        Hub.PageReader.CheckSoon();
-        if (Reader == "tikfinity" && !TikFinityService.IsProcessRunning()) Hub.TikFinity.Launch();
+        TikFinityService.UseReader(Reader);
         _loggedIn = null;
         UpdateReader();
     }
@@ -72,8 +63,8 @@ public partial class StreamSetupView : UserControl
         ReaderHelp.Text = r switch
         {
             "page" => "GiftDeck opens your LIVE in its own TikTok page, logged in as you, muted and out of sight, whenever you're live. Nothing else to install or run, and it works with 18+ LIVEs.",
-            "tikfinity" => "GiftDeck listens to TikFinity's feed. TikFinity has to be running and connected to your LIVE; GiftDeck can start it for you, hidden in the background.",
-            _ => "The bridge connects to your LIVE by itself without logging in. TikTok doesn't send chat or gifts to logged-out viewers of 18+ LIVEs, so use the TikTok page if your LIVE is 18+.",
+            "tikfinity" => "GiftDeck listens to TikFinity's feed (needed for 18+ LIVEs). TikFinity has to be installed and logged in to your TikTok account, with its own Events switched off; GiftDeck starts it for you, hidden in the background.",
+            _ => "The bridge connects to your LIVE by itself without logging in. TikTok doesn't send chat or gifts to logged-out viewers of 18+ LIVEs, so use TikFinity if your LIVE is 18+.",
         };
         TikTokLoginButton.Visibility = r == "page" ? Visibility.Visible : Visibility.Collapsed;
         TikFinityHiddenBox.Visibility = ShowTikFinityButton.Visibility = HideTikFinityButton.Visibility = r == "tikfinity" ? Visibility.Visible : Visibility.Collapsed;
@@ -100,12 +91,13 @@ public partial class StreamSetupView : UserControl
         {
             status = feed.TikTokLive == true ? "Reading your LIVE \u2713" : feed.Connected ? "Bridge running" : "Starting the bridge\u2026";
             brush = feed.TikTokLive == true ? "SuccessBrush" : "TextBrush";
-            if (Tt.State.Mature) { detail = "Your LIVE is set to 18+: the bridge won't see chat or gifts. Choose the TikTok page instead."; brush = "WarnBrush"; }
+            if (Tt.State.Mature) { detail = "Your LIVE is set to 18+: the bridge won't see chat or gifts. Choose TikFinity instead (see the setup checklist above)."; brush = "WarnBrush"; }
         }
         ReaderStatus.Text = status;
         ReaderStatus.Foreground = (System.Windows.Media.Brush)FindResource(brush);
         ReaderDetail.Text = detail;
         ReaderDetail.Visibility = string.IsNullOrEmpty(detail) ? Visibility.Collapsed : Visibility.Visible;
+        UpdateChecklist();
     }
 
     async Task CheckLoginAsync()
@@ -163,6 +155,7 @@ public partial class StreamSetupView : UserControl
         EngineDetail.Text = detail;
         ShowObsButton.IsEnabled = running && !visible && !_engineBusy;
         SetUpPortraitButton.IsEnabled = !_engineBusy;
+        UpdateChecklist();
     }
 
     void EngineSay(string text, string brush)
@@ -231,6 +224,7 @@ public partial class StreamSetupView : UserControl
         if (_loading) return;
         Tt.State.Token = TokenBox.Text.Trim();
         Tt.Save();
+        UpdateChecklist();
     }
 
     void Username_Changed(object sender, RoutedEventArgs e)
@@ -259,6 +253,7 @@ public partial class StreamSetupView : UserControl
         bool differs = mine.Length > 0 && watching.Length > 0 && !string.Equals(mine, watching, StringComparison.OrdinalIgnoreCase);
         UsernameNote.Text = differs ? $"This isn't the account you're logged in with (@{mine}). GiftDeck will read @{watching}'s LIVE." : "";
         UsernameNote.Visibility = differs ? Visibility.Visible : Visibility.Collapsed;
+        UpdateChecklist();
     }
 
     async void Login_Click(object sender, RoutedEventArgs e)

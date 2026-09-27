@@ -70,7 +70,11 @@ public partial class DashboardView : UserControl
         {
         TikTitle.Text = "TikFinity";
         TikButton.Content = "Launch TikFinity";
-        TikStatus.Text = t.Connected && t.TikTokLive == false ? "Running, but TikFinity is NOT connected to your LIVE, so gifts and chat won't arrive. In TikFinity, click Connect (or restart it) once you're live."
+        // TikFinity reports "not live" whenever you're offline; only a problem once GiftDeck has put you LIVE.
+        TikStatus.Text = t.Connected && t.TikTokLive == false
+                ? (Hub.TikTok.Live
+                    ? "Running, but TikFinity is NOT on your LIVE, so gifts and chat won't arrive. In TikFinity, click Connect (or restart it)."
+                    : "Connected. Waiting for you to go LIVE; every gift, follow, like and chat message will reach GiftDeck.")
             : t.Connected ? "Running and connected. Every gift, follow, like and chat message reaches GiftDeck."
             : t.ProcessRunning ? "Running. Waiting for its event feed to open."
             : "Not running. GiftDeck needs it for the TikTok connection.";

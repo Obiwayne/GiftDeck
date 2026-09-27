@@ -100,7 +100,8 @@
         <Setter Property="Background" Value="{StaticResource Panel2Brush}"/>
         <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
         <Setter Property="BorderBrush" Value="{StaticResource LineBrush}"/>
-        <Setter Property="Padding" Value="14,7"/>
+        <Setter Property="Padding" Value="14,0"/>
+        <Setter Property="MinHeight" Value="36"/>
         <Setter Property="FontSize" Value="13"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
@@ -148,10 +149,12 @@
     </Style>
     <Style x:Key="Small" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
         <Setter Property="Padding" Value="10,4"/>
+        <Setter Property="MinHeight" Value="0"/>
         <Setter Property="FontSize" Value="12"/>
     </Style>
     <Style x:Key="SmallDanger" TargetType="Button" BasedOn="{StaticResource Danger}">
         <Setter Property="Padding" Value="10,4"/>
+        <Setter Property="MinHeight" Value="0"/>
         <Setter Property="FontSize" Value="12"/>
     </Style>
 
@@ -162,9 +165,9 @@
         <Setter Property="BorderBrush" Value="{StaticResource LineBrush}"/>
         <Setter Property="CaretBrush" Value="{StaticResource TextBrush}"/>
         <Setter Property="SelectionBrush" Value="{StaticResource AccentBrush}"/>
-        <Setter Property="Padding" Value="9,6"/>
+        <Setter Property="Padding" Value="9,0"/>
         <Setter Property="FontSize" Value="13"/>
-        <Setter Property="MinHeight" Value="34"/>
+        <Setter Property="MinHeight" Value="36"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -185,6 +188,12 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Style.Triggers>
+            <Trigger Property="AcceptsReturn" Value="True">
+                <Setter Property="Padding" Value="9,7"/>
+                <Setter Property="VerticalContentAlignment" Value="Top"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <Style TargetType="PasswordBox">
@@ -192,9 +201,9 @@
         <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
         <Setter Property="BorderBrush" Value="{StaticResource LineBrush}"/>
         <Setter Property="CaretBrush" Value="{StaticResource TextBrush}"/>
-        <Setter Property="Padding" Value="9,6"/>
+        <Setter Property="Padding" Value="9,0"/>
         <Setter Property="FontSize" Value="13"/>
-        <Setter Property="MinHeight" Value="34"/>
+        <Setter Property="MinHeight" Value="36"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -270,7 +279,7 @@
         <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
         <Setter Property="Background" Value="{StaticResource Panel2Brush}"/>
         <Setter Property="BorderBrush" Value="{StaticResource LineBrush}"/>
-        <Setter Property="MinHeight" Value="34"/>
+        <Setter Property="MinHeight" Value="36"/>
         <Setter Property="Padding" Value="10,0"/>
         <Setter Property="FontSize" Value="13"/>
         <Setter Property="MaxDropDownHeight" Value="320"/>

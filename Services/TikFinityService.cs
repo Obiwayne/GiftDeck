@@ -33,6 +33,21 @@ public class TikFinityService
 
     public void Stop() => _cts.Cancel();
 
+    // Where GiftDeck reads the LIVE from: "tikfinity", "bridge" or "page". Switches the feed straight away.
+    public static void UseReader(string reader)
+    {
+        var s = Hub.Settings;
+        s.LiveReader = reader;
+        // The feed GiftDeck listens to: TikFinity's own, or the bridge (which reads the page or TikTok itself).
+        s.TikFinityUrl = reader == "tikfinity" ? "ws://localhost:21213/" : "ws://localhost:" + BridgeService.Port + "/";
+        Hub.SaveSettings();
+        Log.Write("Reading the LIVE through: " + reader);
+        Hub.Bridge.Restart();      // page mode or not (and not needed at all for TikFinity)
+        Hub.TikFinity.Reconnect(); // listen to the new feed now
+        Hub.PageReader.CheckSoon();
+        if (reader == "tikfinity" && !IsProcessRunning()) Hub.TikFinity.Launch();
+    }
+
     public static bool IsProcessRunning() => Process.GetProcessesByName("TikFinity").Length > 0;
 
     public bool Launch()
@@ -97,7 +112,8 @@ public class TikFinityService
     async Task HideWindowsAsync()
     {
         var until = DateTime.Now.AddSeconds(45);
-        while (DateTime.Now < until && !_cts.IsCancellationRequested)
+        // Stops as soon as someone asks to see TikFinity (ShowWindow), e.g. to log in.
+        while (DateTime.Now < until && !_cts.IsCancellationRequested && _startedHidden)
         {
             foreach (var h in Windows(visibleOnly: true)) ShowWindow(h, 0 /* SW_HIDE */);
             await Task.Delay(250);

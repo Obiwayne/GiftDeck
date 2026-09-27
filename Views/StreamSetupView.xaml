@@ -7,8 +7,20 @@
             <TextBlock Text="Stream Setup" Style="{StaticResource H1}"/>
             <TextBlock Text="Your TikTok account, the OBS engine, the vertical canvas and the Streamlabs login. Set these once; title and category are on the Go LIVE page." Style="{StaticResource Muted}" Margin="0,4,0,18"/>
 
-            <!-- TikTok account -->
+            <!-- Setup checklist (rows built in code) -->
             <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                <StackPanel>
+                    <DockPanel Margin="0,0,0,4">
+                        <TextBlock x:Name="ChecklistCount" DockPanel.Dock="Right" Style="{StaticResource Muted}" VerticalAlignment="Center"/>
+                        <TextBlock Text="Setup checklist" Style="{StaticResource H2}"/>
+                    </DockPanel>
+                    <TextBlock x:Name="ChecklistIntro" Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,0,0,10"/>
+                    <StackPanel x:Name="ChecklistPanel"/>
+                </StackPanel>
+            </Border>
+
+            <!-- TikTok account -->
+            <Border x:Name="AccountCard" Style="{StaticResource Card}" Margin="0,0,0,14">
                 <StackPanel>
                     <TextBlock Text="Your TikTok account" Style="{StaticResource H2}" Margin="0,0,0,4"/>
                     <TextBlock Text="The username whose LIVE GiftDeck reads chat, gifts and viewer counts from (the part after @ in your profile link)." Style="{StaticResource Muted}" Margin="0,0,0,10"/>
@@ -19,7 +31,7 @@
             </Border>
 
             <!-- Reading the LIVE -->
-            <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+            <Border x:Name="ReaderCard" Style="{StaticResource Card}" Margin="0,0,0,14">
                 <StackPanel>
                     <TextBlock Text="Reading your LIVE" Style="{StaticResource H2}" Margin="0,0,0,4"/>
                     <TextBlock Text="Where GiftDeck gets your chat, gifts, likes and viewer counts from." Style="{StaticResource Muted}" Margin="0,0,0,10"/>
@@ -45,7 +57,7 @@
             </Border>
 
             <!-- OBS engine -->
-            <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+            <Border x:Name="EngineCard" Style="{StaticResource Card}" Margin="0,0,0,14">
                 <StackPanel>
                     <TextBlock Text="OBS engine" Style="{StaticResource H2}" Margin="0,0,0,4"/>
                     <TextBlock Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,0,0,10"
@@ -97,7 +109,7 @@
             </Border>
 
             <!-- Token -->
-            <Border Style="{StaticResource Card}">
+            <Border x:Name="TokenCard" Style="{StaticResource Card}">
                 <StackPanel>
                     <TextBlock Text="Streamlabs TikTok token" Style="{StaticResource H2}" Margin="0,0,0,4"/>
                     <TextBlock Text="Lets GiftDeck open and close your TikTok LIVE and get its stream key. Log in once with your TikTok account through Streamlabs in your browser (Google sign-in works there). Your account needs Streamlabs TikTok LIVE access." Style="{StaticResource Muted}" Margin="0,0,0,10"/>

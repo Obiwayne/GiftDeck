@@ -81,7 +81,7 @@
                             <StackPanel>
                                 <wv2:WebView2 x:Name="Preview" Height="230" DefaultBackgroundColor="Black"/>
                                 <DockPanel Margin="8,4,8,6">
-                                    <Button DockPanel.Dock="Right" Content="Refresh" Style="{StaticResource Ghost}" Click="RefreshPreview_Click" Padding="8,3"/>
+                                    <Button MinHeight="0" DockPanel.Dock="Right" Content="Refresh" Style="{StaticResource Ghost}" Click="RefreshPreview_Click" Padding="8,3"/>
                                     <TextBlock Text="Live preview" Style="{StaticResource Muted}" VerticalAlignment="Center"/>
                                 </DockPanel>
                             </StackPanel>
@@ -124,9 +124,9 @@
                                         </StackPanel>
                                         <Button Grid.Column="4" Content="Browse" Style="{StaticResource Small}" Tag="{Binding}" Click="TileBrowse_Click" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
                                         <StackPanel Grid.Column="5" Orientation="Horizontal" VerticalAlignment="Bottom">
-                                            <Button Content="▲" Style="{StaticResource Ghost}" Tag="{Binding}" Click="TileUp_Click" Padding="8,4"/>
-                                            <Button Content="▼" Style="{StaticResource Ghost}" Tag="{Binding}" Click="TileDown_Click" Padding="8,4"/>
-                                            <Button Content="✕" Style="{StaticResource Ghost}" Foreground="{StaticResource DangerBrush}" Tag="{Binding}" Click="TileRemove_Click" Padding="8,4"/>
+                                            <Button MinHeight="0" Content="▲" Style="{StaticResource Ghost}" Tag="{Binding}" Click="TileUp_Click" Padding="8,4"/>
+                                            <Button MinHeight="0" Content="▼" Style="{StaticResource Ghost}" Tag="{Binding}" Click="TileDown_Click" Padding="8,4"/>
+                                            <Button MinHeight="0" Content="✕" Style="{StaticResource Ghost}" Foreground="{StaticResource DangerBrush}" Tag="{Binding}" Click="TileRemove_Click" Padding="8,4"/>
                                         </StackPanel>
                                     </Grid>
                                 </Border>

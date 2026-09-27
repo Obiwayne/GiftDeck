@@ -49,7 +49,9 @@
             </DockPanel>
         </Border>
 
-        <DockPanel Grid.Column="1">
+        <!-- Own adorner layers, so placeholder hints stay under the overlays below -->
+        <AdornerDecorator Grid.Column="1">
+        <DockPanel>
             <!-- Profile bar: always shows which profile is in use, and switches it from any page -->
             <Border DockPanel.Dock="Top" Height="58" Background="{StaticResource PanelBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="0,0,0,1" Padding="32,0">
                 <DockPanel>
@@ -70,9 +72,31 @@
             </Border>
             <ContentControl x:Name="ContentHost"/>
         </DockPanel>
+        </AdornerDecorator>
 
-        <views:LivePanel Grid.Column="2"/>
+        <AdornerDecorator Grid.Column="2">
+            <views:LivePanel/>
+        </AdornerDecorator>
         <views:ProfileSwitchOverlay x:Name="SwitchOverlay" Grid.ColumnSpan="3" Panel.ZIndex="100"/>
+
+        <!-- The screen GiftDeck opens on: setup steps if anything is missing, then the ready check. -->
+        <views:SetupWizard x:Name="Setup" Grid.ColumnSpan="3" Panel.ZIndex="150" Visibility="Collapsed"/>
+
+        <!-- Shown after the close button: GiftDeck stays on screen until OBS and everything else has shut down. -->
+        <Grid x:Name="ShutdownOverlay" Grid.ColumnSpan="3" Panel.ZIndex="200" Visibility="Collapsed">
+            <Rectangle Fill="{StaticResource BgBrush}" Opacity="0.94"/>
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Ellipse Width="44" Height="44" StrokeThickness="4" Stroke="{StaticResource AccentBrush}" StrokeDashArray="8 4"
+                         RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" Margin="0,0,0,20">
+                    <Ellipse.RenderTransform>
+                        <RotateTransform x:Name="ShutdownSpin"/>
+                    </Ellipse.RenderTransform>
+                </Ellipse>
+                <TextBlock Text="Shutting down GiftDeck" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="{StaticResource TextBrush}"/>
+                <TextBlock x:Name="ShutdownStep" Style="{StaticResource Muted}" FontSize="13" HorizontalAlignment="Center" Margin="0,8,0,0"/>
+                <TextBlock Text="GiftDeck closes by itself when everything has stopped." Style="{StaticResource Muted}" FontSize="12" HorizontalAlignment="Center" Margin="0,18,0,0"/>
+            </StackPanel>
+        </Grid>
         <!-- Drag the panel's left edge to make chat and gifts wider or narrower -->
         <GridSplitter Grid.Column="2" Width="5" HorizontalAlignment="Left" Background="Transparent" ResizeBehavior="PreviousAndCurrent" ResizeDirection="Columns" Cursor="SizeWE"/>
     </Grid>

@@ -21,6 +21,9 @@ public class ObsHost
 
     public string LastError { get; private set; }
 
+    // True while GiftDeck is starting OBS and waiting to connect to it (for the "Starting OBS" status).
+    public bool Starting { get; private set; }
+
     Process _started; // the OBS this GiftDeck launched, if it's still that one
 
     public bool StartedByGiftDeck
@@ -63,17 +66,30 @@ public class ObsHost
 
         var psi = ObsConfig.BuildStartInfo(exe, collection, profile);
         Log.Write($"Starting OBS hidden: collection \"{collection}\", profile \"{profile}\"");
-        _started = Process.Start(psi);
-        Notify();
-
-        var until = DateTime.Now.AddMilliseconds(timeoutMs);
-        while (DateTime.Now < until)
+        Starting = true;
+        LastError = null;
+        try
         {
-            if (_started.HasExited) throw new Exception($"OBS closed right after starting (exit code {_started.ExitCode}).");
-            if (!Hub.Obs.Connected) try { await Hub.Obs.ConnectAsync(true); } catch { }
-            if (Hub.Obs.Connected) { LastError = null; Notify(); return; }
-            await Task.Delay(1000);
+            _started = Process.Start(psi);
+            Notify();
+
+            var until = DateTime.Now.AddMilliseconds(timeoutMs);
+            while (DateTime.Now < until)
+            {
+                if (_started.HasExited) throw new Exception($"OBS closed right after starting (exit code {_started.ExitCode}).");
+                if (!Hub.Obs.Connected) try { await Hub.Obs.ConnectAsync(true); } catch { }
+                if (Hub.Obs.Connected)
+                {
+                    LastError = null;
+                    // Started hidden, but OBS can still restore a window it saved as maximised: back to the tray.
+                    var w = MainWindow(_started.Id);
+                    if (w != IntPtr.Zero && IsWindowVisible(w)) { Log.Write("OBS opened its window; hiding it again"); HideWindow(); }
+                    return;
+                }
+                await Task.Delay(1000);
+            }
         }
+        finally { Starting = false; Notify(); }
         throw new TimeoutException("OBS started, but GiftDeck couldn't connect to it. Check OBS's WebSocket server is on (Tools, WebSocket Server Settings).");
     }
 
@@ -346,18 +362,49 @@ public class ObsHost
 
     // ---------- Show the hidden window ----------
 
-    // For advanced edits: brings OBS's main window out of the tray.
+    // For editing scenes: brings OBS's main window out of the tray, maximised. It goes through OBS's own tray
+    // icon (the same message a click on the icon sends), because showing the window directly leaves OBS
+    // thinking it's still hidden, and it never draws anything (a blank white window).
     public bool ShowWindow()
     {
         var p = FindRunning();
         if (p == null) return false;
         var w = MainWindow(p.Id);
         if (w == IntPtr.Zero) return false;
-        ShowWindow(w, SW_SHOW);
-        ShowWindow(w, SW_RESTORE);
+        if (!IsWindowVisible(w))
+        {
+            if (!ClickTrayIcon(p.Id)) ShowWindow(w, SW_SHOW); // no tray icon: the old way, better than nothing
+            for (int i = 0; i < 20 && !IsWindowVisible(w); i++) Thread.Sleep(100);
+        }
+        ShowWindow(w, SW_MAXIMIZE);
         SetForegroundWindow(w);
         Notify();
         return true;
+    }
+
+    // Back to the tray after editing, the same way. Only hides the window; OBS keeps running (and streaming, if live).
+    public bool HideWindow()
+    {
+        var p = FindRunning();
+        if (p == null) return false;
+        var w = MainWindow(p.Id);
+        if (w == IntPtr.Zero || !IsWindowVisible(w)) return false;
+        // Un-maximise first: OBS saves the window state on exit, and a saved maximised window makes the next
+        // hidden start pop up on screen instead of staying in the tray.
+        if (IsZoomed(w)) { ShowWindow(w, SW_RESTORE); Thread.Sleep(150); }
+        if (!ClickTrayIcon(p.Id)) ShowWindow(w, SW_HIDE);
+        for (int i = 0; i < 20 && IsWindowVisible(w); i++) Thread.Sleep(100);
+        Notify();
+        return true;
+    }
+
+    // Qt's tray icon talks to a hidden "QTrayIconMessageWindow" with WM_APP+101; a low word of NIN_SELECT is a
+    // single click, which OBS answers by toggling its main window (OBSBasic::IconActivated -> ToggleShowHide).
+    static bool ClickTrayIcon(int pid)
+    {
+        var tray = ObsConfig.WindowsOf(pid, cls => cls.Contains("TrayIconMessageWindow")).FirstOrDefault();
+        if (tray == IntPtr.Zero) return false;
+        return PostMessage(tray, WM_APP + 101, IntPtr.Zero, (IntPtr)NIN_SELECT);
     }
 
     void Notify() { try { StatusChanged?.Invoke(); } catch { } }
@@ -367,9 +414,12 @@ public class ObsHost
     static IntPtr MainWindow(int pid) => ObsConfig.MainWindows(pid).FirstOrDefault();
 
     const uint WM_CLOSE = 0x0010;
-    const int SW_SHOW = 5, SW_RESTORE = 9;
+    const int SW_HIDE = 0, SW_SHOW = 5, SW_MAXIMIZE = 3, SW_RESTORE = 9;
+    const uint WM_APP = 0x8000;
+    const int NIN_SELECT = 0x400;
 
     [DllImport("user32.dll")] static extern bool IsWindowVisible(IntPtr hWnd);
+    [DllImport("user32.dll")] static extern bool IsZoomed(IntPtr hWnd);
     [DllImport("user32.dll")] static extern bool PostMessage(IntPtr hWnd, uint msg, IntPtr w, IntPtr l);
     [DllImport("user32.dll")] static extern bool ShowWindow(IntPtr hWnd, int cmd);
     [DllImport("user32.dll")] static extern bool SetForegroundWindow(IntPtr hWnd);

@@ -28,6 +28,7 @@ public partial class LivePanel : UserControl
         UpdateEmpty();
         Hub.TikFinity.StatusChanged += () => Dispatcher.BeginInvoke(UpdateLive);
         UpdateLive();
+        StartStatusStrip();
     }
 
     int _peak;

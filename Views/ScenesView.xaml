@@ -8,9 +8,15 @@
         </Grid.RowDefinitions>
 
         <DockPanel Margin="0,0,0,16">
+            <!-- Opens OBS's own window to change a scene's layout (move, resize, add sources), then hides it again -->
+            <StackPanel DockPanel.Dock="Right" VerticalAlignment="Bottom" Margin="12,0,0,0">
+                <Button x:Name="EditObsButton" Content="Edit in OBS" Style="{StaticResource Primary}" Click="EditObs_Click"
+                        ToolTip="Opens OBS so you can move, resize or add things in your scenes. Changes save by themselves."/>
+            </StackPanel>
+
             <!-- Transition used for every switch (OBS's own current transition) -->
             <StackPanel x:Name="TransitionPanel" DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Bottom">
-                <StackPanel Margin="0,0,8,0">
+                <StackPanel Margin="0,0,12,0">
                     <TextBlock Text="Transition" Style="{StaticResource Label}"/>
                     <ComboBox x:Name="TransitionBox" Width="150" SelectionChanged="Transition_Changed"/>
                 </StackPanel>
@@ -22,6 +28,8 @@
             <StackPanel>
                 <TextBlock Text="Scenes" Style="{StaticResource H1}"/>
                 <TextBlock x:Name="Status" Style="{StaticResource Muted}" Margin="0,4,0,0" Text="Click a scene to put it live. The audio mixer is on the right."/>
+                <TextBlock x:Name="EditNote" Foreground="{StaticResource WarnBrush}" TextWrapping="Wrap" Margin="0,6,0,0" Visibility="Collapsed"
+                           Text="OBS is open for editing. Changes save by themselves. When you're finished, press Done editing here (don't close OBS with its X: that stops OBS)."/>
             </StackPanel>
         </DockPanel>
 

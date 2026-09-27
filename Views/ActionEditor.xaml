@@ -13,9 +13,9 @@
                 </Grid.ColumnDefinitions>
                 <ComboBox x:Name="TypeCombo" DisplayMemberPath="Label" SelectionChanged="TypeCombo_Changed"/>
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
-                    <Button Content="▲" Style="{StaticResource Ghost}" Click="Up_Click" Padding="8,4" ToolTip="Move up"/>
-                    <Button Content="▼" Style="{StaticResource Ghost}" Click="Down_Click" Padding="8,4" ToolTip="Move down"/>
-                    <Button Content="✕" Style="{StaticResource Ghost}" Foreground="{StaticResource DangerBrush}" Click="Remove_Click" Padding="8,4" ToolTip="Remove this action"/>
+                    <Button MinHeight="0" Content="▲" Style="{StaticResource Ghost}" Click="Up_Click" Padding="8,4" ToolTip="Move up"/>
+                    <Button MinHeight="0" Content="▼" Style="{StaticResource Ghost}" Click="Down_Click" Padding="8,4" ToolTip="Move down"/>
+                    <Button MinHeight="0" Content="✕" Style="{StaticResource Ghost}" Foreground="{StaticResource DangerBrush}" Click="Remove_Click" Padding="8,4" ToolTip="Remove this action"/>
                 </StackPanel>
             </Grid>
 

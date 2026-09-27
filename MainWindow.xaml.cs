@@ -18,12 +18,18 @@ public partial class MainWindow : Window
         Hub.Obs.StatusChanged += () => Dispatcher.BeginInvoke(UpdateStatus);
         Hub.Spotify.StatusChanged += () => Dispatcher.BeginInvoke(UpdateStatus);
         BridgeService.AccountChanged += () => Dispatcher.BeginInvoke(UpdateStatus);
+        Hub.Engine.StatusChanged += () => Dispatcher.BeginInvoke(UpdateStatus);
+        // Loading turns into an error after a while even if nothing reports a change.
+        var statusTimer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
+        statusTimer.Tick += (_, _) => UpdateStatus();
+        statusTimer.Start();
         UpdateStatus();
         BuildNav();
         _noteTimer.Tick += (_, _) => { _noteTimer.Stop(); ProfileNote.Text = ""; };
         RefreshProfiles();
         Hub.Profiles.Changed += () => Dispatcher.BeginInvoke(OnProfilesChanged);
         ApplyCollapsed(Hub.Settings.SidebarCollapsed);
+        Setup.Start(); // covers the window until everything's set up and connected
         // GIFTDECK_START_PAGE (development builds) opens straight on a page, e.g. "scenes".
         Navigate(Environment.GetEnvironmentVariable("GIFTDECK_START_PAGE") is { Length: > 0 } page ? page : "dashboard");
     }
@@ -213,32 +219,51 @@ public partial class MainWindow : Window
         var warn = (Brush)FindResource("WarnBrush");
         var off = (Brush)FindResource("MutedBrush");
 
-        var t = Hub.TikFinity;
-        if (BridgeService.NeedsUsername)
+        Brush For(StatusKind k) => k switch
         {
-            TikDot.Fill = warn;
-            TikText.Text = "Set your TikTok username";
-        }
-        else if (BridgeService.InUse)
-        {
-            // GiftDeck's own bridge reads the LIVE directly; being offline is normal, not an error.
-            TikDot.Fill = !t.Connected ? warn : t.TikTokLive == true ? ok : off;
-            TikText.Text = !t.Connected ? "TikTok bridge starting" : t.TikTokLive == true ? "Connected to your LIVE" : "Waiting for your LIVE";
-        }
-        else
-        {
-            bool notOnLive = t.Connected && t.TikTokLive == false;
-            TikDot.Fill = notOnLive ? (Brush)FindResource("DangerBrush") : t.Connected ? ok : t.ProcessRunning ? warn : off;
-            TikText.Text = notOnLive ? "TikFinity not on your LIVE" : t.Connected ? "TikFinity feed live" : t.ProcessRunning ? "TikFinity starting up" : "TikFinity not running";
-        }
+            StatusKind.Ok => ok,
+            StatusKind.Loading => warn,
+            StatusKind.Error => (Brush)FindResource("DangerBrush"),
+            _ => off,
+        };
 
-        ObsDot.Fill = Hub.Obs.Connected ? ok : off;
-        ObsText.Text = Hub.Obs.Connected ? "OBS connected" : "OBS not connected";
+        // Full wording in the tooltip and on the right-hand panel; the sidebar keeps it short.
+        var (rk, rtext) = StartupStatus.Reader();
+        TikDot.Fill = For(rk);
+        TikText.Text = rk == StatusKind.Error && !BridgeService.NeedsUsername
+            ? (BridgeService.InUse ? "TikTok bridge: error" : "TikFinity: something's wrong")
+            : rtext;
+        var (ok2, otext) = StartupStatus.Obs();
+        ObsDot.Fill = For(ok2);
+        ObsText.Text = ok2 == StatusKind.Error ? "OBS: error" : otext;
 
         SpotDot.Fill = Hub.Spotify.Linked ? ok : off;
         SpotText.Text = Hub.Spotify.Linked ? "Spotify: " + (Hub.Spotify.AccountName ?? "linked") : "Spotify not linked";
-        TikDot.ToolTip = TikText.Text;
-        ObsDot.ToolTip = ObsText.Text;
+        TikDot.ToolTip = TikText.ToolTip = rtext;
+        ObsDot.ToolTip = ObsText.ToolTip = otext;
         SpotDot.ToolTip = SpotText.Text;
+    }
+
+    // ---- Closing: stay on screen, spinner and steps, until everything has shut down ----
+
+    bool _shuttingDown, _shutdownDone;
+
+    protected override async void OnClosing(System.ComponentModel.CancelEventArgs e)
+    {
+        if (_shutdownDone) { base.OnClosing(e); return; }
+        e.Cancel = true;
+        if (_shuttingDown) return; // the close button again while it's already shutting down
+        _shuttingDown = true;
+
+        ShutdownOverlay.Visibility = Visibility.Visible;
+        ShutdownSpin.BeginAnimation(RotateTransform.AngleProperty,
+            new System.Windows.Media.Animation.DoubleAnimation(0, 360, TimeSpan.FromSeconds(1)) { RepeatBehavior = System.Windows.Media.Animation.RepeatBehavior.Forever });
+        ShutdownStep.Text = "Starting…";
+        var step = new Progress<string>(text => ShutdownStep.Text = text);
+        try { await Task.Run(() => Hub.StopServices(t => ((IProgress<string>)step).Report(t))); }
+        catch (Exception ex) { Log.Write("Shutting down: " + ex.Message); }
+
+        _shutdownDone = true;
+        Close();
     }
 }

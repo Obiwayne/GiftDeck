@@ -92,16 +92,33 @@ public static class Hub
         Storage.Save("settings.json", Settings);
     }
 
-    public static void Shutdown()
+    static bool _servicesStopped;
+
+    // The slow part of closing (up to ~45 s while OBS quits). Touches no windows, so the main window runs it
+    // on the pool and shows each step; step gets plain words for the "Shutting down" screen.
+    public static void StopServices(Action<string> step = null)
     {
+        if (_servicesStopped) return;
+        _servicesStopped = true;
+        step ??= _ => { };
+        step("Saving your settings…");
         try { SaveSettings(); } catch { }
         try { Profiles.SaveActive(); } catch { }
         try { Web?.Stop(); } catch { }
+        step("Stopping TikFinity and the TikTok connection…");
         try { TikFinity?.Stop(); } catch { }
         try { TikFinity?.CloseIfHidden(); } catch { }
         try { Bridge?.Stop(); } catch { }
-        try { Engine?.OnAppExit(); } catch { } // needs the OBS connection (is it live?), so before disconnecting; at most 20s
+        step("Closing OBS and putting your own OBS setup back…");
+        try { Engine?.OnAppExit(); } catch { } // needs the OBS connection (is it live?), so before disconnecting; at most 45s
         try { Obs?.DisconnectAsync().Wait(1000); } catch { }
+        step("Done");
+    }
+
+    public static void Shutdown()
+    {
+        StopServices(); // already done when the window closed normally
+        try { SaveSettings(); } catch { }
         try { Tts?.Stop(); } catch { }
         try { Music?.Shutdown(); } catch { }
         Log.Write("GiftDeck closed");

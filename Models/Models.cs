@@ -216,6 +216,8 @@ public class AppSettings
     // "bridge" = the bridge connecting anonymously, "tikfinity" = TikFinity's feed.
     public string LiveReader { get; set; } = "bridge";
     public bool TikFinityHidden { get; set; } = true;
+    // Ticked on the setup checklist: logged in to TikFinity and its own Events are off (so gifts don't fire twice).
+    public bool TikFinityConfirmed { get; set; }
     public bool StreakGiftsOnce { get; set; } = true;
 
     public bool FocusWindowBeforeKeys { get; set; } = false;

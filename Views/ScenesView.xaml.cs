@@ -66,6 +66,11 @@ public partial class ScenesView : UserControl
     {
         InitializeComponent();
         _meterTimer.Tick += (_, _) => UpdateMeters();
+        Hub.Engine.StatusChanged += () => Dispatcher.BeginInvoke(UpdateEditButton);
+        // OBS's window can be shown or hidden from OBS itself too; keep the button honest while the page is up.
+        var editPoll = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+        editPoll.Tick += (_, _) => { if (_visible) UpdateEditButton(); };
+        editPoll.Start();
         Hub.Obs.EventReceived += OnObsEvent;
         Hub.Obs.StatusChanged += () => Dispatcher.BeginInvoke(OnStatus);
         IsVisibleChanged += (_, _) =>
@@ -288,6 +293,7 @@ public partial class ScenesView : UserControl
         {
             Style = (Style)FindResource("Ghost"),
             Padding = new Thickness(6, 2, 6, 2),
+            MinHeight = 0,
             Content = new TextBlock { Text = "", FontFamily = (FontFamily)FindResource("IconFont"), FontSize = 13, Foreground = (Brush)FindResource("MutedBrush") },
             ToolTip = "Show this scene's layers without putting it live",
         };
@@ -456,7 +462,7 @@ public partial class ScenesView : UserControl
         // A copy: SetLayerShown below writes back into _items, which would break a foreach over the list itself.
         foreach (var item in _items.ToList())
         {
-            var eye = new Button { Style = (Style)FindResource("Ghost"), Padding = new Thickness(6, 3, 6, 3), Margin = new Thickness(0, 0, 6, 0) };
+            var eye = new Button { Style = (Style)FindResource("Ghost"), Padding = new Thickness(6, 3, 6, 3), MinHeight = 0, Margin = new Thickness(0, 0, 6, 0) };
             var name = new TextBlock { Text = item.SourceName, TextWrapping = TextWrapping.NoWrap, TextTrimming = TextTrimming.CharacterEllipsis, VerticalAlignment = VerticalAlignment.Center };
             var kind = new TextBlock { Text = KindLabel(item), Style = (Style)FindResource("Muted"), VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(10, 0, 0, 0) };
 
@@ -668,5 +674,25 @@ public partial class ScenesView : UserControl
             row.Shown = shown;
             row.MeterCover.ScaleX = 1 - shown;
         }
+    }
+
+    // ---- Editing a scene in OBS itself ----
+
+    bool ObsWindowShowing => Hub.Engine.State().visible;
+
+    void EditObs_Click(object sender, RoutedEventArgs e)
+    {
+        if (ObsWindowShowing) Hub.Engine.HideWindow();
+        else if (!Hub.Engine.ShowWindow())
+            Status.Text = ObsHost.IsRunning ? "Couldn't find OBS's window." : "OBS isn't running.";
+        UpdateEditButton();
+    }
+
+    void UpdateEditButton()
+    {
+        bool showing = ObsWindowShowing;
+        EditObsButton.Content = showing ? "Done editing" : "Edit in OBS";
+        EditObsButton.IsEnabled = ObsHost.IsRunning;
+        EditNote.Visibility = showing ? Visibility.Visible : Visibility.Collapsed;
     }
 }

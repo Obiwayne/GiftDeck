@@ -311,6 +311,22 @@ public static class ObsConfig
 
     // OBS's main window: a Qt top-level window of that process whose title starts with "OBS " (e.g.
     // "OBS 32.2.2 - Profile: ... - Scenes: ..."). Docks and projectors are other windows with other titles.
+    // All top-level windows of a process whose class name passes the test (hidden ones too).
+    public static List<IntPtr> WindowsOf(int pid, Func<string, bool> classTest)
+    {
+        var found = new List<IntPtr>();
+        EnumWindows((h, _) =>
+        {
+            GetWindowThreadProcessId(h, out var owner);
+            if (owner != pid) return true;
+            var cls = new StringBuilder(256);
+            GetClassName(h, cls, cls.Capacity);
+            if (classTest(cls.ToString())) found.Add(h);
+            return true;
+        }, IntPtr.Zero);
+        return found;
+    }
+
     public static List<IntPtr> MainWindows(int pid)
     {
         var found = new List<IntPtr>();
