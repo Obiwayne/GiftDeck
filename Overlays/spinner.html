@@ -79,16 +79,24 @@
       const fs = Math.max(22, Math.min(54, 560 / Math.max(6, n) + 14));
       g.font = '800 ' + fs + 'px ' + getComputedStyle(document.body).fontFamily;
       g.shadowColor = 'rgba(0,0,0,.8)'; g.shadowBlur = 8;
-      let label = String(e.label || ''); const max = R * .7;
+      // An event's gift picture sits at the rim, with its name inside it.
+      const pic = e.image && pics[e.image], hasPic = pic && pic.complete && pic.naturalWidth > 0;
+      const ps = Math.min(R * .14, R * .8 * a * .75);
+      let label = String(e.label || ''); const max = hasPic ? R * .9 - ps - R * .24 : R * .7;
+      if (hasPic) for (let f = fs; f > fs * .7 && g.measureText(label).width > max; f -= 2) g.font = '800 ' + f + 'px ' + getComputedStyle(document.body).fontFamily;
       while (label.length > 1 && g.measureText(label).width > max) label = label.slice(0, -2) + '…';
-      g.fillText(label, R * .9, 0);
+      g.fillText(label, hasPic ? R * .88 - ps : R * .9, 0);
+      if (hasPic) { g.shadowBlur = 10; g.drawImage(pic, R * .9 - ps, -ps / 2, ps, ps); }
       g.restore();
     }
   }
+  const pics = {};
   function setEntries(list) {
     const key = JSON.stringify(list);
     if (key === lastKey) return;
-    lastKey = key; entries = list; draw();
+    lastKey = key; entries = list;
+    for (const e of list) if (e.image && !pics[e.image]) { const im = new Image(); im.onload = draw; im.src = e.image; pics[e.image] = im; }
+    draw();
   }
   function idle() {
     $('stage').classList.toggle('hidden', hideIdle && !spinning);

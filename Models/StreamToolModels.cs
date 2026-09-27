@@ -53,7 +53,12 @@ public class SpinnerEntry : Observable
 
     public List<RuleAction> Actions { get; set; } = new List<RuleAction>();
 
-    [JsonIgnore] public int EffectiveWeight => Weight > 0 ? Weight : Rarities.DefaultWeight(Rarity);
+    // Set when this slice is an event that is on the spinner (built from the event, never saved with the spinner).
+    [JsonIgnore] public Guid? RuleId { get; set; }
+    // The event's gift picture (a web address), if it has one.
+    [JsonIgnore] public string Image { get; set; } = "";
+
+    [JsonIgnore] public int EffectiveWeight =>Weight > 0 ? Weight : Rarities.DefaultWeight(Rarity);
     [JsonIgnore] public string EffectiveColor => string.IsNullOrWhiteSpace(Color) ? Rarities.DefaultColor(Rarity) : Color.Trim();
 
     // Shown on the Overlays page: "12.5% · 2 actions".
@@ -77,7 +82,13 @@ public class Spinner : Observable
     bool _hideWhenIdle;
     public bool HideWhenIdle { get => _hideWhenIdle; set { _hideWhenIdle = value; Raise(nameof(HideWhenIdle)); } }
 
+    // Old-style prizes with their own actions. Events put on the spinner (Rule.SpinRarity) are added to these when it spins.
     public List<SpinnerEntry> Entries { get; set; } = new List<SpinnerEntry>();
+
+    // The events on this spinner, with their chances, for the Overlays page (filled by the page).
+    List<SpinnerEntry> _eventEntries = new List<SpinnerEntry>();
+    [JsonIgnore] public List<SpinnerEntry> EventEntries { get => _eventEntries; set { _eventEntries = value ?? new List<SpinnerEntry>(); Raise(nameof(EventEntries)); Raise(nameof(HasNoEvents)); } }
+    [JsonIgnore] public bool HasNoEvents => _eventEntries.Count == 0;
 
     // "Spin now" on the Overlays page: also run the prize's actions (off = just spin on the overlay).
     [JsonIgnore] public bool TestRunsActions { get; set; }

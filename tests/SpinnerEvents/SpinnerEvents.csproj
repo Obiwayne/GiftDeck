@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Checks for events on the Gift Spinner (Rule.SpinRarity): the pool, weights, old prize lists, and
+       rules.json round trips. Uses a scratch data folder, never the user's GiftDeck data.
+       Build GiftDeck to a scratch folder first, then build this with -p:GiftDeckDir=(that folder):
+         dotnet build GiftDeck.csproj -c Debug -o <scratch>\gd
+         dotnet run (in tests\SpinnerEvents) with -p:GiftDeckDir=<scratch>\gd -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <GiftDeckDir Condition="'$(GiftDeckDir)' == ''">..\..\bin\Debug\net8.0-windows</GiftDeckDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="GiftDeck">
+      <HintPath>$(GiftDeckDir)\GiftDeck.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

@@ -43,7 +43,23 @@
                                 <Image Source="{Binding TriggerGift.Image}" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"/>
                             </Border>
                             <StackPanel Grid.Column="2" VerticalAlignment="Center">
-                                <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="SemiBold"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                    <!-- On a Gift Spinner: its rarity, in the tier's colour -->
+                                    <Border CornerRadius="8" Padding="7,1" Margin="8,0,0,0" VerticalAlignment="Center" BorderThickness="1"
+                                            BorderBrush="{Binding SpinBadgeColor}" ToolTip="On the Gift Spinner at this rarity">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding SpinBadge}" Value="">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <TextBlock Text="{Binding SpinBadge, StringFormat='Spinner: {0}'}" Foreground="{Binding SpinBadgeColor}" FontSize="11" FontWeight="SemiBold"/>
+                                    </Border>
+                                </StackPanel>
                                 <TextBlock Text="{Binding TriggerSummary}" Style="{StaticResource Muted}" Margin="0,2,0,0"/>
                                 <TextBlock Text="{Binding ActionsSummary}" Margin="0,3,0,0" FontSize="12"/>
                             </StackPanel>
