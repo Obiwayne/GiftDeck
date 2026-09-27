@@ -204,9 +204,11 @@ public partial class ActionEditor
             FrameworkElement input;
             if (a.Type == "choice")
             {
-                var combo = new ComboBox { Width = 200, ItemsSource = a.Choices };
-                combo.SelectedItem = a.Choices.Contains(value) ? value : a.Choices.FirstOrDefault();
-                combo.SelectionChanged += (s, e) => CommitGameArgs();
+                // Pick from the list or type any other name (mods accept e.g. any vehicle model, not only the listed ones).
+                var combo = new ComboBox { Width = 200, ItemsSource = a.Choices, IsEditable = true, IsTextSearchEnabled = true };
+                combo.Text = string.IsNullOrEmpty(value) ? a.Choices.FirstOrDefault() ?? "" : value;
+                combo.SelectionChanged += (s, e) => Dispatcher.BeginInvoke(CommitGameArgs); // Text updates after the selection
+                combo.AddHandler(System.Windows.Controls.Primitives.TextBoxBase.TextChangedEvent, new TextChangedEventHandler((s, e) => CommitGameArgs()));
                 input = combo;
             }
             else
@@ -231,7 +233,7 @@ public partial class ActionEditor
         if (_loading || Action == null || _argsBuiltFor == null) return;
         var o = new JsonObject();
         foreach (var (arg, input) in _argInputs)
-            o[arg.Name] = ArgValue(arg, input is ComboBox c ? c.SelectedItem as string : ((TextBox)input).Text);
+            o[arg.Name] = ArgValue(arg, input is ComboBox c ? c.Text : ((TextBox)input).Text);
         Action.Args = o.Count == 0 ? "" : o.ToJsonString();
     }
 

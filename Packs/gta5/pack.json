@@ -77,7 +77,8 @@
       ],
       "extract": "zip",
       "files": [
-        { "from": "GiftDeckGTA.dll", "to": "scripts/GiftDeckGTA.dll" }
+        { "from": "GiftDeckGTA.dll", "to": "scripts/GiftDeckGTA.dll" },
+        { "from": "GiftDeckGTA.ini", "to": "scripts/GiftDeckGTA.ini", "keepExisting": true }
       ],
       "detectInstalled": "scripts\\GiftDeckGTA.dll"
     }

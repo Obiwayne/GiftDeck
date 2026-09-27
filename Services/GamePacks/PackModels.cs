@@ -137,6 +137,8 @@ public class PackFileMap
 {
     public string From { get; set; } = "*";
     public string To { get; set; } = "";
+    // Only copy when the game folder has no such file yet (settings the user may have changed, e.g. a mod's .ini).
+    public bool KeepExisting { get; set; }
 }
 
 // A setting changed after the files are copied. type "json": "path" is dot-separated (a.b.c), "value" any JSON.

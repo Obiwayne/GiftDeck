@@ -83,10 +83,10 @@ public class PackInstaller
             }
 
             // 2. Work out every file to copy, so a missing file stops the install before anything is written.
-            var plan = new List<(PackComponent c, string src, string rel)>();
+            var plan = new List<(PackComponent c, string src, string rel, bool keep)>();
             foreach (var (c, f) in fetched)
-                foreach (var (src, rel) in MapFiles(c, f.Root))
-                    plan.Add((c, src, SafeRelative(gameFolder, rel)));
+                foreach (var (src, rel, keep) in MapFiles(c, f.Root))
+                    plan.Add((c, src, SafeRelative(gameFolder, rel), keep));
 
             // 3. Copy, backing up whatever is there.
             RequireClosed();
@@ -97,9 +97,12 @@ public class PackInstaller
             try
             {
                 int done = 0;
-                foreach (var (c, src, rel) in plan)
+                foreach (var (c, src, rel, keep) in plan)
                 {
                     if (done++ % 10 == 0) _progress?.Report((0.8 + 0.15 * done / Math.Max(1, plan.Count), $"Copying {c.Name}…"));
+                    // The user's own copy (not one an earlier install wrote) stays as it is.
+                    if (keep && File.Exists(Path.Combine(gameFolder, rel)) && !record.Files.Any(x => SamePath(x.Path, rel))) continue;
+                    if (keep && record.Files.Any(x => SamePath(x.Path, rel))) continue; // ours from before: may hold the user's changes now
                     var entry = Claim(record, gameFolder, rel, c.Id, backupRel);
                     File.Copy(src, Path.Combine(gameFolder, rel), true);
                     entry.Component = c.Id;
@@ -484,16 +487,17 @@ public class PackInstaller
     // ---- File mapping ----
 
     // Every (source file, path in the game folder) the component's "files" list asks for.
-    static List<(string src, string rel)> MapFiles(PackComponent c, string root)
+    static List<(string src, string rel, bool keep)> MapFiles(PackComponent c, string root)
     {
         var all = Directory.EnumerateFiles(root, "*", SearchOption.AllDirectories)
             .Select(f => (full: f, rel: Path.GetRelativePath(root, f).Replace('\\', '/')))
             .Where(f => !c.Exclude.Any(x => Glob(x, Path.GetFileName(f.rel)) || Glob(x, f.rel)))
             .ToList();
         var maps = c.Files.Count > 0 ? c.Files : new List<PackFileMap> { new PackFileMap { From = "*", To = "" } };
-        var result = new List<(string, string)>();
+        var result = new List<(string, string, bool)>();
         foreach (var m in maps)
         {
+            var keep = m.KeepExisting;
             var from = (m.From ?? "*").Replace('\\', '/').TrimStart('/');
             var to = (m.To ?? "").Replace('\\', '/').TrimStart('/');
             var toDir = to.Length == 0 || to.EndsWith("/");
@@ -503,7 +507,7 @@ public class PackInstaller
                 var matched = all.Where(f => f.rel.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)).ToList();
                 if (matched.Count == 0) throw new Exception($"{c.Name}: the download has no {from}");
                 var dest = toDir ? to : to + "/";
-                result.AddRange(matched.Select(f => (f.full, dest + f.rel[prefix.Length..])));
+                result.AddRange(matched.Select(f => (f.full, dest + f.rel[prefix.Length..], keep)));
             }
             else if (from.Contains('*') || from.Contains('?'))
             {
@@ -512,12 +516,12 @@ public class PackInstaller
                 var matched = all.Where(f => f.rel.StartsWith(dir, StringComparison.OrdinalIgnoreCase) && !f.rel[dir.Length..].Contains('/') && Glob(pattern, f.rel[dir.Length..])).ToList();
                 if (matched.Count == 0) throw new Exception($"{c.Name}: the download has no {from}");
                 var dest = toDir ? to : to + "/";
-                result.AddRange(matched.Select(f => (f.full, dest + Path.GetFileName(f.rel))));
+                result.AddRange(matched.Select(f => (f.full, dest + Path.GetFileName(f.rel), keep)));
             }
             else
             {
                 var src = FindFile(root, from) ?? throw new Exception($"{c.Name}: {from} is missing from the download");
-                result.Add((src, toDir ? to + Path.GetFileName(from) : to));
+                result.Add((src, toDir ? to + Path.GetFileName(from) : to, keep));
             }
         }
         return result;
