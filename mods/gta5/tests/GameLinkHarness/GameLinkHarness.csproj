@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Tests for GiftDeck GTA that don't need the game. Links the script's game-independent files
+    (GameLink client, catalog, JSON) and runs them against a small local WebSocket server.
+
+      GameLinkHarness.exe                         run the GameLink test (hello, trigger, result, ping/pong, reconnect)
+      GameLinkHarness.exe check [commands.json]   validate the catalog and check the file matches it
+      GameLinkHarness.exe dump [commands.json]    write the pack's commands.json from the catalog
+  -->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <RootNamespace>GiftDeckGTA.Tests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\GiftDeckGTA\Json.cs" Link="Linked\Json.cs" />
+    <Compile Include="..\..\GiftDeckGTA\Catalog.cs" Link="Linked\Catalog.cs" />
+    <Compile Include="..\..\GiftDeckGTA\GameLinkClient.cs" Link="Linked\GameLinkClient.cs" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+
+</Project>

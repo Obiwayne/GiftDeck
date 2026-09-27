@@ -1,0 +1,58 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    GiftDeck GTA: a ScriptHookVDotNet 3 script (MIT). Not part of GiftDeck's own build.
+
+    Build:  dotnet build -c Release -p:ShvdnDir="<folder with ScriptHookVDotNet3.dll>"
+    ShvdnDir defaults to .\lib (put a copy of ScriptHookVDotNet3.dll there; it is git-ignored).
+    Reference only: the DLL is never copied to the output, SHVDN in the game folder provides it.
+
+    Output (bin\Release\scripts\) is exactly what goes into <GTA V>\scripts\:
+      GiftDeckGTA.dll, GiftDeckGTA.ini
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <AssemblyName>GiftDeckGTA</AssemblyName>
+    <RootNamespace>GiftDeckGTA</RootNamespace>
+    <PlatformTarget>x64</PlatformTarget>
+    <Nullable>disable</Nullable>
+    <Version>1.0.0</Version>
+    <Product>GiftDeck GTA</Product>
+    <Copyright>MIT, GiftDeck</Copyright>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputPath>bin\$(Configuration)\scripts\</OutputPath>
+    <DebugType Condition="'$(Configuration)' == 'Release'">none</DebugType>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <!-- World.CreatePed/CreateVehicle etc. are "obsolete" in the 3.7 nightlies, but their replacements
+         don't exist in SHVDN 3.6, which many players still have. The old calls work in both. -->
+    <NoWarn>$(NoWarn);CS0618</NoWarn>
+    <ShvdnDir Condition="'$(ShvdnDir)' == ''">$(MSBuildThisFileDirectory)lib</ShvdnDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="ScriptHookVDotNet3">
+      <HintPath>$(ShvdnDir)\ScriptHookVDotNet3.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Web.Extensions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="GiftDeckGTA.ini" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <Target Name="CheckShvdn" BeforeTargets="ResolveAssemblyReferences">
+    <Error Condition="!Exists('$(ShvdnDir)\ScriptHookVDotNet3.dll')"
+           Text="ScriptHookVDotNet3.dll not found in '$(ShvdnDir)'. Copy it into mods\gta5\GiftDeckGTA\lib or pass -p:ShvdnDir=&quot;&lt;GTA V folder&gt;&quot;." />
+  </Target>
+
+</Project>
