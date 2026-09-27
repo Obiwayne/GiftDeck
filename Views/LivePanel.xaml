@@ -39,22 +39,6 @@
                     <Button MinHeight="0" DockPanel.Dock="Right" Content="Clear" Style="{StaticResource Ghost}" Padding="8,2" FontSize="12" Click="ClearChat_Click"/>
                     <TextBlock Text="LIVE CHAT" Style="{StaticResource Muted}" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center"/>
                 </DockPanel>
-                <!-- Send a message into the LIVE's chat (through TikTok's own page, logged in as you) -->
-                <StackPanel DockPanel.Dock="Bottom" Margin="16,0,12,14">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBox x:Name="SendBox" KeyDown="SendBox_KeyDown" MaxLength="150" local:Placeholder.Text="Send a message..."/>
-                        <Button x:Name="SendButton" Grid.Column="1" Content="Send" Style="{StaticResource Primary}" Margin="6,0,0,0" Click="Send_Click"/>
-                    </Grid>
-                    <DockPanel Margin="2,5,0,0">
-                        <Button MinHeight="0" DockPanel.Dock="Right" Content="TikTok login" Style="{StaticResource Ghost}" Padding="6,1" FontSize="11.5" Click="TikTokLogin_Click"
-                                ToolTip="Log in once so GiftDeck can post your messages (or look at the TikTok page it uses)"/>
-                        <TextBlock x:Name="SendStatus" Style="{StaticResource Muted}" FontSize="11.5" TextWrapping="Wrap" VerticalAlignment="Center"/>
-                    </DockPanel>
-                </StackPanel>
                 <Grid Margin="12,0,6,12">
                     <TextBlock x:Name="ChatEmpty" Text="Chat messages from your LIVE will show up here." Style="{StaticResource Muted}" Margin="8,4"/>
                     <ListBox x:Name="ChatList" ItemContainerStyle="{StaticResource FeedItem}">

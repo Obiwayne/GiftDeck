@@ -24,6 +24,13 @@ public class ObsHost
     // True while GiftDeck is starting OBS and waiting to connect to it (for the "Starting OBS" status).
     public bool Starting { get; private set; }
 
+    // True from the moment OBS was closed by someone else (its X) until GiftDeck has it running again.
+    public bool Restarting { get; private set; }
+
+    volatile bool _shownByUser;                           // Edit in OBS: the start-up watcher must leave the window alone
+    bool _stopping, _appExiting;                          // GiftDeck is closing OBS itself: don't bring it back
+    readonly List<DateTime> _restarts = new List<DateTime>();
+
     Process _started; // the OBS this GiftDeck launched, if it's still that one
 
     public bool StartedByGiftDeck
@@ -71,6 +78,10 @@ public class ObsHost
         try
         {
             _started = Process.Start(psi);
+            var proc = _started;
+            proc.EnableRaisingEvents = true;
+            proc.Exited += (_, _) => OnObsExited(proc);
+            _ = Task.Run(() => KeepHiddenWhileStarting(proc));
             Notify();
 
             var until = DateTime.Now.AddMilliseconds(timeoutMs);
@@ -78,14 +89,7 @@ public class ObsHost
             {
                 if (_started.HasExited) throw new Exception($"OBS closed right after starting (exit code {_started.ExitCode}).");
                 if (!Hub.Obs.Connected) try { await Hub.Obs.ConnectAsync(true); } catch { }
-                if (Hub.Obs.Connected)
-                {
-                    LastError = null;
-                    // Started hidden, but OBS can still restore a window it saved as maximised: back to the tray.
-                    var w = MainWindow(_started.Id);
-                    if (w != IntPtr.Zero && IsWindowVisible(w)) { Log.Write("OBS opened its window; hiding it again"); HideWindow(); }
-                    return;
-                }
+                if (Hub.Obs.Connected) { LastError = null; return; }
                 await Task.Delay(1000);
             }
         }
@@ -149,6 +153,13 @@ public class ObsHost
             var busy = await BusyReasonAsync();
             if (busy != null) throw new InvalidOperationException($"OBS is {busy}. Stop that first.");
         }
+        _stopping = true;
+        try { await CloseAsync(p, allowKill, gracefulMs); }
+        finally { _stopping = false; }
+    }
+
+    async Task CloseAsync(Process p, bool allowKill, int gracefulMs)
+    {
 
         DateTime started;
         try { started = p.StartTime; } catch { started = DateTime.Now.AddDays(-1); }
@@ -174,6 +185,54 @@ public class ObsHost
             foreach (var f in ObsConfig.SentinelsSince(ObsConfig.Locate().SentinelDir, started.AddSeconds(-2)))
                 try { File.Delete(f); } catch { }
         Closed();
+    }
+
+    // Started hidden, but OBS still opens a window it saved as maximised (closed maximised last time):
+    // put it straight back in the tray, un-maximised so it saves a normal window this time.
+    void KeepHiddenWhileStarting(Process proc)
+    {
+        _shownByUser = false;
+        var until = DateTime.Now.AddSeconds(25);
+        while (DateTime.Now < until && !_shownByUser)
+        {
+            try { if (proc.HasExited) return; } catch { return; }
+            var w = MainWindow(proc.Id);
+            if (w != IntPtr.Zero && IsWindowVisible(w)) { Log.Write("OBS opened its window; hiding it again"); HideWindow(); }
+            Thread.Sleep(100);
+        }
+    }
+
+    // OBS that GiftDeck runs was closed by someone else, usually its X while editing. OBS has no "close to tray",
+    // so bring it back hidden (it saved the scene changes on the way out). Not while GiftDeck itself closes it.
+    void OnObsExited(Process proc)
+    {
+        System.Windows.Application.Current?.Dispatcher.BeginInvoke(ObsCloseGuard.Stop);
+        if (_stopping || _appExiting || proc != _started || !Hub.Settings.ObsManaged) return;
+        _started = null;
+        _restarts.RemoveAll(t => (DateTime.Now - t).TotalMinutes > 3);
+        if (_restarts.Count >= 3)
+        {
+            LastError = "OBS keeps closing, so GiftDeck stopped restarting it. Restart GiftDeck, or check OBS.";
+            Log.Write(LastError);
+            Notify();
+            return;
+        }
+        _restarts.Add(DateTime.Now);
+        Log.Write("OBS was closed from its own window; starting it again in the background");
+        Restarting = true;
+        _ = Hub.Obs.DisconnectAsync();
+        Notify();
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                for (int i = 0; i < 40 && IsRunning; i++) await Task.Delay(250); // an exiting obs64 lingers a moment
+                if (_appExiting) return;
+                await StartPortraitAsync();
+            }
+            catch (Exception e) { LastError = e.Message; Log.Write("Could not start OBS again: " + e.Message); }
+            finally { Restarting = false; Notify(); }
+        });
     }
 
     void Closed()
@@ -340,6 +399,8 @@ public class ObsHost
     // GiftDeck never hangs on OBS. Runs on the pool: the UI thread is blocked here.
     public void OnAppExit()
     {
+        _appExiting = true;
+        System.Windows.Application.Current?.Dispatcher.BeginInvoke(ObsCloseGuard.Stop);
         if (!Hub.Settings.ObsManaged && !StartedByGiftDeck) return; // switched off mid-session: still close the hidden OBS
         var work = Task.Run(async () =>
         {
@@ -362,7 +423,7 @@ public class ObsHost
 
     // ---------- Show the hidden window ----------
 
-    // For editing scenes: brings OBS's main window out of the tray, maximised. It goes through OBS's own tray
+    // For editing scenes: brings OBS's main window out of the tray (at the size OBS last had). It goes through OBS's own tray
     // icon (the same message a click on the icon sends), because showing the window directly leaves OBS
     // thinking it's still hidden, and it never draws anything (a blank white window).
     public bool ShowWindow()
@@ -371,13 +432,16 @@ public class ObsHost
         if (p == null) return false;
         var w = MainWindow(p.Id);
         if (w == IntPtr.Zero) return false;
+        _shownByUser = true;
         if (!IsWindowVisible(w))
         {
             if (!ClickTrayIcon(p.Id)) ShowWindow(w, SW_SHOW); // no tray icon: the old way, better than nothing
             for (int i = 0; i < 20 && !IsWindowVisible(w); i++) Thread.Sleep(100);
         }
-        ShowWindow(w, SW_MAXIMIZE);
         SetForegroundWindow(w);
+        // Its X should hide it again, not quit OBS (see ObsCloseGuard).
+        var ui = System.Windows.Application.Current?.Dispatcher;
+        if (ui != null) ui.Invoke(() => ObsCloseGuard.Watch(w));
         Notify();
         return true;
     }
@@ -388,6 +452,7 @@ public class ObsHost
         var p = FindRunning();
         if (p == null) return false;
         var w = MainWindow(p.Id);
+        System.Windows.Application.Current?.Dispatcher.BeginInvoke(ObsCloseGuard.Stop);
         if (w == IntPtr.Zero || !IsWindowVisible(w)) return false;
         // Un-maximise first: OBS saves the window state on exit, and a saved maximised window makes the next
         // hidden start pop up on screen instead of staying in the tray.

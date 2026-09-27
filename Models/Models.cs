@@ -211,6 +211,8 @@ public class AppSettings
     public bool AutoLaunchTikFinity { get; set; } = false;
     public string BridgeUsername { get; set; } = "";
     public bool SidebarCollapsed { get; set; }
+    // Go LIVE scene buttons: "small", "medium" or "large".
+    public string SceneButtonSize { get; set; } = "small";
     public string ActiveProfile { get; set; } = "";
     // How GiftDeck reads the LIVE: "page" = its own logged-in TikTok page (works with 18+, no outside service),
     // "bridge" = the bridge connecting anonymously, "tikfinity" = TikFinity's feed.

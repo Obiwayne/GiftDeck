@@ -30,6 +30,11 @@ public static class StartupStatus
             _obsWaitingSince = null;
             return (StatusKind.Off, "OBS not connected");
         }
+        if (engine.Restarting)
+        {
+            _obsWaitingSince = null;
+            return (StatusKind.Loading, "OBS was closed; starting it again in the background…");
+        }
         if (!string.IsNullOrEmpty(engine.LastError))
         {
             _obsWaitingSince = null;

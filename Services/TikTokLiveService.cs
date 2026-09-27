@@ -28,6 +28,15 @@ public class TikTokLiveState
     public string Server { get; set; }
     public string Key { get; set; }
     public DateTime? StartedAt { get; set; }
+    // What the open LIVE was started with. TikTok can't change these on a running LIVE, so edits after
+    // Go LIVE only apply to the next one (or a restart).
+    public string LiveTitle { get; set; }
+    public string LiveCategoryName { get; set; }
+    public string LiveCategoryId { get; set; }
+    public bool LiveMature { get; set; }
+
+    public bool LiveDetailsDiffer =>
+        StreamId != null && LiveTitle != null && ((LiveTitle ?? "") != (Title ?? "").Trim() || (LiveCategoryName ?? "") != (CategoryName ?? "") || LiveMature != Mature);
 }
 
 public class TikTokAccount
@@ -169,6 +178,10 @@ public class TikTokLiveService
         State.Server = rtmp.GetString();
         State.Key = key.GetString();
         State.StartedAt = DateTime.Now;
+        State.LiveTitle = (State.Title ?? "").Trim();
+        State.LiveCategoryName = State.CategoryName ?? "";
+        State.LiveCategoryId = State.CategoryId ?? "";
+        State.LiveMature = State.Mature;
         Save();
         Log.Write("TikTok LIVE opened (stream " + State.StreamId + ")");
         StatusChanged?.Invoke();
@@ -191,6 +204,7 @@ public class TikTokLiveService
             State.Server = null;
             State.Key = null;
             State.StartedAt = null;
+            State.LiveTitle = State.LiveCategoryName = State.LiveCategoryId = null;
             Save();
             StatusChanged?.Invoke();
         }
@@ -203,6 +217,7 @@ public class TikTokLiveService
         State.Server = null;
         State.Key = null;
         State.StartedAt = null;
+        State.LiveTitle = State.LiveCategoryName = State.LiveCategoryId = null;
         Save();
         StatusChanged?.Invoke();
     }

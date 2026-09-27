@@ -70,6 +70,11 @@
 
             <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
                 <StackPanel>
+                    <!-- Switch scenes without leaving the page -->
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                        <local:SceneSwitcher/>
+                    </Border>
+
                     <Border Style="{StaticResource Card}" Margin="0,0,0,14">
                         <StackPanel>
                             <TextBlock Text="Music" Style="{StaticResource H2}" Margin="0,0,0,12"/>
@@ -80,7 +85,7 @@
                     <Border Style="{StaticResource Card}" Margin="0,0,0,14">
                         <StackPanel>
                             <TextBlock Text="Stream details" Style="{StaticResource H2}" Margin="0,0,0,10"/>
-                            <local:StreamDetailsPanel/>
+                            <local:StreamDetailsPanel x:Name="Details"/>
                         </StackPanel>
                     </Border>
 

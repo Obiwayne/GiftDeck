@@ -22,7 +22,7 @@ public partial class LivePanel : UserControl
         InitializeComponent();
         Hub.Rules.Handled += (e, fired) =>
         {
-            if (e.Type == "chat" || e.Type == "gift") Dispatcher.BeginInvoke(() => { Add(e); MarkDelivered(e); });
+            if (e.Type == "chat" || e.Type == "gift") Dispatcher.BeginInvoke(() => Add(e));
             else if (e.Type == "viewers") Dispatcher.BeginInvoke(() => ShowViewers(e));
         };
         UpdateEmpty();
@@ -32,73 +32,6 @@ public partial class LivePanel : UserControl
     }
 
     int _peak;
-
-    // ---- Sending chat ----
-
-    string _awaiting;          // the message we sent, until it comes back through the chat feed
-    DateTime _sentAt;
-
-    async void Send_Click(object sender, RoutedEventArgs e) => await SendAsync();
-
-    async void SendBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-    {
-        if (e.Key == System.Windows.Input.Key.Enter) { e.Handled = true; await SendAsync(); }
-    }
-
-    async Task SendAsync()
-    {
-        var text = SendBox.Text.Trim();
-        if (text.Length == 0) return;
-        SendButton.IsEnabled = false;
-        SendStatus.Text = "Sending...";
-        SendStatus.Foreground = (Brush)FindResource("MutedBrush");
-        try
-        {
-            var problem = await TikTokChatWindow.Instance.SendAsync(text);
-            if (problem != null)
-            {
-                SendStatus.Text = problem;
-                SendStatus.Foreground = (Brush)FindResource("WarnBrush");
-                return;
-            }
-            SendBox.Clear();
-            _awaiting = text;
-            _sentAt = DateTime.Now;
-            SendStatus.Text = "Sent to TikTok, waiting for it to appear in chat...";
-            _ = CheckDeliveredAsync(text);
-        }
-        catch (Exception ex)
-        {
-            SendStatus.Text = "Couldn't send: " + ex.Message;
-            SendStatus.Foreground = (Brush)FindResource("DangerBrush");
-        }
-        finally { SendButton.IsEnabled = true; }
-    }
-
-    // Our own message coming back through the chat feed is the proof it was posted.
-    async Task CheckDeliveredAsync(string text)
-    {
-        await Task.Delay(10000);
-        if (_awaiting != text) return;
-        _awaiting = null;
-        SendStatus.Text = "TikTok didn't show that message in chat. Click \"TikTok login\" to check the page.";
-        SendStatus.Foreground = (Brush)FindResource("WarnBrush");
-    }
-
-    void MarkDelivered(LiveEvent e)
-    {
-        if (_awaiting == null || e.Type != "chat") return;
-        if (!string.Equals((e.Comment ?? "").Trim(), _awaiting, StringComparison.Ordinal)) return;
-        _awaiting = null;
-        SendStatus.Text = $"✓ Sent ({(DateTime.Now - _sentAt).TotalSeconds:0.0} s)";
-        SendStatus.Foreground = (Brush)FindResource("SuccessBrush");
-    }
-
-    async void TikTokLogin_Click(object sender, RoutedEventArgs e)
-    {
-        try { await TikTokChatWindow.Instance.ShowToLogInAsync(); }
-        catch (Exception ex) { SendStatus.Text = "Couldn't open TikTok: " + ex.Message; }
-    }
 
     void ShowViewers(LiveEvent e)
     {

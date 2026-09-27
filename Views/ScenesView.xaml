@@ -29,7 +29,7 @@
                 <TextBlock Text="Scenes" Style="{StaticResource H1}"/>
                 <TextBlock x:Name="Status" Style="{StaticResource Muted}" Margin="0,4,0,0" Text="Click a scene to put it live. The audio mixer is on the right."/>
                 <TextBlock x:Name="EditNote" Foreground="{StaticResource WarnBrush}" TextWrapping="Wrap" Margin="0,6,0,0" Visibility="Collapsed"
-                           Text="OBS is open for editing. Changes save by themselves. When you're finished, press Done editing here (don't close OBS with its X: that stops OBS)."/>
+                           Text="OBS is open for editing. Changes save by themselves. When you're finished, press Done editing here or close OBS with its X: either way it goes back in the background and stays connected."/>
             </StackPanel>
         </DockPanel>
 

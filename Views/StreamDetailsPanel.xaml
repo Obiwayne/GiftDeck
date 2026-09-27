@@ -4,14 +4,24 @@
              xmlns:local="clr-namespace:GiftDeck.Views">
     <StackPanel>
         <TextBlock Text="Title" Style="{StaticResource Label}"/>
-        <TextBox x:Name="TitleBox" LostFocus="Details_Changed" Margin="0,0,0,12" local:Placeholder.Text="What viewers see as the LIVE title"/>
+        <TextBox x:Name="TitleBox" LostFocus="Details_Changed" TextChanged="Title_TextChanged" Margin="0,0,0,12" local:Placeholder.Text="What viewers see as the LIVE title"/>
         <TextBlock Text="Category (type to search, then click one)" Style="{StaticResource Label}"/>
         <TextBox x:Name="CategoryBox" TextChanged="Category_TextChanged" local:Placeholder.Text="For example: Grand Theft Auto V"/>
         <ListBox x:Name="CategoryList" ItemContainerStyle="{StaticResource FeedItem}" MaxHeight="160" SelectionChanged="Category_Selected" Visibility="Collapsed" Margin="0,4,0,0"/>
-        <TextBlock x:Name="CategoryChosen" Style="{StaticResource Muted}" Margin="0,5,0,12"/>
-        <CheckBox x:Name="MatureBox" Content="Mature audience (18+)" Click="Details_Changed" Margin="0,0,0,8"/>
-        <CheckBox x:Name="AutoObsBox" Content="Start OBS streaming automatically" Click="Details_Changed" Margin="0,0,0,8"/>
-        <CheckBox x:Name="ResetTotalsBox" Content="Reset overlay totals when going LIVE" Click="Details_Changed"/>
-        <TextBlock x:Name="ErrorText" Foreground="{StaticResource DangerBrush}" Margin="0,6,0,0" FontSize="12"/>
+        <TextBlock x:Name="CategoryChosen" Style="{StaticResource Muted}" Margin="0,5,0,0" Visibility="Collapsed"/>
+        <CheckBox x:Name="MatureBox" Content="Mature audience (18+)" Click="Details_Changed" Margin="0,12,0,0"/>
+        <TextBlock x:Name="ErrorText" Foreground="{StaticResource DangerBrush}" Margin="0,6,0,0" FontSize="12" Visibility="Collapsed"/>
+
+        <!-- While LIVE: TikTok can't change a running LIVE, so new details mean a quick restart -->
+        <Border x:Name="LiveBox" Style="{StaticResource SubCard}" Margin="0,10,0,0" Visibility="Collapsed">
+            <StackPanel>
+                <TextBlock x:Name="LiveNow" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                <TextBlock x:Name="LiveHelp" Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,4,0,0"/>
+                <StackPanel x:Name="RestartRow" Orientation="Horizontal" Margin="0,10,0,0" Visibility="Collapsed">
+                    <Button x:Name="RestartButton" Content="Restart LIVE with these details" Style="{StaticResource Primary}" Click="Restart_Click" Margin="0,0,8,0"/>
+                    <Button Content="Undo changes" Click="Undo_Click"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
     </StackPanel>
 </UserControl>

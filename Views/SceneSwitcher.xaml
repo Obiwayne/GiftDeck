@@ -1,0 +1,19 @@
+<UserControl x:Class="GiftDeck.Views.SceneSwitcher"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:GiftDeck.Views">
+    <!-- One button per OBS scene; the live one is highlighted. One click puts a scene live.
+         Button size S / M / L is the user's pick. Lots of scenes: at most three rows show
+         (the rest scroll), and a search box appears. -->
+    <StackPanel>
+        <DockPanel Margin="0,0,0,12">
+            <StackPanel x:Name="SizePicker" DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center" ToolTip="Button size"/>
+            <TextBlock Text="Scenes" Style="{StaticResource H2}" VerticalAlignment="Center"/>
+        </DockPanel>
+        <TextBox x:Name="Filter" local:Placeholder.Text="Find a scene" Margin="0,0,0,10" Visibility="Collapsed" TextChanged="Filter_Changed"/>
+        <TextBlock x:Name="Hint" Style="{StaticResource Muted}" Text="Connecting to OBS" Visibility="Collapsed"/>
+        <ScrollViewer x:Name="Scroller" VerticalScrollBarVisibility="Auto">
+            <WrapPanel x:Name="Buttons"/>
+        </ScrollViewer>
+    </StackPanel>
+</UserControl>
