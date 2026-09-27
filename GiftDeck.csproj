@@ -30,7 +30,8 @@
 
   <!-- Game packs (pack.json, covers, command lists, presets) ship next to the exe. -->
   <ItemGroup>
-    <None Include="Packs\**\*" CopyToOutputDirectory="PreserveNewest" />
+    <!-- Loose files, never packed inside the single-file exe: the installer copies mods out of here. -->
+    <None Include="Packs\**\*" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
   </ItemGroup>
 
   <!-- Game mods (e.g. mods\gta5\GiftDeckGTA) are separate projects built on their own. -->
