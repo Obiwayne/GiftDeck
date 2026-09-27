@@ -24,7 +24,8 @@ public partial class MainWindow : Window
         RefreshProfiles();
         Hub.Profiles.Changed += () => Dispatcher.BeginInvoke(OnProfilesChanged);
         ApplyCollapsed(Hub.Settings.SidebarCollapsed);
-        Navigate("dashboard");
+        // GIFTDECK_START_PAGE (development builds) opens straight on a page, e.g. "scenes".
+        Navigate(Environment.GetEnvironmentVariable("GIFTDECK_START_PAGE") is { Length: > 0 } page ? page : "dashboard");
     }
 
     // Menu: page key, label, icon (Segoe Fluent Icons / MDL2 code point).

@@ -287,7 +287,7 @@ public partial class ScenesView : UserControl
         {
             Style = (Style)FindResource("Ghost"),
             Padding = new Thickness(6, 2, 6, 2),
-            Content = new TextBlock { Text = "î ž", FontFamily = (FontFamily)FindResource("IconFont"), FontSize = 13, Foreground = (Brush)FindResource("MutedBrush") },
+            Content = new TextBlock { Text = "", FontFamily = (FontFamily)FindResource("IconFont"), FontSize = 13, Foreground = (Brush)FindResource("MutedBrush") },
             ToolTip = "Show this scene's layers without putting it live",
         };
         layers.Click += (_, e) => { e.Handled = true; SelectScene(card.Scene.Uuid); };
@@ -441,7 +441,8 @@ public partial class ScenesView : UserControl
         _layerRows.Clear();
         LayersEmpty.Visibility = _items.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
         LayersEmpty.Text = _selectedUuid == null ? "Pick a scene to see its layers." : "This scene is empty.";
-        foreach (var item in _items)
+        // A copy: SetLayerShown below writes back into _items, which would break a foreach over the list itself.
+        foreach (var item in _items.ToList())
         {
             var eye = new Button { Style = (Style)FindResource("Ghost"), Padding = new Thickness(6, 3, 6, 3), Margin = new Thickness(0, 0, 6, 0) };
             var name = new TextBlock { Text = item.SourceName, TextWrapping = TextWrapping.NoWrap, TextTrimming = TextTrimming.CharacterEllipsis, VerticalAlignment = VerticalAlignment.Center };
@@ -454,7 +455,7 @@ public partial class ScenesView : UserControl
             row.Children.Add(kind);
             if (item.Locked)
             {
-                var lk = new TextBlock { Text = "îœ®", FontFamily = (FontFamily)FindResource("IconFont"), FontSize = 12, Foreground = (Brush)FindResource("MutedBrush"), VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(8, 0, 0, 0), ToolTip = "Locked in OBS (it can still be shown or hidden)" };
+                var lk = new TextBlock { Text = "", FontFamily = (FontFamily)FindResource("IconFont"), FontSize = 12, Foreground = (Brush)FindResource("MutedBrush"), VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(8, 0, 0, 0), ToolTip = "Locked in OBS (it can still be shown or hidden)" };
                 DockPanel.SetDock(lk, Dock.Right);
                 row.Children.Add(lk);
             }
@@ -498,7 +499,7 @@ public partial class ScenesView : UserControl
         if (i >= 0) _items[i] = _items[i] with { Enabled = shown };
         r.Eye.Content = new TextBlock
         {
-            Text = shown ? "î¢" : "î´š",
+            Text = shown ? "" : "",
             FontFamily = (FontFamily)FindResource("IconFont"),
             FontSize = 15,
             Foreground = (Brush)FindResource(shown ? "TextBrush" : "MutedBrush"),
@@ -601,7 +602,7 @@ public partial class ScenesView : UserControl
         row.Muted = muted;
         row.Mute.Style = (Style)FindResource(muted ? "SmallDanger" : "Small");
         row.Mute.Padding = new Thickness(8, 4, 8, 4);
-        row.Mute.Content = new TextBlock { Text = muted ? "î" : "î§", FontFamily = (FontFamily)FindResource("IconFont"), FontSize = 14 };
+        row.Mute.Content = new TextBlock { Text = muted ? "" : "", FontFamily = (FontFamily)FindResource("IconFont"), FontSize = 14 };
         row.Mute.ToolTip = muted ? "Muted. Click to unmute." : "Click to mute";
         row.Meter.Opacity = muted ? 0.3 : 1;
     }

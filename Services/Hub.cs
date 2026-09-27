@@ -46,6 +46,15 @@ public static class Hub
 
         Obs = new ObsService();
         Engine = new ObsHost();
+        // "Set up portrait OBS": convert the user's own collection/profile (remembered by the engine
+        // just before it closes OBS) into the portrait setup the hidden engine runs.
+        ObsHost.PortraitConverter = basicDir =>
+        {
+            var plan = ObsPortraitSetup.Plan(basicDir, Settings.ObsRestoreCollection, Settings.ObsRestoreProfile);
+            ObsPortraitSetup.Apply(plan, basicDir);
+            Log.Write("Portrait OBS setup created: " + plan.Summary.Replace(Environment.NewLine, " "));
+            foreach (var w in plan.Warnings) Log.Write("Portrait setup note: " + w);
+        };
         Spotify = new SpotifyService();
         Spotify.Load();
 

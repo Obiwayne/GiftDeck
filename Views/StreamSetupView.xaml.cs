@@ -56,9 +56,9 @@ public partial class StreamSetupView : UserControl
         }
         else
         {
-            status = visible ? "OBS is running (window showing)" : "OBS is running hidden âœ“";
+            status = visible ? "OBS is running (window showing)" : "OBS is running hidden ✓";
             detail = (ours ? "Started by GiftDeck. " : "Opened outside GiftDeck, so GiftDeck won't close it. ")
-                     + (Hub.Obs.Connected ? "Connected." : "Connectingâ€¦")
+                     + (Hub.Obs.Connected ? "Connected." : "Connecting…")
                      + (visible ? " Minimize it to hide it again; closing it stops OBS." : "");
         }
         if (!string.IsNullOrEmpty(Hub.Engine.LastError) && managed && !running) detail = "Last try: " + Hub.Engine.LastError;
@@ -102,7 +102,7 @@ public partial class StreamSetupView : UserControl
 
         _engineBusy = true;
         UpdateEngine();
-        EngineSay("Setting up portrait OBSâ€¦", "MutedBrush");
+        EngineSay("Setting up portrait OBS…", "MutedBrush");
         try
         {
             await Hub.Engine.SetUpPortraitAsync(convert);
