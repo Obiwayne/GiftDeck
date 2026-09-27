@@ -32,6 +32,7 @@ public partial class MainWindow : Window
     {
         ("dashboard", "Dashboard", "\uE80F"),
         ("golive", "Go LIVE", "\uE714"),
+        ("scenes", "Scenes", "\uE8A9"),
         ("setup", "Stream Setup", "\uE90F"),
         ("profiles", "Profiles", "\uE8F1"),
         ("events", "Events", "\uE945"),
@@ -187,6 +188,7 @@ public partial class MainWindow : Window
             view = key switch
             {
                 "golive" => new GoLiveView(),
+                "scenes" => new ScenesView(),
                 "setup" => new StreamSetupView(),
                 "profiles" => new ProfilesView(),
                 "events" => new EventsView(),
