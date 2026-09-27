@@ -224,6 +224,14 @@ public class AppSettings
     public string ObsPassword { get; set; } = "";
     public bool ObsAutoConnect { get; set; } = true;
 
+    // GiftDeck runs OBS itself, hidden, on the "GiftDeck Portrait" collection and profile (1080x1920),
+    // and puts back the user's own collection and profile (remembered here) when it closes OBS.
+    public bool ObsManaged { get; set; } = false;
+    public string ObsRestoreCollection { get; set; } = "";
+    public string ObsRestoreCollectionFile { get; set; } = "";
+    public string ObsRestoreProfile { get; set; } = "";
+    public string ObsRestoreProfileDir { get; set; } = "";
+
     public string SpotifyClientId { get; set; } = "";
 
     public string JamendoClientId { get; set; } = "";
