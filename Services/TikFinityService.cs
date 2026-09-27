@@ -97,7 +97,7 @@ public class TikFinityService
             {
                 LastError = e.InnerException?.Message ?? e.Message;
                 if (!_loggedFailure)
-                    Log.Write("TikFinity feed unavailable: " + LastError + " (will keep retrying)");
+                    Log.Write((BridgeService.InUse ? "TikTok bridge connection lost: " : "TikFinity feed unavailable: ") + LastError + " (will keep retrying)");
                 _loggedFailure = true;
             }
             catch { }
@@ -171,6 +171,8 @@ public class TikFinityService
             PictureUrl = Picture(data) ?? (user != null ? Picture(user.Value) : null),
         };
         if (string.IsNullOrEmpty(e.Nickname)) e.Nickname = e.UserId;
+        var stamp = J.Num(data, 0, "createTime");
+        if (stamp > 1_000_000_000_000) e.SentAt = DateTimeOffset.FromUnixTimeMilliseconds(stamp).LocalDateTime;
 
         switch (ev)
         {

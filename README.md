@@ -130,8 +130,11 @@ whether yours has it.
 Everything below is on GiftDeck's own pages. Each takes a minute or two and you only do it once.
 
 ### 1. Your TikTok username — *Stream Setup*
-Type your TikTok username (the part after `@`). GiftDeck starts reading that account's LIVE
-automatically whenever it's live: chat, gifts, likes, follows and the viewer count.
+GiftDeck needs to know whose LIVE to read. Until it does, the sidebar says **Set your TikTok username**.
+Logging in with TikTok (step 2) fills it in for you; otherwise type your username (the part after `@`).
+GiftDeck then reads that account's LIVE automatically whenever it's live: chat, gifts, likes, follows
+and the viewer count. Reading a LIVE only uses public information, so no login is needed for this part;
+if the username isn't the account you're logged in with, Stream Setup points that out.
 
 ### 2. Streamlabs login — *Stream Setup* (for the Go LIVE button)
 Click **Log in with TikTok**, finish in the browser, then **Check account** to confirm LIVE access.
@@ -285,6 +288,7 @@ with the preview on, the bridge ~0% and ~65 MB, OBS about +1% for the preview.
 | Bridge log says **rate limit** | The free signing service's limit; it waits and retries. A free [Euler Stream](https://www.eulerstream.com) API key raises it. |
 | Go LIVE: **"Vertical Stream output isn't set up"** | Do step 4 of setup (Aitum output → Custom, `rtmp://127.0.0.1:1936/live`, key `giftdeck`). |
 | **⚠ TikTok isn't showing you as LIVE after 90 seconds** | Check the TikTok app. Make sure LIVE Studio isn't also live on the same account. |
+| How fast do gifts arrive? | The Dashboard feed shows each gift's and chat message's delay from TikTok, e.g. `· 0.8 s`. Combo gifts (Rose etc.) also wait ~2–3 s for the combo to finish so a combo counts once; turn that off in Settings if you'd rather fire on every tap. |
 | Keys fire twice | TikFinity's own events are also on. Turn them off in TikFinity (Actions & Events). |
 | OBS not connected | Enable OBS's WebSocket server (Tools → WebSocket Server Settings). |
 | Music: **"didn't accept that Client ID"** | Copy the Jamendo Client ID again, all of it. |

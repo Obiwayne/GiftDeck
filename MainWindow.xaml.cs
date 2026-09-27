@@ -16,6 +16,7 @@ public partial class MainWindow : Window
         Hub.TikFinity.StatusChanged += () => Dispatcher.BeginInvoke(UpdateStatus);
         Hub.Obs.StatusChanged += () => Dispatcher.BeginInvoke(UpdateStatus);
         Hub.Spotify.StatusChanged += () => Dispatcher.BeginInvoke(UpdateStatus);
+        BridgeService.AccountChanged += () => Dispatcher.BeginInvoke(UpdateStatus);
         UpdateStatus();
         BuildNav();
         _noteTimer.Tick += (_, _) => { _noteTimer.Stop(); ProfileNote.Text = ""; };
@@ -209,7 +210,12 @@ public partial class MainWindow : Window
         var off = (Brush)FindResource("MutedBrush");
 
         var t = Hub.TikFinity;
-        if (BridgeService.InUse)
+        if (BridgeService.NeedsUsername)
+        {
+            TikDot.Fill = warn;
+            TikText.Text = "Set your TikTok username";
+        }
+        else if (BridgeService.InUse)
         {
             // GiftDeck's own bridge reads the LIVE directly; being offline is normal, not an error.
             TikDot.Fill = !t.Connected ? warn : t.TikTokLive == true ? ok : off;

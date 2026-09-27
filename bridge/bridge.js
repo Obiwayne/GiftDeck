@@ -31,6 +31,9 @@ wss.on('connection', ws => {
   ws.send(JSON.stringify({ event: 'liveStatusChange', data: { isLive: live, source: 'bridge' } }));
 });
 
+// When TikTok stamped the message (ms since 1970), so GiftDeck can show how long it took to arrive.
+const sentAt = d => Number((d && d.common && d.common.createTime) || 0);
+
 const who = d => {
   const u = d.user || {};
   return {
@@ -73,7 +76,7 @@ function wire(conn) {
   conn.on(WebcastEvent.CHAT, d => {
     if (stale(d)) return;
     raw('chat', d);
-    const m = { ...who(d), comment: d.content || d.comment || '' };
+    const m = { ...who(d), comment: d.content || d.comment || '', createTime: sentAt(d) };
     log(`chat  ${m.nickname}: ${m.comment}`);
     send('chat', m);
   });
@@ -92,6 +95,7 @@ function wire(conn) {
       repeatCount: d.repeatCount || 1,
       repeatEnd: !!d.repeatEnd,
       giftPictureUrl: img[0] || '',
+      createTime: sentAt(d),
     };
     log(`gift  ${m.nickname} sent ${m.giftName} x${m.repeatCount} (type ${m.giftType}, end ${m.repeatEnd})`);
     send('gift', m);

@@ -18,6 +18,7 @@ public partial class DashboardView : UserControl
         Hub.Rules.Handled += OnHandled;
         Log.Written += OnLog;
         Hub.TikFinity.StatusChanged += () => Dispatcher.BeginInvoke(UpdateStatus);
+        BridgeService.AccountChanged += () => Dispatcher.BeginInvoke(UpdateStatus);
         Hub.Obs.StatusChanged += () => Dispatcher.BeginInvoke(UpdateStatus);
         Hub.Spotify.StatusChanged += () => Dispatcher.BeginInvoke(UpdateStatus);
         UpdateStatus();
@@ -30,6 +31,12 @@ public partial class DashboardView : UserControl
     {
         if (e.Type == "viewers") return; // viewer counts arrive constantly; the Overlays page shows them
         var s = $"{e.Time:HH:mm:ss}  {e.Describe()}";
+        // How long TikTok -> GiftDeck took (ignored if the PC clock is too far off to be meaningful)
+        if (e.SentAt != null && (e.Type == "gift" || e.Type == "chat"))
+        {
+            var delay = (e.Time - e.SentAt.Value).TotalSeconds;
+            if (delay >= 0 && delay < 120) s += $"  \u00b7 {delay:0.0} s";
+        }
         if (fired.Count > 0) s += "   »  " + string.Join(", ", fired.Select(r => r.Name));
         Add(s);
     });
@@ -44,7 +51,14 @@ public partial class DashboardView : UserControl
     void UpdateStatus()
     {
         var t = Hub.TikFinity;
-        if (BridgeService.InUse)
+        if (BridgeService.NeedsUsername)
+        {
+            TikTitle.Text = "TikTok LIVE";
+            TikStatus.Text = "Set your TikTok username so GiftDeck knows whose LIVE to read. Logging in with TikTok on Stream Setup fills it in for you.";
+            TikButton.Content = "Go to Stream Setup";
+            TikButton.Visibility = Visibility.Visible;
+        }
+        else if (BridgeService.InUse)
         {
             TikTitle.Text = "TikTok LIVE";
             TikStatus.Text = !t.Connected ? "GiftDeck's TikTok bridge is starting."
@@ -55,6 +69,7 @@ public partial class DashboardView : UserControl
         else
         {
         TikTitle.Text = "TikFinity";
+        TikButton.Content = "Launch TikFinity";
         TikStatus.Text = t.Connected && t.TikTokLive == false ? "Running, but TikFinity is NOT connected to your LIVE, so gifts and chat won't arrive. In TikFinity, click Connect (or restart it) once you're live."
             : t.Connected ? "Running and connected. Every gift, follow, like and chat message reaches GiftDeck."
             : t.ProcessRunning ? "Running. Waiting for its event feed to open."
@@ -71,7 +86,11 @@ public partial class DashboardView : UserControl
             : "Not linked. Needed only for Spotify actions.";
     }
 
-    void LaunchTik_Click(object sender, RoutedEventArgs e) => Hub.TikFinity.Launch();
+    void LaunchTik_Click(object sender, RoutedEventArgs e)
+    {
+        if (BridgeService.NeedsUsername) (Window.GetWindow(this) as MainWindow)?.Navigate("setup");
+        else Hub.TikFinity.Launch();
+    }
 
     async void ConnectObs_Click(object sender, RoutedEventArgs e)
     {

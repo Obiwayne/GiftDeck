@@ -16,6 +16,12 @@ public class BridgeService
 
     public static bool InUse => Hub.Settings.TikFinityUrl.Contains(":" + Port);
 
+    // True when GiftDeck doesn't yet know whose LIVE to read.
+    public static bool NeedsUsername => InUse && string.IsNullOrWhiteSpace(Hub.Settings.BridgeUsername);
+
+    // Raised when the TikTok username changes, so status text everywhere can update straight away.
+    public static event Action AccountChanged;
+
     public void Start() => _ = Task.Run(Watch);
 
     public void Stop()
@@ -29,6 +35,7 @@ public class BridgeService
     {
         try { if (_process != null && !_process.HasExited) _process.Kill(); } catch { }
         _process = null;
+        AccountChanged?.Invoke();
     }
 
     async Task Watch()

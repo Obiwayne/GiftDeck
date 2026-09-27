@@ -128,6 +128,8 @@ public class LiveEvent
     public string Comment { get; set; } = "";
     public bool IsTest { get; set; }
     public DateTime Time { get; set; } = DateTime.Now;
+    // When TikTok stamped the event, if the feed says (the bridge does); used to show the delay.
+    public DateTime? SentAt { get; set; }
 
     public int Coins => Diamonds * Math.Max(1, RepeatCount);
 
@@ -138,7 +140,7 @@ public class LiveEvent
         {
             case "gift":
                 var count = RepeatCount > 1 ? $" x{RepeatCount}" : "";
-                return $"{who} sent {GiftName}{count} ({Coins} coins)";
+                return $"{who} sent {GiftName}{count} ({Coins} {(Coins == 1 ? "coin" : "coins")})";
             case "follow": return $"{who} followed";
             case "share": return $"{who} shared the stream";
             case "like": return $"{who} sent {LikeCount} likes";

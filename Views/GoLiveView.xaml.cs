@@ -41,6 +41,7 @@ public partial class GoLiveView : UserControl
 
         Tt.StatusChanged += () => Dispatcher.BeginInvoke(UpdateLive);
         Hub.TikFinity.StatusChanged += () => Dispatcher.BeginInvoke(UpdateLive);
+        BridgeService.AccountChanged += () => Dispatcher.BeginInvoke(UpdateLive);
         UpdateLive();
     }
 
@@ -92,7 +93,8 @@ public partial class GoLiveView : UserControl
             if (_pulsing) { _pulse.Stop(); RecDot.Opacity = 1; _pulsing = false; }
             VerifyText.Text = "Not live";
             VerifyText.Foreground = (Brush)FindResource("TextBrush");
-            LiveDetail.Text = string.IsNullOrEmpty(s.Title) ? "Set the title and category on the Stream Setup page." : $"Next LIVE: \"{s.Title}\"" + (string.IsNullOrEmpty(s.CategoryName) ? "" : " \u00b7 " + s.CategoryName);
+            LiveDetail.Text = BridgeService.NeedsUsername ? "Set your TikTok username on the Stream Setup page so GiftDeck can read your LIVE." :
+                string.IsNullOrEmpty(s.Title) ? "Set the title and category below." : $"Next LIVE: \"{s.Title}\"" + (string.IsNullOrEmpty(s.CategoryName) ? "" : " \u00b7 " + s.CategoryName);
         }
     }
 

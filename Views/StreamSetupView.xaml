@@ -14,6 +14,7 @@
                     <TextBlock Text="The username whose LIVE GiftDeck reads chat, gifts and viewer counts from (the part after @ in your profile link)." Style="{StaticResource Muted}" Margin="0,0,0,10"/>
                     <TextBlock Text="TikTok username" Style="{StaticResource Label}"/>
                     <TextBox x:Name="UsernameBox" LostFocus="Username_Changed" local:Placeholder.Text="yourname"/>
+                    <TextBlock x:Name="UsernameNote" Foreground="{StaticResource WarnBrush}" TextWrapping="Wrap" Margin="0,8,0,0" Visibility="Collapsed"/>
                 </StackPanel>
             </Border>
 

@@ -20,6 +20,8 @@ public class TikTokLiveState
     public bool SendVertical { get; set; } = true;
     public string AitumOutput { get; set; } = "Vertical Stream";
     public int RelayPid { get; set; }
+    // TikTok username of the account the Streamlabs token belongs to (from Check account / Log in).
+    public string AccountUsername { get; set; } = "";
 
     // The stream that is currently open, if any.
     public string StreamId { get; set; }
