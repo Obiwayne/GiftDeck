@@ -1,0 +1,27 @@
+{
+  "id": "minecraft",
+  "name": "Minecraft (Java Edition)",
+  "description": "GiftDeck sets up and runs a Minecraft server on this PC (PaperMC). You join it from Minecraft, and gifts summon mobs, drop TNT, change the weather, give items and effects, and more.",
+  "cover": "cover.png",
+  "server": {
+    "type": "paper",
+    "target": "minecraft:server",
+    "panel": "MinecraftServerPanel",
+    "defaultVersion": "latest",
+    "eulaUrl": "https://aka.ms/MinecraftEULA",
+    "join": "In Minecraft: Multiplayer > Direct Connection > localhost"
+  },
+  "detect": [],
+  "exe": "",
+  "mustBeClosed": [],
+  "requirements": [
+    "Minecraft: Java Edition (bought, any launcher). The server's version must match the version you play.",
+    "Accept the Minecraft EULA before the server's first start",
+    "About 500 MB of disk space and 2 GB of memory for the server"
+  ],
+  "components": [],
+  "edits": [],
+  "presets": ["presets/minecraft-chaos.giftdeck"],
+  "commands": "commands.json",
+  "targets": ["minecraft:server"]
+}

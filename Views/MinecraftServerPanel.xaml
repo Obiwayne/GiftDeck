@@ -1,0 +1,110 @@
+<UserControl x:Class="GiftDeck.Views.MinecraftServerPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Loaded="Panel_Loaded" Unloaded="Panel_Unloaded">
+    <!-- The local Minecraft server GiftDeck runs for the Minecraft pack: set up, EULA, start/stop, player, console.
+         Hosted by the Games page for packs with "server" in pack.json. -->
+    <StackPanel>
+        <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+            <StackPanel>
+                <DockPanel Margin="0,0,0,12">
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button x:Name="StartButton" Content="Start server" Style="{StaticResource Primary}" Click="Start_Click"/>
+                        <Button x:Name="StopButton" Content="Stop server" Click="Stop_Click" Margin="8,0,0,0"/>
+                        <Button Content="Open server folder" Style="{StaticResource Ghost}" Click="OpenFolder_Click" Margin="4,0,0,0"/>
+                    </StackPanel>
+                    <Ellipse x:Name="StatusDot" Width="10" Height="10" Fill="{StaticResource MutedBrush}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="Minecraft server" Style="{StaticResource H2}"/>
+                        <TextBlock x:Name="StatusText" Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                    </StackPanel>
+                </DockPanel>
+
+                <!-- Version and download -->
+                <Border Style="{StaticResource SubCard}" Margin="0,0,0,10">
+                    <StackPanel>
+                        <TextBlock Text="Minecraft version" Style="{StaticResource Label}"/>
+                        <DockPanel>
+                            <Button x:Name="SetupButton" DockPanel.Dock="Right" Content="Set up server" Style="{StaticResource Primary}" Click="Setup_Click" Margin="8,0,0,0"/>
+                            <ComboBox x:Name="VersionCombo" MinWidth="220" HorizontalAlignment="Left"/>
+                        </DockPanel>
+                        <TextBlock x:Name="InstalledText" Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,6,0,0"/>
+                        <TextBlock Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,2,0,0"
+                                   Text="Pick the version you play Minecraft on (the server and your game must match). GiftDeck downloads the free PaperMC server from papermc.io."/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Java -->
+                <Border Style="{StaticResource SubCard}" Margin="0,0,0,10">
+                    <DockPanel>
+                        <Button x:Name="JavaButton" DockPanel.Dock="Right" Content="Download Java" Click="DownloadJava_Click" VerticalAlignment="Center" Visibility="Collapsed" Margin="8,0,0,0"/>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock x:Name="JavaText" FontWeight="SemiBold" TextWrapping="Wrap" Text="Java: checking…"/>
+                            <TextBlock Style="{StaticResource Muted}" TextWrapping="Wrap"
+                                       Text="Minecraft servers run on Java. If this PC doesn't have the right one, GiftDeck downloads Eclipse Temurin (free, from adoptium.net) into its own folder. Nothing is installed system-wide."/>
+                        </StackPanel>
+                    </DockPanel>
+                </Border>
+
+                <!-- EULA -->
+                <Border Style="{StaticResource SubCard}" Margin="0,0,0,4">
+                    <StackPanel>
+                        <CheckBox x:Name="EulaCheck" Content="I accept the Minecraft EULA" Click="Eula_Click"/>
+                        <TextBlock Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,6,0,0">
+                            <Run Text="Every Minecraft server needs its owner to accept Mojang's End User License Agreement before it will start."/>
+                            <Hyperlink NavigateUri="https://aka.ms/MinecraftEULA" RequestNavigate="Link_Navigate" Foreground="{StaticResource AccentBrush}">Read the EULA</Hyperlink>
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
+
+                <TextBlock x:Name="ProgressText" Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,10,0,0" Visibility="Collapsed"/>
+                <ProgressBar x:Name="Progress" Height="4" Minimum="0" Maximum="1" Margin="0,6,0,0" Visibility="Collapsed"
+                             Background="{StaticResource Panel3Brush}" Foreground="{StaticResource AccentBrush}" BorderThickness="0"/>
+                <TextBlock x:Name="ErrorText" Foreground="{StaticResource DangerBrush}" TextWrapping="Wrap" Margin="0,10,0,0" Visibility="Collapsed"/>
+            </StackPanel>
+        </Border>
+
+        <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+            <StackPanel>
+                <TextBlock Text="Your player" Style="{StaticResource H2}" Margin="0,0,0,10"/>
+                <TextBlock Text="Your Minecraft name (the player the gifts hit)" Style="{StaticResource Label}"/>
+                <DockPanel>
+                    <Button x:Name="OpButton" DockPanel.Dock="Right" Content="Make me an operator" Click="Op_Click" Margin="8,0,0,0"/>
+                    <TextBox x:Name="PlayerBox" LostFocus="Player_Changed" MaxLength="16"/>
+                </DockPanel>
+                <TextBlock Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,5,0,0"
+                           Text="Leave it empty to hit whoever is nearest. An operator can use cheats like /gamemode in the game."/>
+                <TextBlock x:Name="JoinText" TextWrapping="Wrap" Margin="0,12,0,0"/>
+                <TextBlock x:Name="PlayersText" Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,4,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+            <StackPanel>
+                <TextBlock Text="Server console" Style="{StaticResource H2}" Margin="0,0,0,10"/>
+                <TextBox x:Name="ConsoleBox" IsReadOnly="True" FontFamily="Consolas" FontSize="12" Height="220" TextWrapping="Wrap"
+                         VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Top"/>
+                <DockPanel Margin="0,8,0,0">
+                    <Button DockPanel.Dock="Right" Content="Send" Click="Send_Click" Margin="8,0,0,0"/>
+                    <TextBox x:Name="CommandBox" FontFamily="Consolas" KeyDown="Command_KeyDown"/>
+                </DockPanel>
+                <TextBlock Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,5,0,0" Text="Type a server command without the slash, e.g. time set day or weather clear."/>
+            </StackPanel>
+        </Border>
+
+        <Expander Header="More server settings">
+            <Border Style="{StaticResource Card}" Margin="0,8,0,0">
+                <StackPanel>
+                    <TextBlock Text="Memory for the server (MB)" Style="{StaticResource Label}"/>
+                    <TextBox x:Name="MemoryBox" Width="100" HorizontalAlignment="Left" LostFocus="Settings_Changed"/>
+                    <TextBlock Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,5,0,12" Text="2048 is plenty for one player. Changes apply at the next start."/>
+                    <CheckBox x:Name="LanCheck" Content="Let other PCs on my network join" Click="Settings_Changed"/>
+                    <TextBlock Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="24,4,0,12"
+                               Text="Off: only this PC can join, and Windows Firewall won't ask anything. On: Windows asks to allow Java through the firewall, and friends join with this PC's address."/>
+                    <CheckBox x:Name="StopWithAppCheck" Content="Stop the server when GiftDeck closes" Click="Settings_Changed"/>
+                    <TextBlock x:Name="FolderText" Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,12,0,0"/>
+                </StackPanel>
+            </Border>
+        </Expander>
+    </StackPanel>
+</UserControl>
