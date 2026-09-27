@@ -1,501 +1,3217 @@
 [
-  {
-    "target": "gta5:giftdeck",
-    "name": "GiftDeck GTA",
-    "commands": [
-      {
-        "id": "heal",
-        "name": "Heal",
-        "category": "Player",
-        "description": "Full health.",
-        "args": []
-      },
-      {
-        "id": "armour",
-        "name": "Give armour",
-        "category": "Player",
-        "description": "Full body armour.",
-        "args": []
-      },
-      {
-        "id": "heal_armour",
-        "name": "Heal and armour",
-        "category": "Player",
-        "description": "Full health and full body armour.",
-        "args": []
-      },
-      {
-        "id": "kill_player",
-        "name": "Kill player",
-        "category": "Player",
-        "description": "Wasted.",
-        "args": []
-      },
-      {
-        "id": "wanted_up",
-        "name": "Wanted level +1",
-        "category": "Player",
-        "description": "One more wanted star.",
-        "args": []
-      },
-      {
-        "id": "wanted_down",
-        "name": "Wanted level -1",
-        "category": "Player",
-        "description": "One wanted star less.",
-        "args": []
-      },
-      {
-        "id": "wanted_max",
-        "name": "Wanted level max",
-        "category": "Player",
-        "description": "Five stars.",
-        "args": []
-      },
-      {
-        "id": "wanted_clear",
-        "name": "Clear wanted level",
-        "category": "Player",
-        "description": "The police lose interest.",
-        "args": []
-      },
-      {
-        "id": "add_money",
-        "name": "Add money",
-        "category": "Player",
-        "description": "Adds money to the current character (a negative amount takes it away).",
-        "args": [
-          {
-            "name": "amount",
-            "label": "Amount ($)",
-            "type": "number",
-            "default": "1000"
-          }
-        ]
-      },
-      {
-        "id": "set_money",
-        "name": "Set money",
-        "category": "Player",
-        "description": "Sets the current character's money.",
-        "args": [
-          {
-            "name": "amount",
-            "label": "Amount ($)",
-            "type": "number",
-            "default": "0"
-          }
-        ]
-      },
-      {
-        "id": "random_clothing",
-        "name": "Random clothing",
-        "category": "Player",
-        "description": "Puts the player in a random outfit.",
-        "args": []
-      },
-      {
-        "id": "jail_player",
-        "name": "Jail player",
-        "category": "Player",
-        "description": "Locks the player in a cage for a while.",
-        "args": [
-          {
-            "name": "seconds",
-            "label": "Seconds in jail",
-            "type": "number",
-            "default": "30"
-          }
-        ]
-      },
-      {
-        "id": "spawn_vehicle",
-        "name": "Spawn vehicle",
-        "category": "Vehicle",
-        "description": "Spawns a vehicle next to the player. Any model name works, not only the ones in the list.",
-        "args": [
-          {
-            "name": "model",
-            "label": "Vehicle model",
-            "type": "choice",
-            "default": "adder",
-            "choices": ["adder", "zentorno", "t20", "osiris", "entityxf", "turismor", "infernus", "cheetah", "banshee", "comet2", "elegy2", "sultan", "kuruma", "dominator", "gauntlet", "blista", "panto", "faggio", "bati", "akuma", "sanchez", "bmx", "monster", "sandking", "bodhi2", "dune", "blazer", "rhino", "insurgent", "dump", "bus", "firetruk", "police", "ambulance", "taxi", "stretch", "tractor", "mower", "caddy", "forklift", "towtruck", "phantom", "buzzard", "maverick", "frogger", "cargobob", "lazer", "duster", "jetmax", "seashark"]
-          },
-          {
-            "name": "enter",
-            "label": "Put the player in it",
-            "type": "choice",
-            "default": "no",
-            "choices": ["no", "yes"]
-          }
-        ]
-      },
-      {
-        "id": "spawn_random_vehicle",
-        "name": "Spawn random vehicle",
-        "category": "Vehicle",
-        "description": "Spawns a random vehicle next to the player.",
-        "args": []
-      },
-      {
-        "id": "spawn_random_vehicle_drive",
-        "name": "Spawn random vehicle and drive",
-        "category": "Vehicle",
-        "description": "Puts the player in the driver's seat of a random vehicle.",
-        "args": []
-      },
-      {
-        "id": "delete_vehicle",
-        "name": "Delete player vehicle",
-        "category": "Vehicle",
-        "description": "Removes the vehicle the player is in (or just got out of).",
-        "args": []
-      },
-      {
-        "id": "repair_vehicle",
-        "name": "Repair vehicle",
-        "category": "Vehicle",
-        "description": "Fixes and cleans the player's vehicle.",
-        "args": []
-      },
-      {
-        "id": "explode_vehicles",
-        "name": "Explode vehicles nearby",
-        "category": "Vehicle",
-        "description": "Blows up the vehicles around the player (not the player's own).",
-        "args": [
-          {
-            "name": "radius",
-            "label": "Radius (m)",
-            "type": "number",
-            "default": "40"
-          }
-        ]
-      },
-      {
-        "id": "spawn_ramp",
-        "name": "Spawn ramp",
-        "category": "Vehicle",
-        "description": "Drops a stunt ramp in front of the player.",
-        "args": []
-      },
-      {
-        "id": "tune_random",
-        "name": "Random vehicle tuning",
-        "category": "Vehicle",
-        "description": "Random mods, paint, wheels and neon on the player's vehicle.",
-        "args": []
-      },
-      {
-        "id": "tune_full",
-        "name": "Full vehicle tuning",
-        "category": "Vehicle",
-        "description": "Best engine, brakes, gearbox, armour and turbo, plus a new paint job.",
-        "args": []
-      },
-      {
-        "id": "give_weapon",
-        "name": "Give weapon",
-        "category": "Weapons",
-        "description": "Gives the player a weapon with ammo. Any weapon name works (e.g. pistol, WEAPON_RPG).",
-        "args": [
-          {
-            "name": "weapon",
-            "label": "Weapon",
-            "type": "choice",
-            "default": "pistol",
-            "choices": ["pistol", "combatpistol", "appistol", "pistol50", "revolver", "microsmg", "smg", "assaultsmg", "mg", "combatmg", "assaultrifle", "carbinerifle", "advancedrifle", "specialcarbine", "bullpuprifle", "pumpshotgun", "sawnoffshotgun", "assaultshotgun", "sniperrifle", "heavysniper", "rpg", "grenadelauncher", "minigun", "firework", "railgun", "hominglauncher", "grenade", "stickybomb", "molotov", "flaregun", "stungun", "knife", "bat", "crowbar", "golfclub", "hammer", "machete", "gusenberg", "musket", "flare", "snowball", "ball"]
-          },
-          {
-            "name": "ammo",
-            "label": "Ammo",
-            "type": "number",
-            "default": "250"
-          }
-        ]
-      },
-      {
-        "id": "give_random_weapon",
-        "name": "Give random weapon",
-        "category": "Weapons",
-        "description": "Gives the player a random weapon with ammo.",
-        "args": []
-      },
-      {
-        "id": "set_ammo",
-        "name": "Set ammo",
-        "category": "Weapons",
-        "description": "Sets the ammo of the weapon in the player's hands.",
-        "args": [
-          {
-            "name": "ammo",
-            "label": "Ammo",
-            "type": "number",
-            "default": "9999"
-          }
-        ]
-      },
-      {
-        "id": "remove_weapons",
-        "name": "Remove weapons",
-        "category": "Weapons",
-        "description": "Takes all of the player's weapons.",
-        "args": []
-      },
-      {
-        "id": "spawn_attackers",
-        "name": "Spawn attackers",
-        "category": "Peds",
-        "description": "Hostile peds that hunt the player.",
-        "args": [
-          {
-            "name": "count",
-            "label": "How many",
-            "type": "number",
-            "default": "3"
-          },
-          {
-            "name": "weapon",
-            "label": "Their weapon",
-            "type": "choice",
-            "default": "pistol",
-            "choices": ["pistol", "smg", "rifle", "shotgun", "knife", "none"]
-          }
-        ]
-      },
-      {
-        "id": "arm_attackers",
-        "name": "Arm attackers",
-        "category": "Peds",
-        "description": "Gives every spawned attacker a better gun.",
-        "args": [
-          {
-            "name": "weapon",
-            "label": "Weapon",
-            "type": "choice",
-            "default": "rifle",
-            "choices": ["pistol", "smg", "rifle", "shotgun", "knife", "none"]
-          }
-        ]
-      },
-      {
-        "id": "remove_attackers",
-        "name": "Remove attackers",
-        "category": "Peds",
-        "description": "Removes every attacker, monkey and moto spawned by GiftDeck.",
-        "args": []
-      },
-      {
-        "id": "moto_cops",
-        "name": "Moto cops",
-        "category": "Peds",
-        "description": "Police on motorbikes come after the player.",
-        "args": [
-          {
-            "name": "count",
-            "label": "How many",
-            "type": "number",
-            "default": "2"
-          }
-        ]
-      },
-      {
-        "id": "moto_bandits",
-        "name": "Moto bandits",
-        "category": "Peds",
-        "description": "Armed bikers come after the player.",
-        "args": [
-          {
-            "name": "count",
-            "label": "How many",
-            "type": "number",
-            "default": "2"
-          }
-        ]
-      },
-      {
-        "id": "monkey_killers",
-        "name": "Monkey killers",
-        "category": "Peds",
-        "description": "Armed chimps that attack the player.",
-        "args": [
-          {
-            "name": "count",
-            "label": "How many",
-            "type": "number",
-            "default": "3"
-          }
-        ]
-      },
-      {
-        "id": "spawn_pigeons",
-        "name": "Spawn pigeons",
-        "category": "Peds",
-        "description": "A flock of pigeons around the player.",
-        "args": [
-          {
-            "name": "count",
-            "label": "How many",
-            "type": "number",
-            "default": "10"
-          }
-        ]
-      },
-      {
-        "id": "spawn_poodles",
-        "name": "Spawn poodles",
-        "category": "Peds",
-        "description": "Poodles around the player.",
-        "args": [
-          {
-            "name": "count",
-            "label": "How many",
-            "type": "number",
-            "default": "5"
-          }
-        ]
-      },
-      {
-        "id": "spawn_random_animals",
-        "name": "Spawn random animals",
-        "category": "Peds",
-        "description": "Random animals around the player.",
-        "args": [
-          {
-            "name": "count",
-            "label": "How many",
-            "type": "number",
-            "default": "5"
-          }
-        ]
-      },
-      {
-        "id": "set_time",
-        "name": "Set time",
-        "category": "World",
-        "description": "Sets the clock (hour 0 to 23).",
-        "args": [
-          {
-            "name": "hour",
-            "label": "Hour",
-            "type": "number",
-            "default": "0"
-          }
-        ]
-      },
-      {
-        "id": "set_weather",
-        "name": "Set weather",
-        "category": "World",
-        "description": "Changes the weather.",
-        "args": [
-          {
-            "name": "weather",
-            "label": "Weather",
-            "type": "choice",
-            "default": "THUNDER",
-            "choices": ["EXTRASUNNY", "CLEAR", "CLOUDS", "SMOG", "FOGGY", "OVERCAST", "RAIN", "THUNDER", "CLEARING", "NEUTRAL", "SNOW", "BLIZZARD", "SNOWLIGHT", "XMAS", "HALLOWEEN"]
-          }
-        ]
-      },
-      {
-        "id": "earthquake",
-        "name": "Earthquake",
-        "category": "World",
-        "description": "The ground shakes and cars jump for a while.",
-        "args": [
-          {
-            "name": "seconds",
-            "label": "Seconds",
-            "type": "number",
-            "default": "15"
-          }
-        ]
-      },
-      {
-        "id": "tp_airport",
-        "name": "Teleport to LS Airport",
-        "category": "Teleport",
-        "description": "Los Santos International Airport.",
-        "args": []
-      },
-      {
-        "id": "tp_maze_bank",
-        "name": "Teleport to Maze Bank top",
-        "category": "Teleport",
-        "description": "The roof of the Maze Bank Tower.",
-        "args": []
-      },
-      {
-        "id": "tp_fort_zancudo",
-        "name": "Teleport to Fort Zancudo",
-        "category": "Teleport",
-        "description": "Inside the army base. Expect company.",
-        "args": []
-      },
-      {
-        "id": "tp_chiliad",
-        "name": "Teleport to Mount Chiliad",
-        "category": "Teleport",
-        "description": "The top of Mount Chiliad.",
-        "args": []
-      },
-      {
-        "id": "tp_random",
-        "name": "Teleport to a random place",
-        "category": "Teleport",
-        "description": "Somewhere random on the map.",
-        "args": []
-      },
-      {
-        "id": "tp_waypoint",
-        "name": "Teleport to waypoint",
-        "category": "Teleport",
-        "description": "The waypoint set on the map, if there is one.",
-        "args": []
-      },
-      {
-        "id": "skydive",
-        "name": "Skydive",
-        "category": "Fun",
-        "description": "Sends the player high into the sky with a parachute.",
-        "args": [
-          {
-            "name": "height",
-            "label": "Height (m)",
-            "type": "number",
-            "default": "800"
-          }
-        ]
-      },
-      {
-        "id": "launch_up",
-        "name": "Launch player up",
-        "category": "Fun",
-        "description": "Throws the player (or their car) into the air.",
-        "args": []
-      },
-      {
-        "id": "drunk",
-        "name": "Drunk",
-        "category": "Fun",
-        "description": "Wobbly walk, blurry screen and a shaky camera for a while.",
-        "args": [
-          {
-            "name": "seconds",
-            "label": "Seconds",
-            "type": "number",
-            "default": "30"
-          }
-        ]
-      },
-      {
-        "id": "nothing",
-        "name": "Nothing",
-        "category": "Fun",
-        "description": "Does nothing: for testing that gifts reach the game.",
-        "args": []
-      }
+ {
+  "target": "gta5:chaosmod",
+  "name": "Chaos Mod V",
+  "commands": [
+   {
+    "args": [],
+    "category": "Meta",
+    "description": "Timed effect",
+    "id": "meta_effect_duration_0_5x",
+    "name": "0.5x Effect Duration"
+   },
+   {
+    "args": [],
+    "category": "Meta",
+    "description": "Timed effect",
+    "id": "meta_timerspeed_0_5x",
+    "name": "0.5x Timer Speed"
+   },
+   {
+    "args": [],
+    "category": "Meta",
+    "description": "Timed effect",
+    "id": "meta_effect_duration_2x",
+    "name": "2x Effect Duration"
+   },
+   {
+    "args": [],
+    "category": "Meta",
+    "description": "Timed effect",
+    "id": "meta_timerspeed_2x",
+    "name": "2x Timer Speed"
+   },
+   {
+    "args": [],
+    "category": "Meta",
+    "description": "Timed effect (short)",
+    "id": "meta_timerspeed_5x",
+    "name": "5x Timer Speed"
+   },
+   {
+    "args": [],
+    "category": "Meta",
+    "description": "Timed effect",
+    "id": "meta_spawn_multiple_effects",
+    "name": "Combo Time"
+   },
+   {
+    "args": [],
+    "category": "Meta",
+    "description": "Timed effect",
+    "id": "meta_votingmode_majority",
+    "name": "Majority Voting"
+   },
+   {
+    "args": [],
+    "category": "Meta",
+    "description": "Timed effect",
+    "id": "meta_votingmode_antimajority",
+    "name": "Minority Voting"
+   },
+   {
+    "args": [],
+    "category": "Meta",
+    "description": "Timed effect",
+    "id": "meta_nochaos",
+    "name": "No Chaos"
+   },
+   {
+    "args": [],
+    "category": "Meta",
+    "description": "Instant effect",
+    "id": "meta_re_invoke",
+    "name": "Re-Invoke Previous Effects"
+   },
+   {
+    "args": [],
+    "category": "Meta",
+    "description": "Timed effect",
+    "id": "meta_hide_chaos_ui",
+    "name": "What's Happening??"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect",
+    "id": "misc_airstrike",
+    "name": "Airstrike Inbound"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Instant effect",
+    "id": "misc_go_to_jail",
+    "name": "Bad Boys"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect (short)",
+    "id": "world_blackhole",
+    "name": "Black Hole"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect",
+    "id": "world_blackout",
+    "name": "Blackout"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect (short)",
+    "id": "cocktail_shaker",
+    "name": "Cocktail Shaker"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect (short)",
+    "id": "misc_fps_limit",
+    "name": "Console Experience"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect (short)",
+    "id": "chaosmode",
+    "name": "Doomsday"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect",
+    "id": "misc_remove_water",
+    "name": "Drought"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect",
+    "id": "misc_esp",
+    "name": "ESP"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect (short)",
+    "id": "misc_earthquake",
+    "name": "Earthquake"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Instant effect",
+    "id": "misc_fakecrash",
+    "name": "Fake Crash"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Instant effect",
+    "id": "misc_fakeuturn",
+    "name": "Fake U-Turn"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect",
+    "id": "misc_fireworks",
+    "name": "Fireworks!"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect",
+    "id": "misc_flamethrower",
+    "name": "Flamethrowers"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Instant effect",
+    "id": "misc_get_towed",
+    "name": "Get Towed"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect",
+    "id": "misc_ghost_world",
+    "name": "Ghost Town"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect",
+    "id": "misc_highpitch",
+    "name": "High Pitch"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect (short)",
+    "id": "misc_stuffguns",
+    "name": "Improvised Weaponry"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect (short)",
+    "id": "insanegravity",
+    "name": "Insane Gravity"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Instant effect",
+    "id": "invertvelocity",
+    "name": "Invert Current Velocity"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect (short)",
+    "id": "invertgravity",
+    "name": "Invert Gravity"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect",
+    "id": "misc_jumpy_props",
+    "name": "Jumpy Props"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect (short)",
+    "id": "time_lag",
+    "name": "Lag"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect (short)",
+    "id": "lowgravity",
+    "name": "Low Gravity"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect",
+    "id": "misc_lowpitch",
+    "name": "Low Pitch"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect",
+    "id": "world_lowpoly",
+    "name": "Low Render Distance"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect",
+    "id": "screen_maximap",
+    "name": "Maximap"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect",
+    "id": "meteorrain",
+    "name": "Meteor Shower"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect",
+    "id": "player_moneydrops",
+    "name": "Money Rain"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect",
+    "id": "misc_muffled_audio",
+    "name": "Muffled Audio"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect (short)",
+    "id": "misc_news_team",
+    "name": "News Team"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect",
+    "id": "player_nophone",
+    "name": "No Phone"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect",
+    "id": "misc_nosky",
+    "name": "No Sky"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Instant effect",
+    "id": "nothing",
+    "name": "Nothing"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect",
+    "id": "misc_oilleaks",
+    "name": "Oil Trails"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Instant effect",
+    "id": "misc_pause",
+    "name": "Pause"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect (short)",
+    "id": "misc_pay_respects",
+    "name": "Pay Respects"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect",
+    "id": "player_arenawarstheme",
+    "name": "Play Arena Wars Theme"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect",
+    "id": "misc_portrait",
+    "name": "Portrait Mode"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Instant effect",
+    "id": "misc_quick_sprunk_stop",
+    "name": "Quick Sprunk Stop"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect",
+    "id": "peds_rainbowweps",
+    "name": "Rainbow Weapons"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect",
+    "id": "misc_rampjam",
+    "name": "Ramp Jam"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect (short)",
+    "id": "misc_randomgravity",
+    "name": "Random Gravity"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Instant effect",
+    "id": "misc_nowaypoint",
+    "name": "Remove Waypoint"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect (short)",
+    "id": "misc_clone_on_death",
+    "name": "Resurrection Day"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect (short)",
+    "id": "misc_credits",
+    "name": "Roll Credits"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Instant effect",
+    "id": "misc_random_waypoint",
+    "name": "Set Random Waypoint"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect (short)",
+    "id": "misc_sideways_gravity",
+    "name": "Sideways Gravity"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect",
+    "id": "misc_solid_props",
+    "name": "Solid Props"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Instant effect",
+    "id": "misc_spawnferriswheel",
+    "name": "Spawn Ferris Wheel"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Instant effect",
+    "id": "misc_spawn_orange_ball",
+    "name": "Spawn Orange Ball"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Instant effect",
+    "id": "misc_spawnufo",
+    "name": "Spawn UFO"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Instant effect",
+    "id": "misc_boost_velocity",
+    "name": "Speed Boost"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect",
+    "id": "misc_spinning_props",
+    "name": "Spinning Props"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Instant effect",
+    "id": "misc_superstunt",
+    "name": "Super Stunt"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Instant effect",
+    "id": "misc_uturn",
+    "name": "U-Turn"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect (short)",
+    "id": "misc_vehicle_rain",
+    "name": "Vehicle Rain"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect (short)",
+    "id": "verylowgravity",
+    "name": "Very Low Gravity"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect",
+    "id": "misc_weirdpitch",
+    "name": "Weird Pitch"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect",
+    "id": "world_whalerain",
+    "name": "Whale Rain"
+   },
+   {
+    "args": [],
+    "category": "Misc",
+    "description": "Timed effect",
+    "id": "misc_witness_protection",
+    "name": "Witness Protection"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "peds_2x_animation_speed",
+    "name": "2x Animation Speed"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "peds_aimbot",
+    "name": "Aimbot Peds"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_flee",
+    "name": "All Nearby Peds Are Fleeing"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "peds_cops",
+    "name": "All Peds Are Cops"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "peds_attackplayer",
+    "name": "All Peds Attack Player"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "peds_blind",
+    "name": "Blind Peds"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_busbois",
+    "name": "Bus Bois"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect (short)",
+    "id": "peds_slippery_peds",
+    "name": "Can't Tie My Shoes"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "peds_catguns",
+    "name": "Catto Guns"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect (short)",
+    "id": "peds_eternal_screams",
+    "name": "Eternal Screams"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "playerveh_exit",
+    "name": "Everyone Exits Their Vehicles"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "peds_ghost",
+    "name": "Everyone Is A Ghost"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_bloody",
+    "name": "Everyone Is Bloody"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "peds_invincible",
+    "name": "Everyone Is Invincible"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "player_explosivecombat",
+    "name": "Explosive Combat"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "peds_explosive",
+    "name": "Explosive Peds"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "zombies",
+    "name": "Explosive Zombies"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect (short)",
+    "id": "peds_reflectivedamage",
+    "name": "Friendly Fire"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "peds_sayhi",
+    "name": "Friendly Neighborhood"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect (short)",
+    "id": "peds_roasting",
+    "name": "Get Roasted"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_battleaxe",
+    "name": "Give Everyone A Battle Axe"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_minigun",
+    "name": "Give Everyone A Minigun"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_railgun",
+    "name": "Give Everyone A Railgun"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_give_props",
+    "name": "Give Everyone A Random Prop"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_randomwep",
+    "name": "Give Everyone A Random Weapon"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_stungun",
+    "name": "Give Everyone A Stun Gun"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_giverpg",
+    "name": "Give Everyone An RPG"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_upnatomizer",
+    "name": "Give Everyone An Up-N-Atomizer"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "peds_grapple_guns",
+    "name": "Gravity Guns"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "peds_gunsmoke",
+    "name": "Gunsmoke"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_hands_up",
+    "name": "Hands Up!"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect (short)",
+    "id": "peds_hotcougars",
+    "name": "Hot Cougars In Your Area"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_ignite",
+    "name": "Ignite All Nearby Peds"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "peds_dance",
+    "name": "In The Hood"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "peds_kifflom",
+    "name": "Kifflom!"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect (short)",
+    "id": "peds_killerclowns",
+    "name": "Killer Clowns"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_launchnearby",
+    "name": "Launch All Nearby Peds Up"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "peds_loosetrigger",
+    "name": "Loose Triggers"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "peds_headless",
+    "name": "Mannequins"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "peds_mercenaries",
+    "name": "Mercenaries"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "peds_mindmg",
+    "name": "Minimal Damage"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "peds_minions",
+    "name": "Minions"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_mowermates",
+    "name": "Mower Mates"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect (short)",
+    "id": "peds_nailguns",
+    "name": "Nailguns"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "player_noragdoll",
+    "name": "No Ragdoll"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "peds_not_menendez",
+    "name": "Not Menendez!"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_obliterate",
+    "name": "Obliterate All Nearby Peds"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "misc_onebullet",
+    "name": "One Bullet Mags"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "player_ohko",
+    "name": "One Hit KO"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "peds_frozen",
+    "name": "Peds Are Brainless"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "peds_drive_backwards",
+    "name": "Peds Drive Backwards"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect (short)",
+    "id": "peds_driveby",
+    "name": "Peds Drive-By Player"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "peds_riot",
+    "name": "Peds Riot"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "peds_portal_gun",
+    "name": "Portal Guns"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "peds_prop_hunt",
+    "name": "Prop Hunt"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_ragdoll",
+    "name": "Ragdoll Everyone"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_remweps",
+    "name": "Remove Weapons From Everyone"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_revive",
+    "name": "Revive Dead Peds"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_scooterbrothers",
+    "name": "Scooter Brothers"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect (short)",
+    "id": "peds_sensitivetouch",
+    "name": "Sensitive Touch"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_intorandomvehs",
+    "name": "Set Everyone Into Random Vehicles"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "peds_slidy",
+    "name": "Slidy Peds"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "peds_smoketrails",
+    "name": "Smoke Trails"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_angryalien",
+    "name": "Spawn Angry Alien"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "spawn_angry_chimp",
+    "name": "Spawn Angry Chimp"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_spawnballasquad",
+    "name": "Spawn Balla Squad"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_spawn_biker",
+    "name": "Spawn Biker"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "spawn_bluesultan",
+    "name": "Spawn Blue Sultan"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "spawn_compbrad",
+    "name": "Spawn Companion Brad"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "spawn_chimp",
+    "name": "Spawn Companion Chimp"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "spawn_chop",
+    "name": "Spawn Companion Doggo"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_spawndancingapes",
+    "name": "Spawn Dance Troupe"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_jamesbond",
+    "name": "Spawn Deadly Agent"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "spawn_grieferjesus2",
+    "name": "Spawn Extreme Griefer Jesus"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_spawnfancats",
+    "name": "Spawn Fan Cats"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "spawn_grieferjesus",
+    "name": "Spawn Griefer Jesus"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_spawnimrage",
+    "name": "Spawn Impotent Rage"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_angryjimmy",
+    "name": "Spawn Jealous Jimmy"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_spawn_juggernaut",
+    "name": "Spawn Juggernaut"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_spawn_quarreling_couple",
+    "name": "Spawn Quarreling Couple"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "spawn_comprnd",
+    "name": "Spawn Random Companion"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_spawnrandomhostile",
+    "name": "Spawn Random Enemy"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_spawn_space_ranger",
+    "name": "Spawn Space Ranger"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect (short)",
+    "id": "peds_flip",
+    "name": "Spinning Peds"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_stop_stare",
+    "name": "Stop and Stare"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "peds_tank_bois",
+    "name": "Tanks A Lot"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Instant effect",
+    "id": "playerveh_tprandompeds",
+    "name": "Teleport Random Peds Into Current Vehicle"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "peds_insult",
+    "name": "Unfriendly Neighborhood"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "peds_phones",
+    "name": "Whose Phone Is Ringing?"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "player_famous",
+    "name": "You Are Famous"
+   },
+   {
+    "args": [],
+    "category": "Peds",
+    "description": "Timed effect",
+    "id": "peds_toast",
+    "name": "You're Toast"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "player_plus2stars",
+    "name": "+2 Wanted Stars"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect (short)",
+    "id": "player_movementx05",
+    "name": "0.5x Movement Speed"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "player_1star",
+    "name": "1 Wanted Star"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect",
+    "id": "player_movementx10",
+    "name": "10x Movement Speed"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "player_3stars",
+    "name": "3 Wanted Stars"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "player_5stars",
+    "name": "5 Wanted Stars"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect",
+    "id": "player_movementx5",
+    "name": "5x Movement Speed"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect (short)",
+    "id": "player_afk",
+    "name": "AFK"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect",
+    "id": "player_aimbot",
+    "name": "Aimbot"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect (short)",
+    "id": "player_break",
+    "name": "Autopilot"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect",
+    "id": "player_bees",
+    "name": "Bees"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "player_blimp_strats",
+    "name": "Blimp Strats"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "player_clone",
+    "name": "Clone Player"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect",
+    "id": "player_dead_eye",
+    "name": "Dead Eye"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect",
+    "id": "player_poof",
+    "name": "Deadly Aim"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect",
+    "id": "player_laggy_camera",
+    "name": "Delayed Camera"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect",
+    "id": "player_no_random_movement",
+    "name": "Disable Random Direction"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect",
+    "id": "player_drunk",
+    "name": "Drunk"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "player_fakedeath",
+    "name": "Fake Death"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "tp_fakex2",
+    "name": "Fake Fake Teleport"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "tp_fake",
+    "name": "Fake Teleport"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "player_fakestars",
+    "name": "Fake Wanted Level"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "player_fling_player",
+    "name": "Fling Player"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect (short)",
+    "id": "player_forcefield",
+    "name": "Forcefield"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect (short)",
+    "id": "player_gta_2",
+    "name": "GTA 2"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "player_allweps",
+    "name": "Give All Weapons"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect (short)",
+    "id": "player_gravity",
+    "name": "Gravity Field"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect (short)",
+    "id": "player_grav_sphere",
+    "name": "Gravity Sphere"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "player_heal",
+    "name": "HESOYAM"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect",
+    "id": "player_heavyrecoil",
+    "name": "Heavy Recoil"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect (short)",
+    "id": "player_keeprunning",
+    "name": "Help My W Key Is Stuck"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect",
+    "id": "player_tired",
+    "name": "I'm So Tired"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "player_ignite",
+    "name": "Ignite Player"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect",
+    "id": "player_illegalinnocence",
+    "name": "Innocence Is Illegal"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect",
+    "id": "player_invincible",
+    "name": "Invincibility"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect (short)",
+    "id": "player_jump_jump",
+    "name": "Jump! Jump!"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "player_kickflip",
+    "name": "Kickflip"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "player_upupaway",
+    "name": "Launch Player Up"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect",
+    "id": "player_lockcamera",
+    "name": "Lock Camera"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "player_tp_stunt",
+    "name": "Make Random Stunt Jump"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect",
+    "id": "misc_midas",
+    "name": "Midas Touch"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect",
+    "id": "player_neverwanted",
+    "name": "Never Wanted"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect",
+    "id": "player_nospecial",
+    "name": "No Special Ability"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect",
+    "id": "player_nosprint",
+    "name": "No Sprint & No Jump"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect",
+    "id": "player_pacifist",
+    "name": "Pacifist"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect",
+    "id": "player_ragdollondmg",
+    "name": "Player Ragdolls When Shot"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "poorboi",
+    "name": "Poor Boy"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "player_ragdoll",
+    "name": "Ragdoll"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "player_randclothes",
+    "name": "Randomize Player Clothes"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect",
+    "id": "player_rapid_fire",
+    "name": "Rapid Fire"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "player_hacking",
+    "name": "Realistic Hacking"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "player_rocket",
+    "name": "Rocket Man"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "player_tpclosestveh",
+    "name": "Set Player Into Closest Vehicle"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "player_setintorandveh",
+    "name": "Set Player Into Random Vehicle"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "veh_randomseat",
+    "name": "Set Player Into Random Vehicle Seat"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect (short)",
+    "id": "player_simeonsays",
+    "name": "Simeon Says"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "player_suicide",
+    "name": "Suicide"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect",
+    "id": "player_superrun",
+    "name": "Super Run & Super Jump"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "player_tpeverything",
+    "name": "Teleport Everything To Player"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "player_tpfront",
+    "name": "Teleport Player A Few Meters"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "tp_fortzancudo",
+    "name": "Teleport To Fort Zancudo"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "tp_skyfall",
+    "name": "Teleport To Heaven"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "tp_lsairport",
+    "name": "Teleport To LS Airport"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "tp_mountchilliad",
+    "name": "Teleport To Mount Chiliad"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "tp_random",
+    "name": "Teleport To Random Location"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "tp_mission",
+    "name": "Teleport To Random Mission"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "player_tptowaypointopposite",
+    "name": "Teleport To The Opposite Side Of Waypoint"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "tp_mazebanktower",
+    "name": "Teleport To Top Of Maze Bank Tower"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "player_tptowaypoint",
+    "name": "Teleport To Waypoint"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Instant effect",
+    "id": "player_tp_store",
+    "name": "Teleport to Random Store"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect (short)",
+    "id": "player_tp_to_everything",
+    "name": "Teleporter Malfunction"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect (short)",
+    "id": "player_copyforce",
+    "name": "Use The Force"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect (short)",
+    "id": "player_vr",
+    "name": "Virtual Reality"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect",
+    "id": "player_walkonwater",
+    "name": "Walk On Water"
+   },
+   {
+    "args": [],
+    "category": "Player",
+    "description": "Timed effect (short)",
+    "id": "player_zoomzoom_cam",
+    "name": "Zoom Zoom Cam"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect (short)",
+    "id": "timecycle_darkworld",
+    "name": "A Dark World"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect (short)",
+    "id": "screen_arc",
+    "name": "Arced Screen"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect (short)",
+    "id": "player_binoculars",
+    "name": "Binoculars"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect",
+    "id": "screen_bouncyradar",
+    "name": "Bouncy Radar"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect (short)",
+    "id": "screen_bubblevision",
+    "name": "Bubble Vision"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect",
+    "id": "screen_colorfulworld",
+    "name": "Colorful World"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect (short)",
+    "id": "misc_dvdscreensaver",
+    "name": "DVD Screensaver"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect (short)",
+    "id": "screen_bright",
+    "name": "Deep Fried"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect (short)",
+    "id": "screen_dimwarp",
+    "name": "Dimension Warp"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect (short)",
+    "id": "screen_fog",
+    "name": "Extreme Fog"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect",
+    "id": "misc_flip_ui",
+    "name": "Flipped HUD"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect (short)",
+    "id": "screen_foldedscreen",
+    "name": "Folded Screen"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect (short)",
+    "id": "screen_fourthdimension",
+    "name": "Fourth Dimension"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect",
+    "id": "screen_fullbright",
+    "name": "Fullbright"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect (short)",
+    "id": "screen_fckautorotate",
+    "name": "Goddamn Auto-Rotate"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect (short)",
+    "id": "player_heatvision",
+    "name": "Heat Vision"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect",
+    "id": "screen_hueshift",
+    "name": "Hue Shift"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect (short)",
+    "id": "player_sick_cam",
+    "name": "I Feel Sick"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect (short)",
+    "id": "screen_needglasses",
+    "name": "I Need Glasses"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect",
+    "id": "screen_invertedcolors",
+    "name": "Inverted Colors"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect",
+    "id": "screen_mexico",
+    "name": "Is This What Mexico Looks Like?"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect",
+    "id": "screen_lsnoire",
+    "name": "LS Noire"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect",
+    "id": "screen_lsd",
+    "name": "LSD"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect (short)",
+    "id": "screen_mirrored",
+    "name": "Mirrored Screen"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect",
+    "id": "player_nightvision",
+    "name": "Night Vision"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect",
+    "id": "no_hud",
+    "name": "No HUD"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect",
+    "id": "no_radar",
+    "name": "No Radar"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect",
+    "id": "player_on_demand_cartoon",
+    "name": "On-Demand TV"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect (short)",
+    "id": "screen_screenpotato",
+    "name": "Potato"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect",
+    "id": "player_quake_fov",
+    "name": "Quake FOV"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect",
+    "id": "screen_rgbland",
+    "name": "RGB Land"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect",
+    "id": "screen_realfp",
+    "name": "Real First Person"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect (short)",
+    "id": "screen_screenfreakout",
+    "name": "Screen Freakout"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect",
+    "id": "screen_shatteredscreen",
+    "name": "Shattered Screen"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect (short)",
+    "id": "player_spin_camera",
+    "name": "Spinning Camera"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect (short)",
+    "id": "screen_localcoop",
+    "name": "Split Screen Co-op"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect (short)",
+    "id": "timecycle_fuzzy",
+    "name": "Static"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect",
+    "id": "screen_swappedcolors",
+    "name": "Swapped Colors"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect",
+    "id": "screen_tnpanel",
+    "name": "TN Panel"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect",
+    "id": "screen_textureless",
+    "name": "Textureless"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect (short)",
+    "id": "player_flip_camera",
+    "name": "Turn Turtle"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect (short)",
+    "id": "screen_warpedcam",
+    "name": "Warped Camera"
+   },
+   {
+    "args": [],
+    "category": "Screen",
+    "description": "Timed effect (short)",
+    "id": "screen_lowrenderdist",
+    "name": "Where Did Everything Go?"
+   },
+   {
+    "args": [],
+    "category": "Time",
+    "description": "Instant effect",
+    "id": "time_day",
+    "name": "Set Time To Daytime"
+   },
+   {
+    "args": [],
+    "category": "Time",
+    "description": "Instant effect",
+    "id": "time_evening",
+    "name": "Set Time To Evening"
+   },
+   {
+    "args": [],
+    "category": "Time",
+    "description": "Instant effect",
+    "id": "time_morning",
+    "name": "Set Time To Morning"
+   },
+   {
+    "args": [],
+    "category": "Time",
+    "description": "Instant effect",
+    "id": "time_night",
+    "name": "Set Time To Night"
+   },
+   {
+    "args": [],
+    "category": "Time",
+    "description": "Instant effect",
+    "id": "time_local_time",
+    "name": "Set Time To System Time"
+   },
+   {
+    "args": [],
+    "category": "Time",
+    "description": "Timed effect",
+    "id": "time_superhot",
+    "name": "Superhot"
+   },
+   {
+    "args": [],
+    "category": "Time",
+    "description": "Timed effect",
+    "id": "time_quickday",
+    "name": "Timelapse"
+   },
+   {
+    "args": [],
+    "category": "Time",
+    "description": "Timed effect (short)",
+    "id": "time_x02",
+    "name": "x0.2 Gamespeed"
+   },
+   {
+    "args": [],
+    "category": "Time",
+    "description": "Timed effect (short)",
+    "id": "time_x05",
+    "name": "x0.5 Gamespeed"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect",
+    "id": "vehs_x05engine",
+    "name": "0.5x Vehicle Engine Speed"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect",
+    "id": "vehs_x10engine",
+    "name": "10x Vehicle Engine Speed"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect",
+    "id": "vehs_x2engine",
+    "name": "2x Vehicle Engine Speed"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect (short)",
+    "id": "veh_30mphlimit",
+    "name": "30MPH Speed Limit"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "playerveh_maxupgrades",
+    "name": "Add Max Upgrades To Every Vehicle"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "playerveh_randupgrades",
+    "name": "Add Random Upgrades To Every Vehicle"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect",
+    "id": "vehs_alarmloop",
+    "name": "Alarmy Vehicles"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect",
+    "id": "vehs_invincible",
+    "name": "All Vehicles Are Invulnerable"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect",
+    "id": "vehs_honkconstant",
+    "name": "All Vehicles Honk"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect (short)",
+    "id": "vehs_beyblade",
+    "name": "Beyblades"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect",
+    "id": "vehs_blue",
+    "name": "Blue Traffic"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect",
+    "id": "veh_boostbrake",
+    "name": "Boost Braking"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect",
+    "id": "veh_bouncy",
+    "name": "Bouncy Vehicles"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect",
+    "id": "veh_brakeboost",
+    "name": "Brake Boosting"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "playerveh_breakdoors",
+    "name": "Break Doors Of Every Vehicle"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect",
+    "id": "vehs_chrome",
+    "name": "Chrome Traffic"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect",
+    "id": "player_forcedcinematiccam",
+    "name": "Cinematic Vehicle Cam"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect (short)",
+    "id": "vehs_cruise_control",
+    "name": "Cruise Control"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect (short)",
+    "id": "vehs_crumble",
+    "name": "Crumbling Vehicles"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "vehs_detach_wheel",
+    "name": "Detach Random Wheel"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "playerveh_explode",
+    "name": "Detonate Current Vehicle"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "vehs_disassemble",
+    "name": "Disassemble Current Vehicle"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "vehs_explode",
+    "name": "Explode All Nearby Vehicles"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "vehs_rotall",
+    "name": "Flip All Vehicles"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect",
+    "id": "vehs_flyingcars",
+    "name": "Flying Cars"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect (short)",
+    "id": "traffic_fullaccel",
+    "name": "Full Acceleration"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect",
+    "id": "vehs_green",
+    "name": "Green Traffic"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect",
+    "id": "vehs_honkboost",
+    "name": "Honk Boosting"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect",
+    "id": "vehs_pink",
+    "name": "Hot Traffic"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect",
+    "id": "vehs_ghost",
+    "name": "Invisible Vehicles"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "veh_jesustakethewheel",
+    "name": "Jesus Take The Wheel"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect (short)",
+    "id": "vehs_jumpy",
+    "name": "Jumpy Vehicles"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "playerveh_killengine",
+    "name": "Kill Engine Of Every Vehicle"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "vehs_upupaway",
+    "name": "Launch All Vehicles Up"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "vehs_lockdoors",
+    "name": "Lock All Vehicles"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect",
+    "id": "playerveh_lock",
+    "name": "Lock Player Inside Vehicle"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect (short)",
+    "id": "veh_speed_goal",
+    "name": "Need For Speed"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect",
+    "id": "notraffic",
+    "name": "No Traffic"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect (short)",
+    "id": "vehs_poptiresconstant",
+    "name": "Now This Is Some Tire Poppin'"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "playerveh_poptires",
+    "name": "Pop Tires Of Every Vehicle"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect",
+    "id": "vehs_prop_models",
+    "name": "Prop Cars"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect",
+    "id": "vehs_rainbow",
+    "name": "Rainbow Traffic"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect (short)",
+    "id": "veh_poptire",
+    "name": "Random Tire Popping"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect",
+    "id": "veh_randtraffic",
+    "name": "Random Traffic"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect",
+    "id": "vehs_red",
+    "name": "Red Traffic"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "playerveh_despawn",
+    "name": "Remove Current Vehicle"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "playerveh_repair",
+    "name": "Repair All Vehicles"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "misc_replacevehicle",
+    "name": "Replace Current Vehicle"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "veh_repossession",
+    "name": "Repossession"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect",
+    "id": "vehs_slippery",
+    "name": "Slippery Vehicles"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect",
+    "id": "vehs_spamdoors",
+    "name": "Spammy Vehicle Doors"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "spawn_adder",
+    "name": "Spawn Adder"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "spawn_bmx",
+    "name": "Spawn BMX"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "spawn_baletrailer",
+    "name": "Spawn Bale Trailer"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "spawn_blimp",
+    "name": "Spawn Blimp"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "spawn_bus",
+    "name": "Spawn Bus"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "spawn_buzzard",
+    "name": "Spawn Buzzard"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "spawn_cargo",
+    "name": "Spawn Cargo Plane"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "spawn_dump",
+    "name": "Spawn Dump"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "spawn_faggio",
+    "name": "Spawn Faggio"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "spawn_monster",
+    "name": "Spawn Monster"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "spawn_random",
+    "name": "Spawn Random Vehicle"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "spawn_rhino",
+    "name": "Spawn Rhino"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "spawn_ruiner3",
+    "name": "Spawn Ruined Ruiner"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "spawn_tug",
+    "name": "Spawn Tug"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect",
+    "id": "vehs_tiny",
+    "name": "Tiny Vehicles"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect",
+    "id": "traffic_gtao",
+    "name": "Traffic Magnet"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect",
+    "id": "vehs_ohko",
+    "name": "Vehicles Explode On Impact"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect (short)",
+    "id": "vehs_nogravity",
+    "name": "Vehicles Have No Gravity"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Timed effect",
+    "id": "veh_weapons",
+    "name": "Vehicles Shoot Rockets"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "spawn_romero",
+    "name": "Where's The Funeral?"
+   },
+   {
+    "args": [],
+    "category": "Vehicle",
+    "description": "Instant effect",
+    "id": "vehs_spawn_wizard_broom",
+    "name": "You're A Wizard, Franklin"
+   },
+   {
+    "args": [],
+    "category": "Weather",
+    "description": "Timed effect",
+    "id": "weather_randomizer",
+    "name": "Disco Weather"
+   },
+   {
+    "args": [],
+    "category": "Weather",
+    "description": "Instant effect",
+    "id": "weather_extrasunny",
+    "name": "Extra Sunny Weather"
+   },
+   {
+    "args": [],
+    "category": "Weather",
+    "description": "Instant effect",
+    "id": "weather_foggy",
+    "name": "Foggy Weather"
+   },
+   {
+    "args": [],
+    "category": "Weather",
+    "description": "Instant effect",
+    "id": "weather_neutral",
+    "name": "Neutral Weather"
+   },
+   {
+    "args": [],
+    "category": "Weather",
+    "description": "Timed effect",
+    "id": "world_snow",
+    "name": "Snow"
+   },
+   {
+    "args": [],
+    "category": "Weather",
+    "description": "Instant effect",
+    "id": "weather_snowy",
+    "name": "Snowy Weather"
+   },
+   {
+    "args": [],
+    "category": "Weather",
+    "description": "Instant effect",
+    "id": "weather_stormy",
+    "name": "Stormy Weather"
+   }
+  ]
+ },
+ {
+  "target": "gta5:giftdeck",
+  "name": "GiftDeck GTA",
+  "commands": [
+   {
+    "id": "heal",
+    "name": "Heal",
+    "category": "Player",
+    "description": "Full health.",
+    "args": []
+   },
+   {
+    "id": "armour",
+    "name": "Give armour",
+    "category": "Player",
+    "description": "Full body armour.",
+    "args": []
+   },
+   {
+    "id": "heal_armour",
+    "name": "Heal and armour",
+    "category": "Player",
+    "description": "Full health and full body armour.",
+    "args": []
+   },
+   {
+    "id": "kill_player",
+    "name": "Kill player",
+    "category": "Player",
+    "description": "Wasted.",
+    "args": []
+   },
+   {
+    "id": "wanted_up",
+    "name": "Wanted level +1",
+    "category": "Player",
+    "description": "One more wanted star.",
+    "args": []
+   },
+   {
+    "id": "wanted_down",
+    "name": "Wanted level -1",
+    "category": "Player",
+    "description": "One wanted star less.",
+    "args": []
+   },
+   {
+    "id": "wanted_max",
+    "name": "Wanted level max",
+    "category": "Player",
+    "description": "Five stars.",
+    "args": []
+   },
+   {
+    "id": "wanted_clear",
+    "name": "Clear wanted level",
+    "category": "Player",
+    "description": "The police lose interest.",
+    "args": []
+   },
+   {
+    "id": "add_money",
+    "name": "Add money",
+    "category": "Player",
+    "description": "Adds money to the current character (a negative amount takes it away).",
+    "args": [
+     {
+      "name": "amount",
+      "label": "Amount ($)",
+      "type": "number",
+      "default": "1000"
+     }
     ]
-  }
+   },
+   {
+    "id": "set_money",
+    "name": "Set money",
+    "category": "Player",
+    "description": "Sets the current character's money.",
+    "args": [
+     {
+      "name": "amount",
+      "label": "Amount ($)",
+      "type": "number",
+      "default": "0"
+     }
+    ]
+   },
+   {
+    "id": "random_clothing",
+    "name": "Random clothing",
+    "category": "Player",
+    "description": "Puts the player in a random outfit.",
+    "args": []
+   },
+   {
+    "id": "jail_player",
+    "name": "Jail player",
+    "category": "Player",
+    "description": "Locks the player in a cage for a while.",
+    "args": [
+     {
+      "name": "seconds",
+      "label": "Seconds in jail",
+      "type": "number",
+      "default": "30"
+     }
+    ]
+   },
+   {
+    "id": "spawn_vehicle",
+    "name": "Spawn vehicle",
+    "category": "Vehicle",
+    "description": "Spawns a vehicle next to the player. Any model name works, not only the ones in the list.",
+    "args": [
+     {
+      "name": "model",
+      "label": "Vehicle model",
+      "type": "choice",
+      "default": "adder",
+      "choices": [
+       "adder",
+       "zentorno",
+       "t20",
+       "osiris",
+       "entityxf",
+       "turismor",
+       "infernus",
+       "cheetah",
+       "banshee",
+       "comet2",
+       "elegy2",
+       "sultan",
+       "kuruma",
+       "dominator",
+       "gauntlet",
+       "blista",
+       "panto",
+       "faggio",
+       "bati",
+       "akuma",
+       "sanchez",
+       "bmx",
+       "monster",
+       "sandking",
+       "bodhi2",
+       "dune",
+       "blazer",
+       "rhino",
+       "insurgent",
+       "dump",
+       "bus",
+       "firetruk",
+       "police",
+       "ambulance",
+       "taxi",
+       "stretch",
+       "tractor",
+       "mower",
+       "caddy",
+       "forklift",
+       "towtruck",
+       "phantom",
+       "buzzard",
+       "maverick",
+       "frogger",
+       "cargobob",
+       "lazer",
+       "duster",
+       "jetmax",
+       "seashark"
+      ]
+     },
+     {
+      "name": "enter",
+      "label": "Put the player in it",
+      "type": "choice",
+      "default": "no",
+      "choices": [
+       "no",
+       "yes"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "spawn_random_vehicle",
+    "name": "Spawn random vehicle",
+    "category": "Vehicle",
+    "description": "Spawns a random vehicle next to the player.",
+    "args": []
+   },
+   {
+    "id": "spawn_random_vehicle_drive",
+    "name": "Spawn random vehicle and drive",
+    "category": "Vehicle",
+    "description": "Puts the player in the driver's seat of a random vehicle.",
+    "args": []
+   },
+   {
+    "id": "delete_vehicle",
+    "name": "Delete player vehicle",
+    "category": "Vehicle",
+    "description": "Removes the vehicle the player is in (or just got out of).",
+    "args": []
+   },
+   {
+    "id": "repair_vehicle",
+    "name": "Repair vehicle",
+    "category": "Vehicle",
+    "description": "Fixes and cleans the player's vehicle.",
+    "args": []
+   },
+   {
+    "id": "explode_vehicles",
+    "name": "Explode vehicles nearby",
+    "category": "Vehicle",
+    "description": "Blows up the vehicles around the player (not the player's own).",
+    "args": [
+     {
+      "name": "radius",
+      "label": "Radius (m)",
+      "type": "number",
+      "default": "40"
+     }
+    ]
+   },
+   {
+    "id": "spawn_ramp",
+    "name": "Spawn ramp",
+    "category": "Vehicle",
+    "description": "Drops a stunt ramp in front of the player.",
+    "args": []
+   },
+   {
+    "id": "tune_random",
+    "name": "Random vehicle tuning",
+    "category": "Vehicle",
+    "description": "Random mods, paint, wheels and neon on the player's vehicle.",
+    "args": []
+   },
+   {
+    "id": "tune_full",
+    "name": "Full vehicle tuning",
+    "category": "Vehicle",
+    "description": "Best engine, brakes, gearbox, armour and turbo, plus a new paint job.",
+    "args": []
+   },
+   {
+    "id": "give_weapon",
+    "name": "Give weapon",
+    "category": "Weapons",
+    "description": "Gives the player a weapon with ammo. Any weapon name works (e.g. pistol, WEAPON_RPG).",
+    "args": [
+     {
+      "name": "weapon",
+      "label": "Weapon",
+      "type": "choice",
+      "default": "pistol",
+      "choices": [
+       "pistol",
+       "combatpistol",
+       "appistol",
+       "pistol50",
+       "revolver",
+       "microsmg",
+       "smg",
+       "assaultsmg",
+       "mg",
+       "combatmg",
+       "assaultrifle",
+       "carbinerifle",
+       "advancedrifle",
+       "specialcarbine",
+       "bullpuprifle",
+       "pumpshotgun",
+       "sawnoffshotgun",
+       "assaultshotgun",
+       "sniperrifle",
+       "heavysniper",
+       "rpg",
+       "grenadelauncher",
+       "minigun",
+       "firework",
+       "railgun",
+       "hominglauncher",
+       "grenade",
+       "stickybomb",
+       "molotov",
+       "flaregun",
+       "stungun",
+       "knife",
+       "bat",
+       "crowbar",
+       "golfclub",
+       "hammer",
+       "machete",
+       "gusenberg",
+       "musket",
+       "flare",
+       "snowball",
+       "ball"
+      ]
+     },
+     {
+      "name": "ammo",
+      "label": "Ammo",
+      "type": "number",
+      "default": "250"
+     }
+    ]
+   },
+   {
+    "id": "give_random_weapon",
+    "name": "Give random weapon",
+    "category": "Weapons",
+    "description": "Gives the player a random weapon with ammo.",
+    "args": []
+   },
+   {
+    "id": "set_ammo",
+    "name": "Set ammo",
+    "category": "Weapons",
+    "description": "Sets the ammo of the weapon in the player's hands.",
+    "args": [
+     {
+      "name": "ammo",
+      "label": "Ammo",
+      "type": "number",
+      "default": "9999"
+     }
+    ]
+   },
+   {
+    "id": "remove_weapons",
+    "name": "Remove weapons",
+    "category": "Weapons",
+    "description": "Takes all of the player's weapons.",
+    "args": []
+   },
+   {
+    "id": "spawn_attackers",
+    "name": "Spawn attackers",
+    "category": "Peds",
+    "description": "Hostile peds that hunt the player.",
+    "args": [
+     {
+      "name": "count",
+      "label": "How many",
+      "type": "number",
+      "default": "3"
+     },
+     {
+      "name": "weapon",
+      "label": "Their weapon",
+      "type": "choice",
+      "default": "pistol",
+      "choices": [
+       "pistol",
+       "smg",
+       "rifle",
+       "shotgun",
+       "knife",
+       "none"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "arm_attackers",
+    "name": "Arm attackers",
+    "category": "Peds",
+    "description": "Gives every spawned attacker a better gun.",
+    "args": [
+     {
+      "name": "weapon",
+      "label": "Weapon",
+      "type": "choice",
+      "default": "rifle",
+      "choices": [
+       "pistol",
+       "smg",
+       "rifle",
+       "shotgun",
+       "knife",
+       "none"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "remove_attackers",
+    "name": "Remove attackers",
+    "category": "Peds",
+    "description": "Removes every attacker, monkey and moto spawned by GiftDeck.",
+    "args": []
+   },
+   {
+    "id": "moto_cops",
+    "name": "Moto cops",
+    "category": "Peds",
+    "description": "Police on motorbikes come after the player.",
+    "args": [
+     {
+      "name": "count",
+      "label": "How many",
+      "type": "number",
+      "default": "2"
+     }
+    ]
+   },
+   {
+    "id": "moto_bandits",
+    "name": "Moto bandits",
+    "category": "Peds",
+    "description": "Armed bikers come after the player.",
+    "args": [
+     {
+      "name": "count",
+      "label": "How many",
+      "type": "number",
+      "default": "2"
+     }
+    ]
+   },
+   {
+    "id": "monkey_killers",
+    "name": "Monkey killers",
+    "category": "Peds",
+    "description": "Armed chimps that attack the player.",
+    "args": [
+     {
+      "name": "count",
+      "label": "How many",
+      "type": "number",
+      "default": "3"
+     }
+    ]
+   },
+   {
+    "id": "spawn_pigeons",
+    "name": "Spawn pigeons",
+    "category": "Peds",
+    "description": "A flock of pigeons around the player.",
+    "args": [
+     {
+      "name": "count",
+      "label": "How many",
+      "type": "number",
+      "default": "10"
+     }
+    ]
+   },
+   {
+    "id": "spawn_poodles",
+    "name": "Spawn poodles",
+    "category": "Peds",
+    "description": "Poodles around the player.",
+    "args": [
+     {
+      "name": "count",
+      "label": "How many",
+      "type": "number",
+      "default": "5"
+     }
+    ]
+   },
+   {
+    "id": "spawn_random_animals",
+    "name": "Spawn random animals",
+    "category": "Peds",
+    "description": "Random animals around the player.",
+    "args": [
+     {
+      "name": "count",
+      "label": "How many",
+      "type": "number",
+      "default": "5"
+     }
+    ]
+   },
+   {
+    "id": "set_time",
+    "name": "Set time",
+    "category": "World",
+    "description": "Sets the clock (hour 0 to 23).",
+    "args": [
+     {
+      "name": "hour",
+      "label": "Hour",
+      "type": "number",
+      "default": "0"
+     }
+    ]
+   },
+   {
+    "id": "set_weather",
+    "name": "Set weather",
+    "category": "World",
+    "description": "Changes the weather.",
+    "args": [
+     {
+      "name": "weather",
+      "label": "Weather",
+      "type": "choice",
+      "default": "THUNDER",
+      "choices": [
+       "EXTRASUNNY",
+       "CLEAR",
+       "CLOUDS",
+       "SMOG",
+       "FOGGY",
+       "OVERCAST",
+       "RAIN",
+       "THUNDER",
+       "CLEARING",
+       "NEUTRAL",
+       "SNOW",
+       "BLIZZARD",
+       "SNOWLIGHT",
+       "XMAS",
+       "HALLOWEEN"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "earthquake",
+    "name": "Earthquake",
+    "category": "World",
+    "description": "The ground shakes and cars jump for a while.",
+    "args": [
+     {
+      "name": "seconds",
+      "label": "Seconds",
+      "type": "number",
+      "default": "15"
+     }
+    ]
+   },
+   {
+    "id": "tp_airport",
+    "name": "Teleport to LS Airport",
+    "category": "Teleport",
+    "description": "Los Santos International Airport.",
+    "args": []
+   },
+   {
+    "id": "tp_maze_bank",
+    "name": "Teleport to Maze Bank top",
+    "category": "Teleport",
+    "description": "The roof of the Maze Bank Tower.",
+    "args": []
+   },
+   {
+    "id": "tp_fort_zancudo",
+    "name": "Teleport to Fort Zancudo",
+    "category": "Teleport",
+    "description": "Inside the army base. Expect company.",
+    "args": []
+   },
+   {
+    "id": "tp_chiliad",
+    "name": "Teleport to Mount Chiliad",
+    "category": "Teleport",
+    "description": "The top of Mount Chiliad.",
+    "args": []
+   },
+   {
+    "id": "tp_random",
+    "name": "Teleport to a random place",
+    "category": "Teleport",
+    "description": "Somewhere random on the map.",
+    "args": []
+   },
+   {
+    "id": "tp_waypoint",
+    "name": "Teleport to waypoint",
+    "category": "Teleport",
+    "description": "The waypoint set on the map, if there is one.",
+    "args": []
+   },
+   {
+    "id": "skydive",
+    "name": "Skydive",
+    "category": "Fun",
+    "description": "Sends the player high into the sky with a parachute.",
+    "args": [
+     {
+      "name": "height",
+      "label": "Height (m)",
+      "type": "number",
+      "default": "800"
+     }
+    ]
+   },
+   {
+    "id": "launch_up",
+    "name": "Launch player up",
+    "category": "Fun",
+    "description": "Throws the player (or their car) into the air.",
+    "args": []
+   },
+   {
+    "id": "drunk",
+    "name": "Drunk",
+    "category": "Fun",
+    "description": "Wobbly walk, blurry screen and a shaky camera for a while.",
+    "args": [
+     {
+      "name": "seconds",
+      "label": "Seconds",
+      "type": "number",
+      "default": "30"
+     }
+    ]
+   },
+   {
+    "id": "nothing",
+    "name": "Nothing",
+    "category": "Fun",
+    "description": "Does nothing: for testing that gifts reach the game.",
+    "args": []
+   }
+  ]
+ }
 ]
