@@ -84,6 +84,8 @@ public class OverlayServer
             if (path == "/events") { OpenStream(ctx); return; }
             if (path == "/state") { Write(ctx, _svc.StateJson(), "application/json"); return; }
             if (path.StartsWith("/tile-image/")) { ServeTileImage(ctx, path.Substring("/tile-image/".Length)); return; }
+            if (path.StartsWith("/rule-image/")) { ServeRuleImage(ctx, path.Substring("/rule-image/".Length)); return; }
+            if (path.StartsWith("/alert-media/")) { ServeAlertMedia(ctx, path.Substring("/alert-media/".Length)); return; }
 
             string page = null;
             if (path.StartsWith("/overlay/goal")) page = "goal.html";
@@ -91,6 +93,9 @@ public class OverlayServer
             else if (path.StartsWith("/overlay/counter")) page = "counter.html";
             else if (path.StartsWith("/overlay/countdown")) page = "countdown.html";
             else if (path.StartsWith("/overlay/alerts")) page = "alerts.html";
+            else if (path.StartsWith("/overlay/spinner")) page = "spinner.html";
+            else if (path.StartsWith("/overlay/giftlist")) page = "giftlist.html";
+            else if (path.StartsWith("/overlay/strip")) page = "strip.html";
             else if (path == "/") page = "index.html";
 
             if (page == null)
@@ -112,14 +117,29 @@ public class OverlayServer
     void ServeTileImage(HttpListenerContext ctx, string idText)
     {
         var tile = Guid.TryParse(idText, out var id) ? _svc.FindTile(id) : null;
-        var src = tile == null ? null : _svc.ResolveTileImage(tile);
+        ServeFile(ctx, tile == null ? null : _svc.ResolveTileImage(tile));
+    }
+
+    // A gift event's gift picture (the gift list template).
+    void ServeRuleImage(HttpListenerContext ctx, string idText) =>
+        ServeFile(ctx, Guid.TryParse(idText, out var id) ? _svc.ResolveRuleImage(id) : null);
+
+    // A custom alert's picture or video.
+    void ServeAlertMedia(HttpListenerContext ctx, string idText)
+    {
+        var alert = Guid.TryParse(idText, out var id) ? _svc.FindAlert(id) : null;
+        ServeFile(ctx, alert?.Media?.Trim(), cacheWebImage: false);
+    }
+
+    void ServeFile(HttpListenerContext ctx, string src, bool cacheWebImage = true)
+    {
         if (string.IsNullOrEmpty(src))
         {
             ctx.Response.StatusCode = 404;
             Write(ctx, "No picture", "text/plain");
             return;
         }
-        if (!File.Exists(src) && src.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+        if (cacheWebImage && !File.Exists(src) && src.StartsWith("http", StringComparison.OrdinalIgnoreCase))
         {
             // Web pictures are fetched once into GiftDeck's cache and served from there,
             // because TikTok's image server refuses requests that come from a web page.
@@ -129,7 +149,7 @@ public class OverlayServer
         if (File.Exists(src))
         {
             var ext = Path.GetExtension(src).ToLowerInvariant();
-            var type = ext switch { ".png" => "image/png", ".jpg" or ".jpeg" => "image/jpeg", ".gif" => "image/gif", ".webp" => "image/webp", ".svg" => "image/svg+xml", _ => "application/octet-stream" };
+            var type = ext switch { ".png" => "image/png", ".jpg" or ".jpeg" => "image/jpeg", ".gif" => "image/gif", ".webp" => "image/webp", ".svg" => "image/svg+xml", ".webm" => "video/webm", ".mp4" => "video/mp4", ".mov" => "video/quicktime", _ => "application/octet-stream" };
             var bytes = File.ReadAllBytes(src);
             ctx.Response.ContentType = type;
             ctx.Response.ContentLength64 = bytes.Length;

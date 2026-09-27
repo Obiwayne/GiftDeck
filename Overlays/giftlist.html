@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>GiftDeck gift list</title>
+<style>
+  :root { --accent: #7C5CFF; --font: 'Segoe UI'; }
+  body { margin: 0; background: transparent; font-family: var(--font), 'Segoe UI', sans-serif; color: #fff; overflow: hidden; }
+  .list { margin: 12px; background: rgba(15, 17, 23, .84); border-radius: 18px; box-shadow: 0 8px 30px rgba(0,0,0,.5), 0 0 0 2px var(--accent); overflow: hidden; }
+  .head { background: var(--accent); text-align: center; font-size: 26px; font-weight: 800; letter-spacing: 2px; padding: 8px 12px; text-transform: uppercase; text-shadow: 0 2px 4px rgba(0,0,0,.4); }
+  .head:empty { display: none; }
+  .row { display: flex; align-items: center; gap: 12px; padding: 8px 14px; border-top: 1px solid rgba(255,255,255,.08); }
+  .row:first-child { border-top: none; }
+  .pic { width: 48px; height: 48px; flex: none; display: flex; align-items: center; justify-content: center; }
+  .pic img { max-width: 48px; max-height: 48px; object-fit: contain; filter: drop-shadow(0 3px 6px rgba(0,0,0,.6)); }
+  .pic .emoji { font-size: 34px; font-family: 'Segoe UI Emoji', sans-serif; }
+  .coins { flex: none; min-width: 64px; font-size: 18px; font-weight: 800; color: #fbbf24; text-shadow: 0 1px 4px rgba(0,0,0,.6); white-space: nowrap; }
+  .coins::before { content: ''; display: inline-block; width: 14px; height: 14px; margin-right: 5px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fde68a, #f59e0b 60%, #b45309); vertical-align: -1px; }
+  .what { flex: 1; min-width: 0; }
+  .label { font-size: 20px; font-weight: 700; line-height: 1.15; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-shadow: 0 2px 6px rgba(0,0,0,.6); }
+  .gift { font-size: 13px; opacity: .7; text-transform: uppercase; letter-spacing: .5px; }
+  .empty { padding: 18px; font-size: 16px; color: #bbb; text-align: center; }
+</style>
+</head>
+<body>
+<div class="list"><div class="head" id="head"></div><div id="rows"></div></div>
+<script>
+  const $ = s => document.getElementById(s);
+  function esc(t) { return String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+  const gift = '🎁', coin = '🪙';
+  let last = '';
+  function render(s) {
+    document.documentElement.style.setProperty('--accent', s.style.accent);
+    document.documentElement.style.setProperty('--font', "'" + s.style.font + "'");
+    const g = s.giftList;
+    if (!g) return;
+    const json = JSON.stringify(g);
+    if (json === last) return;
+    last = json;
+    $('head').textContent = g.title || '';
+    if (!g.items.length) { $('rows').innerHTML = '<div class="empty">Add gift events in GiftDeck and they show up here</div>'; return; }
+    $('rows').innerHTML = g.items.map(i => {
+      const fallback = '<div class=emoji>' + (i.anyGift ? coin : gift) + '</div>';
+      const pic = i.image ? '<img src="' + esc(i.image) + '" onerror="this.outerHTML=\'' + fallback + '\'">' : fallback;
+      const price = i.coins > 0 ? i.coins.toLocaleString() + (i.anyGift ? '+' : '') : (i.anyGift ? 'any' : '?');
+      return '<div class="row"><div class="pic">' + pic + '</div><div class="coins">' + price + '</div>'
+        + '<div class="what"><div class="label">' + esc(i.label) + '</div><div class="gift">' + esc(i.gift) + '</div></div></div>';
+    }).join('');
+  }
+  const es = new EventSource('/events');
+  es.onmessage = e => { const m = JSON.parse(e.data); if (m.type === 'state') render(m); };
+</script>
+</body>
+</html>

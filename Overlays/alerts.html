@@ -19,6 +19,15 @@
   .text b { color: #fbbf24; }
   .sub { font-size: 20px; opacity: .85; margin-top: 4px; }
   .count { color: #22d3ee; font-weight: 800; }
+  /* Custom alerts (Overlays page > Alerts and interrupts): a picture or video with a line of text. */
+  .alert.custom { flex-direction: column; gap: 12px; padding: 18px 26px; text-align: center; }
+  .alert.custom .media { max-width: 100%; max-height: 62vh; border-radius: 12px; object-fit: contain; }
+  .alert.custom .text { font-size: 34px; }
+  .alert.full { position: absolute; inset: 0; max-width: none; border-radius: 0; padding: 0; background: #000; box-shadow: none; justify-content: center; }
+  .alert.full .media { position: absolute; inset: 0; width: 100%; height: 100%; max-height: none; border-radius: 0; object-fit: cover; }
+  .alert.full .text { position: absolute; left: 0; right: 0; bottom: 6%; font-size: 48px; font-weight: 800; }
+  .alert.full.in { animation: flashIn .25s ease-out forwards; }
+  @keyframes flashIn { from { opacity: 0; transform: scale(1.08); } to { opacity: 1; transform: scale(1); } }
 </style>
 </head>
 <body>
@@ -27,8 +36,30 @@
   const $ = s => document.getElementById(s);
   let seconds = 6, queue = [], busy = false;
   function esc(t) { return String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+  let current = null, timers = [];
+  // A custom alert: GiftDeck has already filled in {user}, {gift} and {count}; media is a picture or a video.
+  function customAlert(a) {
+    const el = document.createElement('div');
+    el.className = 'alert custom in' + (a.fullScreen ? ' full' : '');
+    let media = '';
+    if (a.media && a.mediaType === 'video') media = '<video class="media" src="' + esc(a.media) + '" autoplay playsinline></video>';
+    else if (a.media) media = '<img class="media" src="' + esc(a.media) + '">';
+    el.innerHTML = media + (a.text ? '<div class="text">' + esc(a.text) + '</div>' : '');
+    const v = el.querySelector('video');
+    // OBS plays the video's own sound; a browser that blocks sound autoplay still gets the picture.
+    if (v) v.play().catch(() => { v.muted = true; v.play().catch(() => {}); });
+    return el;
+  }
   function show(a) {
     busy = true;
+    if (a.kind === 'custom') {
+      const secs = Math.max(1, a.seconds || seconds), el = customAlert(a);
+      current = el;
+      $('wrap').appendChild(el);
+      timers = [setTimeout(() => { el.classList.remove('in'); el.classList.add('out'); }, secs * 1000),
+                setTimeout(() => { el.remove(); current = null; busy = false; next(); }, secs * 1000 + 450)];
+      return;
+    }
     const el = document.createElement('div');
     el.className = 'alert in';
     let img = '';
@@ -43,8 +74,16 @@
     else text = esc(a.user);
     el.innerHTML = img + '<div><div class="text">' + text + '</div>' + (sub ? '<div class="sub">' + esc(sub).replace('&amp;', '&') + '</div>' : '') + '</div>';
     $('wrap').appendChild(el);
-    setTimeout(() => { el.classList.remove('in'); el.classList.add('out'); }, seconds * 1000);
-    setTimeout(() => { el.remove(); busy = false; next(); }, seconds * 1000 + 450);
+    current = el;
+    timers = [setTimeout(() => { el.classList.remove('in'); el.classList.add('out'); }, seconds * 1000),
+              setTimeout(() => { el.remove(); current = null; busy = false; next(); }, seconds * 1000 + 450)];
+  }
+  // An interrupt goes on straight away, cutting off whatever was showing; the line carries on after it.
+  function interrupt(a) {
+    timers.forEach(clearTimeout);
+    if (current) current.remove();
+    current = null; busy = false;
+    show(a);
   }
   function next() { if (!busy && queue.length) show(queue.shift()); }
   const es = new EventSource('/events');
@@ -54,7 +93,8 @@
       seconds = Math.max(2, m.style.alertSeconds || 6);
       document.documentElement.style.setProperty('--accent', m.style.accent);
       document.documentElement.style.setProperty('--font', "'" + m.style.font + "'");
-    } else if (m.type === 'alert') { queue.push(m); if (queue.length > 20) queue.shift(); next(); }
+    } else if (m.type === 'alert' && m.interrupt) interrupt(m);
+    else if (m.type === 'alert') { queue.push(m); if (queue.length > 20) queue.shift(); next(); }
   };
 </script>
 </body>
