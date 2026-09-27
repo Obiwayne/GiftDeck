@@ -106,43 +106,60 @@ public partial class GamesView : UserControl
         foreach (var p in Packs.Packs) CardsPanel.Children.Add(Card(p, statuses[p.Id]));
     }
 
+    const double CardWidth = 300, CardHeight = 169; // every card the same 16:9 picture size
+
+    // A game card is just its cover picture (the name is in the picture), with a tag in the top-right
+    // corner once it's set up. Name and description show on hover.
     UIElement Card(GamePack p, PackStatus st)
     {
-        bool selected = p == _selected;
-        var card = new Border
+        var picture = new Border
         {
-            Width = 280,
-            Background = Brush("PanelBrush"),
-            BorderBrush = Brush(selected ? "AccentBrush" : "LineBrush"),
-            BorderThickness = new Thickness(selected ? 2 : 1),
+            Width = CardWidth, Height = CardHeight,
             CornerRadius = new CornerRadius(10),
-            Cursor = Cursors.Hand,
-            ToolTip = p.Description.Length > 0 ? p.Description : null,
+            Background = Brush("Panel2Brush"),
+            BorderBrush = Brush("LineBrush"), BorderThickness = new Thickness(1),
+            Child = new Image { Source = LoadImage(p.CoverPath), Stretch = Stretch.UniformToFill },
         };
-        var stack = new StackPanel();
-        var img = new Image { Height = 150, Stretch = Stretch.UniformToFill, Source = LoadImage(p.CoverPath) };
-        img.Clip = new RectangleGeometry(new Rect(0, 0, 280, 150), 9, 9);
-        var imgHost = new Border { Height = 150, Background = Brush("Panel2Brush"), CornerRadius = new CornerRadius(9, 9, 0, 0), Child = img, ClipToBounds = true };
-        stack.Children.Add(imgHost);
-        var text = new StackPanel { Margin = new Thickness(14, 10, 14, 14) };
-        text.Children.Add(new TextBlock { Text = p.Name, FontSize = 15, FontWeight = FontWeights.SemiBold, TextWrapping = TextWrapping.Wrap });
-        if (p.Short.Length > 0) text.Children.Add(new TextBlock { Text = p.Short, Style = (Style)FindResource("Muted"), TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 3, 0, 0) });
-        var (line, brush) = CardStatus(p, st);
-        text.Children.Add(new TextBlock { Text = line, Foreground = Brush(brush), FontSize = 12, FontWeight = FontWeights.SemiBold, Margin = new Thickness(0, 8, 0, 0) });
-        stack.Children.Add(text);
-        card.Child = stack;
+        picture.Child.Clip = new RectangleGeometry(new Rect(0, 0, CardWidth - 2, CardHeight - 2), 9, 9);
+        var grid = new Grid { Width = CardWidth, Height = CardHeight };
+        grid.Children.Add(picture);
+        var (tag, tagBrush) = CardTag(p, st);
+        if (tag != null)
+            grid.Children.Add(new Border
+            {
+                HorizontalAlignment = HorizontalAlignment.Right, VerticalAlignment = VerticalAlignment.Top,
+                Margin = new Thickness(0, 10, 10, 0), Padding = new Thickness(9, 3, 9, 4),
+                CornerRadius = new CornerRadius(11), Background = Brush(tagBrush),
+                Child = new TextBlock { Text = tag, Foreground = Brushes.White, FontSize = 11.5, FontWeight = FontWeights.SemiBold },
+            });
+
         // A real button round the card, so Tab + Enter (and screen readers) open a game too.
         var open = new Button
         {
-            Content = card, Padding = new Thickness(0), MinHeight = 0, Margin = new Thickness(0),
+            Content = grid, Padding = new Thickness(0), MinHeight = 0, Margin = new Thickness(0),
             Background = Brushes.Transparent, BorderBrush = Brushes.Transparent, BorderThickness = new Thickness(0),
-            Template = CardButtonTemplate, Cursor = Cursors.Hand, ToolTip = card.ToolTip,
-            VerticalAlignment = VerticalAlignment.Top, // cards line up along the top even when one has more text
+            Template = CardButtonTemplate, Cursor = Cursors.Hand, VerticalAlignment = VerticalAlignment.Top,
+            ToolTip = p.Name + (p.Short.Length > 0 ? Environment.NewLine + p.Short : ""),
         };
-        System.Windows.Automation.AutomationProperties.SetName(open, "Open " + p.Name);
-        card.ToolTip = null;
+        System.Windows.Automation.AutomationProperties.SetName(open, "Open " + p.Name + (tag != null ? " (" + tag + ")" : ""));
         open.Click += (_, _) => Select(p);
         return open;
+    }
+
+    // Installed = the game's mods are in its folder, whether GiftDeck put them there or you did
+    // (for a server pack: the server is set up). Nothing is changed by showing this.
+    (string, string) CardTag(GamePack p, PackStatus st)
+    {
+        if (_busyPack == p) return ("Working…", "AccentBrush");
+        if (p.Server != null)
+        {
+            if (Hub.GameLink.Find(p.Server.Target)?.Connected == true) return ("Running", "SuccessBrush");
+            return Hub.Minecraft?.Server.IsInstalled == true ? ("Installed", "SuccessBrush") : (null, null);
+        }
+        if (Connected(p).Count > 0) return ("Connected", "SuccessBrush");
+        if (st.AnyInstalledByUs && st.UpdateAvailable) return ("Update", "AccentBrush");
+        if ((st.AnyInstalledByUs && st.Installed.Complete) || st.Components.Any(c => c.OnDisk)) return ("Installed", "SuccessBrush");
+        return (null, null);
     }
 
     // Just the card itself: no button chrome around it; a light lift on hover and a focus outline for the keyboard.
@@ -154,19 +171,6 @@ public partial class GamesView : UserControl
         "<Trigger Property='IsMouseOver' Value='True'><Setter TargetName='Bd' Property='Opacity' Value='0.88'/></Trigger>" +
         "<Trigger Property='IsKeyboardFocused' Value='True'><Setter TargetName='Bd' Property='BorderBrush' Value='#7C5CFF'/></Trigger>" +
         "</ControlTemplate.Triggers></ControlTemplate>");
-
-    (string, string) CardStatus(GamePack p, PackStatus st)
-    {
-        if (p.Server != null)
-            return Hub.GameLink.Find(p.Server.Target)?.Connected == true ? ("Server running ✓", "SuccessBrush") : ("Set up the server", "MutedBrush");
-        if (Connected(p).Count > 0) return ("Connected in game ✓", "SuccessBrush");
-        if (_busyPack == p) return ("Working…", "AccentBrush");
-        if (st.AnyInstalledByUs && st.UpdateAvailable) return ("Update available", "AccentBrush");
-        if (st.AnyInstalledByUs && st.Installed.Complete) return ("Installed ✓", "SuccessBrush");
-        if (st.AnyInstalledByUs) return ("Install didn't finish", "WarnBrush");
-        if (!st.GameFound) return ("Game not found", "MutedBrush");
-        return ("Ready to install", "MutedBrush");
-    }
 
     void Back_Click(object sender, RoutedEventArgs e)
     {
