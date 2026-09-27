@@ -27,6 +27,10 @@ namespace GiftDeckGTA.Tests
                     case "dump":
                         Dump(args.Length > 1 ? args[1] : "commands.json");
                         return 0;
+                    case "connect":
+                        // Acts as the script against a real GiftDeck GameLink server on the given port
+                        // (never 21216 while the user's GiftDeck is running), answering like the game would.
+                        return Connect(int.Parse(args[1]), args.Length > 2 ? int.Parse(args[2]) : 3);
                     case "check":
                         CheckCatalog();
                         if (args.Length > 1) CheckFile(args[1]);
@@ -104,13 +108,40 @@ namespace GiftDeckGTA.Tests
             string text = File.ReadAllText(path);
             string expected = Json.Write(Catalog.PackCommands(), true) + "\n";
             Check(text.Replace("\r\n", "\n") == expected, $"{path} matches the catalog in Catalog.cs (run 'dump' to regenerate)");
-            var parsed = Json.Parse(text) as object[];
-            Check(parsed != null && parsed.Length == Catalog.Commands.Count, "it parses as a JSON array of every command");
-            Check(parsed != null && parsed.All(o => o is Dictionary<string, object> d && Json.Str(d, "target") == "gta5:giftdeck" && d.ContainsKey("args")),
-                "each entry has target gta5:giftdeck and args");
+            var groups = Json.Parse(text) as object[];
+            var group = groups?.OfType<Dictionary<string, object>>().FirstOrDefault(g => Json.Str(g, "target") == Catalog.TargetId);
+            var commands = Json.Get(group, "commands") as object[];
+            Check(group != null && Json.Str(group, "name") == Catalog.Name, "it parses as an array with a gta5:giftdeck group");
+            Check(commands != null && commands.Length == Catalog.Commands.Count
+                  && commands.All(o => o is Dictionary<string, object> d && d.ContainsKey("id") && d.ContainsKey("args")),
+                "the group lists every command with its args");
         }
 
         // ---------------------------------------------------------------- GameLink
+
+        static int Connect(int port, int answer)
+        {
+            var client = new GameLinkClient("127.0.0.1", port, Catalog.Hello, m => Console.WriteLine("[client] " + m));
+            client.Start();
+            int answered = 0;
+            var until = DateTime.UtcNow.AddSeconds(90);
+            while (answered < answer && DateTime.UtcNow < until)
+            {
+                while (client.Triggers.TryDequeue(out var t))
+                {
+                    var info = Catalog.Find(t.Command);
+                    string args = string.Join(", ", t.Args.Select(kv => kv.Key + "=" + kv.Value));
+                    Console.WriteLine($"[client] trigger {t.Command} ({args}) from {t.User} / {t.Gift} x{t.Count}");
+                    if (info == null) client.SendResult(t.Id, false, "GiftDeck GTA doesn't know the command '" + t.Command + "'");
+                    else client.SendResult(t.Id, true, $"ran {info.Name} ({args})");
+                    answered++;
+                }
+                Thread.Sleep(16);
+            }
+            Thread.Sleep(300); // let the last result go out
+            client.Stop();
+            return answered >= answer ? 0 : 1;
+        }
 
         static int FreePort()
         {

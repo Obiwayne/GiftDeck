@@ -152,14 +152,15 @@ namespace GiftDeckGTA
                 _ws = ws;
                 _connectionCts = connection;
                 _lastReceived = Environment.TickCount;
-                Connected = true;
                 ConnectCount++;
                 LastError = "";
                 _log("GameLink: connected to GiftDeck at " + Url);
 
                 try
                 {
+                    // Hello first: GiftDeck ignores anything else until it has it, so only now count as connected
                     await SendAsync(Json.Write(_hello())).ConfigureAwait(false);
+                    Connected = true;
                     var keepAlive = KeepAlive(ws, connection);
                     await ReceiveLoop(ws, connection.Token).ConfigureAwait(false);
                     connection.Cancel();

@@ -90,14 +90,17 @@ namespace GiftDeckGTA
             ["commands"] = Commands.Select(c => (object)c.ToJson()).ToList(),
         };
 
-        // Packs/gta5/commands.json: the same list as hello.commands, each command also naming its target
-        // (the pack lists gta5:chaosmod and gta5:giftdeck).
-        public static List<object> PackCommands() => Commands.Select(c =>
+        // Packs/gta5/commands.json: the same list as hello.commands, as one group naming its target (the pack
+        // has two, gta5:chaosmod first), so a Chaos Mod group can sit next to it in the same file.
+        public static List<object> PackCommands() => new List<object>
         {
-            var d = c.ToJson();
-            d["target"] = TargetId;
-            return (object)d;
-        }).ToList();
+            new Dictionary<string, object>
+            {
+                ["target"] = TargetId,
+                ["name"] = Name,
+                ["commands"] = Commands.Select(c => (object)c.ToJson()).ToList(),
+            },
+        };
 
         static List<CommandInfo> Build()
         {

@@ -1,0 +1,501 @@
+[
+  {
+    "target": "gta5:giftdeck",
+    "name": "GiftDeck GTA",
+    "commands": [
+      {
+        "id": "heal",
+        "name": "Heal",
+        "category": "Player",
+        "description": "Full health.",
+        "args": []
+      },
+      {
+        "id": "armour",
+        "name": "Give armour",
+        "category": "Player",
+        "description": "Full body armour.",
+        "args": []
+      },
+      {
+        "id": "heal_armour",
+        "name": "Heal and armour",
+        "category": "Player",
+        "description": "Full health and full body armour.",
+        "args": []
+      },
+      {
+        "id": "kill_player",
+        "name": "Kill player",
+        "category": "Player",
+        "description": "Wasted.",
+        "args": []
+      },
+      {
+        "id": "wanted_up",
+        "name": "Wanted level +1",
+        "category": "Player",
+        "description": "One more wanted star.",
+        "args": []
+      },
+      {
+        "id": "wanted_down",
+        "name": "Wanted level -1",
+        "category": "Player",
+        "description": "One wanted star less.",
+        "args": []
+      },
+      {
+        "id": "wanted_max",
+        "name": "Wanted level max",
+        "category": "Player",
+        "description": "Five stars.",
+        "args": []
+      },
+      {
+        "id": "wanted_clear",
+        "name": "Clear wanted level",
+        "category": "Player",
+        "description": "The police lose interest.",
+        "args": []
+      },
+      {
+        "id": "add_money",
+        "name": "Add money",
+        "category": "Player",
+        "description": "Adds money to the current character (a negative amount takes it away).",
+        "args": [
+          {
+            "name": "amount",
+            "label": "Amount ($)",
+            "type": "number",
+            "default": "1000"
+          }
+        ]
+      },
+      {
+        "id": "set_money",
+        "name": "Set money",
+        "category": "Player",
+        "description": "Sets the current character's money.",
+        "args": [
+          {
+            "name": "amount",
+            "label": "Amount ($)",
+            "type": "number",
+            "default": "0"
+          }
+        ]
+      },
+      {
+        "id": "random_clothing",
+        "name": "Random clothing",
+        "category": "Player",
+        "description": "Puts the player in a random outfit.",
+        "args": []
+      },
+      {
+        "id": "jail_player",
+        "name": "Jail player",
+        "category": "Player",
+        "description": "Locks the player in a cage for a while.",
+        "args": [
+          {
+            "name": "seconds",
+            "label": "Seconds in jail",
+            "type": "number",
+            "default": "30"
+          }
+        ]
+      },
+      {
+        "id": "spawn_vehicle",
+        "name": "Spawn vehicle",
+        "category": "Vehicle",
+        "description": "Spawns a vehicle next to the player. Any model name works, not only the ones in the list.",
+        "args": [
+          {
+            "name": "model",
+            "label": "Vehicle model",
+            "type": "choice",
+            "default": "adder",
+            "choices": ["adder", "zentorno", "t20", "osiris", "entityxf", "turismor", "infernus", "cheetah", "banshee", "comet2", "elegy2", "sultan", "kuruma", "dominator", "gauntlet", "blista", "panto", "faggio", "bati", "akuma", "sanchez", "bmx", "monster", "sandking", "bodhi2", "dune", "blazer", "rhino", "insurgent", "dump", "bus", "firetruk", "police", "ambulance", "taxi", "stretch", "tractor", "mower", "caddy", "forklift", "towtruck", "phantom", "buzzard", "maverick", "frogger", "cargobob", "lazer", "duster", "jetmax", "seashark"]
+          },
+          {
+            "name": "enter",
+            "label": "Put the player in it",
+            "type": "choice",
+            "default": "no",
+            "choices": ["no", "yes"]
+          }
+        ]
+      },
+      {
+        "id": "spawn_random_vehicle",
+        "name": "Spawn random vehicle",
+        "category": "Vehicle",
+        "description": "Spawns a random vehicle next to the player.",
+        "args": []
+      },
+      {
+        "id": "spawn_random_vehicle_drive",
+        "name": "Spawn random vehicle and drive",
+        "category": "Vehicle",
+        "description": "Puts the player in the driver's seat of a random vehicle.",
+        "args": []
+      },
+      {
+        "id": "delete_vehicle",
+        "name": "Delete player vehicle",
+        "category": "Vehicle",
+        "description": "Removes the vehicle the player is in (or just got out of).",
+        "args": []
+      },
+      {
+        "id": "repair_vehicle",
+        "name": "Repair vehicle",
+        "category": "Vehicle",
+        "description": "Fixes and cleans the player's vehicle.",
+        "args": []
+      },
+      {
+        "id": "explode_vehicles",
+        "name": "Explode vehicles nearby",
+        "category": "Vehicle",
+        "description": "Blows up the vehicles around the player (not the player's own).",
+        "args": [
+          {
+            "name": "radius",
+            "label": "Radius (m)",
+            "type": "number",
+            "default": "40"
+          }
+        ]
+      },
+      {
+        "id": "spawn_ramp",
+        "name": "Spawn ramp",
+        "category": "Vehicle",
+        "description": "Drops a stunt ramp in front of the player.",
+        "args": []
+      },
+      {
+        "id": "tune_random",
+        "name": "Random vehicle tuning",
+        "category": "Vehicle",
+        "description": "Random mods, paint, wheels and neon on the player's vehicle.",
+        "args": []
+      },
+      {
+        "id": "tune_full",
+        "name": "Full vehicle tuning",
+        "category": "Vehicle",
+        "description": "Best engine, brakes, gearbox, armour and turbo, plus a new paint job.",
+        "args": []
+      },
+      {
+        "id": "give_weapon",
+        "name": "Give weapon",
+        "category": "Weapons",
+        "description": "Gives the player a weapon with ammo. Any weapon name works (e.g. pistol, WEAPON_RPG).",
+        "args": [
+          {
+            "name": "weapon",
+            "label": "Weapon",
+            "type": "choice",
+            "default": "pistol",
+            "choices": ["pistol", "combatpistol", "appistol", "pistol50", "revolver", "microsmg", "smg", "assaultsmg", "mg", "combatmg", "assaultrifle", "carbinerifle", "advancedrifle", "specialcarbine", "bullpuprifle", "pumpshotgun", "sawnoffshotgun", "assaultshotgun", "sniperrifle", "heavysniper", "rpg", "grenadelauncher", "minigun", "firework", "railgun", "hominglauncher", "grenade", "stickybomb", "molotov", "flaregun", "stungun", "knife", "bat", "crowbar", "golfclub", "hammer", "machete", "gusenberg", "musket", "flare", "snowball", "ball"]
+          },
+          {
+            "name": "ammo",
+            "label": "Ammo",
+            "type": "number",
+            "default": "250"
+          }
+        ]
+      },
+      {
+        "id": "give_random_weapon",
+        "name": "Give random weapon",
+        "category": "Weapons",
+        "description": "Gives the player a random weapon with ammo.",
+        "args": []
+      },
+      {
+        "id": "set_ammo",
+        "name": "Set ammo",
+        "category": "Weapons",
+        "description": "Sets the ammo of the weapon in the player's hands.",
+        "args": [
+          {
+            "name": "ammo",
+            "label": "Ammo",
+            "type": "number",
+            "default": "9999"
+          }
+        ]
+      },
+      {
+        "id": "remove_weapons",
+        "name": "Remove weapons",
+        "category": "Weapons",
+        "description": "Takes all of the player's weapons.",
+        "args": []
+      },
+      {
+        "id": "spawn_attackers",
+        "name": "Spawn attackers",
+        "category": "Peds",
+        "description": "Hostile peds that hunt the player.",
+        "args": [
+          {
+            "name": "count",
+            "label": "How many",
+            "type": "number",
+            "default": "3"
+          },
+          {
+            "name": "weapon",
+            "label": "Their weapon",
+            "type": "choice",
+            "default": "pistol",
+            "choices": ["pistol", "smg", "rifle", "shotgun", "knife", "none"]
+          }
+        ]
+      },
+      {
+        "id": "arm_attackers",
+        "name": "Arm attackers",
+        "category": "Peds",
+        "description": "Gives every spawned attacker a better gun.",
+        "args": [
+          {
+            "name": "weapon",
+            "label": "Weapon",
+            "type": "choice",
+            "default": "rifle",
+            "choices": ["pistol", "smg", "rifle", "shotgun", "knife", "none"]
+          }
+        ]
+      },
+      {
+        "id": "remove_attackers",
+        "name": "Remove attackers",
+        "category": "Peds",
+        "description": "Removes every attacker, monkey and moto spawned by GiftDeck.",
+        "args": []
+      },
+      {
+        "id": "moto_cops",
+        "name": "Moto cops",
+        "category": "Peds",
+        "description": "Police on motorbikes come after the player.",
+        "args": [
+          {
+            "name": "count",
+            "label": "How many",
+            "type": "number",
+            "default": "2"
+          }
+        ]
+      },
+      {
+        "id": "moto_bandits",
+        "name": "Moto bandits",
+        "category": "Peds",
+        "description": "Armed bikers come after the player.",
+        "args": [
+          {
+            "name": "count",
+            "label": "How many",
+            "type": "number",
+            "default": "2"
+          }
+        ]
+      },
+      {
+        "id": "monkey_killers",
+        "name": "Monkey killers",
+        "category": "Peds",
+        "description": "Armed chimps that attack the player.",
+        "args": [
+          {
+            "name": "count",
+            "label": "How many",
+            "type": "number",
+            "default": "3"
+          }
+        ]
+      },
+      {
+        "id": "spawn_pigeons",
+        "name": "Spawn pigeons",
+        "category": "Peds",
+        "description": "A flock of pigeons around the player.",
+        "args": [
+          {
+            "name": "count",
+            "label": "How many",
+            "type": "number",
+            "default": "10"
+          }
+        ]
+      },
+      {
+        "id": "spawn_poodles",
+        "name": "Spawn poodles",
+        "category": "Peds",
+        "description": "Poodles around the player.",
+        "args": [
+          {
+            "name": "count",
+            "label": "How many",
+            "type": "number",
+            "default": "5"
+          }
+        ]
+      },
+      {
+        "id": "spawn_random_animals",
+        "name": "Spawn random animals",
+        "category": "Peds",
+        "description": "Random animals around the player.",
+        "args": [
+          {
+            "name": "count",
+            "label": "How many",
+            "type": "number",
+            "default": "5"
+          }
+        ]
+      },
+      {
+        "id": "set_time",
+        "name": "Set time",
+        "category": "World",
+        "description": "Sets the clock (hour 0 to 23).",
+        "args": [
+          {
+            "name": "hour",
+            "label": "Hour",
+            "type": "number",
+            "default": "0"
+          }
+        ]
+      },
+      {
+        "id": "set_weather",
+        "name": "Set weather",
+        "category": "World",
+        "description": "Changes the weather.",
+        "args": [
+          {
+            "name": "weather",
+            "label": "Weather",
+            "type": "choice",
+            "default": "THUNDER",
+            "choices": ["EXTRASUNNY", "CLEAR", "CLOUDS", "SMOG", "FOGGY", "OVERCAST", "RAIN", "THUNDER", "CLEARING", "NEUTRAL", "SNOW", "BLIZZARD", "SNOWLIGHT", "XMAS", "HALLOWEEN"]
+          }
+        ]
+      },
+      {
+        "id": "earthquake",
+        "name": "Earthquake",
+        "category": "World",
+        "description": "The ground shakes and cars jump for a while.",
+        "args": [
+          {
+            "name": "seconds",
+            "label": "Seconds",
+            "type": "number",
+            "default": "15"
+          }
+        ]
+      },
+      {
+        "id": "tp_airport",
+        "name": "Teleport to LS Airport",
+        "category": "Teleport",
+        "description": "Los Santos International Airport.",
+        "args": []
+      },
+      {
+        "id": "tp_maze_bank",
+        "name": "Teleport to Maze Bank top",
+        "category": "Teleport",
+        "description": "The roof of the Maze Bank Tower.",
+        "args": []
+      },
+      {
+        "id": "tp_fort_zancudo",
+        "name": "Teleport to Fort Zancudo",
+        "category": "Teleport",
+        "description": "Inside the army base. Expect company.",
+        "args": []
+      },
+      {
+        "id": "tp_chiliad",
+        "name": "Teleport to Mount Chiliad",
+        "category": "Teleport",
+        "description": "The top of Mount Chiliad.",
+        "args": []
+      },
+      {
+        "id": "tp_random",
+        "name": "Teleport to a random place",
+        "category": "Teleport",
+        "description": "Somewhere random on the map.",
+        "args": []
+      },
+      {
+        "id": "tp_waypoint",
+        "name": "Teleport to waypoint",
+        "category": "Teleport",
+        "description": "The waypoint set on the map, if there is one.",
+        "args": []
+      },
+      {
+        "id": "skydive",
+        "name": "Skydive",
+        "category": "Fun",
+        "description": "Sends the player high into the sky with a parachute.",
+        "args": [
+          {
+            "name": "height",
+            "label": "Height (m)",
+            "type": "number",
+            "default": "800"
+          }
+        ]
+      },
+      {
+        "id": "launch_up",
+        "name": "Launch player up",
+        "category": "Fun",
+        "description": "Throws the player (or their car) into the air.",
+        "args": []
+      },
+      {
+        "id": "drunk",
+        "name": "Drunk",
+        "category": "Fun",
+        "description": "Wobbly walk, blurry screen and a shaky camera for a while.",
+        "args": [
+          {
+            "name": "seconds",
+            "label": "Seconds",
+            "type": "number",
+            "default": "30"
+          }
+        ]
+      },
+      {
+        "id": "nothing",
+        "name": "Nothing",
+        "category": "Fun",
+        "description": "Does nothing: for testing that gifts reach the game.",
+        "args": []
+      }
+    ]
+  }
+]
