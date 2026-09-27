@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Checks for text-to-speech per profile and quick mute. Not part of GiftDeck.exe (GiftDeck.csproj excludes tests\**).
+       Build GiftDeck first into a scratch folder, then build this with -p:GiftDeckBuild=<that folder>
+       and run TtsHarness.exe <empty scratch data folder> <screenshot folder>. See docs\v2.1\tts-mute-profiles.md.
+       It runs everything in-process against its own data folder (GIFTDECK_DATA), never the real one,
+       makes no sound (fake online download, volume 0) and renders the changed UI offscreen to PNGs. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>TtsHarness</AssemblyName>
+    <GiftDeckBuild Condition="'$(GiftDeckBuild)' == ''">..\..\bin\Debug\net8.0-windows</GiftDeckBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="GiftDeck">
+      <HintPath>$(GiftDeckBuild)\GiftDeck.dll</HintPath>
+    </Reference>
+    <PackageReference Include="System.Speech" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2792.45" />
+  </ItemGroup>
+
+</Project>

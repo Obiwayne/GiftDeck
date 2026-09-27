@@ -29,6 +29,7 @@ public partial class MainWindow : Window
         RefreshProfiles();
         Hub.Profiles.Changed += () => Dispatcher.BeginInvoke(OnProfilesChanged);
         ApplyCollapsed(Hub.Settings.SidebarCollapsed);
+        StartTtsMuteNav();
         Setup.Start(); // covers the window until everything's set up and connected
         // GIFTDECK_START_PAGE (development builds) opens straight on a page, e.g. "scenes".
         Navigate(Environment.GetEnvironmentVariable("GIFTDECK_START_PAGE") is { Length: > 0 } page ? page : "dashboard");

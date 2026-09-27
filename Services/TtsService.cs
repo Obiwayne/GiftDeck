@@ -3,6 +3,8 @@ using System.Speech.Synthesis;
 using System.Windows;
 using System.Windows.Media;
 
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("TtsHarness")]
+
 namespace GiftDeck.Services;
 
 // Text to speech using the voices installed in Windows, plus two free online voices
@@ -29,6 +31,30 @@ public class TtsService
     Action _finishPlayer;
 
     public static bool IsOnline(string voice) => voice == GoogleMale || voice == GoogleFemale;
+
+    // Quick mute (Live panel, Go LIVE): stops what's speaking and skips everything until unmuted.
+    // Saved in settings.json so a restart mid-stream doesn't suddenly start talking again;
+    // the menu and the Text to speech page say "muted" so it can't stay off unnoticed.
+    public event Action MuteChanged;
+    public bool Muted => Hub.Settings.TtsMuted;
+
+    public void SetMuted(bool muted)
+    {
+        if (muted) Stop();
+        if (Hub.Settings.TtsMuted == muted) return;
+        Hub.Settings.TtsMuted = muted;
+        Hub.SaveSettings();
+        Log.Write(muted ? "Text to speech muted" : "Text to speech unmuted");
+        MuteChanged?.Invoke();
+    }
+
+    public void ToggleMute() => SetMuted(!Muted);
+
+    // True while an online voice is downloading, playing or waiting its turn.
+    public bool OnlineBusy { get { lock (_online) return _onlineRunning || _player != null; } }
+
+    // The harness (tests\Tts) swaps this so it needs neither the network nor the speakers.
+    internal Func<string, string, Task<string>> Download = DownloadAsync;
 
     public List<string> Voices
     {
@@ -74,9 +100,10 @@ public class TtsService
         }
     }
 
-    public void Speak(string text)
+    // False when nothing was queued (muted, or no text).
+    public bool Speak(string text)
     {
-        if (string.IsNullOrWhiteSpace(text)) return;
+        if (Muted || string.IsNullOrWhiteSpace(text)) return false;
         int max = Math.Max(20, Hub.Settings.TtsMaxChars);
         if (text.Length > max) text = text.Substring(0, max);
 
@@ -84,10 +111,10 @@ public class TtsService
         if (IsOnline(voice))
         {
             SpeakOnline(text, voice == GoogleMale ? "male" : "female");
-            return;
+            return true;
         }
-        try { Synth().SpeakAsync(text); }
-        catch (Exception e) { Log.Write("TTS failed: " + e.Message); }
+        try { Synth().SpeakAsync(text); return true; }
+        catch (Exception e) { Log.Write("TTS failed: " + e.Message); return false; }
     }
 
     void SpeakOnline(string text, string gender)
@@ -115,9 +142,9 @@ public class TtsService
             }
             try
             {
-                var file = await DownloadAsync(item.text, item.gender);
-                lock (_online) if (gen != _onlineGeneration) { TryDelete(file); continue; }
-                await PlayAsync(file);
+                var file = await Download(item.text, item.gender);
+                lock (_online) if (gen != _onlineGeneration || Muted) { TryDelete(file); continue; }
+                await PlayAsync(file, gen);
                 TryDelete(file);
             }
             catch (Exception e)
@@ -151,13 +178,15 @@ public class TtsService
         return file;
     }
 
-    Task PlayAsync(string file)
+    Task PlayAsync(string file, int gen)
     {
         var done = new TaskCompletionSource();
         var app = Application.Current;
         if (app == null) { done.SetResult(); return done.Task; }
         app.Dispatcher.BeginInvoke(() =>
         {
+            // Stopped or muted between the download and now: don't start it.
+            lock (_online) if (gen != _onlineGeneration || Muted) { done.TrySetResult(); return; }
             var p = new MediaPlayer();
             void Finish() { p.Close(); if (_player == p) { _player = null; _finishPlayer = null; } done.TrySetResult(); }
             p.MediaEnded += (s, e) => Finish();

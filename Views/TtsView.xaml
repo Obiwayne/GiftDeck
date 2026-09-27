@@ -4,7 +4,31 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="32,28,32,28" MaxWidth="900" HorizontalAlignment="Left">
             <TextBlock Text="Text to speech" Style="{StaticResource H1}"/>
-            <TextBlock Text="Uses the voices installed in Windows. Nothing is sent to the internet." Style="{StaticResource Muted}" Margin="0,4,0,18"/>
+            <TextBlock Text="Uses the voices installed in Windows, or one of the two free Google voices (those go over the internet)." Style="{StaticResource Muted}" Margin="0,4,0,18"/>
+
+            <!-- Shown while muted, so it never stays off without anyone noticing -->
+            <Border x:Name="MutedBanner" Style="{StaticResource Card}" Background="{StaticResource DangerDimBrush}" BorderBrush="{StaticResource DangerDimBrush}" Margin="0,0,0,14" Visibility="Collapsed">
+                <DockPanel>
+                    <Button DockPanel.Dock="Right" Content="Unmute" Style="{StaticResource Primary}" Click="Unmute_Click" Margin="12,0,0,0"/>
+                    <TextBlock DockPanel.Dock="Left" FontFamily="{StaticResource IconFont}" Text="&#xE74F;" FontSize="18" Foreground="{StaticResource DangerBrush}" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="Text to speech is muted" FontWeight="SemiBold" Foreground="{StaticResource DangerBrush}"/>
+                        <TextBlock Text="Nothing is read out: not chat, not Speak actions in your events. The speaker button in the Live panel and on Go LIVE turns it back on too." Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <!-- Voice, speed, volume and chat reading are saved with the active profile -->
+            <Border Style="{StaticResource SubCard}" Margin="0,0,0,14">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Left" FontFamily="{StaticResource IconFont}" Text="&#xE77B;" FontSize="14" Foreground="{StaticResource AccentBrush}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBlock VerticalAlignment="Center" TextWrapping="Wrap">
+                        <Run Text="These settings belong to the"/>
+                        <Run x:Name="ProfileName" FontWeight="SemiBold" Text="Default"/>
+                        <Run Text="profile. Each profile can have its own voice, speed, volume and chat reading."/>
+                    </TextBlock>
+                </DockPanel>
+            </Border>
 
             <Border Style="{StaticResource Card}" Margin="0,0,0,14">
                 <StackPanel>
@@ -44,6 +68,7 @@
                 <StackPanel>
                     <TextBlock Text="Read chat aloud" Style="{StaticResource H2}" Margin="0,0,0,10"/>
                     <CheckBox x:Name="ReadChat" Content="Read every chat message out loud" Click="ReadChat_Click" Margin="0,0,0,12"/>
+                    <TextBlock Text="The two settings below are the same for every profile." Style="{StaticResource Muted}" Margin="0,0,0,10"/>
                     <TextBlock Text="How to say it" Style="{StaticResource Label}"/>
                     <TextBox x:Name="TemplateBox" TextChanged="Template_Changed"/>
                     <TextBlock Text="{}{user} is the viewer's name and {comment} is what they typed." Style="{StaticResource Muted}" Margin="0,5,0,14"/>

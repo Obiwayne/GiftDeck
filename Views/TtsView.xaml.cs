@@ -11,22 +11,41 @@ public partial class TtsView : UserControl
     public TtsView()
     {
         InitializeComponent();
-        var voices = Hub.Tts.Voices;
-        VoiceCombo.ItemsSource = voices;
+        VoiceCombo.ItemsSource = Hub.Tts.Voices;
+        Fill();
+        // The page stays open across profile switches: show the new profile's voice.
+        void OnProfile() => Dispatcher.BeginInvoke(Fill);
+        void OnMute() => Dispatcher.BeginInvoke(ShowMuted);
+        Loaded += (_, _) => { Hub.Profiles.Changed += OnProfile; Hub.Tts.MuteChanged += OnMute; Fill(); };
+        Unloaded += (_, _) => { Hub.Profiles.Changed -= OnProfile; Hub.Tts.MuteChanged -= OnMute; };
+    }
+
+    void Fill()
+    {
+        _loading = true;
+        var voices = (List<string>)VoiceCombo.ItemsSource;
         VoiceCombo.SelectedItem = voices.Contains(Hub.Settings.TtsVoice) ? Hub.Settings.TtsVoice : voices.FirstOrDefault(v => !TtsService.IsOnline(v)) ?? voices.FirstOrDefault();
         RateSlider.Value = Hub.Settings.TtsRate;
         VolumeSlider.Value = Hub.Settings.TtsVolume;
         ReadChat.IsChecked = Hub.Settings.TtsReadChat;
         TemplateBox.Text = Hub.Settings.TtsChatTemplate;
         MaxCharsBox.Text = Hub.Settings.TtsMaxChars.ToString();
+        ProfileName.Text = Hub.Profiles?.Active ?? Hub.Settings.ActiveProfile;
         UpdateLabels();
+        ShowMuted();
         _loading = false;
     }
 
+    void ShowMuted() => MutedBanner.Visibility = Hub.Tts.Muted ? Visibility.Visible : Visibility.Collapsed;
+
+    void Unmute_Click(object sender, RoutedEventArgs e) => Hub.Tts.SetMuted(false);
+
+    // Voice, speed, volume and read-chat are the active profile's: saved to its tts.json too.
     void Apply()
     {
         if (_loading) return;
         Hub.SaveSettings();
+        TtsProfile.Save(Hub.Settings.ActiveProfile);
         Hub.Tts.Apply();
     }
 

@@ -19,6 +19,7 @@
             <!-- Header strip, same height as the PROFILE bar so the top edge lines up across the window -->
             <Border Grid.ColumnSpan="3" Height="58" BorderBrush="{StaticResource LineBrush}" BorderThickness="0,0,0,1" Padding="20,0">
                 <DockPanel VerticalAlignment="Center">
+                    <local:TtsMuteButton DockPanel.Dock="Right" VerticalAlignment="Center" Margin="10,0,-8,0"/>
                     <TextBlock x:Name="PeakText" DockPanel.Dock="Right" Text="Peak 0" Style="{StaticResource Muted}" VerticalAlignment="Center"/>
                     <TextBlock x:Name="TotalText" DockPanel.Dock="Right" Text="" Style="{StaticResource Muted}" VerticalAlignment="Center" Margin="0,0,14,0"/>
                     <Ellipse x:Name="LiveDot" Width="10" Height="10" Fill="{StaticResource MutedBrush}" VerticalAlignment="Center" Margin="0,0,10,0"/>

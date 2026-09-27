@@ -46,6 +46,8 @@ public class ProfileService
             Hub.Settings.ActiveProfile = List()[0];
             Hub.SaveSettings();
         }
+        TtsProfile.Migrate(List());
+        TtsProfile.Load(Active);
     }
 
     public void Switch(string name)
@@ -75,7 +77,11 @@ public class ProfileService
             CopyDir(DirOf(copyFrom), DirOf(name));
             RepointFiles(DirOf(copyFrom), DirOf(name));
         }
-        else Directory.CreateDirectory(DirOf(name));
+        else
+        {
+            Directory.CreateDirectory(DirOf(name));
+            TtsProfile.Save(name); // starts with the voice in use now
+        }
         Changed?.Invoke();
         return name;
     }
@@ -111,6 +117,7 @@ public class ProfileService
         Hub.Overlays.Save();
         var t = Hub.TikTok.State;
         Storage.Save(File("stream.json"), new ProfileStream { Title = t.Title, CategoryName = t.CategoryName, CategoryId = t.CategoryId, Mature = t.Mature });
+        TtsProfile.Save(Active);
     }
 
     void LoadActive()
@@ -125,6 +132,7 @@ public class ProfileService
             Hub.TikTok.Save();
             Hub.TikTok.NotifyChanged();
         }
+        TtsProfile.Load(Active);
     }
 
     // ---- Export / import: one .giftdeck file (a zip) with the profile and the sounds/pictures it uses ----
@@ -159,6 +167,8 @@ public class ProfileService
         WriteEntry(zip, "overlays.json", Serialize(overlays));
         var stream = Path.Combine(dir, "stream.json");
         if (System.IO.File.Exists(stream)) zip.CreateEntryFromFile(stream, "stream.json");
+        var tts = Path.Combine(dir, TtsProfile.FileName);
+        if (System.IO.File.Exists(tts)) zip.CreateEntryFromFile(tts, TtsProfile.FileName);
         foreach (var (path, zipName) in files) zip.CreateEntryFromFile(path, "files/" + zipName);
         Log.Write($"Exported the \"{name}\" profile to {zipPath}");
     }
@@ -186,13 +196,14 @@ public class ProfileService
                 var target = Path.GetFullPath(Path.Combine(filesDir, Path.GetFileName(e.FullName)));
                 if (target.StartsWith(Path.GetFullPath(filesDir), StringComparison.OrdinalIgnoreCase)) e.ExtractToFile(target, true);
             }
-            else if (e.FullName is "rules.json" or "overlays.json" or "stream.json")
+            else if (e.FullName is "rules.json" or "overlays.json" or "stream.json" or TtsProfile.FileName)
             {
                 using var r = new StreamReader(e.Open());
                 var text = r.ReadToEnd().Replace(FilesToken, JsonEscape(filesDir.Replace('\\', '/')));
                 System.IO.File.WriteAllText(Path.Combine(dir, e.FullName), text);
             }
         }
+        if (zip.GetEntry(TtsProfile.FileName) == null) TtsProfile.Save(name); // older files: keep the voice in use now
         Log.Write($"Imported the \"{name}\" profile");
         Changed?.Invoke();
         return name;

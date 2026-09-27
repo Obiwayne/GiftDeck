@@ -265,4 +265,7 @@ public class AppSettings
     public bool TtsReadChat { get; set; } = false;
     public string TtsChatTemplate { get; set; } = "{user} says {comment}";
     public int TtsMaxChars { get; set; } = 200;
+    // Quick mute from the Live panel / Go LIVE. Voice, speed, volume and read-chat are the active
+    // profile's (profiles\<name>\tts.json, copied in here on switch); mute, template and cut-off are for all.
+    public bool TtsMuted { get; set; } = false;
 }
