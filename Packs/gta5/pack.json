@@ -1,0 +1,92 @@
+{
+  "id": "gta5",
+  "name": "GTA V (Legacy)",
+  "short": "Chaos Mod effects, vehicles, weapons, weather and more, set off by gifts",
+  "description": "Gifts set off things in your Story Mode game: hundreds of Chaos Mod V effects, plus spawning vehicles, weapons, money, wanted levels, weather and teleports from the GiftDeck GTA script. GiftDeck installs Script Hook V, Script Hook V .NET, Chaos Mod V (GiftDeck build) and the GiftDeck GTA script into your game folder, and backs up any file it replaces.",
+  "cover": "cover.png",
+  "warning": "Story Mode only. Script Hook V closes the game if you go Online, and using mods Online can get your Rockstar account banned.",
+  "detect": [
+    { "type": "steam", "appId": 271590 },
+    { "type": "registry", "key": "HKLM\\SOFTWARE\\WOW6432Node\\Rockstar Games\\Grand Theft Auto V", "value": "InstallFolder" },
+    { "type": "epic", "appName": "9d2d0eb64d5c44529cece33fe2a46482" }
+  ],
+  "exe": "GTA5.exe",
+  "mustBeClosed": [ "GTA5.exe", "PlayGTAV.exe", "GTAVLauncher.exe" ],
+  "requirements": [
+    { "text": "Close the game", "detail": "GiftDeck can't change the game's files while it's running.", "check": "closed" },
+    { "text": "BattlEye off", "detail": "Script Hook V comes with an args.txt that starts the game without BattlEye, which is enough for most people. If BattlEye still starts: Rockstar Games Launcher > Settings > Grand Theft Auto V Legacy, untick BattlEye (or put -nobattleye in Launch Arguments)." },
+    { "text": "Story Mode only", "detail": "Never go Online with these mods installed: Script Hook V closes the game if you try, and mods Online can get you banned." },
+    { "text": "Finish the prologue first", "detail": "Play through the first mission (the North Yankton robbery) before using the mods. Many effects don't work until it's done." }
+  ],
+  "components": [
+    {
+      "id": "scripthookv",
+      "name": "Script Hook V",
+      "license": "Free, by Alexander Blade. Not redistributable, so it's always downloaded from dev-c.com.",
+      "source": {
+        "type": "url",
+        "page": "https://www.dev-c.com/gtav/scripthookv/",
+        "find": "href=\"(/files/ScriptHookV_[0-9._]+\\.zip)\"",
+        "version": "ScriptHookV_([0-9.]+)",
+        "instructions": "On the page, press the first Download button (next to Version). Then pick the ScriptHookV_….zip you downloaded."
+      },
+      "extract": "zip",
+      "files": [
+        { "from": "bin/ScriptHookV.dll", "to": "ScriptHookV.dll" },
+        { "from": "bin/dinput8.dll", "to": "dinput8.dll" },
+        { "from": "bin/args.txt", "to": "args.txt" }
+      ],
+      "detectInstalled": "ScriptHookV.dll"
+    },
+    {
+      "id": "shvdn",
+      "name": "Script Hook V .NET",
+      "license": "Free and open source (zlib), github.com/scripthookvdotnet. The nightly build: the last stable one doesn't work with current versions of the game.",
+      "source": { "type": "github", "repo": "scripthookvdotnet/scripthookvdotnet-nightly", "asset": "^ScriptHookVDotNet.*\\.zip$" },
+      "extract": "zip",
+      "files": [
+        { "from": "ScriptHookVDotNet.asi", "to": "" },
+        { "from": "ScriptHookVDotNet.ini", "to": "" },
+        { "from": "ScriptHookVDotNet2.dll", "to": "" },
+        { "from": "ScriptHookVDotNet3.dll", "to": "" }
+      ],
+      "detectInstalled": "ScriptHookVDotNet3.dll"
+    },
+    {
+      "id": "chaosmod",
+      "name": "Chaos Mod V (GiftDeck build)",
+      "license": "Free and open source (GPL-3), a GiftDeck build of gta-chaos-mod/ChaosModV: effects run when a gift says so, with no timer or voting.",
+      "sources": [
+        { "type": "local", "path": "%USERPROFILE%\\ChaosModV-GiftDeck\\dist\\" },
+        { "type": "github", "repo": "Obiwayne/ChaosModV-GiftDeck", "asset": "^chaosmod.*\\.zip$" }
+      ],
+      "extract": "zip",
+      "files": [
+        { "from": "ChaosMod.asi", "to": "ChaosMod.asi" },
+        { "from": "chaosmod/", "to": "chaosmod/" }
+      ],
+      "versionFile": "chaosmod/version.txt",
+      "detectInstalled": "ChaosMod.asi"
+    },
+    {
+      "id": "giftdeckgta",
+      "name": "GiftDeck GTA script",
+      "license": "Free and open source (MIT), part of GiftDeck. Shows a green greeting in game; F10 opens its menu.",
+      "sources": [
+        { "type": "local", "path": "%USERPROFILE%\\GiftDeck\\mods\\gta5\\GiftDeckGTA\\bin\\Release\\" }
+      ],
+      "extract": "zip",
+      "files": [
+        { "from": "GiftDeckGTA.dll", "to": "scripts/GiftDeckGTA.dll" }
+      ],
+      "detectInstalled": "scripts\\GiftDeckGTA.dll"
+    }
+  ],
+  "edits": [
+    { "file": "chaosmod/configs/config.json", "type": "json", "path": "NewEffectSpawnTime", "value": 99999 },
+    { "file": "chaosmod/configs/config.json", "type": "json", "path": "DisableTimerBarDraw", "value": true }
+  ],
+  "presets": [],
+  "commands": "commands.json",
+  "targets": [ "gta5:chaosmod", "gta5:giftdeck" ]
+}
