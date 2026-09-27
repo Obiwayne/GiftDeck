@@ -114,6 +114,7 @@ public class OverlayService
                 Bump(GoalMetric.Coins, e.Coins);
                 Bump(GoalMetric.Gifts, Math.Max(1, e.RepeatCount));
                 Extend(c => c.SecondsPerCoin * e.Coins);
+                AddGifter(e);
                 if (e.Coins >= Config.AlertMinCoins) PushAlert("gift", e, Hub.Gifts.Find(e.GiftId, e.GiftName)?.ImageUrl);
                 break;
             case "viewers":
@@ -164,7 +165,163 @@ public class OverlayService
                 image = string.IsNullOrEmpty(ResolveTileImage(t)) ? "" : "/tile-image/" + t.Id,
             }),
         },
+        spinners = Config.Spinners.Select(s => new { id = s.Id, name = s.Name, hideWhenIdle = s.HideWhenIdle, entries = SpinEntries(s.Entries) }),
+        giftList = new { title = Config.Templates.GiftListTitle, items = GiftList() },
+        strip = new { title = Config.Templates.StripTitle, top = TopGifters(3), goal = NextGoal() },
     }, Json);
+
+    // ---- Stream tools: Gift Spinner, custom alerts, gift list and top gifters templates ----
+
+    static object SpinEntries(IEnumerable<SpinnerEntry> entries) =>
+        entries.Select(x => new { label = x.Label, rarity = x.Rarity, color = x.EffectiveColor }).ToList();
+
+    public void PushSpin(Spinner s, List<SpinnerEntry> entries, int index, LiveEvent e)
+    {
+        Broadcast?.Invoke(JsonSerializer.Serialize(new
+        {
+            type = "spin",
+            spinner = s.Id,
+            name = s.Name,
+            entries = SpinEntries(entries),
+            index,
+            seconds = s.SpinSeconds,
+            revealMs = SpinnerService.RevealMs,
+            user = e.Nickname ?? "",
+            avatar = e.PictureUrl ?? "",
+        }, Json));
+    }
+
+    public void PushCustomAlert(AlertDef a, LiveEvent e)
+    {
+        string media = "", mediaType = "";
+        if (!string.IsNullOrWhiteSpace(a.Media))
+        {
+            media = "/alert-media/" + a.Id + "?v=" + DateTime.UtcNow.Ticks;
+            var ext = Path.GetExtension(a.Media.Trim().Split('?')[0]).ToLowerInvariant();
+            mediaType = ext == ".webm" || ext == ".mp4" || ext == ".mov" ? "video" : "image";
+        }
+        Broadcast?.Invoke(JsonSerializer.Serialize(new
+        {
+            type = "alert",
+            kind = "custom",
+            id = a.Id,
+            text = RulesEngine.Template(a.Text, e),
+            media,
+            mediaType,
+            seconds = a.Seconds,
+            interrupt = a.Interrupt,
+            fullScreen = a.FullScreen,
+            user = e.Nickname ?? "",
+            avatar = e.PictureUrl ?? "",
+        }, Json));
+    }
+
+    public AlertDef FindAlert(Guid id) => Config.CustomAlerts.FirstOrDefault(a => a.Id == id);
+
+    void AddGifter(LiveEvent e)
+    {
+        if (e.Coins <= 0) return;
+        var key = string.IsNullOrEmpty(e.UserId) ? e.Nickname ?? "" : e.UserId;
+        var list = Config.Stats.Gifters;
+        lock (list)
+        {
+            var g = list.FirstOrDefault(x => x.UserId == key);
+            if (g == null) list.Add(g = new GifterTotal { UserId = key });
+            g.Coins += e.Coins;
+            if (!string.IsNullOrEmpty(e.Nickname)) g.Name = e.Nickname;
+            if (!string.IsNullOrEmpty(e.PictureUrl)) g.Avatar = e.PictureUrl;
+        }
+    }
+
+    public List<GifterTotal> TopGifters(int n)
+    {
+        var list = Config.Stats.Gifters;
+        lock (list) return list.OrderByDescending(x => x.Coins).Take(n).Select(x => new GifterTotal { Name = x.Name, Coins = x.Coins, Avatar = x.Avatar }).ToList();
+    }
+
+    // The first goal that isn't reached yet, else the last one (so the strip always has something to show).
+    object NextGoal()
+    {
+        var g = Config.Goals.FirstOrDefault(x => x.Progress < x.Target) ?? Config.Goals.LastOrDefault();
+        return g == null ? null : new { title = g.Title, metric = g.Metric, target = g.Target, progress = g.Progress };
+    }
+
+    // Every enabled gift event, cheapest first: the gift's picture, its price and what it does.
+    public List<GiftListItem> GiftList()
+    {
+        var rules = Hub.Rules?.Rules.ToList() ?? new List<Rule>();
+        var items = new List<GiftListItem>();
+        foreach (var r in rules)
+        {
+            if (!r.Enabled) continue;
+            var t = r.Trigger;
+            if (t.Type == TriggerType.Gift)
+            {
+                var g = Hub.Gifts?.Find(t.GiftId, t.GiftName);
+                items.Add(new GiftListItem
+                {
+                    Id = r.Id, Label = r.Name, Gift = g?.Name ?? t.GiftName,
+                    Coins = t.MinCoins > 0 ? t.MinCoins : g?.Coins ?? 0,
+                    Image = string.IsNullOrEmpty(g?.ImageUrl) ? "" : "/rule-image/" + r.Id,
+                });
+            }
+            else if (t.Type == TriggerType.AnyGift)
+                items.Add(new GiftListItem { Id = r.Id, Label = r.Name, Gift = "Any gift", Coins = t.MinCoins, AnyGift = true });
+        }
+        items = items.OrderBy(x => x.Coins).ThenBy(x => x.Label, StringComparer.OrdinalIgnoreCase).ToList();
+        if (Config.Templates.GiftListMax > 0) items = items.Take(Config.Templates.GiftListMax).ToList();
+        return items;
+    }
+
+    public class GiftListItem
+    {
+        public Guid Id { get; set; }
+        public string Label { get; set; }
+        public string Gift { get; set; }
+        public int Coins { get; set; }
+        public string Image { get; set; }
+        public bool AnyGift { get; set; }
+    }
+
+    // The gift picture for a gift event (for the gift list template).
+    public string ResolveRuleImage(Guid ruleId)
+    {
+        var rule = FindRule(ruleId);
+        return rule == null ? null : Hub.Gifts?.Find(rule.Trigger.GiftId, rule.Trigger.GiftName)?.ImageUrl;
+    }
+
+    public Spinner AddSpinner()
+    {
+        var s = new Spinner { Name = Config.Spinners.Count == 0 ? "Gift Spinner" : "Gift Spinner " + (Config.Spinners.Count + 1) };
+        foreach (var r in Rarities.All) s.Entries.Add(new SpinnerEntry { Label = r + " prize", Rarity = r });
+        Config.Spinners.Add(s);
+        ListsChanged?.Invoke();
+        Touch();
+        return s;
+    }
+
+    public void RemoveSpinner(Spinner s)
+    {
+        Config.Spinners.Remove(s);
+        ListsChanged?.Invoke();
+        Touch();
+    }
+
+    public AlertDef AddCustomAlert()
+    {
+        var a = new AlertDef { Name = "Alert " + (Config.CustomAlerts.Count + 1) };
+        Config.CustomAlerts.Add(a);
+        ListsChanged?.Invoke();
+        Touch();
+        return a;
+    }
+
+    public void RemoveCustomAlert(AlertDef a)
+    {
+        Config.CustomAlerts.Remove(a);
+        ListsChanged?.Invoke();
+        Touch();
+    }
 
     // ---- Gift menu board ----
 

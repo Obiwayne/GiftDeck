@@ -98,10 +98,12 @@ public class StreamStats : Observable
     public int Gifts { get => _gifts; set { _gifts = value; Raise(nameof(Gifts)); } }
     public int Viewers { get => _viewers; set { _viewers = value; Raise(nameof(Viewers)); } }
     public DateTime Started { get; set; } = DateTime.Now;
+    public List<GifterTotal> Gifters { get; set; } = new List<GifterTotal>();
 
     public void Reset()
     {
         Follows = Shares = Likes = Coins = Gifts = 0;
+        lock (Gifters) Gifters.Clear();
         Started = DateTime.Now;
     }
 }
@@ -203,4 +205,9 @@ public class OverlayConfig
     public int AlertMinCoins { get; set; } = 0;
     public bool AlertFollows { get; set; } = true;
     public bool AlertShares { get; set; } = false;
+
+    // Stream tools (docs/v2.1/plan.md section 4).
+    public List<Spinner> Spinners { get; set; } = new List<Spinner>();
+    public List<AlertDef> CustomAlerts { get; set; } = new List<AlertDef>();
+    public TemplatesConfig Templates { get; set; } = new TemplatesConfig();
 }
