@@ -29,6 +29,8 @@ public partial class ActionEditor : UserControl
         new Choice(ActionType.SpotifyControl, "Spotify: control player"),
         new Choice(ActionType.RunProgram, "Run a program"),
         new Choice(ActionType.GameCommand, "Run a game command"),
+        new Choice(ActionType.Alert, "Show an alert"),
+        new Choice(ActionType.SpinWheel, "Spin the Gift Spinner"),
     };
 
     static readonly Choice[] SpotifyCommands =
@@ -128,8 +130,28 @@ public partial class ActionEditor : UserControl
             case ActionType.GameCommand:
                 PopulateGame();
                 break;
+            case ActionType.Alert:
+            case ActionType.SpinWheel:
+                FillStreamTools();
+                break;
         }
         UpdatePanels();
+    }
+
+    // Alerts and spinners are set up on the Overlays page; the action stores the chosen one's id.
+    void FillStreamTools()
+    {
+        var cfg = Hub.Overlays.Config;
+        bool alert = Action.Type == ActionType.Alert;
+        var items = alert ? cfg.CustomAlerts.Select(a => new Choice(a.Id.ToString(), a.Name)).ToList()
+                          : cfg.Spinners.Select(s => new Choice(s.Id.ToString(), s.Name)).ToList();
+        StreamToolCombo.ItemsSource = items;
+        var chosen = items.FirstOrDefault(c => (string)c.Value == Action.Text);
+        if (chosen == null && string.IsNullOrEmpty(Action.Text)) { chosen = items.FirstOrDefault(); Action.Text = chosen?.Value as string ?? ""; }
+        StreamToolCombo.SelectedItem = chosen;
+        StreamToolLabel.Text = alert ? "Alert to show" : "Spinner to spin";
+        StreamToolHint.Text = items.Count == 0 ? (alert ? "No alerts yet: add one on the Overlays page, under Alerts and interrupts." : "No spinners yet: add one on the Overlays page, under Gift Spinner.")
+                            : chosen == null ? "The one this action used has been removed. Choose another." : "";
     }
 
     void UpdatePanels()
@@ -146,6 +168,7 @@ public partial class ActionEditor : UserControl
         SpotifyControlPanel.Visibility = t == ActionType.SpotifyControl ? Visibility.Visible : Visibility.Collapsed;
         ProgramPanel.Visibility = t == ActionType.RunProgram ? Visibility.Visible : Visibility.Collapsed;
         GamePanel.Visibility = t == ActionType.GameCommand ? Visibility.Visible : Visibility.Collapsed;
+        StreamToolPanel.Visibility = t == ActionType.Alert || t == ActionType.SpinWheel ? Visibility.Visible : Visibility.Collapsed;
         if (t == ActionType.SpotifyControl)
         {
             var cmd = (SpotifyCmdCombo.SelectedItem as Choice)?.Value as string;
@@ -230,8 +253,14 @@ public partial class ActionEditor : UserControl
                 Action.Text = ProgramPath.Text.Trim();
                 Action.Text2 = ProgramArgs.Text;
                 break;
+            case ActionType.Alert:
+            case ActionType.SpinWheel:
+                if (StreamToolCombo.SelectedItem is Choice c) { Action.Text = (string)c.Value; StreamToolHint.Text = ""; }
+                break;
         }
     }
+
+    void StreamTool_Changed(object sender, SelectionChangedEventArgs e) => Commit();
 
     void KeyBox_KeyDown(object sender, KeyEventArgs e)
     {
@@ -298,7 +327,7 @@ public partial class ActionEditor : UserControl
         }
     }
 
-    RuleEditorWindow Owner => Window.GetWindow(this) as RuleEditorWindow;
+    IActionHost Owner => Window.GetWindow(this) as IActionHost;
     void Up_Click(object sender, RoutedEventArgs e) => Owner?.MoveAction(Action, -1);
     void Down_Click(object sender, RoutedEventArgs e) => Owner?.MoveAction(Action, 1);
     void Remove_Click(object sender, RoutedEventArgs e) => Owner?.RemoveAction(Action);

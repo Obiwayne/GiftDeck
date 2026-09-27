@@ -307,6 +307,9 @@
                 </StackPanel>
             </Border>
 
+            <!-- Overlay templates, Gift Spinner, custom alerts and interrupts -->
+            <local:StreamToolsPanel/>
+
             <!-- Style -->
             <Border Style="{StaticResource Card}">
                 <StackPanel>

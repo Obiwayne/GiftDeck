@@ -1,0 +1,37 @@
+<Window x:Class="GiftDeck.Views.PrizeActionsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:GiftDeck.Views"
+        Title="Prize actions" Width="760" Height="620" MinWidth="640" MinHeight="420"
+        Background="{StaticResource BgBrush}" WindowStartupLocation="CenterOwner"
+        FontFamily="Segoe UI" TextOptions.TextFormattingMode="Display" UseLayoutRounding="True" ShowInTaskbar="False">
+    <DockPanel Margin="28,24,28,20">
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+            <Button Content="Cancel" Click="Cancel_Click" Margin="0,0,10,0"/>
+            <Button Content="Save actions" Style="{StaticResource Primary}" Click="Save_Click"/>
+        </StackPanel>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="0,0,8,0">
+                <TextBlock x:Name="Heading" Text="Prize" Style="{StaticResource H1}"/>
+                <TextBlock Text="What happens when the spinner lands on this prize. The actions run after the wheel stops, one after another, top to bottom." Style="{StaticResource Muted}" Margin="0,4,0,16" TextWrapping="Wrap"/>
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <DockPanel Margin="0,0,0,10">
+                            <Button DockPanel.Dock="Right" Content="+  Add action" Click="AddAction_Click"/>
+                            <TextBlock Text="Then do this" Style="{StaticResource H2}" VerticalAlignment="Center"/>
+                        </DockPanel>
+                        <TextBlock x:Name="NoActions" Text="No actions yet. The spinner will just show the prize." Style="{StaticResource Muted}"/>
+                        <ItemsControl x:Name="ActionsList">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <local:ActionEditor Margin="0,0,0,8"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</Window>

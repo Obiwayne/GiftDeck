@@ -148,14 +148,79 @@ public class RulesEngine
         }
         Log.Write($"\"{rule.Name}\" fired for {e.Nickname}" + (times > 1 ? $" x{times}" : "") + (e.IsTest ? " (test)" : ""));
         var actions = rule.Actions.ToList();
+        // Actions run from inside this one (a spinner prize) share its chain, so they never wait behind its own interrupt.
+        var chain = _chain.Value;
+        bool outermost = chain == null;
+        if (outermost) _chain.Value = chain = new System.Runtime.CompilerServices.StrongBox<int>();
+        using var release = outermost ? new ChainEnd(this, chain) : null; // lets the others go when this event is done
         for (int i = 0; i < times; i++)
         {
             foreach (var a in actions)
             {
+                if (chain.Value == 0) await WaitWhilePausedAsync();
                 try { await RunAction(a, e); }
                 catch (Exception ex) { Log.Write($"  {a.Summary()} failed: {ex.Message}"); }
             }
             if (times > 1 && !actions.Any(a => a.Type == ActionType.Delay)) await Task.Delay(150);
+        }
+    }
+
+    sealed class ChainEnd : IDisposable
+    {
+        readonly RulesEngine _engine;
+        readonly System.Runtime.CompilerServices.StrongBox<int> _chain;
+        public ChainEnd(RulesEngine engine, System.Runtime.CompilerServices.StrongBox<int> chain) { _engine = engine; _chain = chain; }
+        public void Dispose() { for (; _chain.Value > 0; _chain.Value--) _engine.ResumeQueue(); }
+    }
+
+    // ---- Interrupts: an alert can pause every event's actions while it plays ----
+    // Actions that come up while paused wait in a line and are let go one by one, in the order they
+    // arrived, when the interrupt ends. The event that started the interrupt finishes its own actions
+    // first. Pauses nest (two interrupts in a row stay paused).
+
+    readonly object _pauseLock = new object();
+    readonly Queue<TaskCompletionSource<bool>> _waiting = new Queue<TaskCompletionSource<bool>>();
+    readonly AsyncLocal<System.Runtime.CompilerServices.StrongBox<int>> _chain = new AsyncLocal<System.Runtime.CompilerServices.StrongBox<int>>(); // interrupts held by the event running here
+    int _pauses;
+
+    public bool IsPaused { get { lock (_pauseLock) return _pauses > 0; } }
+
+    public void PauseQueue()
+    {
+        lock (_pauseLock) _pauses++;
+    }
+
+    // An interrupt has finished playing. Inside an event's actions the others stay paused until that event is done.
+    public void EndInterrupt()
+    {
+        var chain = _chain.Value;
+        if (chain != null) chain.Value++;
+        else ResumeQueue();
+    }
+
+    public void ResumeQueue()
+    {
+        lock (_pauseLock) if (_pauses > 0) _pauses--;
+        while (true)
+        {
+            TaskCompletionSource<bool> next;
+            lock (_pauseLock)
+            {
+                if (_pauses > 0 || _waiting.Count == 0) return; // a released action may have started a new interrupt
+                next = _waiting.Dequeue();
+            }
+            next.TrySetResult(true); // runs that action up to its next await before the next one is let go
+        }
+    }
+
+    public Task WaitWhilePausedAsync()
+    {
+        lock (_pauseLock)
+        {
+            if (_pauses == 0 && _waiting.Count == 0) return Task.CompletedTask;
+            var t = new TaskCompletionSource<bool>();
+            _waiting.Enqueue(t);
+            return t.Task;
         }
     }
 

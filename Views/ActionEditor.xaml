@@ -218,6 +218,12 @@
                 <TextBlock x:Name="GameArgsHint" Style="{StaticResource Muted}" Margin="0,4,0,0"
                            Text="{}Text fields can use {user}, {gift}, {coins}, {count}, {likes} and {comment}."/>
             </StackPanel>
+
+            <StackPanel x:Name="StreamToolPanel">
+                <TextBlock x:Name="StreamToolLabel" Text="Alert to show" Style="{StaticResource Label}"/>
+                <ComboBox x:Name="StreamToolCombo" DisplayMemberPath="Label" SelectionChanged="StreamTool_Changed" Width="300" HorizontalAlignment="Left"/>
+                <TextBlock x:Name="StreamToolHint" Style="{StaticResource Muted}" Margin="0,5,0,0" TextWrapping="Wrap"/>
+            </StackPanel>
         </StackPanel>
     </Border>
 </UserControl>
