@@ -218,6 +218,18 @@ public class RulesEngine
                 if (string.IsNullOrWhiteSpace(a.Text)) throw new Exception("No program set");
                 Process.Start(new ProcessStartInfo(a.Text, Template(a.Text2 ?? "", e)) { UseShellExecute = true });
                 break;
+            case ActionType.GameCommand:
+            {
+                var r = await Hub.GameLink.RunAsync(a.Text, a.Text2, a.Args, e, s => Template(s, e));
+                Log.Write(r.Ok ? $"  Game: {a.Text2}" + (string.IsNullOrEmpty(r.Message) ? "" : " (" + r.Message + ")") : $"  Game command {a.Text2} failed: {r.Message}");
+                break;
+            }
+            case ActionType.SpinWheel:
+                await Hub.Spinners.SpinAsync(a.Text, e);
+                break;
+            case ActionType.Alert:
+                await Hub.Alerts.ShowAsync(a.Text, e);
+                break;
         }
     }
 

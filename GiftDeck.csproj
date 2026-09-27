@@ -28,4 +28,16 @@
     <EmbeddedResource Include="Overlays\*.html" />
   </ItemGroup>
 
+  <!-- Game packs (pack.json, covers, command lists, presets) ship next to the exe. -->
+  <ItemGroup>
+    <None Include="Packs\**\*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <!-- Game mods (e.g. mods\gta5\GiftDeckGTA) are separate projects built on their own. -->
+  <ItemGroup>
+    <Compile Remove="mods\**" />
+    <Page Remove="mods\**" />
+    <None Remove="mods\**" />
+  </ItemGroup>
+
 </Project>

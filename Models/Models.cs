@@ -4,7 +4,7 @@ namespace GiftDeck.Models;
 
 public enum TriggerType { Gift, AnyGift, Follow, Share, Like, Chat, Subscribe, Join }
 
-public enum ActionType { KeyPress, Sound, ObsScene, ObsShowSource, ObsHideSource, Delay, Tts, SpotifyRequest, SpotifyControl, RunProgram, ObsCanvasScene }
+public enum ActionType { KeyPress, Sound, ObsScene, ObsShowSource, ObsHideSource, Delay, Tts, SpotifyRequest, SpotifyControl, RunProgram, ObsCanvasScene, GameCommand, SpinWheel, Alert }
 
 public class RuleTrigger
 {
@@ -46,6 +46,8 @@ public class RuleAction
     public string Text { get; set; } = "";
     public string Text2 { get; set; } = "";
     public int Number { get; set; }
+    // GameCommand: the command's argument values as a JSON object (text values may use {user} etc.).
+    public string Args { get; set; } = "";
 
     public string Summary()
     {
@@ -62,11 +64,14 @@ public class RuleAction
             case ActionType.SpotifyRequest: return "Spotify song request";
             case ActionType.SpotifyControl: return "Spotify " + Text + (Text == "SetVolume" ? " " + Number : "");
             case ActionType.RunProgram: return "Run " + (string.IsNullOrWhiteSpace(Text) ? "(no program)" : System.IO.Path.GetFileName(Text));
+            case ActionType.GameCommand: return "Game: " + (string.IsNullOrWhiteSpace(Text2) ? "(no command chosen)" : Text2);
+            case ActionType.SpinWheel: return "Spin the Gift Spinner" + (string.IsNullOrWhiteSpace(Text) ? "" : " " + Text);
+            case ActionType.Alert: return "Show alert" + (string.IsNullOrWhiteSpace(Text) ? "" : " " + Text);
         }
         return Type.ToString();
     }
 
-    public RuleAction Clone() => new RuleAction { Type = Type, Text = Text, Text2 = Text2, Number = Number };
+    public RuleAction Clone() => new RuleAction { Type = Type, Text = Text, Text2 = Text2, Number = Number, Args = Args };
 }
 
 public class Rule

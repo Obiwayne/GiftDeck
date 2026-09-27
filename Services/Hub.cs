@@ -22,6 +22,10 @@ public static class Hub
     public static RelayService Relay { get; private set; }
     public static ProfileService Profiles { get; private set; }
     public static LivePageReader PageReader { get; private set; }
+    public static GameLinkService GameLink { get; private set; }
+    public static GamePackService Packs { get; private set; }
+    public static SpinnerService Spinners { get; private set; }
+    public static AlertService Alerts { get; private set; }
 
     public static void Init()
     {
@@ -44,6 +48,13 @@ public static class Hub
 
         Rules = new RulesEngine();
         Rules.Load();
+
+        GameLink = new GameLinkService();
+        GameLink.Start();
+        Packs = new GamePackService();
+        Packs.Load();
+        Spinners = new SpinnerService();
+        Alerts = new AlertService();
 
         Obs = new ObsService();
         Engine = new ObsHost();
@@ -105,6 +116,7 @@ public static class Hub
         try { SaveSettings(); } catch { }
         try { Profiles.SaveActive(); } catch { }
         try { Web?.Stop(); } catch { }
+        try { GameLink?.Stop(); } catch { }
         step("Stopping TikFinity and the TikTok connection…");
         try { TikFinity?.Stop(); } catch { }
         try { TikFinity?.CloseIfHidden(); } catch { }
