@@ -7,9 +7,15 @@ using System.Text.Json;
 namespace GiftDeck.Services;
 
 // obs-websocket v5 client (built into OBS 28 and later).
-public class ObsService
+public partial class ObsService
 {
     public event Action StatusChanged;
+
+    // OBS events (scene switched, input volume meters, ...): (eventType, eventData). Raised on a background thread.
+    public event Action<string, JsonElement> EventReceived;
+
+    // obs-websocket event subscriptions: every normal category, plus the high-volume input meters for the audio mixer.
+    const int EventSubscriptions = 2047 | (1 << 16);
 
     public bool Connected { get; private set; }
     public string LastError { get; private set; }
@@ -166,13 +172,20 @@ public class ObsService
                     var challenge = a.GetProperty("challenge").GetString();
                     auth = BuildAuth(Hub.Settings.ObsPassword ?? "", salt, challenge);
                 }
-                var identify = new { op = 1, d = new { rpcVersion = 1, authentication = auth, eventSubscriptions = 0 } };
+                var identify = new { op = 1, d = new { rpcVersion = 1, authentication = auth, eventSubscriptions = EventSubscriptions } };
                 await SendAsync(ws, JsonSerializer.Serialize(identify, new JsonSerializerOptions { DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull }), token);
                 break;
             }
             case 2: // Identified
                 _identified?.TrySetResult(true);
                 break;
+            case 5: // Event
+            {
+                var type = d.GetProperty("eventType").GetString() ?? "";
+                var data = d.TryGetProperty("eventData", out var ed) ? ed.Clone() : default;
+                try { EventReceived?.Invoke(type, data); } catch (Exception e) { Log.Write($"OBS event {type} handler failed: {e.Message}"); }
+                break;
+            }
             case 7: // RequestResponse
             {
                 var id = d.GetProperty("requestId").GetString() ?? "";

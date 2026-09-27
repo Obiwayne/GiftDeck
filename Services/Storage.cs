@@ -5,8 +5,13 @@ namespace GiftDeck.Services;
 
 public static class Storage
 {
-    public static readonly string Dir = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "GiftDeck");
+    // GIFTDECK_DATA points a development build at its own folder, so it never touches the data
+    // the installed (stable) GiftDeck uses. run-dev.ps1 sets it.
+    public static readonly string Dir = Environment.GetEnvironmentVariable("GIFTDECK_DATA") is { Length: > 0 } custom
+        ? custom
+        : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "GiftDeck");
+
+    public static bool IsDevData => Environment.GetEnvironmentVariable("GIFTDECK_DATA") is { Length: > 0 };
 
     static readonly JsonSerializerOptions Opts = new JsonSerializerOptions
     {

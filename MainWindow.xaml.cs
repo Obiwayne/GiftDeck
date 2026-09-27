@@ -13,6 +13,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        if (Storage.IsDevData) Title = "GiftDeck v2 (development build)";
         Hub.TikFinity.StatusChanged += () => Dispatcher.BeginInvoke(UpdateStatus);
         Hub.Obs.StatusChanged += () => Dispatcher.BeginInvoke(UpdateStatus);
         Hub.Spotify.StatusChanged += () => Dispatcher.BeginInvoke(UpdateStatus);
