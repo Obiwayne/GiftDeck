@@ -287,4 +287,6 @@ public class AppSettings
     // Quick mute from the Live panel / Go LIVE. Voice, speed, volume and read-chat are the active
     // profile's (profiles\<name>\tts.json, copied in here on switch); mute, template and cut-off are for all.
     public bool TtsMuted { get; set; } = false;
+    // Key for the free Google voices; kept out of the source so it never lands in the public repo.
+    public string GoogleTtsKey { get; set; } = "";
 }

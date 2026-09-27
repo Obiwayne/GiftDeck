@@ -1,6 +1,7 @@
 <UserControl x:Class="GiftDeck.Views.TtsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:GiftDeck.Views">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="32,28,32,28" MaxWidth="900" HorizontalAlignment="Left">
             <TextBlock Text="Text to speech" Style="{StaticResource H1}"/>
@@ -74,6 +75,22 @@
                     <TextBlock Text="{}{user} is the viewer's name and {comment} is what they typed." Style="{StaticResource Muted}" Margin="0,5,0,14"/>
                     <TextBlock Text="Cut messages off after this many characters" Style="{StaticResource Label}"/>
                     <TextBox x:Name="MaxCharsBox" Width="100" HorizontalAlignment="Left" TextChanged="MaxChars_Changed"/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                <StackPanel>
+                    <TextBlock Text="Google voices" Style="{StaticResource H2}" Margin="0,0,0,8"/>
+                    <TextBlock Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,0,0,10" Text="The two free Google voices need a Google speech API key. Paste it here; it stays in your settings on this PC."/>
+                    <TextBlock Text="Google speech API key" Style="{StaticResource Label}"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <local:SecretBox x:Name="GoogleKeyBox"/>
+                        <Button Grid.Column="1" Content="Save" Style="{StaticResource Primary}" Click="SaveGoogleKey_Click" Margin="8,0,0,0"/>
+                    </Grid>
                 </StackPanel>
             </Border>
 

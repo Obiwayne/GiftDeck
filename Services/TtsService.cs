@@ -14,9 +14,18 @@ public class TtsService
     public const string GoogleMale = "Google Male (free, online)";
     public const string GoogleFemale = "Google Female (free, online)";
 
-    // Chromium's public speech key, the one TikFinity's tts.js sends.
+    // The Google speech API key is not in the source: it comes from Settings (Text to speech page)
+    // or the GIFTDECK_GOOGLE_TTS_KEY environment variable. Without one the Google voices are skipped.
     const string GoogleUrl = "https://www.google.com/speech-api/v2/synthesize";
-    const string GoogleKey = "AIzaSyBOti4mM-6x9WDnZIjIeyEU21OpBXqWBgw";
+    static string GoogleKey
+    {
+        get
+        {
+            var key = Hub.Settings.GoogleTtsKey;
+            if (string.IsNullOrWhiteSpace(key)) key = Environment.GetEnvironmentVariable("GIFTDECK_GOOGLE_TTS_KEY");
+            return key?.Trim() ?? "";
+        }
+    }
 
     static readonly HttpClient Http = new HttpClient { Timeout = TimeSpan.FromSeconds(15) };
 
@@ -157,10 +166,12 @@ public class TtsService
     static async Task<string> DownloadAsync(string text, string gender)
     {
         // TikFinity's speed/pitch are 0..1 with 0.5 as normal; map GiftDeck's -10..10 rate onto 0.1..0.9.
+        var key = GoogleKey;
+        if (key.Length == 0) throw new InvalidOperationException("no Google speech API key set (Text to speech page)");
         double speed = 0.5 + Math.Clamp(Hub.Settings.TtsRate, -10, 10) * 0.04;
         var query = new Dictionary<string, string>
         {
-            ["key"] = GoogleKey,
+            ["key"] = key,
             ["enc"] = "mpeg",
             ["lang"] = "en-US",
             ["text"] = text,

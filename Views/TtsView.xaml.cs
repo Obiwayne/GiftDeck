@@ -30,6 +30,7 @@ public partial class TtsView : UserControl
         ReadChat.IsChecked = Hub.Settings.TtsReadChat;
         TemplateBox.Text = Hub.Settings.TtsChatTemplate;
         MaxCharsBox.Text = Hub.Settings.TtsMaxChars.ToString();
+        GoogleKeyBox.Text = Hub.Settings.GoogleTtsKey;
         ProfileName.Text = Hub.Profiles?.Active ?? Hub.Settings.ActiveProfile;
         UpdateLabels();
         ShowMuted();
@@ -37,6 +38,12 @@ public partial class TtsView : UserControl
     }
 
     void ShowMuted() => MutedBanner.Visibility = Hub.Tts.Muted ? Visibility.Visible : Visibility.Collapsed;
+
+    void SaveGoogleKey_Click(object sender, RoutedEventArgs e)
+    {
+        Hub.Settings.GoogleTtsKey = GoogleKeyBox.Text.Trim();
+        Hub.SaveSettings();
+    }
 
     void Unmute_Click(object sender, RoutedEventArgs e) => Hub.Tts.SetMuted(false);
 
