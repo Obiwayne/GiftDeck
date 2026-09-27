@@ -35,29 +35,45 @@ public partial class MainWindow : Window
     }
 
     // Menu: page key, label, icon (Segoe Fluent Icons / MDL2 code point).
+    // The menu, grouped: an entry with a null glyph is a section heading.
     static readonly (string Key, string Label, string Glyph)[] NavItems =
     {
-        ("dashboard", "Dashboard", "\uE80F"),
-        ("golive", "Go LIVE", "\uE714"),
-        ("scenes", "Scenes", "\uE8A9"),
-        ("games", "Games", "\uE7FC"),
-        ("setup", "Stream Setup", "\uE90F"),
-        ("profiles", "Profiles", "\uE8F1"),
-        ("events", "Events", "\uE945"),
-        ("overlays", "Overlays", "\uE7F4"),
-        ("music", "Music", "\uE8D6"),
-        ("spotify", "Spotify", "\uEC4F"),
-        ("tts", "Text to speech", "\uE767"),
-        ("obs", "OBS", "\uE722"),
-        ("settings", "Settings", "\uE713"),
+        ("dashboard", "Dashboard", ""),
+        (null, "LIVE STREAM", null),
+        ("golive", "Go LIVE", ""),
+        ("scenes", "Scenes", ""),
+        ("setup", "Stream Setup", ""),
+        (null, "GAMES & EVENTS", null),
+        ("games", "Games", ""),
+        ("events", "Events", ""),
+        ("profiles", "Profiles", ""),
+        ("overlays", "Overlays", ""),
+        (null, "SOUND", null),
+        ("music", "Music", ""),
+        ("spotify", "Spotify", ""),
+        ("tts", "Text to speech", ""),
+        (null, "SETTINGS", null),
+        ("obs", "OBS", ""),
+        ("settings", "Settings", ""),
     };
 
     readonly List<TextBlock> _navLabels = new List<TextBlock>();
+    readonly List<(TextBlock Label, Border Line)> _navSections = new List<(TextBlock, Border)>();
 
     void BuildNav()
     {
         foreach (var (key, label, glyph) in NavItems)
         {
+            if (glyph == null)
+            {
+                // Section heading: small grey caps; a thin line instead when the menu is collapsed to icons.
+                var heading = new TextBlock { Text = label, Style = (Style)FindResource("Muted"), FontSize = 10.5, FontWeight = FontWeights.SemiBold, Margin = new Thickness(12, 16, 0, 6) };
+                var line = new Border { Height = 1, Background = (Brush)FindResource("LineBrush"), Margin = new Thickness(8, 12, 8, 8), Visibility = Visibility.Collapsed };
+                _navSections.Add((heading, line));
+                NavPanel.Children.Add(heading);
+                NavPanel.Children.Add(line);
+                continue;
+            }
             var text = new TextBlock { Text = label, Margin = new Thickness(12, 0, 0, 0), VerticalAlignment = VerticalAlignment.Center };
             _navLabels.Add(text);
             var content = new StackPanel { Orientation = Orientation.Horizontal };
@@ -164,7 +180,12 @@ public partial class MainWindow : Window
         NavPanel.Margin = collapsed ? new Thickness(10, 0, 10, 0) : new Thickness(12, 0, 12, 0);
         Footer.Margin = collapsed ? new Thickness(0, 0, 0, 20) : new Thickness(20, 0, 20, 20);
         foreach (var t in _navLabels) t.Visibility = hidden;
-        foreach (RadioButton rb in NavPanel.Children)
+        foreach (var (heading, line) in _navSections)
+        {
+            heading.Visibility = hidden;
+            line.Visibility = collapsed ? Visibility.Visible : Visibility.Collapsed;
+        }
+        foreach (var rb in NavPanel.Children.OfType<RadioButton>())
             rb.ToolTip = collapsed ? ((TextBlock)((StackPanel)rb.Content).Children[1]).Text : null;
 
         CollapseLabel.Visibility = hidden;

@@ -44,8 +44,10 @@
                     </StackPanel>
                 </StackPanel>
 
-                <!-- Filled from MainWindow.NavItems -->
-                <StackPanel x:Name="NavPanel" Margin="12,0"/>
+                <!-- Filled from MainWindow.NavItems (grouped under section headings); scrolls on short windows -->
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel x:Name="NavPanel" Margin="12,0"/>
+                </ScrollViewer>
             </DockPanel>
         </Border>
 
