@@ -131,6 +131,7 @@ public partial class ScenesView : UserControl
                 Queue(Part.All);
                 break;
             case "SceneItemEnableStateChanged":
+                _staleThumbs.Add(Str(data, "sceneUuid"));
                 if (Str(data, "sceneUuid") == _selectedUuid && data.TryGetProperty("sceneItemId", out var id))
                     SetLayerShown(id.GetInt32(), data.TryGetProperty("sceneItemEnabled", out var en) && en.ValueKind == JsonValueKind.True);
                 break;
@@ -347,7 +348,9 @@ public partial class ScenesView : UserControl
         Queue(Part.Items);
     }
 
-    // Small snapshots of every scene, one after another, about every 1.5 seconds while the page is on screen.
+    // Thumbnails: only the live scene moves (about 8 frames a second); every other scene shows a still frame,
+    // taken once, or kept from when it was last live. A still frame is retaken once when that scene changes
+    // (e.g. a layer shown or hidden), so it stays accurate without the whole grid flickering.
     async Task ThumbLoopAsync()
     {
         if (_thumbLoop) return;
@@ -356,25 +359,34 @@ public partial class ScenesView : UserControl
         {
             while (IsVisible)
             {
+                var started = DateTime.Now;
                 if (Hub.Obs.Connected)
                 {
                     foreach (var card in _cards.Values.ToList())
                     {
                         if (!IsVisible || !Hub.Obs.Connected) break;
+                        var uuid = card.Scene.Uuid;
+                        bool live = uuid == _programUuid;
+                        bool needsStill = card.Thumb.Source == null || _staleThumbs.Remove(uuid);
+                        if (!live && !needsStill) continue;
                         try
                         {
                             // Fixed size, a bit over the box, so it stays sharp on scaled displays.
-                            var jpg = await Hub.Obs.GetScreenshotAsync(card.Scene.Uuid, (int)(card.Thumb.Width * 1.5));
+                            var jpg = await Hub.Obs.GetScreenshotAsync(uuid, (int)(card.Thumb.Width * 1.5));
                             card.Thumb.Source = await Task.Run(() => Decode(jpg));
                         }
                         catch { }
                     }
                 }
-                await Task.Delay(1500);
+                var wait = 125 - (int)(DateTime.Now - started).TotalMilliseconds;
+                await Task.Delay(Math.Max(wait, 16));
             }
         }
         finally { _thumbLoop = false; }
     }
+
+    // Scenes whose still frame should be retaken once.
+    readonly HashSet<string> _staleThumbs = new HashSet<string>();
 
     static BitmapImage Decode(byte[] jpg)
     {
