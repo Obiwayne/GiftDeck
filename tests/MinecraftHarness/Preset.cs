@@ -79,12 +79,25 @@ static class Preset
         Converters = { new JsonStringEnumConverter() },
     };
 
-    public static void Write(string zipPath)
+    public static void Write(string zipPath) => Write(zipPath, "Minecraft Chaos", Rules(), "GIFTS CONTROL MY WORLD", "#3C8527");
+
+    // One preset per GiftDeck Games mini-game (Packs/minecraft/presets/minecraft-<game>.giftdeck).
+    public static void WriteGames(string dir)
     {
-        var rules = Rules();
-        var overlays = new OverlayConfig { Accent = "#3C8527" };
-        overlays.Menu.Title = "GIFTS CONTROL MY WORLD";
-        overlays.Menu.HeaderColor = "#3C8527";
+        Write(Path.Combine(dir, "minecraft-bedrock-box.giftdeck"), "Minecraft Bedrock Box", GameRules.BedrockBox(), "DIG OUT OF THE BEDROCK BOX", "#6B3FA0");
+        Write(Path.Combine(dir, "minecraft-sand-pour.giftdeck"), "Minecraft Sand Pour", GameRules.SandPour(), "BURY ME IN SAND", "#C9A23A");
+        Write(Path.Combine(dir, "minecraft-sheep-out.giftdeck"), "Minecraft Sheep Out", GameRules.SheepOut(), "FILL THE MEADOW WITH SHEEP", "#5A9E3A");
+    }
+
+    internal static Rule GiftRule(string name, string gift, long id, bool perGift, int max, params RuleAction[] actions) => Gift(name, gift, id, perGift, max, actions);
+    internal static Rule OtherRule(string name, TriggerType type, params RuleAction[] actions) => Other(name, type, actions);
+    internal static RuleAction Command(string command, object args) => Cmd(command, args);
+
+    static void Write(string zipPath, string name, List<Rule> rules, string title, string accent)
+    {
+        var overlays = new OverlayConfig { Accent = accent };
+        overlays.Menu.Title = title;
+        overlays.Menu.HeaderColor = accent;
         overlays.Menu.Columns = 4;
         foreach (var r in rules.Where(r => r.Trigger.Type == TriggerType.Gift))
             overlays.Menu.Tiles.Add(new MenuTile { RuleId = r.Id, Label = r.Name, Subtitle = r.Trigger.GiftName });
@@ -97,7 +110,7 @@ static class Preset
             using var w = new StreamWriter(zip.CreateEntry(name).Open());
             w.Write(text);
         }
-        Entry("profile.json", JsonSerializer.Serialize(new { app = "GiftDeck", name = "Minecraft Chaos", version = 1 }));
+        Entry("profile.json", JsonSerializer.Serialize(new { app = "GiftDeck", name, version = 1 }));
         Entry("rules.json", JsonSerializer.Serialize(rules, Json));
         Entry("overlays.json", JsonSerializer.Serialize(overlays, Json));
         Console.WriteLine($"Wrote {zipPath}: {rules.Count} events");

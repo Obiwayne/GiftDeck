@@ -79,6 +79,25 @@
             </StackPanel>
         </Border>
 
+        <!-- GiftDeck Games (the plugin GiftDeck puts in the server's plugins folder): start/stop a mini-game. -->
+        <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+            <StackPanel>
+                <TextBlock Text="Mini-games" Style="{StaticResource H2}" Margin="0,0,0,4"/>
+                <TextBlock Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,0,0,10"
+                           Text="Streamer against viewers: the game builds an arena far from spawn and puts you in it. Your own inventory is saved and comes back when the game ends. Load the game's preset so gifts drive it."/>
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button x:Name="GameStartButton" Content="Start" Style="{StaticResource Primary}" Click="GameStart_Click" Margin="8,0,0,0"/>
+                        <Button x:Name="GameResetButton" Content="Start over" Click="GameReset_Click" Margin="8,0,0,0"/>
+                        <Button x:Name="GameStopButton" Content="Stop" Click="GameStop_Click" Margin="8,0,0,0"/>
+                    </StackPanel>
+                    <ComboBox x:Name="GameCombo" MinWidth="220" HorizontalAlignment="Left" SelectionChanged="GameCombo_Changed"/>
+                </DockPanel>
+                <TextBlock x:Name="GameDescText" Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,6,0,0"/>
+                <TextBlock x:Name="GameStatusText" TextWrapping="Wrap" Margin="0,8,0,0"/>
+            </StackPanel>
+        </Border>
+
         <Border Style="{StaticResource Card}" Margin="0,0,0,14">
             <StackPanel>
                 <TextBlock Text="Server console" Style="{StaticResource H2}" Margin="0,0,0,10"/>

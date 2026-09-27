@@ -1,7 +1,7 @@
 {
   "id": "minecraft",
   "name": "Minecraft (Java Edition)",
-  "description": "GiftDeck sets up and runs a Minecraft server on this PC (PaperMC). You join it from Minecraft, and gifts summon mobs, drop TNT, change the weather, give items and effects, and more.",
+  "description": "GiftDeck sets up and runs a Minecraft server on this PC (PaperMC). You join it from Minecraft, and gifts summon mobs, drop TNT, change the weather, give items and effects, and more. Includes the GiftDeck Games mini-games: Bedrock Box, Sand Pour and Sheep Out.",
   "cover": "cover.png",
   "server": {
     "type": "paper",
@@ -21,7 +21,7 @@
   ],
   "components": [],
   "edits": [],
-  "presets": ["presets/minecraft-chaos.giftdeck"],
+  "presets": ["presets/minecraft-chaos.giftdeck", "presets/minecraft-bedrock-box.giftdeck", "presets/minecraft-sand-pour.giftdeck", "presets/minecraft-sheep-out.giftdeck"],
   "commands": "commands.json",
   "targets": ["minecraft:server"]
 }

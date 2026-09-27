@@ -179,5 +179,218 @@
     "description": "A short line of text just above the player's hotbar.",
     "args": [{"name": "text", "label": "Text", "type": "text", "default": "{user} sent {gift}"}],
     "run": "title {player} actionbar {text:text}"
+  },
+  {
+    "id": "gdg_status", "name": "Mini-games: status", "category": "Mini-games",
+    "description": "Which GiftDeck Games mini-game is running, who is in it and how it is going. Needs the GiftDeck Games plugin (GiftDeck installs it with the server).",
+    "args": [],
+    "run": "gdg status"
+  },
+  {
+    "id": "gdg_stopall", "name": "Mini-games: stop all", "category": "Mini-games",
+    "description": "Stops any running mini-game, clears its arena and gives the player their things back.",
+    "args": [],
+    "run": "gdg stopall"
+  },
+  {
+    "id": "bb_start", "name": "Bedrock Box: start", "category": "Mini-game: Bedrock Box",
+    "description": "Builds a bedrock box far from spawn and puts the player on top of 30 layers of stone to dig through. Their inventory is saved and comes back when the game ends. With nobody online, the box waits and pulls the player in when they join.",
+    "args": [],
+    "run": "gdg bedrockbox start {player}"
+  },
+  {
+    "id": "bb_stop", "name": "Bedrock Box: stop", "category": "Mini-game: Bedrock Box",
+    "description": "Ends the game, clears the box and sends the player back with their own things.",
+    "args": [],
+    "run": "gdg bedrockbox stop"
+  },
+  {
+    "id": "bb_reset", "name": "Bedrock Box: start over", "category": "Mini-game: Bedrock Box",
+    "description": "Rebuilds the box and starts again with the same player.",
+    "args": [],
+    "run": "gdg bedrockbox reset"
+  },
+  {
+    "id": "bb_tnt", "name": "Bedrock Box: drop TNT", "category": "Mini-game: Bedrock Box",
+    "description": "Lit TNT falls into the box on top of the player, with the viewer's name on it.",
+    "args": [
+      {"name": "count", "label": "How many (1-20)", "type": "number", "default": "3"},
+      {"name": "viewer", "label": "Viewer name", "type": "text", "default": "{user}"}
+    ],
+    "run": "gdg bedrockbox tnt {count} {viewer}"
+  },
+  {
+    "id": "bb_sand", "name": "Bedrock Box: refill with sand", "category": "Mini-game: Bedrock Box",
+    "description": "Sand or gravel pours down the shaft and buries the player's progress.",
+    "args": [
+      {"name": "count", "label": "How many blocks (1-64)", "type": "number", "default": "8"},
+      {"name": "block", "label": "Block", "type": "choice", "default": "sand", "choices": ["sand", "red_sand", "gravel"]},
+      {"name": "viewer", "label": "Viewer name", "type": "text", "default": "{user}"}
+    ],
+    "run": "gdg bedrockbox sand {count} {block} {viewer}"
+  },
+  {
+    "id": "bb_anvil", "name": "Bedrock Box: drop anvils", "category": "Mini-game: Bedrock Box",
+    "description": "Anvils fall down the shaft onto the player's head.",
+    "args": [
+      {"name": "count", "label": "How many (1-10)", "type": "number", "default": "1"},
+      {"name": "viewer", "label": "Viewer name", "type": "text", "default": "{user}"}
+    ],
+    "run": "gdg bedrockbox anvil {count} {viewer}"
+  },
+  {
+    "id": "bb_mob", "name": "Bedrock Box: send mobs", "category": "Mini-game: Bedrock Box",
+    "description": "Mobs named after the viewer appear right next to the player in the box.",
+    "args": [
+      {"name": "mob", "label": "Mob", "type": "choice", "default": "zombie",
+       "choices": ["zombie", "husk", "skeleton", "stray", "spider", "cave_spider", "creeper", "silverfish", "endermite", "slime", "magma_cube", "witch", "pillager", "vindicator", "bee", "chicken", "pig", "sheep", "cow", "rabbit", "fox", "frog", "goat", "axolotl", "wolf", "cat"]},
+      {"name": "count", "label": "How many (1-10)", "type": "number", "default": "1"},
+      {"name": "viewer", "label": "Viewer name", "type": "text", "default": "{user}"}
+    ],
+    "run": "gdg bedrockbox mob {mob} {count} {viewer}"
+  },
+  {
+    "id": "bb_pickaxe", "name": "Bedrock Box: give a pickaxe (help)", "category": "Mini-game: Bedrock Box",
+    "description": "A better pickaxe (Efficiency III) named after the viewer. Diamond or better cuts through the obsidian layer.",
+    "args": [
+      {"name": "tier", "label": "Pickaxe", "type": "choice", "default": "diamond", "choices": ["wooden", "stone", "iron", "diamond", "netherite"]},
+      {"name": "viewer", "label": "Viewer name", "type": "text", "default": "{user}"}
+    ],
+    "run": "gdg bedrockbox pickaxe {tier} {viewer}"
+  },
+  {
+    "id": "bb_haste", "name": "Bedrock Box: haste (help)", "category": "Mini-game: Bedrock Box",
+    "description": "The player digs faster for a while.",
+    "args": [
+      {"name": "seconds", "label": "Seconds (5-120)", "type": "number", "default": "30"},
+      {"name": "viewer", "label": "Viewer name", "type": "text", "default": "{user}"}
+    ],
+    "run": "gdg bedrockbox haste {seconds} {viewer}"
+  },
+  {
+    "id": "bb_drill", "name": "Bedrock Box: drill down (help)", "category": "Mini-game: Bedrock Box",
+    "description": "Removes blocks straight under the player's feet.",
+    "args": [
+      {"name": "layers", "label": "Blocks (1-10)", "type": "number", "default": "3"},
+      {"name": "viewer", "label": "Viewer name", "type": "text", "default": "{user}"}
+    ],
+    "run": "gdg bedrockbox drill {layers} {viewer}"
+  },
+  {
+    "id": "bb_heal", "name": "Bedrock Box: heal (help)", "category": "Mini-game: Bedrock Box",
+    "description": "Full health and a full hunger bar.",
+    "args": [{"name": "viewer", "label": "Viewer name", "type": "text", "default": "{user}"}],
+    "run": "gdg bedrockbox heal {viewer}"
+  },
+  {
+    "id": "sp_start", "name": "Sand Pour: start", "category": "Mini-game: Sand Pour",
+    "description": "Builds a glass pit far from spawn and puts the player in it with a shovel. Viewers pour sand on them; they win by surviving 3 minutes. Their inventory is saved and comes back afterwards.",
+    "args": [],
+    "run": "gdg sandpour start {player}"
+  },
+  {
+    "id": "sp_stop", "name": "Sand Pour: stop", "category": "Mini-game: Sand Pour",
+    "description": "Ends the game, clears the pit and sends the player back with their own things.",
+    "args": [],
+    "run": "gdg sandpour stop"
+  },
+  {
+    "id": "sp_reset", "name": "Sand Pour: start over", "category": "Mini-game: Sand Pour",
+    "description": "Empties the pit and starts the timer again with the same player.",
+    "args": [],
+    "run": "gdg sandpour reset"
+  },
+  {
+    "id": "sp_pour", "name": "Sand Pour: pour on the player", "category": "Mini-game: Sand Pour",
+    "description": "Pours blocks from the top of the pit onto the player. More blocks cover a wider area (1: straight down, up to 9: 3x3, up to 25: 5x5, more: 7x7). Anvils are capped at 12.",
+    "args": [
+      {"name": "count", "label": "How many blocks (1-200)", "type": "number", "default": "10"},
+      {"name": "block", "label": "Block", "type": "choice", "default": "sand", "choices": ["sand", "red_sand", "gravel", "concrete", "anvil"]},
+      {"name": "viewer", "label": "Viewer name", "type": "text", "default": "{user}"}
+    ],
+    "run": "gdg sandpour pour {count} {block} {viewer}"
+  },
+  {
+    "id": "sp_shovel", "name": "Sand Pour: give a shovel (help)", "category": "Mini-game: Sand Pour",
+    "description": "A better shovel (Efficiency III) named after the viewer.",
+    "args": [
+      {"name": "tier", "label": "Shovel", "type": "choice", "default": "diamond", "choices": ["wooden", "stone", "iron", "diamond", "netherite"]},
+      {"name": "viewer", "label": "Viewer name", "type": "text", "default": "{user}"}
+    ],
+    "run": "gdg sandpour shovel {tier} {viewer}"
+  },
+  {
+    "id": "sp_dig", "name": "Sand Pour: dig the player out (help)", "category": "Mini-game: Sand Pour",
+    "description": "Clears all the sand in the 3x3 above the player's head.",
+    "args": [{"name": "viewer", "label": "Viewer name", "type": "text", "default": "{user}"}],
+    "run": "gdg sandpour dig {viewer}"
+  },
+  {
+    "id": "sp_haste", "name": "Sand Pour: haste (help)", "category": "Mini-game: Sand Pour",
+    "description": "The player digs faster for a while.",
+    "args": [
+      {"name": "seconds", "label": "Seconds (5-120)", "type": "number", "default": "30"},
+      {"name": "viewer", "label": "Viewer name", "type": "text", "default": "{user}"}
+    ],
+    "run": "gdg sandpour haste {seconds} {viewer}"
+  },
+  {
+    "id": "sp_heal", "name": "Sand Pour: heal (help)", "category": "Mini-game: Sand Pour",
+    "description": "Full health and a full hunger bar.",
+    "args": [{"name": "viewer", "label": "Viewer name", "type": "text", "default": "{user}"}],
+    "run": "gdg sandpour heal {viewer}"
+  },
+  {
+    "id": "so_start", "name": "Sheep Out: start", "category": "Mini-game: Sheep Out",
+    "description": "Builds a fenced meadow far from spawn and puts the player in it with a sword. Viewers fill it with sheep: 40 at once and the viewers win, 3 minutes under that and the player wins. Their inventory is saved and comes back afterwards.",
+    "args": [],
+    "run": "gdg sheepout start {player}"
+  },
+  {
+    "id": "so_stop", "name": "Sheep Out: stop", "category": "Mini-game: Sheep Out",
+    "description": "Ends the game, clears the meadow and sends the player back with their own things.",
+    "args": [],
+    "run": "gdg sheepout stop"
+  },
+  {
+    "id": "so_reset", "name": "Sheep Out: start over", "category": "Mini-game: Sheep Out",
+    "description": "Clears the meadow and starts the timer again with the same player.",
+    "args": [],
+    "run": "gdg sheepout reset"
+  },
+  {
+    "id": "so_sheep", "name": "Sheep Out: send sheep", "category": "Mini-game: Sheep Out",
+    "description": "Sheep named after the viewer appear in the meadow. Rainbow sheep are Minecraft's jeb_ sheep.",
+    "args": [
+      {"name": "count", "label": "How many (1-30)", "type": "number", "default": "3"},
+      {"name": "color", "label": "Colour", "type": "choice", "default": "random",
+       "choices": ["random", "rainbow", "white", "orange", "magenta", "light_blue", "yellow", "lime", "pink", "gray", "light_gray", "cyan", "purple", "blue", "brown", "green", "red", "black"]},
+      {"name": "viewer", "label": "Viewer name", "type": "text", "default": "{user}"}
+    ],
+    "run": "gdg sheepout sheep {count} {color} {viewer}"
+  },
+  {
+    "id": "so_sword", "name": "Sheep Out: give a sword (help)", "category": "Mini-game: Sheep Out",
+    "description": "A better sword (Sweeping Edge III) named after the viewer.",
+    "args": [
+      {"name": "tier", "label": "Sword", "type": "choice", "default": "diamond", "choices": ["wooden", "stone", "iron", "diamond", "netherite"]},
+      {"name": "viewer", "label": "Viewer name", "type": "text", "default": "{user}"}
+    ],
+    "run": "gdg sheepout sword {tier} {viewer}"
+  },
+  {
+    "id": "so_smite", "name": "Sheep Out: lightning clears sheep (help)", "category": "Mini-game: Sheep Out",
+    "description": "Lightning takes sheep out of the meadow.",
+    "args": [
+      {"name": "count", "label": "How many sheep (1-30)", "type": "number", "default": "5"},
+      {"name": "viewer", "label": "Viewer name", "type": "text", "default": "{user}"}
+    ],
+    "run": "gdg sheepout smite {count} {viewer}"
+  },
+  {
+    "id": "so_heal", "name": "Sheep Out: heal (help)", "category": "Mini-game: Sheep Out",
+    "description": "Full health and a full hunger bar.",
+    "args": [{"name": "viewer", "label": "Viewer name", "type": "text", "default": "{user}"}],
+    "run": "gdg sheepout heal {viewer}"
   }
 ]

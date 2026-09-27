@@ -19,7 +19,9 @@ static class Program
         if (mode == "unit") return await Unit();
         if (mode == "live" && args.Length > 1) return await Live(args[1], args.Length > 2 ? args[2] : "latest");
         if (mode == "make-preset" && args.Length > 1) { Preset.Write(args[1]); return 0; }
-        Console.WriteLine("usage: unit | live <scratch folder> [paper version]");
+        if (mode == "make-game-presets" && args.Length > 1) { Preset.WriteGames(args[1]); return 0; }
+        if (mode == "games" && args.Length > 1) return await GamesLive.Run(args[1], args.Length > 2 ? args[2] : "latest");
+        Console.WriteLine("usage: unit | live <scratch folder> [paper version] | games <scratch folder> [paper version] | make-preset <file> | make-game-presets <folder>");
         return 2;
     }
 
@@ -108,6 +110,8 @@ static class Program
 
         Console.WriteLine("Preset");
         CheckPreset();
+
+        GamesLive.Unit(Check);
 
         Console.WriteLine(_fail == 0 ? "ALL PASSED" : $"{_fail} FAILED");
         return _fail == 0 ? 0 : 1;
