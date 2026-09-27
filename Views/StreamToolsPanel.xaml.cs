@@ -207,6 +207,47 @@ public partial class StreamToolsPanel : UserControl
         Hub.Overlays.Touch();
     }
 
+    // Green screen: every slider step is saved (the overlay reads it when the alert next shows).
+    void KeySlider_Changed(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (_loading || !IsLoaded) return;
+        Hub.Overlays.Touch();
+    }
+
+    // "Pick from video": the preview browser reads the colour of the video's corners (Overlays/chroma.js).
+    async void PickKeyColor_Click(object sender, RoutedEventArgs e)
+    {
+        var a = Of<AlertDef>(sender);
+        if (a == null) return;
+        if (string.IsNullOrWhiteSpace(a.Media)) { Status.Text = "Choose the alert's video first."; return; }
+        Hub.Overlays.Touch();
+        if (!_previewReady)
+        {
+            await StartPreview("/overlay/alerts", "Gift alerts", 800, 450);
+            await Task.Delay(800);
+        }
+        if (!_previewReady) { Status.Text = "Picking the colour needs the preview (the overlay server isn't running)."; return; }
+        try
+        {
+            var expr = "(async () => { if (!window.GDChroma) await new Promise((ok, no) => { const s = document.createElement('script'); s.src = '/lib/chroma.js'; s.onload = ok; s.onerror = no; document.head.appendChild(s); });"
+                     + " return await GDChroma.pickFromUrl('/alert-media/" + a.Id + "?v=' + Date.now()); })()";
+            var json = await Preview.CoreWebView2.CallDevToolsProtocolMethodAsync("Runtime.evaluate",
+                System.Text.Json.JsonSerializer.Serialize(new { expression = expr, awaitPromise = true, returnByValue = true }));
+            using var doc = System.Text.Json.JsonDocument.Parse(json);
+            var root = doc.RootElement;
+            if (root.TryGetProperty("exceptionDetails", out _) || !root.GetProperty("result").TryGetProperty("value", out var v) || v.ValueKind != System.Text.Json.JsonValueKind.String)
+                throw new Exception("no colour");
+            a.KeyColor = v.GetString();
+            a.KeyGreen = true;
+            Hub.Overlays.Touch();
+            Status.Text = $"Colour to remove: {a.KeyColor} (from the corners of \"{a.Name}\")";
+        }
+        catch
+        {
+            Status.Text = "Couldn't read the colour from that video. Videos from websites can't be read: use a file on this PC, or type the colour in.";
+        }
+    }
+
     async void TestAlert_Click(object sender, RoutedEventArgs e)
     {
         var a = Of<AlertDef>(sender);

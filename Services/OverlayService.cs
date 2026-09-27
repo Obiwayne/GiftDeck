@@ -168,6 +168,7 @@ public class OverlayService
         spinners = Config.Spinners.Select(s => new { id = s.Id, name = s.Name, hideWhenIdle = s.HideWhenIdle, entries = SpinEntries(s.Entries) }),
         giftList = new { title = Config.Templates.GiftListTitle, items = GiftList() },
         strip = new { title = Config.Templates.StripTitle, top = TopGifters(3), goal = NextGoal() },
+        allInOne = Config.AllInOne,
     }, Json);
 
     // ---- Stream tools: Gift Spinner, custom alerts, gift list and top gifters templates ----
@@ -211,6 +212,8 @@ public class OverlayService
             seconds = a.Seconds,
             interrupt = a.Interrupt,
             fullScreen = a.FullScreen,
+            // Green-screen removal (videos only): colour blank = pick it from the video's corners.
+            key = a.KeyGreen && mediaType == "video" ? new { color = a.KeyColor?.Trim() ?? "", strength = a.KeyStrength, softness = a.KeySoftness } : null,
             user = e.Nickname ?? "",
             avatar = e.PictureUrl ?? "",
         }, Json));

@@ -21,6 +21,7 @@
   .gift { font-size: 13px; opacity: .7; text-transform: uppercase; letter-spacing: .5px; }
   .empty { padding: 18px; font-size: 16px; color: #bbb; text-align: center; }
 </style>
+<script src="/lib/common.js"></script>
 </head>
 <body>
 <div class="list"><div class="head" id="head"></div><div id="rows"></div></div>
@@ -47,8 +48,7 @@
         + '<div class="what"><div class="label">' + esc(i.label) + '</div><div class="gift">' + esc(i.gift) + '</div></div></div>';
     }).join('');
   }
-  const es = new EventSource('/events');
-  es.onmessage = e => { const m = JSON.parse(e.data); if (m.type === 'state') render(m); };
+  GD.listen(m => { if (m.type === 'state') render(m); });
 </script>
 </body>
 </html>

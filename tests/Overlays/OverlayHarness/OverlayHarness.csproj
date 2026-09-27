@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Screenshots of the overlay pages (all-in-one, green-screen alerts) and the WPF editor cards.
+       Runs GiftDeck's real OverlayServer on a spare port with a scratch GIFTDECK_DATA, drives headless Edge
+       over its DevTools port, and never talks to a running GiftDeck. Not part of GiftDeck.exe.
+       Run: OverlayHarness.exe <scratch folder> [port]   (needs Edge; ffmpeg on PATH for the test clip) -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\GiftDeck.csproj" />
+  </ItemGroup>
+
+</Project>

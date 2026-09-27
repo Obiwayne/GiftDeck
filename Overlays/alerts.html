@@ -28,7 +28,12 @@
   .alert.full .text { position: absolute; left: 0; right: 0; bottom: 6%; font-size: 48px; font-weight: 800; }
   .alert.full.in { animation: flashIn .25s ease-out forwards; }
   @keyframes flashIn { from { opacity: 0; transform: scale(1.08); } to { opacity: 1; transform: scale(1); } }
+  /* Green-screen videos: the keyed canvas floats on the stream, so no card behind it. */
+  .alert.keyed, .alert.full.keyed { background: transparent; box-shadow: none; }
+  .alert .src { position: absolute; left: 0; top: 0; width: 2px; height: 2px; opacity: 0; pointer-events: none; }
 </style>
+<script src="/lib/common.js"></script>
+<script src="/lib/chroma.js"></script>
 </head>
 <body>
 <div class="wrap" id="wrap"></div>
@@ -37,15 +42,36 @@
   let seconds = 6, queue = [], busy = false;
   function esc(t) { return String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
   let current = null, timers = [];
+  // ?pos=top, bottomLeft, ... (the all-in-one page): where alert cards appear. Full-screen alerts still fill it all.
+  const pos = GD.param('pos');
+  if (pos) {
+    const w = $('wrap');
+    w.style.alignItems = /^top/i.test(pos) ? 'flex-start' : /^bottom/i.test(pos) ? 'flex-end' : 'center';
+    w.style.justifyContent = /left$/i.test(pos) ? 'flex-start' : /right$/i.test(pos) ? 'flex-end' : 'center';
+    w.style.padding = '3%';
+  }
   // A custom alert: GiftDeck has already filled in {user}, {gift} and {count}; media is a picture or a video.
   function customAlert(a) {
     const el = document.createElement('div');
     el.className = 'alert custom in' + (a.fullScreen ? ' full' : '');
     let media = '';
-    if (a.media && a.mediaType === 'video') media = '<video class="media" src="' + esc(a.media) + '" autoplay playsinline></video>';
+    const keyed = a.media && a.mediaType === 'video' && a.key && window.GDChroma;
+    if (keyed) media = '<video class="src" src="' + esc(a.media) + '" playsinline></video><canvas class="media"></canvas>';
+    else if (a.media && a.mediaType === 'video') media = '<video class="media" src="' + esc(a.media) + '" autoplay playsinline></video>';
     else if (a.media) media = '<img class="media" src="' + esc(a.media) + '">';
     el.innerHTML = media + (a.text ? '<div class="text">' + esc(a.text) + '</div>' : '');
     const v = el.querySelector('video');
+    if (keyed) {
+      el.classList.add('keyed');
+      // Green screen: draw the video through the chroma key. If it can't be keyed, show it as it is.
+      GDChroma.attach(v, el.querySelector('canvas'), a.key, err => {
+        console.warn('Green screen removal failed, showing the video as it is', err);
+        const c = el.querySelector('canvas');
+        if (c) c.remove();
+        v.className = 'media';
+        el.classList.remove('keyed');
+      });
+    }
     // OBS plays the video's own sound; a browser that blocks sound autoplay still gets the picture.
     if (v) v.play().catch(() => { v.muted = true; v.play().catch(() => {}); });
     return el;
@@ -86,16 +112,14 @@
     show(a);
   }
   function next() { if (!busy && queue.length) show(queue.shift()); }
-  const es = new EventSource('/events');
-  es.onmessage = e => {
-    const m = JSON.parse(e.data);
+  GD.listen(m => {
     if (m.type === 'state') {
       seconds = Math.max(2, m.style.alertSeconds || 6);
       document.documentElement.style.setProperty('--accent', m.style.accent);
       document.documentElement.style.setProperty('--font', "'" + m.style.font + "'");
     } else if (m.type === 'alert' && m.interrupt) interrupt(m);
     else if (m.type === 'alert') { queue.push(m); if (queue.length > 20) queue.shift(); next(); }
-  };
+  });
 </script>
 </body>
 </html>

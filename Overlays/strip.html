@@ -29,6 +29,7 @@
   .fill { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), #22d3ee); border-radius: 7px; transition: width .9s cubic-bezier(.2,.8,.2,1); }
   .done .fill { background: linear-gradient(90deg, #fbbf24, #f97316); }
 </style>
+<script src="/lib/common.js"></script>
 </head>
 <body>
 <div class="strip">
@@ -70,8 +71,7 @@
     $('gfill').style.width = pct + '%';
     $('goal').classList.toggle('done', goal.progress >= goal.target);
   }
-  const es = new EventSource('/events');
-  es.onmessage = e => { const m = JSON.parse(e.data); if (m.type === 'state') render(m); };
+  GD.listen(m => { if (m.type === 'state') render(m); });
 </script>
 </body>
 </html>

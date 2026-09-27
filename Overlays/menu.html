@@ -35,6 +35,7 @@
   .sub { font-size: 14px; opacity: .8; text-transform: uppercase; margin-top: 2px; font-family: 'Segoe UI', sans-serif; font-weight: 600; flex: none; }
   .empty { grid-column: 1 / -1; display: flex; align-items: center; justify-content: center; font-family: 'Segoe UI', sans-serif; font-size: 20px; color: #bbb; background: #000; }
 </style>
+<script src="/lib/common.js"></script>
 </head>
 <body>
 <div class="board">
@@ -70,8 +71,7 @@
       return '<div class="tile"><div class="pic">' + pic + '</div><div class="label">' + esc(t.label) + '</div>' + sub + '</div>';
     }).join('');
   }
-  const es = new EventSource('/events');
-  es.onmessage = e => { const msg = JSON.parse(e.data); if (msg.type === 'state') render(msg); };
+  GD.listen(m => { if (m.type === 'state') render(m); });
 </script>
 </body>
 </html>

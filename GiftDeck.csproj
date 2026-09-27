@@ -25,7 +25,7 @@
 
   <ItemGroup>
     <Resource Include="Assets\giftdeck.ico" />
-    <EmbeddedResource Include="Overlays\*.html" />
+    <EmbeddedResource Include="Overlays\*.html;Overlays\*.js" />
   </ItemGroup>
 
   <!-- Game packs (pack.json, covers, command lists, presets) ship next to the exe. -->
