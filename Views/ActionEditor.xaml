@@ -151,6 +151,73 @@
                     <TextBox x:Name="ProgramArgs" TextChanged="Field_Changed"/>
                 </StackPanel>
             </Grid>
+
+            <!-- Run a game command: game, then a searchable list (500+ commands), then the command's own fields. -->
+            <StackPanel x:Name="GamePanel">
+                <Grid Margin="0,0,0,8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="230"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="Game" Style="{StaticResource Label}"/>
+                        <ComboBox x:Name="GameCombo" DisplayMemberPath="Label" SelectionChanged="GameCombo_Changed"/>
+                    </StackPanel>
+                    <TextBlock Grid.Column="1" x:Name="GameStatus" Style="{StaticResource Muted}" TextWrapping="Wrap" VerticalAlignment="Bottom" Margin="12,0,0,6"/>
+                </Grid>
+                <TextBlock x:Name="NoGames" Style="{StaticResource Muted}" TextWrapping="Wrap"
+                           Text="No games yet. Install a game on the Games page, or start a game with its GiftDeck mod, and its commands show up here."/>
+
+                <StackPanel x:Name="CommandPicker">
+                    <Grid Margin="0,0,0,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="200"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="CommandSearch" TextChanged="CommandSearch_Changed" Margin="0,0,8,0" local:Placeholder.Text="Search commands"/>
+                        <ComboBox Grid.Column="1" x:Name="CategoryCombo" SelectionChanged="CategoryCombo_Changed"/>
+                    </Grid>
+                    <ListBox x:Name="CommandList" Height="200" ItemContainerStyle="{StaticResource FeedItem}"
+                             SelectionChanged="CommandList_Changed"
+                             VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling"
+                             VirtualizingPanel.IsVirtualizingWhenGrouping="True" VirtualizingPanel.ScrollUnit="Pixel"
+                             ScrollViewer.CanContentScroll="True">
+                        <ListBox.GroupStyle>
+                            <GroupStyle>
+                                <GroupStyle.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Name}" Style="{StaticResource Muted}" FontSize="11" FontWeight="SemiBold" Margin="8,8,0,2"/>
+                                    </DataTemplate>
+                                </GroupStyle.HeaderTemplate>
+                            </GroupStyle>
+                        </ListBox.GroupStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel>
+                                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Margin="0,0,10,0"/>
+                                    <TextBlock Text="{Binding Detail}" Style="{StaticResource Muted}" TextTrimming="CharacterEllipsis"/>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <TextBlock x:Name="CommandCount" Style="{StaticResource Muted}" FontSize="11" Margin="0,4,0,0"/>
+                </StackPanel>
+
+                <DockPanel Margin="0,10,0,0">
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Top">
+                        <Button x:Name="GameTestButton" Content="Test" Style="{StaticResource Ghost}" Click="GameTest_Click"
+                                ToolTip="Run this command in the game now (the game and its mod must be running)"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock x:Name="ChosenCommand" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                        <TextBlock x:Name="ChosenDescription" Style="{StaticResource Muted}" TextWrapping="Wrap"/>
+                        <TextBlock x:Name="GameTestResult" Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </DockPanel>
+                <WrapPanel x:Name="GameArgsPanel" Margin="0,6,0,0"/>
+                <TextBlock x:Name="GameArgsHint" Style="{StaticResource Muted}" Margin="0,4,0,0"
+                           Text="{}Text fields can use {user}, {gift}, {coins}, {count}, {likes} and {comment}."/>
+            </StackPanel>
         </StackPanel>
     </Border>
 </UserControl>
