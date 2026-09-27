@@ -8,7 +8,7 @@ using GiftDeck.Services;
 
 namespace GiftDeck.Views;
 
-public partial class RuleEditorWindow : Window
+public partial class RuleEditorWindow : Window, IActionHost
 {
     public Rule Result { get; private set; }
 
