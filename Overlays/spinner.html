@@ -31,6 +31,7 @@
   @keyframes glow { from { box-shadow: 0 0 0 3px var(--win), 0 0 30px var(--win); } to { box-shadow: 0 0 0 5px var(--win), 0 0 90px var(--win); } }
   .empty { font-size: 20px; color: #ddd; text-shadow: 0 2px 6px #000; }
 </style>
+<script src="/lib/common.js"></script>
 </head>
 <body>
 <div class="stage" id="stage">
@@ -141,18 +142,17 @@
   function state(s) {
     document.documentElement.style.setProperty('--accent', s.style.accent);
     document.documentElement.style.setProperty('--font', "'" + s.style.font + "'");
-    const sp = (s.spinners || []).find(x => x.id === wantId) || (!wantId ? (s.spinners || [])[0] : null);
+    // ?id=any (the all-in-one page): show whichever spinner spins; the first one in between.
+    const sp = (s.spinners || []).find(x => x.id === wantId) || (!wantId || wantId === 'any' ? (s.spinners || [])[0] : null);
     if (!sp) { $('who').innerHTML = '<span class="empty">No spinner set up in GiftDeck</span>'; setEntries([]); return; }
-    myId = sp.id; hideIdle = !!sp.hideWhenIdle;
+    myId = sp.id; hideIdle = !!sp.hideWhenIdle || GD.param('idle') === 'hide';
     if (!spinning) { setEntries(sp.entries); if ($('who').querySelector('.empty')) $('who').textContent = ''; }
     idle();
   }
-  const es = new EventSource('/events');
-  es.onmessage = e => {
-    const m = JSON.parse(e.data);
+  GD.listen(m => {
     if (m.type === 'state') state(m);
-    else if (m.type === 'spin' && (m.spinner === myId || m.spinner === wantId)) spin(m);
-  };
+    else if (m.type === 'spin' && (m.spinner === myId || m.spinner === wantId || wantId === 'any')) spin(m);
+  });
 </script>
 </body>
 </html>

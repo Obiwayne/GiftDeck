@@ -86,6 +86,7 @@ public class OverlayServer
             if (path.StartsWith("/tile-image/")) { ServeTileImage(ctx, path.Substring("/tile-image/".Length)); return; }
             if (path.StartsWith("/rule-image/")) { ServeRuleImage(ctx, path.Substring("/rule-image/".Length)); return; }
             if (path.StartsWith("/alert-media/")) { ServeAlertMedia(ctx, path.Substring("/alert-media/".Length)); return; }
+            if (path.StartsWith("/lib/") && path.EndsWith(".js")) { ServeScript(ctx, path.Substring("/lib/".Length)); return; }
 
             string page = null;
             if (path.StartsWith("/overlay/goal")) page = "goal.html";
@@ -96,6 +97,7 @@ public class OverlayServer
             else if (path.StartsWith("/overlay/spinner")) page = "spinner.html";
             else if (path.StartsWith("/overlay/giftlist")) page = "giftlist.html";
             else if (path.StartsWith("/overlay/strip")) page = "strip.html";
+            else if (path.StartsWith("/overlay/all")) page = "all.html";
             else if (path == "/") page = "index.html";
 
             if (page == null)
@@ -111,6 +113,18 @@ public class OverlayServer
             Log.Write("Overlay request failed: " + e.Message);
             try { ctx.Response.Abort(); } catch { }
         }
+    }
+
+    // Scripts the overlay pages share (Overlays/*.js, embedded like the pages).
+    void ServeScript(HttpListenerContext ctx, string name)
+    {
+        if (name.Length == 0 || name.Any(c => !(char.IsLetterOrDigit(c) || c == '-' || c == '.')))
+        {
+            ctx.Response.StatusCode = 404;
+            Write(ctx, "Not found", "text/plain");
+            return;
+        }
+        Write(ctx, Page(name), "text/javascript; charset=utf-8");
     }
 
     // A tile's picture: a file on this PC is sent directly, a web address is redirected to.

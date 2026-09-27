@@ -375,8 +375,12 @@ public partial class ObsService
     }
 
     // Adds a Browser Source showing the given page to the scene that is currently live.
-    public async Task<string> AddBrowserSourceAsync(string name, string url, int width, int height)
+    // audioViaObs: "Control audio via OBS", so sound from the page (alert videos) goes into the stream mix.
+    public async Task<string> AddBrowserSourceAsync(string name, string url, int width, int height, bool audioViaObs = false)
     {
+        object settings = audioViaObs
+            ? new { url, width, height, shutdown = false, restart_when_active = false, reroute_audio = true }
+            : new { url, width, height, shutdown = false, restart_when_active = false };
         var cur = await RequestAsync("GetCurrentProgramScene");
         var scene = cur.GetProperty("currentProgramSceneName").GetString();
         var inputName = name;
@@ -389,7 +393,7 @@ public partial class ObsService
                     sceneName = scene,
                     inputName,
                     inputKind = "browser_source",
-                    inputSettings = new { url, width, height, shutdown = false, restart_when_active = false },
+                    inputSettings = settings,
                     sceneItemEnabled = true,
                 });
                 return $"Added \"{inputName}\" to scene \"{scene}\"";

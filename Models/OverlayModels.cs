@@ -210,4 +210,5 @@ public class OverlayConfig
     public List<Spinner> Spinners { get; set; } = new List<Spinner>();
     public List<AlertDef> CustomAlerts { get; set; } = new List<AlertDef>();
     public TemplatesConfig Templates { get; set; } = new TemplatesConfig();
+    public AllInOneConfig AllInOne { get; set; } = new AllInOneConfig();
 }

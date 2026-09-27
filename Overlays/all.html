@@ -1,0 +1,150 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>GiftDeck all-in-one overlay</title>
+<style>
+  /* One page for everything: each part is the real overlay page in a frame (so the drawing code lives in one
+     place), sized and placed as set on GiftDeck's Overlays page. Only this page listens to GiftDeck; it
+     passes every message down to the parts. */
+  html, body { height: 100%; }
+  body { margin: 0; background: transparent; overflow: hidden; color-scheme: normal; }
+  #safe { position: absolute; inset: 0; }
+  body.room #safe { top: 8%; bottom: 18%; }   /* the TikTok app's own buttons and chat sit here */
+  .zone { position: absolute; display: flex; flex-direction: column; }
+  .z-topLeft { top: 0; left: 0; align-items: flex-start; }
+  .z-top { top: 0; left: 0; right: 0; align-items: center; }
+  .z-topRight { top: 0; right: 0; align-items: flex-end; }
+  .z-left { top: 50%; left: 0; transform: translateY(-50%); align-items: flex-start; }
+  .z-middle { top: 50%; left: 0; right: 0; transform: translateY(-50%); align-items: center; }
+  .z-right { top: 50%; right: 0; transform: translateY(-50%); align-items: flex-end; }
+  .z-bottomLeft { bottom: 0; left: 0; align-items: flex-start; }
+  .z-bottom { bottom: 0; left: 0; right: 0; align-items: center; }
+  .z-bottomRight { bottom: 0; right: 0; align-items: flex-end; }
+  .part { position: relative; flex: none; overflow: hidden; }
+  iframe { position: absolute; left: 0; top: 0; border: 0; background: transparent; transform-origin: 0 0; }
+  .spinner { position: absolute; z-index: 10; }
+  .spinner iframe { position: static; width: 100%; height: 100%; }
+  #alerts { position: fixed; left: 0; top: 0; z-index: 20; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="safe"></div>
+<script>
+  const spots = ['topLeft', 'top', 'topRight', 'left', 'middle', 'right', 'bottomLeft', 'bottom', 'bottomRight'];
+  const safe = document.getElementById('safe');
+  const zones = {};
+  for (const s of spots) { const z = document.createElement('div'); z.className = 'zone z-' + s; safe.appendChild(z); zones[s] = z; }
+  const frames = new Map();   // one entry per part on the page
+  let state = null, stateRaw = null;
+
+  // How big the parts are drawn: the Scale setting, relative to a 1080 px wide (or tall) page.
+  function zoom() { return ((state && state.allInOne && state.allInOne.scale) || 130) / 100 * Math.min(innerWidth, innerHeight) / 1080; }
+
+  // The parts that should be on the page, from the settings in GiftDeck.
+  function wanted(s) {
+    const c = s.allInOne || {}, out = [];
+    const add = (part, kind, src) => out.push({ kind, src, spot: spots.includes(part.spot) ? part.spot : 'middle', width: part.width || 100, id: kind + '|' + src + '|' + part.spot });
+    if (c.strip && c.strip.on) add(c.strip, 'strip', '/overlay/strip?embed=1');
+    if (c.goals && c.goals.on) (s.goals || []).forEach(g => add(c.goals, 'goal', '/overlay/goal/' + g.id + '?embed=1'));
+    if (c.giftList && c.giftList.on) add(c.giftList, 'giftlist', '/overlay/giftlist?embed=1');
+    if (c.board && c.board.on) add(c.board, 'board', '/overlay/menu?embed=1');
+    if (c.spinner && c.spinner.on && (s.spinners || []).length) add(c.spinner, 'spinner', '/overlay/spinner?embed=1&id=any' + (c.spinnerOnlyWhileSpinning ? '&idle=hide' : ''));
+    if (c.alerts && c.alerts.on) add(c.alerts, 'alerts', '/overlay/alerts?embed=1&pos=' + encodeURIComponent(c.alerts.spot || 'middle'));
+    return out;
+  }
+
+  function sync() {
+    const list = wanted(state), keep = new Set();
+    document.body.classList.toggle('room', !!(state.allInOne && state.allInOne.leaveRoomForTikTok) && innerHeight > innerWidth);
+    list.forEach((p, i) => {
+      keep.add(p.id);
+      let f = frames.get(p.id);
+      if (!f) {
+        const frame = document.createElement('iframe');
+        frame.setAttribute('allow', 'autoplay');   // alert videos play with their sound
+        frame.setAttribute('scrolling', 'no');
+        frame.src = p.src;
+        let wrap = frame;
+        if (p.kind === 'alerts') { frame.id = 'alerts'; document.body.appendChild(frame); }
+        else if (p.kind === 'spinner') { wrap = document.createElement('div'); wrap.className = 'spinner'; wrap.appendChild(frame); safe.appendChild(wrap); }
+        else { wrap = document.createElement('div'); wrap.className = 'part'; wrap.appendChild(frame); zones[p.spot].appendChild(wrap); }
+        f = { frame, wrap };
+        frames.set(p.id, f);
+      }
+      Object.assign(f, p);
+      f.wrap.style.order = i;
+    });
+    for (const [id, f] of frames) if (!keep.has(id)) { f.wrap.remove(); frames.delete(id); }
+    layout();
+  }
+
+  // The height a part's page needs: the bottom of its lowest box.
+  function measure(frame) {
+    try {
+      const doc = frame.contentDocument;
+      if (!doc || !doc.body) return 0;
+      let h = 0;
+      for (const el of doc.body.children) {
+        if (el.tagName === 'SCRIPT') continue;
+        const r = el.getBoundingClientRect();
+        if (!r.height) continue;
+        h = Math.max(h, r.bottom + (parseFloat(frame.contentWindow.getComputedStyle(el).marginBottom) || 0));
+      }
+      return Math.ceil(h);
+    } catch (e) { return 0; }
+  }
+
+  function layout() {
+    if (!state) return;
+    const z = zoom(), W = safe.clientWidth, H = safe.clientHeight, m = state.menu || {};
+    for (const f of frames.values()) {
+      const s = f.frame.style;
+      if (f.kind === 'alerts') {
+        s.width = innerWidth / z + 'px'; s.height = innerHeight / z + 'px'; s.transform = 'scale(' + z + ')';
+        continue;
+      }
+      const w = Math.round(W * f.width / 100);
+      if (f.kind === 'spinner') {
+        // The wheel page sizes itself to its box: as wide as set, and a bit taller for the name above it.
+        const h = Math.round(Math.min(w * 1.22, H)), st = f.wrap.style, sp = f.spot;
+        st.width = w + 'px'; st.height = h + 'px';
+        st.left = (/Left$|^left$/.test(sp) ? 0 : /Right$|^right$/.test(sp) ? W - w : (W - w) / 2) + 'px';
+        st.top = (/^top/.test(sp) ? 0 : /^bottom/.test(sp) ? H - h : (H - h) / 2) + 'px';
+        continue;
+      }
+      const iw = w / z;
+      let ih;
+      if (f.kind === 'board' && !(m.tileSize > 0)) {
+        // The board stretches to fill its page, so give it square tiles plus the header.
+        const cols = m.columns || 5, rows = Math.max(1, Math.ceil(((m.tiles || []).length || 1) / cols));
+        ih = iw / cols * rows + (m.title ? 52 : 0);
+      } else ih = measure(f.frame) || 1;
+      s.width = iw + 'px'; s.height = ih + 'px'; s.transform = 'scale(' + z + ')';
+      f.wrap.style.width = w + 'px'; f.wrap.style.height = Math.ceil(ih * z) + 'px';
+    }
+  }
+
+  function forward(raw) {
+    for (const f of frames.values()) { try { f.frame.contentWindow.postMessage(raw, location.origin); } catch (e) { } }
+  }
+
+  // A part has loaded: give it the current state straight away.
+  addEventListener('message', e => {
+    if (e.origin !== location.origin || e.data !== 'gd-ready' || !stateRaw) return;
+    for (const f of frames.values()) if (f.frame.contentWindow === e.source) { e.source.postMessage(stateRaw, location.origin); setTimeout(layout, 50); }
+  });
+
+  const es = new EventSource('/events');
+  es.onmessage = e => {
+    const m = JSON.parse(e.data);
+    if (m.type === 'state') { state = m; stateRaw = e.data; sync(); }
+    forward(e.data);
+    if (m.type === 'state') requestAnimationFrame(layout);
+  };
+  addEventListener('resize', () => { if (state) sync(); });
+  // Parts change height as things happen (a new gifter, a longer gift list): keep the frames fitted.
+  setInterval(layout, 300);
+</script>
+</body>
+</html>

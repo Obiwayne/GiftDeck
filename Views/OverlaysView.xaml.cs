@@ -220,12 +220,12 @@ public partial class OverlaysView : UserControl
         try { Clipboard.SetText(url); Status.Text = "Copied " + url; } catch { }
     }
 
-    async Task AddToObs(string name, string url, int w, int h)
+    async Task AddToObs(string name, string url, int w, int h, bool audioViaObs = false)
     {
         try
         {
             if (!Hub.Obs.Connected) await Hub.Obs.ConnectAsync();
-            Status.Text = await Hub.Obs.AddBrowserSourceAsync(name, url, w, h);
+            Status.Text = await Hub.Obs.AddBrowserSourceAsync(name, url, w, h, audioViaObs);
         }
         catch (Exception ex)
         {
@@ -278,7 +278,7 @@ public partial class OverlaysView : UserControl
 
     // Alerts and style
     void CopyAlerts_Click(object sender, RoutedEventArgs e) => Copy(Url("/overlay/alerts"));
-    async void ObsAlerts_Click(object sender, RoutedEventArgs e) => await AddToObs("GiftDeck alerts", Url("/overlay/alerts"), 800, 250);
+    async void ObsAlerts_Click(object sender, RoutedEventArgs e) => await AddToObs("GiftDeck alerts", Url("/overlay/alerts"), 800, 250, audioViaObs: true); // alert videos' sound
     void TestAlert_Click(object sender, RoutedEventArgs e) => Hub.Overlays.TestAlert();
 
     void Style_Changed(object sender, RoutedEventArgs e)

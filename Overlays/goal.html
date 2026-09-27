@@ -18,6 +18,7 @@
   .bump { animation: bump .5s ease-out; }
   @keyframes bump { 0% { transform: scale(1); } 40% { transform: scale(1.035); } 100% { transform: scale(1); } }
 </style>
+<script src="/lib/common.js"></script>
 </head>
 <body>
 <div class="goal" id="goal">
@@ -42,8 +43,7 @@
     if (last >= 0 && g.progress !== last) { const el = $('goal'); el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); }
     last = g.progress;
   }
-  const es = new EventSource('/events');
-  es.onmessage = e => { const m = JSON.parse(e.data); if (m.type === 'state') render(m); };
+  GD.listen(m => { if (m.type === 'state') render(m); });
 </script>
 </body>
 </html>

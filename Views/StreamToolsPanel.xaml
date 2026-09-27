@@ -246,6 +246,24 @@
                                             <TextBox Text="{Binding Volume, UpdateSourceTrigger=LostFocus}" LostFocus="Field_Changed"/>
                                         </StackPanel>
                                     </Grid>
+                                    <!-- Green-screen videos: the overlay keys the colour out (docs/v2.1/all-in-one-overlay.md) -->
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                        <CheckBox Content="Remove green background" IsChecked="{Binding KeyGreen}" Click="Field_Changed" VerticalAlignment="Center" Margin="0,0,14,0"
+                                                  ToolTip="For green-screen videos (WebM or MP4): the green goes see-through on stream, so only what's in front of it shows. The video's own sound still plays."/>
+                                        <StackPanel Orientation="Horizontal" IsEnabled="{Binding KeyGreen}">
+                                            <Border Width="22" Height="22" CornerRadius="4" Background="{Binding KeyColor, FallbackValue=Transparent}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                            <TextBox Text="{Binding KeyColor, UpdateSourceTrigger=LostFocus}" Width="104" FontFamily="Consolas" LostFocus="Field_Changed" VerticalAlignment="Center"
+                                                     ToolTip="The colour to remove, like #00FF00 (green) or #0000FF (blue). Blank = take it from the video's corners."/>
+                                            <Button Content="Pick from video" Style="{StaticResource Small}" Tag="{Binding}" Click="PickKeyColor_Click" Margin="6,0,16,0" VerticalAlignment="Center"
+                                                    ToolTip="Reads the colour from the corners of the video's first frame"/>
+                                            <TextBlock Text="Strength" Style="{StaticResource Muted}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                            <Slider Width="110" Minimum="1" Maximum="100" IsSnapToTickEnabled="True" TickFrequency="1" Value="{Binding KeyStrength}" ValueChanged="KeySlider_Changed" VerticalAlignment="Center" Margin="0,0,16,0"
+                                                    ToolTip="How much of the colour goes: more removes more green, too much eats into the picture"/>
+                                            <TextBlock Text="Soft edges" Style="{StaticResource Muted}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                            <Slider Width="90" Minimum="1" Maximum="50" IsSnapToTickEnabled="True" TickFrequency="1" Value="{Binding KeySoftness}" ValueChanged="KeySlider_Changed" VerticalAlignment="Center"
+                                                    ToolTip="How gently the edges fade out"/>
+                                        </StackPanel>
+                                    </StackPanel>
                                     <StackPanel Orientation="Horizontal">
                                         <CheckBox Content="Interrupt: pause other events while it plays" IsChecked="{Binding Interrupt}" Click="Field_Changed" VerticalAlignment="Center" Margin="0,0,16,0"/>
                                         <CheckBox Content="Full screen" IsChecked="{Binding FullScreen}" Click="Field_Changed" VerticalAlignment="Center" Margin="0,0,16,0"/>

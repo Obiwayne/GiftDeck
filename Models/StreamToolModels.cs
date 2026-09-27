@@ -127,6 +127,21 @@ public class AlertDef : Observable
     // Fill the whole Browser Source (for jumpscares) instead of a card in the middle.
     bool _fullScreen;
     public bool FullScreen { get => _fullScreen; set { _fullScreen = value; Raise(nameof(FullScreen)); } }
+
+    // Green-screen videos: the overlay makes this colour see-through (a chroma key), so only the subject shows.
+    bool _keyGreen;
+    public bool KeyGreen { get => _keyGreen; set { _keyGreen = value; Raise(nameof(KeyGreen)); } }
+
+    // Blank = work it out from the video's corners.
+    string _keyColor = "#00FF00";
+    public string KeyColor { get => _keyColor; set { _keyColor = value ?? ""; Raise(nameof(KeyColor)); } }
+
+    // How close to the colour a pixel has to be to go (1-100), and how soft the cut-out edge is (1-100).
+    int _keyStrength = 40;
+    public int KeyStrength { get => _keyStrength; set { _keyStrength = Math.Clamp(value, 1, 100); Raise(nameof(KeyStrength)); } }
+
+    int _keySoftness = 8;
+    public int KeySoftness { get => _keySoftness; set { _keySoftness = Math.Clamp(value, 1, 100); Raise(nameof(KeySoftness)); } }
 }
 
 // ---- Overlay templates made from the profile's events ----
