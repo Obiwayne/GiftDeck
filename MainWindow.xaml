@@ -9,7 +9,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition x:Name="SideColumn" Width="228"/>
             <ColumnDefinition Width="*" MinWidth="640"/>
-            <ColumnDefinition Width="620" MinWidth="420"/>
+            <ColumnDefinition x:Name="LiveColumn" Width="620" MinWidth="420"/>
         </Grid.ColumnDefinitions>
 
         <Border Background="{StaticResource PanelBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="0,0,1,0">
@@ -74,7 +74,7 @@
         </DockPanel>
         </AdornerDecorator>
 
-        <AdornerDecorator Grid.Column="2">
+        <AdornerDecorator x:Name="LiveHost" Grid.Column="2">
             <views:LivePanel/>
         </AdornerDecorator>
         <views:ProfileSwitchOverlay x:Name="SwitchOverlay" Grid.ColumnSpan="3" Panel.ZIndex="100"/>
@@ -98,6 +98,6 @@
             </StackPanel>
         </Grid>
         <!-- Drag the panel's left edge to make chat and gifts wider or narrower -->
-        <GridSplitter Grid.Column="2" Width="5" HorizontalAlignment="Left" Background="Transparent" ResizeBehavior="PreviousAndCurrent" ResizeDirection="Columns" Cursor="SizeWE"/>
+        <GridSplitter x:Name="LiveSplitter" Grid.Column="2" Width="5" HorizontalAlignment="Left" Background="Transparent" ResizeBehavior="PreviousAndCurrent" ResizeDirection="Columns" Cursor="SizeWE"/>
     </Grid>
 </Window>

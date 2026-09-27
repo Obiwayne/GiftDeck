@@ -3,11 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!-- Supported games: find the game, install its mods in one click, load a ready-made preset.
          The game cards and the rows inside the detail cards are built in code (GamesView.xaml.cs). -->
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel Margin="32,28,32,28" MaxWidth="960" HorizontalAlignment="Left">
-            <TextBlock Text="Games" Style="{StaticResource H1}"/>
-            <TextBlock Style="{StaticResource Muted}" Margin="0,4,0,18" TextWrapping="Wrap"
-                       Text="Pick a game, install its mods in one click, and start from a ready-made set of events. GiftDeck finds the game by itself and backs up any file it replaces."/>
+    <ScrollViewer x:Name="Scroller" VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="32,28,32,28" MaxWidth="1320" HorizontalAlignment="Left">
+            <!-- The list of games; clicking one opens its own page (the detail panel below, with a way back). -->
+            <StackPanel x:Name="ListHeader">
+                <TextBlock Text="Games" Style="{StaticResource H1}"/>
+                <TextBlock Style="{StaticResource Muted}" Margin="0,4,0,18" TextWrapping="Wrap"
+                           Text="Pick a game to install its mods in one click and start from a ready-made set of events."/>
+            </StackPanel>
+            <Button x:Name="BackButton" Content="&#x2190;  All games" Style="{StaticResource Ghost}" HorizontalAlignment="Left"
+                    Margin="-14,0,0,10" Click="Back_Click" Visibility="Collapsed"/>
 
             <WrapPanel x:Name="CardsPanel"/>
             <TextBlock x:Name="EmptyText" Style="{StaticResource Muted}" Visibility="Collapsed" TextWrapping="Wrap"

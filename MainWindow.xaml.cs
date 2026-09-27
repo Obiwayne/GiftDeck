@@ -213,6 +213,21 @@ public partial class MainWindow : Window
         }
         ContentHost.Content = view;
         _currentPage = key;
+        ShowLivePanel(!FullWidthPages.Contains(key));
+    }
+
+    // Pages that use the whole width: the live chat / gifts panel steps aside while they're open.
+    static readonly HashSet<string> FullWidthPages = new HashSet<string> { "games" };
+    GridLength _liveWidth = new GridLength(620);
+
+    void ShowLivePanel(bool show)
+    {
+        bool shown = LiveHost.Visibility == Visibility.Visible;
+        if (show == shown) return;
+        if (!show) _liveWidth = LiveColumn.Width; // keep the width the user dragged it to
+        LiveColumn.MinWidth = show ? 420 : 0;
+        LiveColumn.Width = show ? _liveWidth : new GridLength(0);
+        LiveHost.Visibility = LiveSplitter.Visibility = show ? Visibility.Visible : Visibility.Collapsed;
     }
 
     void UpdateStatus()

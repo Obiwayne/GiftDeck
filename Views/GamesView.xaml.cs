@@ -41,11 +41,11 @@ public partial class GamesView : UserControl
         _timer.Tick += (_, _) => Refresh();
         IsVisibleChanged += (_, _) =>
         {
-            if (IsVisible) { _timer.Start(); Refresh(true); CheckLatest(false); }
+            // Coming back to Games always starts on the list of games.
+            if (IsVisible) { _selected = null; _timer.Start(); Refresh(true); Scroller.ScrollToTop(); }
             else _timer.Stop();
         };
-        _selected = Packs.Packs.FirstOrDefault();
-        Refresh(true);
+        Refresh(true); // opens on the list of games; nothing is picked until one is clicked
     }
 
     Brush Brush(string key) => (Brush)FindResource(key);
@@ -54,8 +54,7 @@ public partial class GamesView : UserControl
 
     void Refresh(bool force = false)
     {
-        if (_selected != null && Packs.Find(_selected.Id) is { } again) _selected = again; // packs reloaded
-        else _selected = Packs.Packs.FirstOrDefault();
+        if (_selected != null) _selected = Packs.Find(_selected.Id); // packs reloaded (null if it's gone: back to the list)
         var statuses = Packs.Packs.ToDictionary(p => p.Id, p => SafeStatus(p));
         _status = _selected != null ? statuses[_selected.Id] : null;
 
@@ -113,7 +112,6 @@ public partial class GamesView : UserControl
         var card = new Border
         {
             Width = 280,
-            Margin = new Thickness(0, 0, 14, 14),
             Background = Brush("PanelBrush"),
             BorderBrush = Brush(selected ? "AccentBrush" : "LineBrush"),
             BorderThickness = new Thickness(selected ? 2 : 1),
@@ -133,9 +131,29 @@ public partial class GamesView : UserControl
         text.Children.Add(new TextBlock { Text = line, Foreground = Brush(brush), FontSize = 12, FontWeight = FontWeights.SemiBold, Margin = new Thickness(0, 8, 0, 0) });
         stack.Children.Add(text);
         card.Child = stack;
-        card.MouseLeftButtonUp += (_, _) => Select(p);
-        return card;
+        // A real button round the card, so Tab + Enter (and screen readers) open a game too.
+        var open = new Button
+        {
+            Content = card, Padding = new Thickness(0), MinHeight = 0, Margin = new Thickness(0),
+            Background = Brushes.Transparent, BorderBrush = Brushes.Transparent, BorderThickness = new Thickness(0),
+            Template = CardButtonTemplate, Cursor = Cursors.Hand, ToolTip = card.ToolTip,
+            VerticalAlignment = VerticalAlignment.Top, // cards line up along the top even when one has more text
+        };
+        System.Windows.Automation.AutomationProperties.SetName(open, "Open " + p.Name);
+        card.ToolTip = null;
+        open.Click += (_, _) => Select(p);
+        return open;
     }
+
+    // Just the card itself: no button chrome around it; a light lift on hover and a focus outline for the keyboard.
+    static readonly ControlTemplate CardButtonTemplate = (ControlTemplate)System.Windows.Markup.XamlReader.Parse(
+        "<ControlTemplate TargetType='Button' xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'>" +
+        "<Border x:Name='Bd' xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml' CornerRadius='10' BorderThickness='2' BorderBrush='Transparent' Margin='0,0,14,14'>" +
+        "<ContentPresenter/></Border>" +
+        "<ControlTemplate.Triggers>" +
+        "<Trigger Property='IsMouseOver' Value='True'><Setter TargetName='Bd' Property='Opacity' Value='0.88'/></Trigger>" +
+        "<Trigger Property='IsKeyboardFocused' Value='True'><Setter TargetName='Bd' Property='BorderBrush' Value='#7C5CFF'/></Trigger>" +
+        "</ControlTemplate.Triggers></ControlTemplate>");
 
     (string, string) CardStatus(GamePack p, PackStatus st)
     {
@@ -150,12 +168,21 @@ public partial class GamesView : UserControl
         return ("Ready to install", "MutedBrush");
     }
 
+    void Back_Click(object sender, RoutedEventArgs e)
+    {
+        _selected = null;
+        if (_busyPack == null) _message = null;
+        Refresh(true);
+        Scroller.ScrollToTop();
+    }
+
     void Select(GamePack p)
     {
         if (p == _selected) return;
         _selected = p;
         if (_busyPack == null) { _message = null; }
         Refresh(true);
+        Scroller.ScrollToTop();
         CheckLatest(false);
     }
 
@@ -182,6 +209,9 @@ public partial class GamesView : UserControl
     {
         var p = _selected;
         DetailPanel.Visibility = p == null ? Visibility.Collapsed : Visibility.Visible;
+        // The list and a game's page are two views: the list alone, or the game with a way back.
+        ListHeader.Visibility = CardsPanel.Visibility = p == null ? Visibility.Visible : Visibility.Collapsed;
+        BackButton.Visibility = p == null ? Visibility.Collapsed : Visibility.Visible;
         if (p == null) return;
         var st = _status;
 
