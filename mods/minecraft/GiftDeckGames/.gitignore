@@ -1,0 +1,5 @@
+# Gradle caches and build output (the released jar is committed under Packs/minecraft/plugins/)
+.gradle/
+build/
+.kotlin/
+*.class

@@ -60,6 +60,7 @@ public partial class MinecraftServerPanel : UserControl
         ConsoleBox.Text = string.Join(Environment.NewLine, Server.ConsoleTail(300));
         ConsoleBox.ScrollToEnd();
         _loading = false;
+        FillGames();
 
         Refresh();
         _ = LoadVersionsAsync();
@@ -114,6 +115,7 @@ public partial class MinecraftServerPanel : UserControl
         StartButton.IsEnabled = !_busy && installed && !running;
         StopButton.IsEnabled = state is MinecraftServerState.Running or MinecraftServerState.Starting;
         OpButton.IsEnabled = Server.RconConnected;
+        GameStartButton.IsEnabled = GameResetButton.IsEnabled = GameStopButton.IsEnabled = Server.RconConnected;
 
         var port = Target.Settings.ServerPort == 25565 ? "" : ":" + Target.Settings.ServerPort;
         JoinText.Text = installed
@@ -358,6 +360,55 @@ public partial class MinecraftServerPanel : UserControl
         s.LanAccess = LanCheck.IsChecked == true;
         s.StopWithGiftDeck = StopWithAppCheck.IsChecked == true;
         Target.SaveSettings();
+    }
+
+    // ---------------- mini-games (GiftDeck Games plugin) ----------------
+
+    static readonly (string Id, string Name, string Text)[] MiniGames =
+    {
+        ("bedrockbox", "Bedrock Box", "Dig down through 30 layers inside bedrock walls while viewers drop TNT, sand, anvils and mobs on you. Reach the emerald floor to win."),
+        ("sandpour", "Sand Pour", "Viewers pour sand, gravel and anvils on you in a glass pit. Dig to keep breathing and survive 3 minutes."),
+        ("sheepout", "Sheep Out", "Viewers fill a meadow with sheep named after them. Keep it under 40 sheep for 3 minutes with your sword."),
+    };
+
+    void FillGames()
+    {
+        if (GameCombo.Items.Count > 0) return;
+        foreach (var g in MiniGames) GameCombo.Items.Add(new ComboBoxItem { Content = g.Name, Tag = g.Id });
+        GameCombo.SelectedIndex = 0;
+    }
+
+    string ChosenGame => (GameCombo.SelectedItem as ComboBoxItem)?.Tag as string ?? MiniGames[0].Id;
+
+    void GameCombo_Changed(object sender, SelectionChangedEventArgs e) =>
+        GameDescText.Text = MiniGames.FirstOrDefault(g => g.Id == ChosenGame).Text ?? "";
+
+    async void GameStart_Click(object sender, RoutedEventArgs e)
+    {
+        SavePlayer();
+        await RunGameCommand($"gdg {ChosenGame} start {MinecraftTarget.PlayerSelector(Target.Settings.PlayerName)}");
+    }
+
+    async void GameReset_Click(object sender, RoutedEventArgs e) => await RunGameCommand($"gdg {ChosenGame} reset");
+    async void GameStop_Click(object sender, RoutedEventArgs e) => await RunGameCommand($"gdg {ChosenGame} stop");
+
+    async Task RunGameCommand(string line)
+    {
+        if (!Server.RconConnected && Server.State != MinecraftServerState.Running)
+        {
+            GameStatusText.Text = "Start the server first.";
+            return;
+        }
+        AppendConsole("> " + line);
+        try
+        {
+            var reply = MinecraftTarget.CleanReply(await Target.RunRawAsync(line));
+            if (reply.StartsWith("Unknown or incomplete command", StringComparison.OrdinalIgnoreCase))
+                reply = "The GiftDeck Games plugin isn't loaded. Stop and start the server so GiftDeck can install it.";
+            GameStatusText.Text = reply;
+            AppendConsole(reply);
+        }
+        catch (Exception ex) { GameStatusText.Text = ex.Message; }
     }
 
     // ---------------- console ----------------

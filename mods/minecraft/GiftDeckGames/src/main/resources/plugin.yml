@@ -1,0 +1,18 @@
+name: GiftDeckGames
+version: '${version}'
+main: io.github.obiwayne.giftdeckgames.GiftDeckGames
+# The oldest API it is built against; newer Paper versions (1.21.x, 26.x) load it too.
+api-version: '1.20'
+description: Streamer-vs-viewers mini-games (Bedrock Box, Sand Pour, Sheep Out) driven by server commands, for GiftDeck.
+author: Obiwayne
+website: https://github.com/Obiwayne/GiftDeck
+commands:
+  gdg:
+    description: GiftDeck mini-games. /gdg help
+    usage: /gdg <bedrockbox|sandpour|sheepout|status|stopall> ...
+    permission: giftdeckgames.admin
+    aliases: [giftdeckgames]
+permissions:
+  giftdeckgames.admin:
+    description: Start, stop and drive the mini-games (the server console and RCON always can).
+    default: op

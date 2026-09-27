@@ -265,6 +265,7 @@ public sealed class MinecraftServer : IDisposable
             Version = build.Version, Build = build.Build, JavaMin = build.JavaMin, Jar = "paper.jar", Sha256 = build.Sha256, InstalledAt = DateTime.Now,
         });
         WriteProperties();
+        InstallPluginsSafe();
         progress?.Report(new InstallProgress($"Paper {build.Version} is ready", 1));
         SetState(MinecraftServerState.Stopped, "");
     }
@@ -455,6 +456,69 @@ public sealed class MinecraftServer : IDisposable
         File.WriteAllLines(path, lines);
     }
 
+    // ---------------- plugins ----------------
+
+    // GiftDeck's own server plugins (Packs/minecraft/plugins/*.jar: GiftDeck Games, the mini-games) go into the
+    // server's plugins folder at set-up and before every start. A jar is copied when it is missing or GiftDeck's
+    // is newer (plugin.yml version; same version but different bytes = a rebuilt jar, also copied). A newer
+    // one the user put there themselves is kept.
+    public string PluginsSource { get; set; } = Path.Combine(AppContext.BaseDirectory, "Packs", "minecraft", "plugins");
+
+    public List<string> InstallPlugins()
+    {
+        var done = new List<string>();
+        if (!Directory.Exists(PluginsSource)) return done;
+        var dest = Path.Combine(Folder, "plugins");
+        foreach (var jar in Directory.GetFiles(PluginsSource, "*.jar"))
+        {
+            var target = Path.Combine(dest, Path.GetFileName(jar));
+            var ours = PluginVersion(jar);
+            if (File.Exists(target))
+            {
+                var theirs = PluginVersion(target);
+                var a = MinecraftTarget.ParseVersion(ours);
+                var b = MinecraftTarget.ParseVersion(theirs);
+                if (a != null && b != null && a < b) continue;
+                if (a != null && b != null && a == b && SameBytes(jar, target)) continue;
+                if ((a == null || b == null) && SameBytes(jar, target)) continue;
+            }
+            Directory.CreateDirectory(dest);
+            File.Copy(jar, target, true);
+            done.Add($"{Path.GetFileNameWithoutExtension(jar)} {ours}".Trim());
+        }
+        return done;
+    }
+
+    void InstallPluginsSafe()
+    {
+        try
+        {
+            foreach (var p in InstallPlugins()) AddConsole($"[GiftDeck] Installed the server plugin {p}");
+        }
+        catch (Exception ex) { AddConsole("[GiftDeck] Couldn't copy GiftDeck's server plugins: " + ex.Message); }
+    }
+
+    // The version line of a plugin jar's plugin.yml (or paper-plugin.yml), or "".
+    public static string PluginVersion(string jar)
+    {
+        try
+        {
+            using var zip = ZipFile.OpenRead(jar);
+            var entry = zip.GetEntry("plugin.yml") ?? zip.GetEntry("paper-plugin.yml");
+            if (entry == null) return "";
+            using var r = new StreamReader(entry.Open());
+            var m = Regex.Match(r.ReadToEnd(), @"^version:\s*['""]?([^'""\r\n]+)", RegexOptions.Multiline);
+            return m.Success ? m.Groups[1].Value.Trim() : "";
+        }
+        catch { return ""; }
+    }
+
+    static bool SameBytes(string a, string b)
+    {
+        if (new FileInfo(a).Length != new FileInfo(b).Length) return false;
+        return File.ReadAllBytes(a).AsSpan().SequenceEqual(File.ReadAllBytes(b));
+    }
+
     // ---------------- start / stop ----------------
 
     Process _proc;
@@ -481,6 +545,7 @@ public sealed class MinecraftServer : IDisposable
         if (!PortFree(Settings.RconPort)) throw new Exception($"Port {Settings.RconPort} (RCON) is already used by another program.");
 
         WriteProperties();
+        InstallPluginsSafe();
         int mem = Math.Clamp(Settings.MemoryMb, 1024, 32768);
         var psi = new ProcessStartInfo(java.Exe)
         {

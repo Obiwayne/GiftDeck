@@ -1,0 +1,19 @@
+# GiftDeck Games settings. Changes apply to the next game started (or after /reload confirm).
+
+# Where the arenas are built: far from spawn, high in the sky, one chunk per game side by side along x.
+arena:
+  world: ""        # empty = the server's main world (the overworld)
+  x: 20000         # rounded down to a chunk corner
+  z: 0
+  y: 200           # floor height (arenas are up to 70 blocks tall; keep below the build limit of 320)
+
+bedrockbox:
+  depth: 30              # layers to dig through
+  obsidian-layer: true   # one obsidian layer near the bottom: needs a diamond pickaxe (a viewer's gift) or a lot of patience
+
+sandpour:
+  seconds: 180           # survive this long to win
+
+sheepout:
+  seconds: 180           # survive this long to win...
+  max-sheep: 40          # ...without this many sheep in the arena at once
