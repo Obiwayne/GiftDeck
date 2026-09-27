@@ -165,7 +165,7 @@ public class OverlayService
                 image = string.IsNullOrEmpty(ResolveTileImage(t)) ? "" : "/tile-image/" + t.Id,
             }),
         },
-        spinners = Config.Spinners.Select(s => new { id = s.Id, name = s.Name, hideWhenIdle = s.HideWhenIdle, entries = SpinEntries(s.Entries) }),
+        spinners = Config.Spinners.Select(s => new { id = s.Id, name = s.Name, hideWhenIdle = s.HideWhenIdle, entries = SpinEntries(SpinnerService.Pool(s)) }),
         giftList = new { title = Config.Templates.GiftListTitle, items = GiftList() },
         strip = new { title = Config.Templates.StripTitle, top = TopGifters(3), goal = NextGoal() },
     }, Json);
@@ -173,7 +173,7 @@ public class OverlayService
     // ---- Stream tools: Gift Spinner, custom alerts, gift list and top gifters templates ----
 
     static object SpinEntries(IEnumerable<SpinnerEntry> entries) =>
-        entries.Select(x => new { label = x.Label, rarity = x.Rarity, color = x.EffectiveColor }).ToList();
+        entries.Select(x => new { label = x.Label, rarity = x.Rarity, color = x.EffectiveColor, image = x.RuleId != null && !string.IsNullOrEmpty(x.Image) ? "/rule-image/" + x.RuleId : "" }).ToList();
 
     public void PushSpin(Spinner s, List<SpinnerEntry> entries, int index, LiveEvent e)
     {
@@ -293,7 +293,6 @@ public class OverlayService
     public Spinner AddSpinner()
     {
         var s = new Spinner { Name = Config.Spinners.Count == 0 ? "Gift Spinner" : "Gift Spinner " + (Config.Spinners.Count + 1) };
-        foreach (var r in Rarities.All) s.Entries.Add(new SpinnerEntry { Label = r + " prize", Rarity = r });
         Config.Spinners.Add(s);
         ListsChanged?.Invoke();
         Touch();

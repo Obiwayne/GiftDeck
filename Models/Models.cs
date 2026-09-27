@@ -90,6 +90,14 @@ public class Rule
     public bool RepeatPerGift { get; set; }
     public int MaxRepeats { get; set; }
 
+    // Gift Spinner: null = not on a spinner; otherwise this event is a slice of the wheel and runs when it lands there.
+    public Rarity? SpinRarity { get; set; }
+    // Which spinner (its id). Blank, or a spinner that was removed, = the first spinner.
+    public string SpinnerId { get; set; } = "";
+
+    [JsonIgnore] public string SpinBadge => SpinRarity?.ToString() ?? "";
+    [JsonIgnore] public string SpinBadgeColor => SpinRarity is Rarity sr ? Rarities.DefaultColor(sr) : "#9CA3AF";
+
     [JsonIgnore] public DateTime LastFired { get; set; }
     [JsonIgnore] public string TriggerSummary => Trigger.Summary();
     [JsonIgnore] public GiftInfo TriggerGift => Trigger.Type == TriggerType.Gift ? GiftDeck.Services.Hub.Gifts?.Find(Trigger.GiftId, Trigger.GiftName) : null;
@@ -106,6 +114,8 @@ public class Rule
             CooldownSeconds = CooldownSeconds,
             RepeatPerGift = RepeatPerGift,
             MaxRepeats = MaxRepeats,
+            SpinRarity = SpinRarity,
+            SpinnerId = SpinnerId,
             Trigger = new RuleTrigger
             {
                 Type = Trigger.Type, GiftId = Trigger.GiftId, GiftName = Trigger.GiftName,

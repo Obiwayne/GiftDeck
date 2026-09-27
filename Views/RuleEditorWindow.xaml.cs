@@ -61,6 +61,67 @@ public partial class RuleEditorWindow : Window, IActionHost
         _actions.CollectionChanged += (s, e) => UpdateNoActions();
         UpdateNoActions();
         UpdatePanels();
+        LoadSpinner(rule);
+    }
+
+    // ---- Gift Spinner: this event as a slice of the wheel ----
+
+    static readonly Choice[] RarityChoices =
+    {
+        new Choice(null, "None (not on the spinner)"),
+        new Choice(Rarity.Common, "Common"),
+        new Choice(Rarity.Uncommon, "Uncommon"),
+        new Choice(Rarity.Rare, "Rare"),
+        new Choice(Rarity.Epic, "Epic"),
+        new Choice(Rarity.Legendary, "Legendary (rarest)"),
+    };
+
+    bool _spinLoaded;
+
+    void LoadSpinner(Rule rule)
+    {
+        var spinners = Hub.Overlays?.Config.Spinners ?? new List<Spinner>();
+        SpinRarityCombo.ItemsSource = RarityChoices;
+        SpinRarityCombo.SelectedItem = RarityChoices.FirstOrDefault(c => Equals(c.Value, rule.SpinRarity)) ?? RarityChoices[0];
+        SpinnerCombo.ItemsSource = spinners;
+        SpinnerCombo.SelectedItem = SpinnerService.SpinnerFor(new Rule { SpinRarity = Rarity.Common, SpinnerId = rule.SpinnerId }, spinners);
+        SpinnerCombo.SelectionChanged += (s, e) => UpdateSpinHint();
+        _spinLoaded = true;
+        UpdateSpinHint();
+    }
+
+    Rarity? SelectedRarity => SpinRarityCombo.SelectedItem is Choice c ? (Rarity?)c.Value : null;
+
+    void SpinRarity_Changed(object sender, SelectionChangedEventArgs e) { if (_spinLoaded) UpdateSpinHint(); }
+
+    void UpdateSpinHint()
+    {
+        var spinners = Hub.Overlays?.Config.Spinners ?? new List<Spinner>();
+        var rarity = SelectedRarity;
+        SpinnerPickPanel.Visibility = rarity != null && spinners.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
+        if (rarity == null)
+        {
+            SpinHint.Text = "Pick a rarity to put this event on the wheel. To spin it, give another event (for example a gift) the action 'Spin the Gift Spinner'.";
+            return;
+        }
+        if (_actions.Any(a => a.Type == ActionType.SpinWheel))
+        {
+            SpinHint.Text = "This event spins a wheel itself, so it can't also be on one. Set this back to None.";
+            return;
+        }
+        if (spinners.Count == 0)
+        {
+            SpinHint.Text = "There is no spinner yet. Add one on the Overlays page (Stream tools, Gift Spinner) and this event goes on it.";
+            return;
+        }
+        // The chance with the wheel as it is now, counting this event as saved.
+        var me = new Rule { Id = _rule.Id, Name = "this", Enabled = true, SpinRarity = rarity, SpinnerId = SpinnerCombo.SelectedItem is Spinner sp ? sp.Id.ToString() : "" };
+        var rules = Hub.Rules.Rules.Where(r => r.Id != _rule.Id).Append(me).ToList();
+        var target = SpinnerService.SpinnerFor(me, spinners);
+        var pool = SpinnerService.PoolFor(target, spinners, rules);
+        var mine = pool.FirstOrDefault(x => x.RuleId == _rule.Id);
+        var chance = mine == null ? "" : $"About {SpinnerService.ChanceText(SpinnerService.Chance(pool, mine))} of spins on \"{target.Name}\" land here ({pool.Count} {(pool.Count == 1 ? "slice" : "slices")} on it).";
+        SpinHint.Text = _rule.Enabled ? chance : "This event is switched off, so it stays off the wheel until you switch it on. " + chance;
     }
 
     TriggerType SelectedTrigger => TriggerCombo.SelectedItem is Choice c ? (TriggerType)c.Value : TriggerType.Gift;
@@ -165,6 +226,10 @@ public partial class RuleEditorWindow : Window, IActionHost
             r.Actions.Add(a.Clone());
         }
         if (r.Name.Length == 0) r.Name = t.Summary();
+
+        r.SpinRarity = SelectedRarity;
+        r.SpinnerId = SpinnerCombo.SelectedItem is Spinner spinner && (Hub.Overlays?.Config.Spinners.Count ?? 0) > 1 ? spinner.Id.ToString() : _rule.SpinnerId ?? "";
+        if (r.SpinRarity != null && SpinnerService.SpinsAWheel(r)) { Fail("An event that spins the wheel can't also be on it: set Gift Spinner back to None."); return; }
 
         Result = r;
         DialogResult = true;

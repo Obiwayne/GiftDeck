@@ -20,6 +20,8 @@ public partial class StreamToolsPanel : UserControl
         GiftListMax.Text = t.GiftListMax.ToString();
         StripTitle.Text = t.StripTitle;
         Hub.Overlays.ListsChanged += () => Dispatcher.BeginInvoke(RefreshLists);
+        Hub.Rules.Rules.CollectionChanged += (s, e) => Dispatcher.BeginInvoke(RulesChanged);
+        IsVisibleChanged += (s, e) => { if (IsVisible) RulesChanged(); }; // an event switched on or off
         RefreshLists();
         _loading = false;
         Loaded += async (s, e) => await StartPreview("/overlay/giftlist", "Gift list", 420, 800);
@@ -37,13 +39,19 @@ public partial class StreamToolsPanel : UserControl
         NoAlerts.Visibility = cfg.CustomAlerts.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
     }
 
+    // Chances over the whole wheel: the events on it and its other prizes.
     static void UpdateChances(Spinner s)
     {
-        foreach (var x in s.Entries)
-        {
-            var pct = SpinnerService.Chance(s, x);
-            x.ChanceText = pct >= 10 ? pct.ToString("0") + "%" : pct.ToString("0.#") + "%";
-        }
+        var events = SpinnerService.EventEntries(s, Hub.Overlays.Config.Spinners, Hub.Rules.Rules);
+        var pool = events.Concat(s.Entries).ToList();
+        foreach (var x in pool) x.ChanceText = SpinnerService.ChanceText(SpinnerService.Chance(pool, x));
+        s.EventEntries = events;
+    }
+
+    // An event was added, edited or removed on the Events page: it may have moved on or off a wheel.
+    void RulesChanged()
+    {
+        foreach (var s in Hub.Overlays.Config.Spinners) UpdateChances(s);
     }
 
     // ---- Preview: a small embedded browser showing the real overlay page ----
@@ -115,7 +123,7 @@ public partial class StreamToolsPanel : UserControl
     {
         var s = Of<Spinner>(sender);
         if (s == null) return;
-        if (MessageBox.Show($"Remove the spinner \"{s.Name}\" and its prizes?", "GiftDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
+        if (MessageBox.Show($"Remove the spinner \"{s.Name}\" and its other prizes? Events on it move to the first spinner.", "GiftDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
         Hub.Overlays.RemoveSpinner(s);
     }
 

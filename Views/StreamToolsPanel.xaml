@@ -81,7 +81,7 @@
                     <Button DockPanel.Dock="Right" Content="+  Add spinner" Click="AddSpinner_Click" VerticalAlignment="Top"/>
                     <StackPanel>
                         <TextBlock Text="Gift Spinner" Style="{StaticResource H2}"/>
-                        <TextBlock Text="A prize wheel on stream. An event's 'Spin the Gift Spinner' action spins it for the viewer; when it stops, the prize's actions run. Rarer tiers come up less often. Browser Source 600 x 700." Style="{StaticResource Muted}" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                        <TextBlock Text="A wheel on stream that picks one of your events. Put events on it by opening them and picking a rarity; rarer ones come up less often. An event with the 'Spin the Gift Spinner' action (for example a gift) spins it, and when it stops the event it landed on runs. Browser Source 600 x 700." Style="{StaticResource Muted}" Margin="0,3,0,0" TextWrapping="Wrap"/>
                     </StackPanel>
                 </DockPanel>
                 <TextBlock x:Name="NoSpinners" Text="No spinners yet." Style="{StaticResource Muted}" Margin="0,8,0,0"/>
@@ -107,7 +107,42 @@
                                         <CheckBox Grid.Column="2" Content="Hide between spins" IsChecked="{Binding HideWhenIdle}" Click="Field_Changed" VerticalAlignment="Bottom" Margin="0,0,0,6"/>
                                     </Grid>
 
-                                    <TextBlock Text="Prizes" Style="{StaticResource Label}" Margin="0,12,0,4"/>
+                                    <TextBlock Text="Events on this spinner" Style="{StaticResource Label}" Margin="0,12,0,4"/>
+                                    <TextBlock Text="None yet. To add one, open an event on the Events page and pick a rarity under Gift Spinner." TextWrapping="Wrap" Margin="0,0,0,6">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock" BasedOn="{StaticResource Muted}">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding HasNoEvents}" Value="True">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                    <ItemsControl ItemsSource="{Binding EventEntries}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Margin="0,0,0,6">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="18"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="120"/>
+                                                        <ColumnDefinition Width="64"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Border Width="12" Height="22" CornerRadius="3" Background="{Binding EffectiveColor}" VerticalAlignment="Center"/>
+                                                    <TextBlock Grid.Column="1" Text="{Binding Label}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,0,6,0"/>
+                                                    <TextBlock Grid.Column="2" Text="{Binding Rarity}" Foreground="{Binding EffectiveColor}" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                                    <TextBlock Grid.Column="3" Text="{Binding ChanceText}" Style="{StaticResource Muted}" VerticalAlignment="Center" ToolTip="Chance of landing on this event"/>
+                                                    <TextBlock Grid.Column="4" Text="{Binding ActionsText}" Style="{StaticResource Muted}" VerticalAlignment="Center"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    <TextBlock Text="To add, change or remove one, open the event on the Events page (Gift Spinner). Events that are switched off are left off the wheel." Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,0,0,4"/>
+
+                                    <TextBlock Text="Other prizes (optional, with their own actions)" Style="{StaticResource Label}" Margin="0,12,0,4"/>
                                     <ItemsControl ItemsSource="{Binding Entries}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
@@ -139,7 +174,7 @@
                                     <StackPanel Orientation="Horizontal">
                                         <Button Content="+  Add prize" Style="{StaticResource Small}" Tag="{Binding}" Click="AddEntry_Click" Margin="0,0,14,0"/>
                                         <Button Content="Spin now" Style="{StaticResource Primary}" Tag="{Binding}" Click="SpinNow_Click" Margin="0,0,8,0"/>
-                                        <CheckBox Content="Also run the prize's actions" IsChecked="{Binding TestRunsActions}" VerticalAlignment="Center" Margin="0,0,14,0" ToolTip="Off: the wheel spins on the overlay only, nothing is pressed or sent to a game."/>
+                                        <CheckBox Content="Also run what it lands on" IsChecked="{Binding TestRunsActions}" VerticalAlignment="Center" Margin="0,0,14,0" ToolTip="Off: the wheel spins on the overlay only, nothing is pressed or sent to a game."/>
                                         <Button Content="Preview" Style="{StaticResource Ghost}" Tag="{Binding}" Click="PreviewSpinner_Click" Margin="0,0,6,0"/>
                                         <Button Content="Copy URL" Style="{StaticResource Small}" Tag="{Binding}" Click="CopySpinner_Click" Margin="0,0,6,0"/>
                                         <Button Content="Add to OBS" Style="{StaticResource Small}" Tag="{Binding}" Click="ObsSpinner_Click" Margin="0,0,6,0"/>
