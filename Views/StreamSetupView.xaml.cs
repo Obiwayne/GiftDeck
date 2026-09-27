@@ -26,7 +26,100 @@ public partial class StreamSetupView : UserControl
         RelayServerBox.Text = RelayService.LocalServer;
         RelayKeyBox.Text = RelayService.LocalKey;
         UpdateFfmpeg();
+        ManagedBox.IsChecked = Hub.Settings.ObsManaged;
+        UpdateEngine();
+        Hub.Engine.StatusChanged += () => Dispatcher.BeginInvoke(UpdateEngine);
+        Hub.Obs.StatusChanged += () => Dispatcher.BeginInvoke(UpdateEngine);
+        // OBS can be opened or closed outside GiftDeck; a light check while the page is on screen.
+        var poll = new DispatcherTimer { Interval = TimeSpan.FromSeconds(3) };
+        poll.Tick += (_, _) => { if (IsVisible) UpdateEngine(); };
+        poll.Start();
         _loading = false;
+    }
+
+    bool _engineBusy;
+
+    void UpdateEngine()
+    {
+        var (running, visible, ours) = Hub.Engine.State();
+        bool managed = Hub.Settings.ObsManaged;
+        string status, detail;
+        if (!managed)
+        {
+            status = "GiftDeck isn't running OBS";
+            detail = running ? "OBS is open; you run it yourself." : "OBS isn't open. Tick the box above to let GiftDeck run it.";
+        }
+        else if (!running)
+        {
+            status = "OBS isn't running";
+            detail = ObsHost.PortraitExists() ? "GiftDeck starts it when it opens, and when you Go LIVE." : "Click Set up portrait OBS to make the portrait canvas first.";
+        }
+        else
+        {
+            status = visible ? "OBS is running (window showing)" : "OBS is running hidden âœ“";
+            detail = (ours ? "Started by GiftDeck. " : "Opened outside GiftDeck, so GiftDeck won't close it. ")
+                     + (Hub.Obs.Connected ? "Connected." : "Connectingâ€¦")
+                     + (visible ? " Minimize it to hide it again; closing it stops OBS." : "");
+        }
+        if (!string.IsNullOrEmpty(Hub.Engine.LastError) && managed && !running) detail = "Last try: " + Hub.Engine.LastError;
+        EngineStatus.Text = status;
+        EngineStatus.Foreground = (System.Windows.Media.Brush)FindResource(managed && running ? "SuccessBrush" : managed ? "WarnBrush" : "TextBrush");
+        EngineDetail.Text = detail;
+        ShowObsButton.IsEnabled = running && !visible && !_engineBusy;
+        SetUpPortraitButton.IsEnabled = !_engineBusy;
+    }
+
+    void EngineSay(string text, string brush)
+    {
+        EngineMessage.Text = text;
+        EngineMessage.Foreground = (System.Windows.Media.Brush)FindResource(brush);
+        EngineMessage.Visibility = string.IsNullOrEmpty(text) ? Visibility.Collapsed : Visibility.Visible;
+    }
+
+    void Managed_Changed(object sender, RoutedEventArgs e)
+    {
+        if (_loading) return;
+        Hub.Settings.ObsManaged = ManagedBox.IsChecked == true;
+        Hub.SaveSettings();
+        EngineSay(Hub.Settings.ObsManaged
+            ? "GiftDeck will start OBS hidden next time it opens (or when you Go LIVE)."
+            : "GiftDeck won't start or close OBS any more. Go LIVE uses the Vertical canvas settings below again.", "MutedBrush");
+        UpdateEngine();
+    }
+
+    async void SetUpPortrait_Click(object sender, RoutedEventArgs e)
+    {
+        var convert = ObsHost.PortraitConverter;
+        if (convert == null)
+        {
+            EngineSay("Setting up the portrait canvas isn't available in this build yet.", "WarnBrush");
+            return;
+        }
+        var ask = ObsHost.IsRunning
+            ? "GiftDeck will close OBS, make a \"GiftDeck Portrait\" scene collection and profile (1080x1920) from your current setup, and open OBS again hidden on them. Your own scenes aren't changed.\n\nContinue?"
+            : "GiftDeck will make a \"GiftDeck Portrait\" scene collection and profile (1080x1920) from your current OBS setup, and start OBS hidden on them. Your own scenes aren't changed.\n\nContinue?";
+        if (MessageBox.Show(ask, "GiftDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
+
+        _engineBusy = true;
+        UpdateEngine();
+        EngineSay("Setting up portrait OBSâ€¦", "MutedBrush");
+        try
+        {
+            await Hub.Engine.SetUpPortraitAsync(convert);
+            _loading = true;
+            ManagedBox.IsChecked = true;
+            _loading = false;
+            EngineSay("Done. OBS is running hidden on your portrait canvas.", "SuccessBrush");
+        }
+        catch (Exception ex) { EngineSay(ex.Message, "DangerBrush"); Log.Write("Set up portrait OBS failed: " + ex.Message); }
+        finally { _engineBusy = false; UpdateEngine(); }
+    }
+
+    void ShowObs_Click(object sender, RoutedEventArgs e)
+    {
+        if (!Hub.Engine.ShowWindow()) EngineSay("Couldn't find OBS's window.", "WarnBrush");
+        else EngineSay("", "MutedBrush");
+        UpdateEngine();
     }
 
     void Details_Changed(object sender, RoutedEventArgs e)

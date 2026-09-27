@@ -26,6 +26,11 @@ public partial class GoLiveView : UserControl
 
     TikTokLiveService Tt => Hub.TikTok;
 
+    // GiftDeck runs OBS on a portrait main canvas: stream that, not Aitum's vertical canvas through the relay.
+    static bool Managed => Hub.Settings.ObsManaged;
+    bool UseVertical => Tt.State.SendVertical && !Managed;
+    bool AutoObs => Tt.State.AutoObs || Managed; // nobody can paste a key into an OBS they can't see
+
     public GoLiveView()
     {
         InitializeComponent();
@@ -55,7 +60,7 @@ public partial class GoLiveView : UserControl
         bool live = opened || tiktokSaysLive;
         bool confirmed = tiktokSaysLive || _confirmed;
         if (!opened) { _confirmed = false; _sending = false; }
-        if (opened && _sending && Tt.State.SendVertical && !Hub.Relay.Running) _sending = false; // Aitum stopped sending
+        if (opened && _sending && UseVertical && !Hub.Relay.Running) _sending = false; // Aitum stopped sending
 
         if (live && _liveSince == null) _liveSince = s.StartedAt ?? DateTime.Now;
         if (!live) _liveSince = null;
@@ -154,25 +159,25 @@ public partial class GoLiveView : UserControl
         if (!Hub.Obs.Connected)
         {
             PreviewImage.Source = null;
-            PreviewHint.Text = "OBS isn't connected. Open OBS and GiftDeck will connect by itself.";
+            PreviewHint.Text = Managed ? "OBS isn't running. GiftDeck starts it for you; see OBS engine on the Stream Setup page." : "OBS isn't connected. Open OBS and GiftDeck will connect by itself.";
             PreviewSource.Text = "";
             await Task.Delay(1000);
             return;
         }
         try
         {
-            bool vertical = Tt.State.SendVertical && Hub.Obs.Canvases.Count > 0;
+            bool vertical = UseVertical && Hub.Obs.Canvases.Count > 0;
             if (_sceneUuid == null || (DateTime.Now - _sceneCheckedAt).TotalSeconds > 2)
             {
                 _sceneUuid = vertical ? await Hub.Obs.GetCanvasSceneUuidAsync(Hub.Obs.Canvases[0]) : await Hub.Obs.GetProgramSceneUuidAsync();
                 _sceneCheckedAt = DateTime.Now;
-                _previewName = vertical ? Hub.Obs.Canvases[0] : "OBS main canvas";
+                _previewName = vertical ? Hub.Obs.Canvases[0] : Managed ? "Portrait canvas" : "OBS main canvas";
             }
             if (_sceneUuid == null) { await Task.Delay(500); return; }
 
             // Always the same size: sizing it from the on-screen box made the box and the picture
             // chase each other by a pixel every frame (the wobble on the right edge).
-            var jpg = await Hub.Obs.GetScreenshotAsync(_sceneUuid, vertical ? 540 : 960);
+            var jpg = await Hub.Obs.GetScreenshotAsync(_sceneUuid, vertical || Managed ? 540 : 960);
             var img = await Task.Run(() =>
             {
                 var b = new BitmapImage();
@@ -213,12 +218,12 @@ public partial class GoLiveView : UserControl
 
     async void GoLive_Click(object sender, RoutedEventArgs e)
     {
-        if (Tt.State.AutoObs && Tt.State.SendVertical && RelayService.FindFfmpeg() == null)
+        if (AutoObs && UseVertical && RelayService.FindFfmpeg() == null)
         {
             Status.Text = "Not started. Going LIVE with the vertical canvas needs ffmpeg: on the Stream Setup page, click Download ffmpeg, then press Go LIVE again.";
             return;
         }
-        if (Tt.State.AutoObs && Tt.State.SendVertical && AitumRelayConfigured(Tt.State.AitumOutput) == false)
+        if (AutoObs && UseVertical && AitumRelayConfigured(Tt.State.AitumOutput) == false)
         {
             Status.Text = $"Not started. Aitum's \"{Tt.State.AitumOutput}\" output in OBS isn't set up yet: edit it, choose Custom, Server {RelayService.LocalServer}, Stream key {RelayService.LocalKey} (also on the Stream Setup page). Then press Go LIVE again.";
             return;
@@ -230,12 +235,16 @@ public partial class GoLiveView : UserControl
             var (server, key) = await Tt.StartAsync();
             Status.Text = "LIVE is open on TikTok.";
             bool sending = false;
-            if (Tt.State.AutoObs)
+            if (AutoObs)
             {
                 try
                 {
-                    if (!Hub.Obs.Connected) await Hub.Obs.ConnectAsync();
-                    sending = Tt.State.SendVertical ? await StartVerticalAsync(server, key) : await StartMainAsync(server, key);
+                    if (!Hub.Obs.Connected)
+                    {
+                        if (Managed && !ObsHost.IsRunning) { Status.Text = "LIVE is open. Starting OBS"; await Hub.Engine.StartPortraitAsync(); }
+                        else await Hub.Obs.ConnectAsync();
+                    }
+                    sending = UseVertical ? await StartVerticalAsync(server, key) : await StartMainAsync(server, key);
                 }
                 catch (Exception ex)
                 {
@@ -264,7 +273,7 @@ public partial class GoLiveView : UserControl
             return false;
         }
         await Hub.Obs.StartStreamAsync();
-        Status.Text = "LIVE is open and OBS is streaming its main canvas to it.";
+        Status.Text = Managed ? "LIVE is open and OBS is streaming your portrait canvas to it." : "LIVE is open and OBS is streaming its main canvas to it.";
         Log.Write("OBS given the TikTok stream key and started");
         return true;
     }
@@ -340,11 +349,11 @@ public partial class GoLiveView : UserControl
         Status.Text = "Ending the LIVE";
         try
         {
-            if (Tt.State.AutoObs && Hub.Obs.Connected)
+            if (AutoObs && Hub.Obs.Connected)
             {
                 try
                 {
-                    if (Tt.State.SendVertical) { if (await Hub.Obs.IsAitumOutputActiveAsync(Tt.State.AitumOutput) == true) await Hub.Obs.StopAitumOutputAsync(Tt.State.AitumOutput); }
+                    if (UseVertical) { if (await Hub.Obs.IsAitumOutputActiveAsync(Tt.State.AitumOutput) == true) await Hub.Obs.StopAitumOutputAsync(Tt.State.AitumOutput); }
                     else if (await Hub.Obs.IsStreamingAsync()) await Hub.Obs.StopStreamAsync();
                 }
                 catch (Exception ex) { Log.Write("Could not stop the OBS stream: " + ex.Message); }

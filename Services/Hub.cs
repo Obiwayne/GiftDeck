@@ -9,6 +9,7 @@ public static class Hub
     public static GiftCatalog Gifts { get; private set; }
     public static TikFinityService TikFinity { get; private set; }
     public static ObsService Obs { get; private set; }
+    public static ObsHost Engine { get; private set; }
     public static SpotifyService Spotify { get; private set; }
     public static TtsService Tts { get; private set; }
     public static SoundService Sounds { get; private set; }
@@ -44,6 +45,7 @@ public static class Hub
         Rules.Load();
 
         Obs = new ObsService();
+        Engine = new ObsHost();
         Spotify = new SpotifyService();
         Spotify.Load();
 
@@ -70,6 +72,7 @@ public static class Hub
         Web.Start();
         TikFinity.Start();
         Obs.StartAutoConnect();
+        Engine.OnAppStart(); // managed OBS: starts it hidden in the background
     }
 
     public static void SaveSettings()
@@ -84,6 +87,7 @@ public static class Hub
         try { Web?.Stop(); } catch { }
         try { TikFinity?.Stop(); } catch { }
         try { Bridge?.Stop(); } catch { }
+        try { Engine?.OnAppExit(); } catch { } // needs the OBS connection (is it live?), so before disconnecting; at most 20s
         try { Obs?.DisconnectAsync().Wait(1000); } catch { }
         try { Tts?.Stop(); } catch { }
         try { Music?.Shutdown(); } catch { }
