@@ -138,6 +138,33 @@ consent, server.properties with RCON on 127.0.0.1 and a random password), start/
 an RCON client, a command catalog (summon mobs, TNT, weather, time, give items, effects, gamerules)
 with args, and a preset.
 
+**Server packs.** A pack with a `"server"` object in pack.json sets up a local server instead of copying
+files into a game. It has no `detect`/`components`/`edits`; the Games page shows the pack's server panel
+in place of Install/Uninstall (Minecraft: `new Views.MinecraftServerPanel()`, which controls `Hub.Minecraft`):
+
+```json
+"server": {"type":"paper", "target":"minecraft:server", "panel":"MinecraftServerPanel",
+           "defaultVersion":"latest", "eulaUrl":"https://aka.ms/MinecraftEULA",
+           "join":"In Minecraft: Multiplayer > Direct Connection > localhost"}
+```
+
+Paper comes from PaperMC's Fill API v3 (`https://fill.papermc.io/v3/projects/paper`; the old
+`api.papermc.io/v2` answers 410 Gone), sha256-checked; the API also says which Java each version needs
+(1.20.x: 17, 1.21.x: 21, 26.x: 25). Java: GiftDeck uses the oldest installed Java that is new enough (its
+own downloads, JAVA_HOME, PATH, Program Files vendors, the Minecraft Launcher's runtimes), or downloads an
+Eclipse Temurin JRE (Adoptium API) into `%LOCALAPPDATA%\GiftDeck\java\` after asking. Servers live in
+`%LOCALAPPDATA%\GiftDeck\minecraft\<name>\`; settings (player, ports, random RCON password) in
+`minecraft.json` in GiftDeck's data folder. `eula.txt` is only written when the user ticks the box.
+server.properties: `enable-rcon=true`, `server-ip=127.0.0.1` (game and RCON only on this PC, so no
+firewall prompt; "Let other PCs on my network join" clears it), `broadcast-rcon-to-ops=false`,
+`online-mode` left true.
+
+Minecraft's commands.json adds fields the other readers ignore: `run` (a server command or a list),
+`repeat` (the number arg that says how many times) + `maxRepeat`, `warning`, and
+`legacy: [{"before":"1.21.11","run":...,"values":{"keep_inventory":"keepInventory"}}]` for older servers.
+Template tokens: `{player}`, `{arg}`, `{arg:text}` / `{arg:nbttext}` (quoted, escaped text components;
+nbttext is the pre-1.21.5 JSON-in-SNBT form), `{rand:-4:4}`, `{?arg}...{/arg}` (only when arg isn't empty).
+
 ## Shared hooks (already in the skeleton commit)
 
 - `ActionType.GameCommand`, `ActionType.SpinWheel`, `ActionType.Alert`; `RuleAction.Args` (JSON string).

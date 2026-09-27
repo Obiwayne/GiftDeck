@@ -1,0 +1,183 @@
+[
+  {
+    "id": "summon_mob", "name": "Summon mobs", "category": "Mobs",
+    "description": "Spawns mobs around the player, with the viewer's name floating above them.",
+    "args": [
+      {"name": "mob", "label": "Mob", "type": "choice", "default": "zombie",
+       "choices": ["zombie", "skeleton", "creeper", "spider", "cave_spider", "witch", "enderman", "slime", "phantom", "pillager", "vindicator", "ravager", "blaze", "piglin_brute", "wither_skeleton", "silverfish", "bee", "wolf", "pig", "cow", "chicken", "sheep", "villager", "iron_golem", "cat", "horse", "axolotl", "frog", "goat", "allay"]},
+      {"name": "count", "label": "How many", "type": "number", "default": "1"},
+      {"name": "name", "label": "Name tag (empty for none)", "type": "text", "default": "{user}"}
+    ],
+    "repeat": "count", "maxRepeat": 30,
+    "run": "execute at {player} run summon {mob} ~{rand:-4:4} ~1 ~{rand:-4:4}{?name} {CustomName:{name:nbttext},CustomNameVisible:1b}{/name}"
+  },
+  {
+    "id": "charged_creeper", "name": "Charged creeper", "category": "Mobs",
+    "description": "A charged creeper right next to the player. Big boom.",
+    "args": [
+      {"name": "count", "label": "How many", "type": "number", "default": "1"},
+      {"name": "name", "label": "Name tag (empty for none)", "type": "text", "default": "{user}"}
+    ],
+    "repeat": "count", "maxRepeat": 10,
+    "run": "execute at {player} run summon creeper ~{rand:-3:3} ~ ~{rand:-3:3} {powered:1b{?name},CustomName:{name:nbttext},CustomNameVisible:1b{/name}}"
+  },
+  {
+    "id": "tnt", "name": "TNT around the player", "category": "Chaos",
+    "description": "Lit TNT drops around the player.",
+    "args": [
+      {"name": "count", "label": "How many", "type": "number", "default": "5"},
+      {"name": "fuse", "label": "Fuse (20 = 1 second)", "type": "number", "default": "60"}
+    ],
+    "repeat": "count", "maxRepeat": 40,
+    "run": "execute at {player} run summon tnt ~{rand:-4:4} ~{rand:1:3} ~{rand:-4:4} {fuse:{fuse}}",
+    "legacy": [{"before": "1.20.3", "run": "execute at {player} run summon tnt ~{rand:-4:4} ~{rand:1:3} ~{rand:-4:4} {Fuse:{fuse}}"}]
+  },
+  {
+    "id": "lightning", "name": "Lightning strike", "category": "Chaos",
+    "description": "Lightning hits right next to the player.",
+    "args": [{"name": "count", "label": "How many", "type": "number", "default": "1"}],
+    "repeat": "count", "maxRepeat": 20,
+    "run": "execute at {player} run summon lightning_bolt ~{rand:-2:2} ~ ~{rand:-2:2}"
+  },
+  {
+    "id": "anvil_rain", "name": "Anvil rain", "category": "Chaos",
+    "description": "Anvils fall from the sky onto the player.",
+    "args": [{"name": "count", "label": "How many", "type": "number", "default": "5"}],
+    "repeat": "count", "maxRepeat": 30,
+    "run": "execute at {player} run summon falling_block ~{rand:-2:2} ~15 ~{rand:-2:2} {BlockState:{Name:\"minecraft:anvil\"},Time:1}"
+  },
+  {
+    "id": "glass_cage", "name": "Trap in a glass cage", "category": "Chaos",
+    "description": "Builds a glass box around the player.",
+    "args": [],
+    "run": "execute at {player} run fill ~-1 ~-1 ~-1 ~1 ~2 ~1 glass hollow"
+  },
+  {
+    "id": "launch", "name": "Launch into the air", "category": "Player",
+    "description": "Throws the player up into the sky (fall damage included).",
+    "args": [{"name": "power", "label": "Power (10 = small hop, 60 = very high)", "type": "number", "default": "30"}],
+    "run": "effect give {player} minecraft:levitation 1 {power} true"
+  },
+  {
+    "id": "sky_drop", "name": "Drop from the sky", "category": "Player",
+    "description": "Teleports the player straight up so they fall back down.",
+    "args": [{"name": "height", "label": "Height in blocks", "type": "number", "default": "40"}],
+    "run": "execute at {player} run tp {player} ~ ~{height} ~"
+  },
+  {
+    "id": "teleport_random", "name": "Teleport somewhere random", "category": "Player",
+    "description": "Moves the player to a random spot nearby.",
+    "args": [{"name": "radius", "label": "Up to this many blocks away", "type": "number", "default": "200"}],
+    "run": "execute at {player} run spreadplayers ~ ~ 0 {radius} false {player}"
+  },
+  {
+    "id": "effect", "name": "Give an effect", "category": "Effects",
+    "description": "Speed, blindness, levitation and every other potion effect.",
+    "args": [
+      {"name": "effect", "label": "Effect", "type": "choice", "default": "speed",
+       "choices": ["speed", "slowness", "haste", "mining_fatigue", "strength", "jump_boost", "nausea", "regeneration", "resistance", "fire_resistance", "water_breathing", "invisibility", "blindness", "night_vision", "hunger", "weakness", "poison", "wither", "glowing", "levitation", "slow_falling", "darkness", "saturation", "absorption"]},
+      {"name": "seconds", "label": "Seconds", "type": "number", "default": "15"},
+      {"name": "amplifier", "label": "Extra strength (0 = normal)", "type": "number", "default": "1"}
+    ],
+    "run": "effect give {player} minecraft:{effect} {seconds} {amplifier} true"
+  },
+  {
+    "id": "clear_effects", "name": "Remove all effects", "category": "Effects",
+    "description": "Clears every potion effect from the player.",
+    "args": [],
+    "run": "effect clear {player}"
+  },
+  {
+    "id": "heal", "name": "Heal and feed", "category": "Effects",
+    "description": "Full health and a full hunger bar.",
+    "args": [],
+    "run": ["effect give {player} minecraft:instant_health 1 10 true", "effect give {player} minecraft:saturation 1 20 true"]
+  },
+  {
+    "id": "give_item", "name": "Give items", "category": "Items",
+    "description": "Puts items in the player's inventory.",
+    "args": [
+      {"name": "item", "label": "Item", "type": "choice", "default": "diamond",
+       "choices": ["diamond", "emerald", "gold_ingot", "iron_ingot", "netherite_ingot", "golden_apple", "enchanted_golden_apple", "cooked_beef", "bread", "cake", "ender_pearl", "totem_of_undying", "elytra", "firework_rocket", "diamond_sword", "diamond_pickaxe", "bow", "arrow", "shield", "tnt", "cobweb", "dirt", "cobblestone", "oak_log", "torch", "water_bucket", "lava_bucket", "experience_bottle", "spyglass", "poisonous_potato"]},
+      {"name": "amount", "label": "How many", "type": "number", "default": "1"}
+    ],
+    "run": "give {player} minecraft:{item} {amount}"
+  },
+  {
+    "id": "xp", "name": "Give XP levels", "category": "Items",
+    "description": "Adds experience levels.",
+    "args": [{"name": "levels", "label": "Levels", "type": "number", "default": "5"}],
+    "run": "xp add {player} {levels} levels"
+  },
+  {
+    "id": "clear_inventory", "name": "Clear the inventory", "category": "Items",
+    "description": "Deletes EVERYTHING the player is carrying. There is no undo.",
+    "warning": "This deletes the whole inventory, with no undo.",
+    "args": [],
+    "run": "clear {player}"
+  },
+  {
+    "id": "kill", "name": "Kill the player", "category": "Player",
+    "description": "Instant death (items drop unless keep inventory is on).",
+    "warning": "The player dies and drops their items unless keep inventory is on.",
+    "args": [],
+    "run": "kill {player}"
+  },
+  {
+    "id": "gamemode", "name": "Change game mode", "category": "Player",
+    "description": "Survival, creative, adventure or spectator.",
+    "args": [{"name": "mode", "label": "Game mode", "type": "choice", "default": "survival", "choices": ["survival", "creative", "adventure", "spectator"]}],
+    "run": "gamemode {mode} {player}"
+  },
+  {
+    "id": "weather", "name": "Change the weather", "category": "World",
+    "description": "Clear skies, rain or a thunderstorm.",
+    "args": [{"name": "weather", "label": "Weather", "type": "choice", "default": "thunder", "choices": ["clear", "rain", "thunder"]}],
+    "run": "weather {weather}"
+  },
+  {
+    "id": "time", "name": "Change the time of day", "category": "World",
+    "description": "Day, noon, night or midnight.",
+    "args": [{"name": "time", "label": "Time", "type": "choice", "default": "night", "choices": ["day", "noon", "night", "midnight"]}],
+    "run": "time set {time}"
+  },
+  {
+    "id": "difficulty", "name": "Change the difficulty", "category": "World",
+    "description": "Peaceful removes every hostile mob.",
+    "args": [{"name": "level", "label": "Difficulty", "type": "choice", "default": "hard", "choices": ["peaceful", "easy", "normal", "hard"]}],
+    "run": "difficulty {level}"
+  },
+  {
+    "id": "gamerule", "name": "Change a game rule", "category": "World",
+    "description": "Keep inventory, day/night cycle, mob spawning, fire spread and more.",
+    "args": [
+      {"name": "rule", "label": "Rule", "type": "choice", "default": "keep_inventory",
+       "choices": ["keep_inventory", "advance_time", "advance_weather", "spawn_mobs", "mob_griefing", "fall_damage", "fire_damage", "drowning_damage", "natural_health_regeneration", "immediate_respawn"]},
+      {"name": "value", "label": "Value", "type": "choice", "default": "true", "choices": ["true", "false"]}
+    ],
+    "run": "gamerule {rule} {value}",
+    "legacy": [{"before": "1.21.11", "run": "gamerule {rule} {value}",
+                "values": {"keep_inventory": "keepInventory", "advance_time": "doDaylightCycle", "advance_weather": "doWeatherCycle", "spawn_mobs": "doMobSpawning", "mob_griefing": "mobGriefing", "fall_damage": "fallDamage", "fire_damage": "fireDamage", "drowning_damage": "drowningDamage", "natural_health_regeneration": "naturalRegeneration", "immediate_respawn": "doImmediateRespawn"}}]
+  },
+  {
+    "id": "say", "name": "Say in chat", "category": "Chat",
+    "description": "A message in the game chat.",
+    "args": [{"name": "message", "label": "Message", "type": "text", "default": "{user} sent {gift}!"}],
+    "run": "say {message}"
+  },
+  {
+    "id": "title", "name": "Big title on screen", "category": "Chat",
+    "description": "Large text in the middle of the player's screen.",
+    "args": [
+      {"name": "title", "label": "Title", "type": "text", "default": "{user}"},
+      {"name": "subtitle", "label": "Small text under it", "type": "text", "default": "sent {gift}!"}
+    ],
+    "run": ["title {player} subtitle {subtitle:text}", "title {player} title {title:text}"]
+  },
+  {
+    "id": "actionbar", "name": "Text above the hotbar", "category": "Chat",
+    "description": "A short line of text just above the player's hotbar.",
+    "args": [{"name": "text", "label": "Text", "type": "text", "default": "{user} sent {gift}"}],
+    "run": "title {player} actionbar {text:text}"
+  }
+]
