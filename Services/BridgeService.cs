@@ -35,11 +35,34 @@ public class BridgeService
     {
         try { if (_process != null && !_process.HasExited) _process.Kill(); } catch { }
         _process = null;
+        _ = Task.Run(KillLeftover);
         AccountChanged?.Invoke();
+    }
+
+    // A bridge left running after GiftDeck crashed keeps the port, so a new one never starts and a
+    // username or mode change never takes effect. bridge.js writes its process id to bridge.pid; stop that
+    // one, but only if it's still the same node process (started when the file was written, not a reused id).
+    static void KillLeftover()
+    {
+        try
+        {
+            var dir = FindBridgeDir();
+            if (dir == null) return;
+            var file = Path.Combine(dir, "bridge.pid");
+            if (!File.Exists(file) || !int.TryParse(File.ReadAllText(file).Trim(), out var pid)) return;
+            using var p = Process.GetProcessById(pid); // throws when it isn't running
+            if (!p.ProcessName.Equals("node", StringComparison.OrdinalIgnoreCase)) return;
+            if (Math.Abs((p.StartTime - File.GetLastWriteTime(file)).TotalSeconds) > 60) return;
+            p.Kill();
+            p.WaitForExit(3000);
+            Log.Write("Stopped a TikTok bridge that was left running from before");
+        }
+        catch { }
     }
 
     async Task Watch()
     {
+        KillLeftover();
         while (!_cts.IsCancellationRequested)
         {
             try

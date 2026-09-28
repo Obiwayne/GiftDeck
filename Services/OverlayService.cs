@@ -87,6 +87,14 @@ public class OverlayService
 
     public void OnEvent(LiveEvent e)
     {
+        // Tests still show their alert so it can be previewed, but never move goals, timers or top gifters.
+        if (e.IsTest)
+        {
+            if (e.Type == "follow" && Config.AlertFollows) PushAlert("follow", e, null);
+            else if (e.Type == "share" && Config.AlertShares) PushAlert("share", e, null);
+            else if (e.Type == "gift" && e.Coins >= Config.AlertMinCoins) PushAlert("gift", e, Hub.Gifts.Find(e.GiftId, e.GiftName)?.ImageUrl);
+            return;
+        }
         var s = Config.Stats;
         switch (e.Type)
         {
@@ -106,7 +114,13 @@ public class OverlayService
                 s.Likes += e.LikeCount;
                 if (e.TotalLikes > s.Likes) s.Likes = e.TotalLikes;
                 Bump(GoalMetric.Likes, e.LikeCount);
-                Extend(c => (int)Math.Round(c.SecondsPer100Likes * e.LikeCount / 100.0));
+                Extend(c =>
+                {
+                    c.LikeCarry += c.SecondsPer100Likes * e.LikeCount / 100.0;
+                    var whole = (int)Math.Floor(c.LikeCarry);
+                    c.LikeCarry -= whole;
+                    return whole;
+                });
                 break;
             case "gift":
                 s.Coins += e.Coins;

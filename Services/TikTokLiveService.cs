@@ -188,26 +188,33 @@ public class TikTokLiveService
         return (State.Server, State.Key);
     }
 
+    // Only forgets the LIVE once TikTok has ended it (or no longer knows it). If the request fails
+    // (no connection, Streamlabs error), the stream stays saved so End LIVE can be pressed again.
     public async Task EndAsync()
     {
         if (!Live) return;
         var streamId = State.StreamId;
-        try
+        var res = await _http.SendAsync(Request(HttpMethod.Post, "stream/" + streamId + "/end"));
+        var text = await res.Content.ReadAsStringAsync();
+        if (res.StatusCode == System.Net.HttpStatusCode.NotFound || text.Contains("not found", StringComparison.OrdinalIgnoreCase))
         {
-            var r = await SendAsync(Request(HttpMethod.Post, "stream/" + streamId + "/end"));
-            bool ok = r.TryGetProperty("success", out var s) && s.ValueKind == JsonValueKind.True;
-            Log.Write(ok ? "TikTok LIVE ended" : "TikTok answered without success when ending the LIVE: " + Short(r.GetRawText()));
+            Log.Write("TikTok no longer knows this LIVE (already ended): " + Short(text));
         }
-        finally
+        else if (res.StatusCode == System.Net.HttpStatusCode.Unauthorized)
         {
-            State.StreamId = null;
-            State.Server = null;
-            State.Key = null;
-            State.StartedAt = null;
-            State.LiveTitle = State.LiveCategoryName = State.LiveCategoryId = null;
-            Save();
-            StatusChanged?.Invoke();
+            throw new Exception("Streamlabs rejected the token. Log in again with the Stream Key Generator and import the new token.");
         }
+        else if (!res.IsSuccessStatusCode)
+        {
+            throw new Exception($"Streamlabs answered {(int)res.StatusCode}: {Short(text)}");
+        }
+        else
+        {
+            bool ok = false;
+            try { using var doc = JsonDocument.Parse(text); ok = doc.RootElement.TryGetProperty("success", out var s) && s.ValueKind == JsonValueKind.True; } catch { }
+            Log.Write(ok ? "TikTok LIVE ended" : "TikTok answered without success when ending the LIVE: " + Short(text));
+        }
+        Forget();
     }
 
     // Forget a stream we think is open (for example after TikTok closed it on its own).

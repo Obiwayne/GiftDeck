@@ -48,7 +48,7 @@
 <script>
   const $ = s => document.getElementById(s);
   const wantId = new URLSearchParams(location.search).get('id') || location.pathname.split('/').filter(Boolean)[2] || '';
-  let entries = [], rotation = 0, spinning = false, hideIdle = false, myId = '', lastKey = '';
+  let entries = [], rotation = 0, spinning = false, hideIdle = false, myId = '', lastKey = '', timers = [];
   function esc(t) { return String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
   function fit() {
     const s = Math.max(160, Math.min(innerWidth * .92, (innerHeight - 20) / 1.22));
@@ -103,6 +103,7 @@
     $('stage').classList.toggle('hidden', hideIdle && !spinning);
   }
   function spin(m) {
+    timers.forEach(clearTimeout);
     spinning = true; idle();
     setEntries(m.entries);
     const n = m.entries.length, a = 360 / n, win = m.entries[m.index] || {};
@@ -118,7 +119,7 @@
     const cv = $('wheel');
     cv.style.transition = 'transform ' + m.seconds + 's cubic-bezier(.12,.7,.1,1)';
     cv.style.transform = 'rotate(' + rotation + 'deg)';
-    setTimeout(() => {
+    timers = [setTimeout(() => {
       const color = win.color || '#F59E0B', rarity = String(win.rarity || 'common');
       document.documentElement.style.setProperty('--win', color);
       $('tier').textContent = rarity;
@@ -129,7 +130,7 @@
         document.body.classList.add('big');
         const f = $('flash'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go');
       }
-    }, m.seconds * 1000 + 50);
+    }, m.seconds * 1000 + 50),
     setTimeout(() => {
       spinning = false;
       $('reveal').classList.remove('show');
@@ -137,7 +138,7 @@
       $('who').textContent = '';
       $('hub').textContent = '?';
       idle();
-    }, m.seconds * 1000 + Math.max(1500, m.revealMs || 1800) + 2500);
+    }, m.seconds * 1000 + Math.max(1500, m.revealMs || 1800) + 2500)];
   }
   function state(s) {
     document.documentElement.style.setProperty('--accent', s.style.accent);

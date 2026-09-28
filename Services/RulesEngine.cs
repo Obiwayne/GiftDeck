@@ -41,7 +41,7 @@ public class RulesEngine
 
         if (e.Type == "chat" && !e.IsTest)
         {
-            if (Hub.Settings.TtsReadChat) Hub.Tts.Speak(Template(Hub.Settings.TtsChatTemplate, e));
+            if (Hub.Settings.TtsReadChat) Hub.Tts.SpeakChat(Template(Hub.Settings.TtsChatTemplate, e), e.Comment, e.UserId);
             if (Hub.Settings.SpotifyChatRequests && StartsWithCommand(e.Comment, Hub.Settings.SpotifyRequestCommand))
                 _ = HandleSongRequest(e);
         }
@@ -58,17 +58,30 @@ public class RulesEngine
         foreach (var rule in rules)
         {
             if (!rule.Enabled || !Matches(rule, e)) continue;
-            if (rule.CooldownSeconds > 0 && (DateTime.Now - rule.LastFired).TotalSeconds < rule.CooldownSeconds)
+            bool cooling;
+            lock (rule) // TikTok and Kick events arrive on different threads
+            {
+                cooling = rule.CooldownSeconds > 0 && (DateTime.Now - rule.LastFired).TotalSeconds < rule.CooldownSeconds;
+                if (!cooling) rule.LastFired = DateTime.Now;
+            }
+            if (cooling)
             {
                 Log.Write($"\"{rule.Name}\" skipped (cooldown)");
                 continue;
             }
-            rule.LastFired = DateTime.Now;
             fired.Add(rule);
             _ = RunActionsAsync(rule, e);
         }
-        Handled?.Invoke(e, fired);
+        // Each listener on its own, so one that throws doesn't stop the others (the feed, stats) hearing about it.
+        foreach (var listener in Handled?.GetInvocationList() ?? Array.Empty<Delegate>())
+        {
+            try { ((Action<LiveEvent, List<Rule>>)listener)(e, fired); }
+            catch (Exception ex) { Log.Write("Showing an event failed: " + ex.Message); }
+        }
     }
+
+    // One set of key presses at a time: two gifts at once would otherwise mix their keys (Ctrl held by one, Z by the other).
+    static readonly SemaphoreSlim KeyGate = new SemaphoreSlim(1, 1);
 
     bool Matches(Rule rule, LiveEvent e)
     {
@@ -230,14 +243,19 @@ public class RulesEngine
         switch (a.Type)
         {
             case ActionType.KeyPress:
-                if (Hub.Settings.FocusWindowBeforeKeys && !WindowFocus.Focus(Hub.Settings.FocusWindowTitle))
-                    Log.Write($"  Could not bring a window with \"{Hub.Settings.FocusWindowTitle}\" in its title to the front");
-                await Task.Run(() =>
+                await KeyGate.WaitAsync();
+                try
                 {
-                    var target = WindowFocus.ForegroundTitle();
-                    KeySender.Send(a.Text, a.Number > 0 ? a.Number : Hub.Settings.KeyHoldMs);
-                    Log.Write($"  Pressed {a.Text} in \"{(target.Length > 0 ? target : "(no window)")}\"");
-                });
+                    if (Hub.Settings.FocusWindowBeforeKeys && !WindowFocus.Focus(Hub.Settings.FocusWindowTitle))
+                        Log.Write($"  Could not bring a window with \"{Hub.Settings.FocusWindowTitle}\" in its title to the front");
+                    await Task.Run(() =>
+                    {
+                        var target = WindowFocus.ForegroundTitle();
+                        KeySender.Send(a.Text, a.Number > 0 ? a.Number : Hub.Settings.KeyHoldMs);
+                        Log.Write($"  Pressed {a.Text} in \"{(target.Length > 0 ? target : "(no window)")}\"");
+                    });
+                }
+                finally { KeyGate.Release(); }
                 break;
             case ActionType.Sound:
                 Hub.Sounds.Play(a.Text, a.Number > 0 ? a.Number : 100);
@@ -282,7 +300,7 @@ public class RulesEngine
                 break;
             case ActionType.RunProgram:
                 if (string.IsNullOrWhiteSpace(a.Text)) throw new Exception("No program set");
-                Process.Start(new ProcessStartInfo(a.Text, Template(a.Text2 ?? "", e)) { UseShellExecute = true });
+                Process.Start(new ProcessStartInfo(a.Text, Template(a.Text2 ?? "", SafeForCommandLine(e))) { UseShellExecute = true });
                 break;
             case ActionType.GameCommand:
             {
@@ -325,6 +343,18 @@ public class RulesEngine
             .Replace("{likes}", e.LikeCount.ToString())
             .Replace("{comment}", e.Comment ?? "")
             .Replace("{request}", StripCommand(e.Comment));
+    }
+
+    // Viewers choose their names and messages, so before they go into a program's command line anything that could
+    // start another command or break out of quotes (& | < > ^ " % ` $ and so on) is taken out.
+    static LiveEvent SafeForCommandLine(LiveEvent e)
+    {
+        static string Clean(string s) => s == null ? null : new string(s.Where(c => char.IsLetterOrDigit(c) || c == ' ' || c == '_' || c == '-' || c == '.' || c == ',' || c == '!' || c == '?').ToArray());
+        return new LiveEvent
+        {
+            Type = e.Type, UserId = e.UserId, Nickname = Clean(e.Nickname), GiftName = Clean(e.GiftName), Comment = Clean(e.Comment),
+            GiftId = e.GiftId, Diamonds = e.Diamonds, RepeatCount = e.RepeatCount, LikeCount = e.LikeCount, Platform = e.Platform, IsTest = e.IsTest,
+        };
     }
 
     public LiveEvent FakeEvent(RuleTrigger t)

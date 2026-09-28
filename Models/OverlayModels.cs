@@ -50,6 +50,7 @@ public class Countdown : Observable
     public int SecondsPer100Likes { get; set; } = 10;
 
     [JsonIgnore] public int SetMinutes { get; set; } = 60;   // the "set to" box in the app
+    [JsonIgnore] public double LikeCarry { get; set; }       // part-seconds from likes, added once they make a whole one
     [JsonIgnore] public int RemainingSeconds => Running && EndsAt != null ? Math.Max(0, (int)(EndsAt.Value - DateTime.UtcNow).TotalSeconds) : PausedSeconds;
     [JsonIgnore] public string RemainingText => TimeSpan.FromSeconds(RemainingSeconds).ToString(RemainingSeconds >= 3600 ? @"h\:mm\:ss" : @"m\:ss");
     [JsonIgnore] public string StartPauseLabel => Running ? "Pause" : "Start";

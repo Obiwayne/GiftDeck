@@ -51,7 +51,7 @@
     w.style.padding = '3%';
   }
   // A custom alert: GiftDeck has already filled in {user}, {gift} and {count}; media is a picture or a video.
-  function customAlert(a) {
+  function customAlert(a, onFail) {
     const el = document.createElement('div');
     el.className = 'alert custom in' + (a.fullScreen ? ' full' : '');
     let media = '';
@@ -61,6 +61,10 @@
     else if (a.media) media = '<img class="media" src="' + esc(a.media) + '">';
     el.innerHTML = media + (a.text ? '<div class="text">' + esc(a.text) + '</div>' : '');
     const v = el.querySelector('video');
+    // Media that won't load: drop it (and the black full-screen card); with no text left, end the alert.
+    const fail = () => { el.classList.remove('full', 'keyed'); el.querySelectorAll('.media, .src').forEach(x => x.remove()); if (!a.text) onFail(); };
+    if (v) v.addEventListener('error', fail);
+    else { const im = el.querySelector('img'); if (im) im.onerror = fail; }
     if (keyed) {
       el.classList.add('keyed');
       // Green screen: draw the video through the chroma key. If it can't be keyed, show it as it is.
@@ -79,7 +83,8 @@
   function show(a) {
     busy = true;
     if (a.kind === 'custom') {
-      const secs = Math.max(1, a.seconds || seconds), el = customAlert(a);
+      const secs = Math.max(1, a.seconds || seconds);
+      const el = customAlert(a, () => { if (current !== el) return; timers.forEach(clearTimeout); el.remove(); current = null; busy = false; next(); });
       current = el;
       $('wrap').appendChild(el);
       timers = [setTimeout(() => { el.classList.remove('in'); el.classList.add('out'); }, secs * 1000),
@@ -89,8 +94,8 @@
     const el = document.createElement('div');
     el.className = 'alert in';
     let img = '';
-    if (a.image) img = '<img class="img" src="' + esc(a.image) + '">';
-    else if (a.avatar) img = '<img class="img avatar" src="' + esc(a.avatar) + '">';
+    if (a.image) img = '<img class="img" src="' + esc(a.image) + '" onerror="this.remove()">';
+    else if (a.avatar) img = '<img class="img avatar" src="' + esc(a.avatar) + '" onerror="this.remove()">';
     let text, sub = '';
     if (a.kind === 'gift') {
       text = '<b>' + esc(a.user) + '</b> sent ' + esc(a.gift) + (a.count > 1 ? ' <span class="count">x' + a.count + '</span>' : '');
@@ -111,6 +116,9 @@
     current = null; busy = false;
     show(a);
   }
+  // A full line drops its least valuable alert: fewest coins, and follows/shares before gifts.
+  function worth(a) { return a.kind === 'custom' ? 1e9 : typeof a.coins === 'number' ? a.coins : typeof a.diamonds === 'number' ? a.diamonds : a.kind === 'follow' || a.kind === 'share' ? -1 : 0; }
+  function lowest() { let i = 0; queue.forEach((a, j) => { if (worth(a) < worth(queue[i])) i = j; }); return i; }
   function next() { if (!busy && queue.length) show(queue.shift()); }
   GD.listen(m => {
     if (m.type === 'state') {
@@ -118,7 +126,7 @@
       document.documentElement.style.setProperty('--accent', m.style.accent);
       document.documentElement.style.setProperty('--font', "'" + m.style.font + "'");
     } else if (m.type === 'alert' && m.interrupt) interrupt(m);
-    else if (m.type === 'alert') { queue.push(m); if (queue.length > 20) queue.shift(); next(); }
+    else if (m.type === 'alert') { queue.push(m); if (queue.length > 20) queue.splice(lowest(), 1); next(); }
   });
 </script>
 </body>

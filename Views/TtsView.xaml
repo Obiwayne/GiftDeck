@@ -36,6 +36,8 @@
                     <TextBlock Text="Voice" Style="{StaticResource H2}" Margin="0,0,0,10"/>
                     <TextBlock Text="Voice" Style="{StaticResource Label}"/>
                     <ComboBox x:Name="VoiceCombo" SelectionChanged="Voice_Changed" Margin="0,0,0,14"/>
+                    <TextBlock x:Name="VoiceNote" Foreground="{StaticResource DangerBrush}" TextWrapping="Wrap" Margin="0,-6,0,14" Visibility="Collapsed"
+                               Text="Google voices need a Google speech API key (further down this page). Until there is one, GiftDeck speaks with the Windows voice instead."/>
                     <Grid Margin="0,0,0,14">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -68,7 +70,8 @@
             <Border Style="{StaticResource Card}" Margin="0,0,0,14">
                 <StackPanel>
                     <TextBlock Text="Read chat aloud" Style="{StaticResource H2}" Margin="0,0,0,10"/>
-                    <CheckBox x:Name="ReadChat" Content="Read every chat message out loud" Click="ReadChat_Click" Margin="0,0,0,12"/>
+                    <CheckBox x:Name="ReadChat" Content="Read every chat message out loud" Click="ReadChat_Click" Margin="0,0,0,6"/>
+                    <TextBlock Text="Commands (!like this) aren't read, links are read as &quot;a link&quot;, each viewer is read at most every 4 seconds, and when chat is faster than the voice new messages are skipped so it keeps up." Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,0,0,12"/>
                     <TextBlock Text="The two settings below are the same for every profile." Style="{StaticResource Muted}" Margin="0,0,0,10"/>
                     <TextBlock Text="How to say it" Style="{StaticResource Label}"/>
                     <TextBox x:Name="TemplateBox" TextChanged="Template_Changed"/>

@@ -34,7 +34,8 @@ public partial class SettingsView : UserControl
         s.StreakGiftsOnce = StreakOnce.IsChecked == true;
         s.FocusWindowBeforeKeys = FocusWindow.IsChecked == true;
         Hub.SaveSettings();
-        if (s.AutoLaunchTikFinity && !TikFinityService.IsProcessRunning()) Hub.TikFinity.Launch();
+        // Only the auto-launch box itself starts TikFinity; ticking an unrelated box shouldn't.
+        if (sender == AutoLaunch && s.AutoLaunchTikFinity && !TikFinityService.IsProcessRunning()) Hub.TikFinity.Launch();
     }
 
     void Text_Changed(object sender, TextChangedEventArgs e)
@@ -42,10 +43,28 @@ public partial class SettingsView : UserControl
         if (_loading) return;
         var s = Hub.Settings;
         s.TikFinityExe = ExeBox.Text.Trim();
-        if (UrlBox.Text.Trim().StartsWith("ws")) s.TikFinityUrl = UrlBox.Text.Trim();
+        var url = UrlBox.Text.Trim();
+        if (Flag(UrlBox, url.StartsWith("ws"), "The address has to start with ws:// (for example ws://localhost:21213). Not saved.")) s.TikFinityUrl = url;
         s.FocusWindowTitle = FocusTitle.Text.Trim();
-        if (int.TryParse(HoldBox.Text.Trim(), out int hold) && hold >= 10) s.KeyHoldMs = hold;
+        var holdOk = int.TryParse(HoldBox.Text.Trim(), out int hold) && hold >= 10;
+        if (Flag(HoldBox, holdOk, "Type a whole number of milliseconds, 10 or more. Not saved.")) s.KeyHoldMs = hold;
         Hub.SaveSettings();
+    }
+
+    // Marks a box red with the reason while its text can't be saved, so it doesn't silently revert on restart.
+    static bool Flag(TextBox box, bool ok, string why)
+    {
+        if (ok)
+        {
+            box.ClearValue(Control.BorderBrushProperty);
+            box.ClearValue(ToolTipProperty);
+        }
+        else
+        {
+            box.BorderBrush = System.Windows.Media.Brushes.IndianRed;
+            box.ToolTip = why;
+        }
+        return ok;
     }
 
     void SoundVolume_Changed(object sender, RoutedPropertyChangedEventArgs<double> e)

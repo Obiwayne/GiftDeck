@@ -100,8 +100,14 @@ public partial class SoundLibraryWindow : Window
 
     void Cancel_Click(object sender, RoutedEventArgs e)
     {
-        Hub.Sounds.StopAll();
         DialogResult = false;
         Close();
+    }
+
+    // The X closes the window too, so the preview stops here rather than in each button.
+    protected override void OnClosed(EventArgs e)
+    {
+        Hub.Sounds.StopAll();
+        base.OnClosed(e);
     }
 }

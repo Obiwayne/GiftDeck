@@ -4,6 +4,7 @@
     <Grid Margin="32,28,32,28">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -15,10 +16,17 @@
             </StackPanel>
         </DockPanel>
 
-        <TextBlock x:Name="Empty" Grid.Row="1" Text="No events yet. Click New event to add your first one." Style="{StaticResource Muted}"
+        <DockPanel Grid.Row="1" Margin="0,0,0,12">
+            <TextBlock x:Name="CountText" DockPanel.Dock="Right" Style="{StaticResource Muted}" VerticalAlignment="Center" Margin="12,0,0,0"/>
+            <TextBlock x:Name="TestStatus" DockPanel.Dock="Right" Style="{StaticResource Muted}" VerticalAlignment="Center" Margin="12,0,0,0"/>
+            <TextBox x:Name="SearchBox" Width="300" HorizontalAlignment="Left" TextChanged="Search_Changed"
+                     ToolTip="Filter by name, gift, trigger or action"/>
+        </DockPanel>
+
+        <TextBlock x:Name="Empty" Grid.Row="2" Text="No events yet. Click New event to add your first one." Style="{StaticResource Muted}"
                    HorizontalAlignment="Center" Margin="0,60,0,0" Visibility="Collapsed"/>
 
-        <ListBox x:Name="RuleList" Grid.Row="1">
+        <ListBox x:Name="RuleList" Grid.Row="2" MouseDoubleClick="RuleList_DoubleClick" KeyDown="RuleList_KeyDown">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Border Style="{StaticResource Card}" Padding="16,12">

@@ -172,6 +172,7 @@ static class Program
         var silent = WriteSilentWav(Path.Combine(_data, "silence.wav"), seconds: 6);
         int downloads = 0;
         TimeSpan downloadDelay = TimeSpan.Zero;
+        Hub.Settings.GoogleTtsKey = "harness"; // without a key the Google voices fall back to Windows speech
         tts.Download = async (text, gender) =>
         {
             Interlocked.Increment(ref downloads);

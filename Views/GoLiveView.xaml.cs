@@ -13,6 +13,8 @@ public partial class GoLiveView : UserControl
 {
     bool _confirmed;          // TikTok said the LIVE is showing (after Go LIVE)
     bool _sending;            // OBS was started on this LIVE (vertical: while the relay is still running)
+    bool _busy;               // Go LIVE, End LIVE or a restart is running: the others wait for it
+    string _previewError;     // last preview error written to the log (so it isn't logged every second)
     DateTime? _liveSince;     // when TikTok (or GiftDeck) first showed us live
     bool _previewOn = true;
     string _sceneUuid;
@@ -65,8 +67,14 @@ public partial class GoLiveView : UserControl
         if (live && _liveSince == null) _liveSince = s.StartedAt ?? DateTime.Now;
         if (!live) _liveSince = null;
 
-        GoLiveButton.Visibility = live ? Visibility.Collapsed : Visibility.Visible; // already live (e.g. LIVE Studio): a second LIVE would clash
+        // Already live (e.g. LIVE Studio): a second LIVE would clash. Opened here but OBS isn't sending:
+        // the same button starts sending again with this LIVE's server and key.
+        bool retry = opened && !_sending && !confirmed && !_busy;
+        GoLiveButton.Visibility = !live || retry ? Visibility.Visible : Visibility.Collapsed;
+        GoLiveButton.Content = retry ? "Start sending again" : "Go LIVE";
+        GoLiveButton.IsEnabled = !_busy;
         EndLiveButton.Visibility = opened ? Visibility.Visible : Visibility.Collapsed;
+        EndLiveButton.IsEnabled = !_busy;
         KeyPanel.Visibility = opened ? Visibility.Visible : Visibility.Collapsed;
 
         if (live)
@@ -81,7 +89,7 @@ public partial class GoLiveView : UserControl
 
             if (confirmed) { VerifyText.Text = "\u2713 TikTok confirms you're live"; VerifyText.Foreground = (Brush)FindResource("SuccessBrush"); }
             else if (_sending) { VerifyText.Text = "Sending\u2026 waiting for TikTok to show the LIVE"; VerifyText.Foreground = (Brush)FindResource("WarnBrush"); }
-            else { VerifyText.Text = "\u2716 Not sending: OBS isn't streaming to this LIVE. See below, or press End LIVE."; VerifyText.Foreground = (Brush)FindResource("DangerBrush"); }
+            else { VerifyText.Text = "\u2716 Not sending: OBS isn't streaming to this LIVE. Press Start sending again, or End LIVE."; VerifyText.Foreground = (Brush)FindResource("DangerBrush"); }
             var liveTitle = s.LiveTitle ?? s.Title; // what the running LIVE uses, not edits that aren't applied yet
             var liveCategory = s.LiveTitle != null ? s.LiveCategoryName : s.CategoryName;
             LiveDetail.Text = opened
@@ -192,6 +200,7 @@ public partial class GoLiveView : UserControl
                 return b;
             });
             if (!_previewOn) return;
+            _previewError = null;
             PreviewImage.Source = img;
             PreviewHint.Text = "";
             _frames++;
@@ -206,7 +215,8 @@ public partial class GoLiveView : UserControl
         catch (Exception ex)
         {
             _sceneUuid = null;
-            PreviewHint.Text = "Preview unavailable: " + ex.Message;
+            PreviewHint.Text = "The preview isn't available right now. Trying again\u2026";
+            if (ex.Message != _previewError) { _previewError = ex.Message; Log.Write("OBS preview failed: " + ex.Message); }
             await Task.Delay(1000);
         }
     }
@@ -220,6 +230,7 @@ public partial class GoLiveView : UserControl
 
     async void GoLive_Click(object sender, RoutedEventArgs e)
     {
+        if (_busy) return;
         if (UseVertical && RelayService.FindFfmpeg() == null)
         {
             Status.Text = "Not started. Going LIVE with the vertical canvas needs ffmpeg: on the Stream Setup page, click Download ffmpeg, then press Go LIVE again.";
@@ -230,23 +241,72 @@ public partial class GoLiveView : UserControl
             Status.Text = $"Not started. Aitum's \"{Tt.State.AitumOutput}\" output in OBS isn't set up yet: edit it, choose Custom, Server {RelayService.LocalServer}, Stream key {RelayService.LocalKey} (also on the Stream Setup page). Then press Go LIVE again.";
             return;
         }
-        GoLiveButton.IsEnabled = false;
-        Status.Text = "Opening the LIVE on TikTok";
+        _busy = true;
+        UpdateLive();
         try
         {
+            if (Tt.Live)
+            {
+                // The LIVE is already open but OBS isn't sending to it: try again with its saved server and key.
+                Status.Text = "Starting to send to the open LIVE";
+                bool again = await StartSendingAsync(Tt.State.Server, Tt.State.Key);
+                _sending = again;
+                if (again) _ = ConfirmOnTikTokAsync();
+                return;
+            }
+
+            // OBS first: opening the LIVE makes it public, so there must be something ready to send.
+            Status.Text = "Checking OBS";
+            var obsProblem = await ConnectObsAsync();
+            if (obsProblem != null) { Status.Text = "Not started. " + obsProblem; return; }
+
+            Status.Text = "Opening the LIVE on TikTok";
             var (server, key) = await Tt.StartAsync();
+            Hub.Rules.ResetLikeCounters(); // "every N likes" counts per viewer for this LIVE, not the last one
             Status.Text = "LIVE is open on TikTok.";
             bool sending = await StartSendingAsync(server, key);
             Hub.Overlays.ResetStats(); // every LIVE starts its goals and counters from zero
             _sending = sending;
             if (sending) _ = ConfirmOnTikTokAsync();
         }
-        catch (Exception ex) { Status.Text = ex.Message; }
+        catch (Exception ex)
+        {
+            Log.Write("Go LIVE failed: " + ex.Message);
+            Status.Text = Explain(ex, "open the LIVE");
+        }
         finally
         {
-            GoLiveButton.IsEnabled = true;
+            _busy = false;
             UpdateLive();
         }
+    }
+
+    // Makes sure GiftDeck can talk to OBS (starting GiftDeck's own OBS if needed).
+    // Null when it's ready, otherwise what to do about it.
+    async Task<string> ConnectObsAsync()
+    {
+        if (Hub.Obs.Connected) return null;
+        try
+        {
+            if (Managed && !ObsHost.IsRunning) { Status.Text = "Starting OBS"; await Hub.Engine.StartPortraitAsync(); }
+            else await Hub.Obs.ConnectAsync();
+        }
+        catch (Exception ex) { Log.Write("OBS isn't ready: " + ex.Message); }
+        if (Hub.Obs.Connected) return null;
+        return Managed
+            ? "GiftDeck couldn't start OBS. Check OBS engine on the Stream Setup page, then try again."
+            : "OBS isn't connected. Open OBS (with Tools, WebSocket Server Settings switched on), then try again.";
+    }
+
+    // A plain sentence for the status line; the exact error goes to the log.
+    static string Explain(Exception ex, string what)
+    {
+        if (ex is System.Net.Http.HttpRequestException || ex is TaskCanceledException)
+            return $"GiftDeck couldn't reach Streamlabs to {what}. Check your internet connection and try again.";
+        var m = (ex.Message ?? "").Trim();
+        if (m.StartsWith("Streamlabs answered") || m.StartsWith("Streamlabs sent") || m.StartsWith("TikTok did not"))
+            return $"Streamlabs couldn't {what} just now. Try again in a minute.";
+        return m.Length == 0 ? $"GiftDeck couldn't {what}. Try again." : m.EndsWith(".") ? m : m + ".";
     }
 
     // Points OBS at the LIVE's server and key and starts sending.
@@ -254,16 +314,18 @@ public partial class GoLiveView : UserControl
     {
         try
         {
-            if (!Hub.Obs.Connected)
+            var obsProblem = await ConnectObsAsync();
+            if (obsProblem != null)
             {
-                if (Managed && !ObsHost.IsRunning) { Status.Text = "LIVE is open. Starting OBS"; await Hub.Engine.StartPortraitAsync(); }
-                else await Hub.Obs.ConnectAsync();
+                Status.Text = "LIVE is open, but OBS isn't sending. " + obsProblem + " Press Start sending again, or copy the server and key below into OBS.";
+                return false;
             }
             return UseVertical ? await StartVerticalAsync(server, key) : await StartMainAsync(server, key);
         }
         catch (Exception ex)
         {
-            Status.Text = "LIVE is open, but OBS could not be started: " + ex.Message + " Copy the key below into OBS.";
+            Log.Write("Could not start sending to the LIVE: " + ex.Message);
+            Status.Text = "LIVE is open, but OBS couldn't start sending. Press Start sending again, or copy the server and key below into OBS.";
             return false;
         }
     }
@@ -293,10 +355,13 @@ public partial class GoLiveView : UserControl
                    + (string.IsNullOrEmpty(s.CategoryName) ? "" : " \u00b7 " + s.CategoryName) + (s.Mature ? " \u00b7 18+" : "");
         var ask = "Restart your LIVE as " + next + "?\n\nGiftDeck ends this LIVE and starts the new one straight away (about 20 seconds). "
                   + "Viewers have to rejoin, and TikTok's likes and viewer count start again. Your GiftDeck totals keep counting.";
+        if (_busy) { Status.Text = "Wait for GiftDeck to finish with the LIVE, then try the restart again."; return; }
         if (MessageBox.Show(ask, "GiftDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
+        if (_busy || !Tt.Live) return;
 
+        _busy = true;
         Details.SetBusy(true);
-        EndLiveButton.IsEnabled = false;
+        UpdateLive();
         Log.Write("Restarting the LIVE with new details: " + next);
         try
         {
@@ -304,7 +369,13 @@ public partial class GoLiveView : UserControl
             await StopSendingAsync();
             Status.Text = "Restarting: ending the old LIVE\u2026";
             try { await Tt.EndAsync(); }
-            catch (Exception ex) { Log.Write("Ending the old LIVE: " + ex.Message); } // cleared here either way
+            catch (Exception ex)
+            {
+                // The old LIVE is still open on TikTok: don't open a second one.
+                Log.Write("Ending the old LIVE: " + ex.Message);
+                Status.Text = "The restart stopped: " + Explain(ex, "end the old LIVE") + " Press Start sending again to carry on with it, or End LIVE.";
+                return;
+            }
             _confirmed = false;
             Status.Text = "Restarting: opening the new LIVE\u2026";
             var (server, key) = await Tt.StartAsync();
@@ -314,13 +385,13 @@ public partial class GoLiveView : UserControl
         }
         catch (Exception ex)
         {
-            Status.Text = "The restart didn't finish: " + ex.Message + " Press Go LIVE to start again.";
+            Status.Text = "The restart didn't finish: " + Explain(ex, "open the new LIVE") + " Press Go LIVE to start again.";
             Log.Write("Restarting the LIVE failed: " + ex.Message);
         }
         finally
         {
+            _busy = false;
             Details.SetBusy(false);
-            EndLiveButton.IsEnabled = true;
             UpdateLive();
         }
     }
@@ -405,8 +476,11 @@ public partial class GoLiveView : UserControl
 
     async void EndLive_Click(object sender, RoutedEventArgs e)
     {
+        if (_busy) return;
         if (MessageBox.Show("End the LIVE on TikTok and stop streaming in OBS?", "GiftDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
-        EndLiveButton.IsEnabled = false;
+        if (_busy) return;
+        _busy = true;
+        UpdateLive();
         Status.Text = "Ending the LIVE";
         try
         {
@@ -416,11 +490,12 @@ public partial class GoLiveView : UserControl
         }
         catch (Exception ex)
         {
-            Status.Text = "TikTok reported a problem ending the LIVE (" + ex.Message + "). It has been cleared here; check the TikTok app if it still shows you as live.";
+            Log.Write("Ending the LIVE failed: " + ex.Message);
+            Status.Text = "The LIVE may still be on TikTok: " + Explain(ex, "end the LIVE") + " Press End LIVE again.";
         }
         finally
         {
-            EndLiveButton.IsEnabled = true;
+            _busy = false;
             UpdateLive();
         }
     }

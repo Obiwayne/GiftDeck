@@ -13,6 +13,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        FitToScreen();
         if (Storage.IsDevData) Title = "GiftDeck v2 (development build)";
         Hub.TikFinity.StatusChanged += () => Dispatcher.BeginInvoke(UpdateStatus);
         Hub.Obs.StatusChanged += () => Dispatcher.BeginInvoke(UpdateStatus);
@@ -33,6 +34,21 @@ public partial class MainWindow : Window
         Setup.Start(); // covers the window until everything's set up and connected
         // GIFTDECK_START_PAGE (development builds) opens straight on a page, e.g. "scenes".
         Navigate(Environment.GetEnvironmentVariable("GIFTDECK_START_PAGE") is { Length: > 0 } page ? page : "dashboard");
+        Loaded += (_, _) => WarnUnreadable();
+    }
+
+    // A settings or events file that couldn't be read starts over empty; say so, and where the old one was kept.
+    int _unreadableShown;
+    void WarnUnreadable()
+    {
+        string[] files;
+        lock (Storage.Unreadable) files = Storage.Unreadable.Skip(_unreadableShown).ToArray();
+        if (files.Length == 0) return;
+        _unreadableShown += files.Length;
+        MessageBox.Show(this, "GiftDeck couldn't read some of its saved files, so those settings or events started over empty. "
+            + "The old files were kept, untouched, here:\n\n" + string.Join("\n", files)
+            + "\n\nThis can happen after a crash or when a profile comes from a newer GiftDeck.",
+            "Some saved files couldn't be read", MessageBoxButton.OK, MessageBoxImage.Warning);
     }
 
     // Menu: page key, label, icon (Segoe Fluent Icons / MDL2 code point).
@@ -156,6 +172,7 @@ public partial class MainWindow : Window
     void OnProfilesChanged()
     {
         RefreshProfiles();
+        WarnUnreadable();
         if (_shownProfile == Hub.Profiles.Active) return;
         _shownProfile = Hub.Profiles.Active;
         foreach (var key in new[] { "events", "overlays", "golive" }) _views.Remove(key);
@@ -283,6 +300,17 @@ public partial class MainWindow : Window
         SpotDot.ToolTip = SpotText.Text;
     }
 
+    // The designed size is for big monitors; on a laptop (e.g. 1080p at 150%) keep the whole window on screen.
+    void FitToScreen()
+    {
+        var area = SystemParameters.WorkArea;
+        MinWidth = Math.Min(MinWidth, area.Width);
+        MinHeight = Math.Min(MinHeight, area.Height);
+        Width = Math.Min(Width, area.Width);
+        Height = Math.Min(Height, area.Height);
+        if (Width >= area.Width - 1 && Height >= area.Height - 1) WindowState = WindowState.Maximized;
+    }
+
     // ---- Closing: stay on screen, spinner and steps, until everything has shut down ----
 
     bool _shuttingDown, _shutdownDone;
@@ -292,6 +320,10 @@ public partial class MainWindow : Window
         if (_shutdownDone) { base.OnClosing(e); return; }
         e.Cancel = true;
         if (_shuttingDown) return; // the close button again while it's already shutting down
+        bool live = Hub.TikTok.Live || (Hub.TikFinity.Connected && Hub.TikFinity.TikTokLive == true);
+        if (live && MessageBox.Show(this, "You're LIVE. Close GiftDeck anyway?\n\nGifts will stop doing anything, and a LIVE GiftDeck opened stays open on TikTok until it's ended. To end it first, press End LIVE on the Go LIVE page.",
+                "Close GiftDeck while LIVE?", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) != MessageBoxResult.Yes)
+            return;
         _shuttingDown = true;
 
         ShutdownOverlay.Visibility = Visibility.Visible;

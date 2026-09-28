@@ -40,6 +40,7 @@ public class TtsService
     Action _finishPlayer;
 
     public static bool IsOnline(string voice) => voice == GoogleMale || voice == GoogleFemale;
+    public static bool HasGoogleKey => GoogleKey.Length > 0;
 
     // Quick mute (Live panel, Go LIVE): stops what's speaking and skips everything until unmuted.
     // Saved in settings.json so a restart mid-stream doesn't suddenly start talking again;
@@ -84,6 +85,7 @@ public class TtsService
             {
                 _synth = new SpeechSynthesizer();
                 _synth.SetOutputToDefaultAudioDevice();
+                _synth.SpeakCompleted += (_, _) => Interlocked.Decrement(ref _localPending);
             }
             return _synth;
         }
@@ -117,13 +119,47 @@ public class TtsService
         if (text.Length > max) text = text.Substring(0, max);
 
         var voice = Hub.Settings.TtsVoice;
-        if (IsOnline(voice))
+        // A Google voice without a key would say nothing at all; the Windows voice is better than silence on stream.
+        if (IsOnline(voice) && HasGoogleKey)
         {
             SpeakOnline(text, voice == GoogleMale ? "male" : "female");
             return true;
         }
-        try { Synth().SpeakAsync(text); return true; }
+        try
+        {
+            var synth = Synth();
+            Interlocked.Increment(ref _localPending);
+            synth.SpeakAsync(text);
+            return true;
+        }
         catch (Exception e) { Log.Write("TTS failed: " + e.Message); return false; }
+    }
+
+    int _localPending;
+    readonly Dictionary<string, DateTime> _lastChat = new Dictionary<string, DateTime>();
+    static readonly System.Text.RegularExpressions.Regex Links = new(@"(https?://|www\.)\S+", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+    static readonly System.Text.RegularExpressions.Regex Runs = new(@"(.)\1{3,}");
+
+    // Messages waiting to be spoken, in whichever voice is in use.
+    int Backlog { get { lock (_online) return _online.Count + Math.Max(0, Volatile.Read(ref _localPending)); } }
+
+    // Reading chat aloud: commands aren't read, links are just "a link", "sooooooo" becomes "sooo", one message
+    // per viewer every few seconds, and when the voice falls behind new messages are skipped so it stays current.
+    public bool SpeakChat(string text, string comment, string userId)
+    {
+        if (Muted || string.IsNullOrWhiteSpace(comment) || comment.TrimStart().StartsWith("!")) return false;
+        if (Backlog >= 5) return false;
+        if (!string.IsNullOrEmpty(userId))
+        {
+            lock (_lastChat)
+            {
+                if (_lastChat.TryGetValue(userId, out var last) && (DateTime.Now - last).TotalSeconds < 4) return false;
+                _lastChat[userId] = DateTime.Now;
+                if (_lastChat.Count > 2000) _lastChat.Clear();
+            }
+        }
+        text = Runs.Replace(Links.Replace(text, "a link"), m => new string(m.Groups[1].Value[0], 3));
+        return Speak(text);
     }
 
     void SpeakOnline(string text, string gender)

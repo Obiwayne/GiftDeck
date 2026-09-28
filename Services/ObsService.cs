@@ -30,7 +30,10 @@ public partial class ObsService
     TaskCompletionSource<bool> _identified;
     readonly SemaphoreSlim _sendLock = new SemaphoreSlim(1, 1);
     readonly ConcurrentDictionary<string, TaskCompletionSource<JsonElement>> _pending = new ConcurrentDictionary<string, TaskCompletionSource<JsonElement>>();
-    bool _connecting;
+    // The connect attempt in progress, if any: a second caller waits for it instead of starting another.
+    Task _connectTask;
+    readonly object _connectLock = new object();
+    bool Connecting { get { lock (_connectLock) return _connectTask != null && !_connectTask.IsCompleted; } }
 
     public void StartAutoConnect()
     {
@@ -38,7 +41,7 @@ public partial class ObsService
         {
             while (true)
             {
-                if (!Connected && !_connecting && Hub.Settings.ObsAutoConnect)
+                if (!Connected && !Connecting && Hub.Settings.ObsAutoConnect)
                 {
                     try { await ConnectAsync(true); } catch { }
                 }
@@ -47,10 +50,33 @@ public partial class ObsService
         });
     }
 
+    // Connects, or waits for the connect that's already running (and gets its result or error).
     public async Task ConnectAsync(bool quiet = false)
     {
-        if (_connecting) return;
-        _connecting = true;
+        TaskCompletionSource<bool> mine;
+        Task running;
+        lock (_connectLock)
+        {
+            running = _connectTask != null && !_connectTask.IsCompleted ? _connectTask : null;
+            mine = running == null ? new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously) : null;
+            if (mine != null) _connectTask = mine.Task;
+        }
+        if (running != null) { await running; return; }
+        try
+        {
+            await ConnectCoreAsync(quiet);
+            mine.TrySetResult(true);
+        }
+        catch (Exception e)
+        {
+            mine.TrySetException(e);
+            _ = mine.Task.Exception; // seen here, so nobody else has to wait on it
+            throw;
+        }
+    }
+
+    async Task ConnectCoreAsync(bool quiet)
+    {
         try
         {
             await DisconnectAsync();
@@ -95,10 +121,6 @@ public partial class ObsService
             await DisconnectAsync();
             StatusChanged?.Invoke();
             throw;
-        }
-        finally
-        {
-            _connecting = false;
         }
     }
 

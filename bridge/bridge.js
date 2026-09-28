@@ -19,6 +19,8 @@ const wss = new WebSocketServer({ port });
 const fsLog = require('fs');
 const logFile = __dirname + '/bridge.log';
 try { fsLog.writeFileSync(logFile, ''); } catch {}
+// GiftDeck reads this to stop a bridge left running after it crashed (see BridgeService.KillLeftover).
+try { fsLog.writeFileSync(__dirname + '/bridge.pid', String(process.pid)); } catch {}
 const log = (...a) => {
   const line = [new Date().toLocaleTimeString(), ...a].join(' ');
   console.log(line);
@@ -31,8 +33,20 @@ function send(event, data) {
   for (const c of wss.clients) if (c.readyState === 1) c.send(msg);
 }
 
+// Once GiftDeck has connected, quit if it's gone for 30 s (GiftDeck closed or crashed), so a leftover
+// bridge doesn't keep the port and stop GiftDeck starting a fresh one for a new username or mode.
+let idleTimer = null;
 wss.on('connection', ws => {
   log('GiftDeck connected to the bridge');
+  if (idleTimer) { clearTimeout(idleTimer); idleTimer = null; }
+  ws.on('close', () => {
+    if (wss.clients.size > 0 || idleTimer) return;
+    idleTimer = setTimeout(() => {
+      if (wss.clients.size > 0) { idleTimer = null; return; }
+      log('GiftDeck has been gone for 30 seconds; stopping the bridge');
+      process.exit(0);
+    }, 30000);
+  });
   ws.send(JSON.stringify({ event: 'liveStatusChange', data: { isLive: live, source: 'bridge' } }));
   if (pageMode) ws.on('message', msg => onPageMessage(msg).catch(e => log('Page frame not decoded:', e.message)));
 });

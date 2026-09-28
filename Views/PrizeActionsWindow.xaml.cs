@@ -9,6 +9,7 @@ public partial class PrizeActionsWindow : Window, IActionHost
 {
     readonly SpinnerEntry _entry;
     readonly ObservableCollection<RuleAction> _actions;
+    readonly EditorGuard _guard;
 
     public PrizeActionsWindow(SpinnerEntry entry)
     {
@@ -17,8 +18,9 @@ public partial class PrizeActionsWindow : Window, IActionHost
         Heading.Text = string.IsNullOrWhiteSpace(entry.Label) ? "Prize" : entry.Label;
         _actions = new ObservableCollection<RuleAction>(entry.Actions.Select(a => a.Clone()));
         ActionsList.ItemsSource = _actions;
-        _actions.CollectionChanged += (s, e) => UpdateNoActions();
+        _actions.CollectionChanged += (s, e) => { UpdateNoActions(); _guard?.MarkDirty(); };
         UpdateNoActions();
+        _guard = new EditorGuard(this, Save);
     }
 
     void UpdateNoActions() => NoActions.Visibility = _actions.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
@@ -35,8 +37,15 @@ public partial class PrizeActionsWindow : Window, IActionHost
         _actions.Move(i, j);
     }
 
-    void Save_Click(object sender, RoutedEventArgs e)
+    void Save_Click(object sender, RoutedEventArgs e) => Save();
+
+    void Save()
     {
+        for (int i = 0; i < _actions.Count; i++)
+        {
+            var problem = EditorGuard.CheckAction(_actions[i], i + 1);
+            if (problem != null) { ErrorText.Text = problem; return; }
+        }
         _entry.Actions = _actions.Select(a => a.Clone()).ToList();
         _entry.RefreshActionsText();
         DialogResult = true;

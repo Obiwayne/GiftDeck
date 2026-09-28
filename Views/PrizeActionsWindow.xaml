@@ -6,10 +6,13 @@
         Background="{StaticResource BgBrush}" WindowStartupLocation="CenterOwner"
         FontFamily="Segoe UI" TextOptions.TextFormattingMode="Display" UseLayoutRounding="True" ShowInTaskbar="False">
     <DockPanel Margin="28,24,28,20">
-        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
-            <Button Content="Cancel" Click="Cancel_Click" Margin="0,0,10,0"/>
-            <Button Content="Save actions" Style="{StaticResource Primary}" Click="Save_Click"/>
-        </StackPanel>
+        <Grid DockPanel.Dock="Bottom" Margin="0,16,0,0">
+            <TextBlock x:Name="ErrorText" Foreground="{StaticResource DangerBrush}" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,220,0"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Cancel" Click="Cancel_Click" Margin="0,0,10,0"/>
+                <Button Content="Save actions" Style="{StaticResource Primary}" Click="Save_Click" ToolTip="Save (Ctrl+S)"/>
+            </StackPanel>
+        </Grid>
 
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <StackPanel Margin="0,0,8,0">

@@ -172,6 +172,12 @@ public class OverlayServer
             ctx.Response.Close();
             return;
         }
+        if (!src.StartsWith("http://", StringComparison.OrdinalIgnoreCase) && !src.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+        {
+            ctx.Response.StatusCode = 404;
+            Write(ctx, "File not found", "text/plain");
+            return;
+        }
         ctx.Response.StatusCode = 302;
         ctx.Response.Headers["Location"] = src;
         ctx.Response.Close();

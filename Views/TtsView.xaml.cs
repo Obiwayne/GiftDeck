@@ -34,8 +34,11 @@ public partial class TtsView : UserControl
         ProfileName.Text = Hub.Profiles?.Active ?? Hub.Settings.ActiveProfile;
         UpdateLabels();
         ShowMuted();
+        ShowVoiceNote();
         _loading = false;
     }
+
+    void ShowVoiceNote() => VoiceNote.Visibility = TtsService.IsOnline(VoiceCombo.SelectedItem as string) && !TtsService.HasGoogleKey ? Visibility.Visible : Visibility.Collapsed;
 
     void ShowMuted() => MutedBanner.Visibility = Hub.Tts.Muted ? Visibility.Visible : Visibility.Collapsed;
 
@@ -43,6 +46,7 @@ public partial class TtsView : UserControl
     {
         Hub.Settings.GoogleTtsKey = GoogleKeyBox.Text.Trim();
         Hub.SaveSettings();
+        ShowVoiceNote();
     }
 
     void Unmute_Click(object sender, RoutedEventArgs e) => Hub.Tts.SetMuted(false);
@@ -66,6 +70,7 @@ public partial class TtsView : UserControl
     {
         if (_loading) return;
         Hub.Settings.TtsVoice = VoiceCombo.SelectedItem as string ?? "";
+        ShowVoiceNote();
         Apply();
     }
 

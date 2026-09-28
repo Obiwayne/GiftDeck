@@ -15,6 +15,7 @@ public partial class RuleEditorWindow : Window, IActionHost
     readonly Rule _rule;
     readonly ObservableCollection<RuleAction> _actions;
     readonly ICollectionView _giftView;
+    readonly EditorGuard _guard;
 
     static readonly Choice[] TriggerChoices =
     {
@@ -61,10 +62,12 @@ public partial class RuleEditorWindow : Window, IActionHost
 
         _actions = new ObservableCollection<RuleAction>(rule.Actions.Select(a => a.Clone()));
         ActionsList.ItemsSource = _actions;
-        _actions.CollectionChanged += (s, e) => UpdateNoActions();
+        _actions.CollectionChanged += (s, e) => { UpdateNoActions(); _guard?.MarkDirty(); };
         UpdateNoActions();
         UpdatePanels();
         LoadSpinner(rule);
+        _guard = new EditorGuard(this, Save);
+        Loaded += (s, e) => NameBox.Focus();
     }
 
     // ---- Gift Spinner: this event as a slice of the wheel ----
@@ -187,46 +190,58 @@ public partial class RuleEditorWindow : Window, IActionHost
         _actions.Move(i, j);
     }
 
-    static int Int(TextBox box)
+    // Reads a number box; a box that can't be read is named in the error instead of quietly becoming 0.
+    bool _badNumber;
+    int Int(TextBox box, string field)
     {
-        int.TryParse(box.Text.Trim(), out int v);
-        return Math.Max(0, v);
+        var v = EditorGuard.ReadCount(box);
+        if (v != null) return v.Value;
+        if (!_badNumber) Fail($"{field}: type a whole number, like 5 or 1000.");
+        _badNumber = true;
+        box.Focus();
+        box.SelectAll();
+        return 0;
     }
 
-    void Save_Click(object sender, RoutedEventArgs e)
+    void Save_Click(object sender, RoutedEventArgs e) => Save();
+
+    void Save()
     {
-        var r = new Rule { Id = _rule.Id, Enabled = _rule.Enabled, Name = NameBox.Text.Trim(), CooldownSeconds = Int(CooldownBox) };
+        _badNumber = false;
+        Fail("");
+        var r = new Rule { Id = _rule.Id, Enabled = _rule.Enabled, Name = NameBox.Text.Trim(), CooldownSeconds = Int(CooldownBox, "Cooldown") };
         var t = new RuleTrigger { Type = SelectedTrigger, Platform = (PlatformCombo.SelectedItem as ComboBoxItem)?.Tag as string ?? "" };
         bool giftTrigger = t.Type == TriggerType.Gift || t.Type == TriggerType.AnyGift;
         r.RepeatPerGift = giftTrigger && RepeatBox.IsChecked == true;
-        r.MaxRepeats = r.RepeatPerGift ? Int(MaxRepeatsBox) : 0;
+        r.MaxRepeats = r.RepeatPerGift ? Int(MaxRepeatsBox, "Most runs per combo") : 0;
         switch (t.Type)
         {
             case TriggerType.Gift:
                 if (!(GiftCombo.SelectedItem is GiftInfo g)) { Fail("Choose a gift."); return; }
                 t.GiftId = g.Id;
                 t.GiftName = g.Name;
-                t.MinCoins = Int(GiftMinCoins);
+                t.MinCoins = Int(GiftMinCoins, "Minimum coins");
                 break;
             case TriggerType.AnyGift:
-                t.MinCoins = Int(AnyMin);
-                t.MaxCoins = Int(AnyMax);
+                t.MinCoins = Int(AnyMin, "Minimum coins");
+                t.MaxCoins = Int(AnyMax, "Maximum coins");
                 if (t.MaxCoins > 0 && t.MaxCoins < t.MinCoins) { Fail("Maximum coins must be at least the minimum."); return; }
                 break;
             case TriggerType.Like:
-                t.MinLikes = Math.Max(1, Int(LikeBox));
+                t.MinLikes = Math.Max(1, Int(LikeBox, "Likes"));
                 break;
             case TriggerType.Chat:
                 t.ChatCommand = ChatBox.Text.Trim();
                 break;
         }
+        if (_badNumber) return;
         r.Trigger = t;
 
-        foreach (var a in _actions)
+        for (int i = 0; i < _actions.Count; i++)
         {
-            string problem = Validate(a);
+            string problem = EditorGuard.CheckAction(_actions[i], i + 1);
             if (problem != null) { Fail(problem); return; }
-            r.Actions.Add(a.Clone());
+            r.Actions.Add(_actions[i].Clone());
         }
         if (r.Name.Length == 0) r.Name = t.Summary();
 
@@ -237,29 +252,6 @@ public partial class RuleEditorWindow : Window, IActionHost
         Result = r;
         DialogResult = true;
         Close();
-    }
-
-    static string Validate(RuleAction a)
-    {
-        switch (a.Type)
-        {
-            case ActionType.KeyPress:
-                return KeySender.TryParse(a.Text, out _, out var err) ? null : "Press keys: " + err;
-            case ActionType.Sound:
-                return string.IsNullOrWhiteSpace(a.Text) ? "Play sound: choose a file." : null;
-            case ActionType.ObsScene:
-                return string.IsNullOrWhiteSpace(a.Text) ? "OBS scene: enter the scene name." : null;
-            case ActionType.ObsCanvasScene:
-                return string.IsNullOrWhiteSpace(a.Text) ? "Vertical canvas scene: enter the scene name." : null;
-            case ActionType.ObsShowSource:
-            case ActionType.ObsHideSource:
-                return string.IsNullOrWhiteSpace(a.Text) ? "OBS source: enter the source name." : null;
-            case ActionType.Tts:
-                return string.IsNullOrWhiteSpace(a.Text) ? "Speak: enter the text to say." : null;
-            case ActionType.RunProgram:
-                return string.IsNullOrWhiteSpace(a.Text) ? "Run program: choose a program." : null;
-        }
-        return null;
     }
 
     void Fail(string message) => ErrorText.Text = message;

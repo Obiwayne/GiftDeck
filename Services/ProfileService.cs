@@ -90,9 +90,17 @@ public class ProfileService
     {
         newName = CleanName(newName);
         if (newName == oldName) return;
-        if (Directory.Exists(DirOf(newName))) throw new Exception($"There's already a profile called \"{newName}\".");
+        bool caseOnly = string.Equals(newName, oldName, StringComparison.OrdinalIgnoreCase);
+        if (!caseOnly && Directory.Exists(DirOf(newName))) throw new Exception($"There's already a profile called \"{newName}\".");
         if (oldName == Active) SaveActive();
-        Directory.Move(DirOf(oldName), DirOf(newName));
+        if (caseOnly)
+        {
+            // Windows folder names ignore case, so "gta" to "GTA" goes by way of a temporary name.
+            var temp = DirOf(oldName) + ".renaming";
+            Directory.Move(DirOf(oldName), temp);
+            Directory.Move(temp, DirOf(newName));
+        }
+        else Directory.Move(DirOf(oldName), DirOf(newName));
         RepointFiles(DirOf(oldName), DirOf(newName));
         if (oldName == Active)
         {

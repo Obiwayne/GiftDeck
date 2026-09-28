@@ -298,6 +298,8 @@ public partial class MinecraftServerPanel : UserControl
 
     async void Stop_Click(object sender, RoutedEventArgs e)
     {
+        if (MessageBox.Show(Window.GetWindow(this), "Stop the Minecraft server? Anyone on it is disconnected, and gift commands stop working until it's started again.",
+                "Stop server", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) != MessageBoxResult.Yes) return;
         ShowError(null);
         StopButton.IsEnabled = false;
         try { await Server.StopAsync(); }
@@ -389,7 +391,12 @@ public partial class MinecraftServerPanel : UserControl
         await RunGameCommand($"gdg {ChosenGame} start {MinecraftTarget.PlayerSelector(Target.Settings.PlayerName)}");
     }
 
-    async void GameReset_Click(object sender, RoutedEventArgs e) => await RunGameCommand($"gdg {ChosenGame} reset");
+    async void GameReset_Click(object sender, RoutedEventArgs e)
+    {
+        if (MessageBox.Show(Window.GetWindow(this), "Start this mini-game over? The current round's progress is lost.",
+                "Start over", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) != MessageBoxResult.Yes) return;
+        await RunGameCommand($"gdg {ChosenGame} reset");
+    }
     async void GameStop_Click(object sender, RoutedEventArgs e) => await RunGameCommand($"gdg {ChosenGame} stop");
 
     async Task RunGameCommand(string line)

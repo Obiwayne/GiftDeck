@@ -22,3 +22,4 @@ build/
 
 # Claude Code agent worktrees
 .claude/
+bridge/bridge.pid
