@@ -149,6 +149,9 @@ once TikTok shows it (or a clear warning after 90 seconds).
 
 - **Scenes:** one button per scene (sizes S, M, L; a search box appears when you have lots), with the
   live scene in red. The **Scenes** page adds thumbnails, layers and an audio mixer.
+- **No scenes yet?** On the **Scenes** page, **Create starter scenes** makes *Starting Soon*, *Cam + Game*,
+  *Just Cam*, *Just Screen*, *Be Right Back* and *Stream Ending* in one click, with your webcam, your
+  screen and the all-in-one overlay already placed. It only adds the ones you don't have.
 - **Change the title or category while live:** TikTok can't edit a running LIVE, so GiftDeck offers
   **Restart LIVE with these details**: it ends the LIVE and opens a new one straight away. Viewers have
   to rejoin; GiftDeck's own totals keep counting.

@@ -264,7 +264,49 @@ public partial class ScenesView : UserControl
             SceneGrid.Children.Add(card.Root);
         }
         ScenesEmpty.Visibility = _scenes.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+        UpdateStarter();
         UpdateCards();
+    }
+
+    // ---- Starter scenes ----
+
+    bool _makingStarters;
+
+    void UpdateStarter()
+    {
+        var missing = StarterScenes.Missing(_scenes.Select(s => s.Name));
+        StarterPanel.Visibility = missing.Count > 0 || _makingStarters ? Visibility.Visible : Visibility.Collapsed;
+        if (_makingStarters) return;
+        StarterText.Text = missing.Count == StarterScenes.Names.Length
+            ? "Make " + string.Join(", ", StarterScenes.Names) + " in one click, with your camera, screen and GiftDeck overlay already in place. Your own scenes aren't changed."
+            : "Add the ones you don't have yet: " + string.Join(", ", missing) + ". Scenes you already have aren't changed.";
+    }
+
+    async void Starter_Click(object sender, RoutedEventArgs e)
+    {
+        if (_makingStarters || !Hub.Obs.Connected) return;
+        _makingStarters = true;
+        StarterButton.IsEnabled = false;
+        try
+        {
+            var r = await StarterScenes.CreateAsync(new Progress<string>(t => StarterText.Text = t));
+            Status.Text = r.Created.Count == 0
+                ? "You already have all the starter scenes."
+                : $"Made {r.Created.Count} {(r.Created.Count == 1 ? "scene" : "scenes")}: {string.Join(", ", r.Created)}. Use Edit in OBS to change anything in them.";
+            if (r.Notes.Count > 0)
+                MessageBox.Show(Window.GetWindow(this), string.Join("\n\n", r.Notes), "Starter scenes", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            Log.Write("Starter scenes failed: " + ex.Message);
+            Status.Text = "Couldn't make the starter scenes. Check OBS is connected and try again.";
+        }
+        finally
+        {
+            _makingStarters = false;
+            StarterButton.IsEnabled = true;
+            Queue(Part.Scenes | Part.Items | Part.Audio);
+        }
     }
 
     SceneCard MakeCard(ObsScene s)
