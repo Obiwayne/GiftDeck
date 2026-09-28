@@ -8,6 +8,6 @@ public static class TikFinityInstaller
 
     public static bool Installed => File.Exists(Hub.Settings.TikFinityExe);
 
-    public static Task InstallAsync(IProgress<(double part, string text)> progress) =>
-        SetupSteps.InstallFromElectronFeedAsync(Feed, "TikFinity", "/S", progress, () => Installed);
+    public static Task InstallAsync(IProgress<(double part, string text)> progress, CancellationToken cancel = default) =>
+        SetupSteps.InstallFromElectronFeedAsync(Feed, "TikFinity", "/S", progress, () => Installed, cancel);
 }

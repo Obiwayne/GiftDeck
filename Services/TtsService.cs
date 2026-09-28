@@ -140,6 +140,9 @@ public class TtsService
     static readonly System.Text.RegularExpressions.Regex Links = new(@"(https?://|www\.)\S+", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
     static readonly System.Text.RegularExpressions.Regex Runs = new(@"(.)\1{3,}");
 
+    // Something is being said or is about to be (the music goes quieter meanwhile).
+    public bool IsSpeaking => !Muted && (OnlineBusy || Volatile.Read(ref _localPending) > 0);
+
     // Messages waiting to be spoken, in whichever voice is in use.
     int Backlog { get { lock (_online) return _online.Count + Math.Max(0, Volatile.Read(ref _localPending)); } }
 

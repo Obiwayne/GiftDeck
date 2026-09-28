@@ -17,33 +17,27 @@ public static class FfmpegDownloader
     {
         Directory.CreateDirectory(InstallDir);
         var zip = Path.Combine(Path.GetTempPath(), "giftdeck-ffmpeg.zip");
-        using (var http = new HttpClient { Timeout = TimeSpan.FromMinutes(30) })
+        try
         {
-            http.DefaultRequestHeaders.UserAgent.ParseAdd("GiftDeck");
-            using var res = await http.GetAsync(Url, HttpCompletionOption.ResponseHeadersRead, cancel);
-            res.EnsureSuccessStatusCode();
-            var total = res.Content.Headers.ContentLength ?? 0;
-            await using var src = await res.Content.ReadAsStreamAsync(cancel);
-            await using var dst = File.Create(zip);
-            var buffer = new byte[1 << 16];
-            long done = 0;
-            int n;
-            while ((n = await src.ReadAsync(buffer, cancel)) > 0)
+            // Same download as the setup installers: gives up if no data arrives for 30 seconds, deletes a partial file.
+            using (var http = new HttpClient { Timeout = TimeSpan.FromMinutes(30) })
             {
-                await dst.WriteAsync(buffer.AsMemory(0, n), cancel);
-                done += n;
-                if (total > 0) progress?.Report((double)done / total);
+                http.DefaultRequestHeaders.UserAgent.ParseAdd("GiftDeck");
+                await SetupSteps.DownloadFileAsync(http, Url, zip, (done, total) =>
+                {
+                    if (total > 0) progress?.Report((double)done / total);
+                }, cancel);
             }
-        }
 
-        await Task.Run(() =>
-        {
-            using var archive = ZipFile.OpenRead(zip);
-            var entry = archive.Entries.FirstOrDefault(e => e.FullName.EndsWith("/bin/ffmpeg.exe", StringComparison.OrdinalIgnoreCase))
-                        ?? throw new Exception("The ffmpeg download didn't contain ffmpeg.exe");
-            entry.ExtractToFile(InstalledExe, overwrite: true);
-        }, cancel);
-        try { File.Delete(zip); } catch { }
+            await Task.Run(() =>
+            {
+                using var archive = ZipFile.OpenRead(zip);
+                var entry = archive.Entries.FirstOrDefault(e => e.FullName.EndsWith("/bin/ffmpeg.exe", StringComparison.OrdinalIgnoreCase))
+                            ?? throw new Exception("The ffmpeg download didn't contain ffmpeg.exe");
+                entry.ExtractToFile(InstalledExe, overwrite: true);
+            }, cancel);
+        }
+        finally { try { File.Delete(zip); } catch { } }
         Log.Write("ffmpeg installed to " + InstallDir);
     }
 }

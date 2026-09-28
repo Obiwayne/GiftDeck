@@ -257,6 +257,7 @@ public class SpotifyService
             var id = query.Contains("spotify:track:") ? query.Substring(query.IndexOf("spotify:track:") + 14) : query.Substring(query.IndexOf("/track/") + 7);
             id = new string(id.TakeWhile(ch => char.IsLetterOrDigit(ch)).ToArray());
             var track = await ApiAsync(HttpMethod.Get, "/v1/tracks/" + id);
+            CheckExplicit(track.Value);
             uri = track.Value.GetProperty("uri").GetString();
             label = TrackLabel(track.Value);
         }
@@ -266,11 +267,18 @@ public class SpotifyService
             var items = r.Value.GetProperty("tracks").GetProperty("items");
             if (items.GetArrayLength() == 0) throw new Exception("No Spotify track matched \"" + query + "\"");
             var t = items[0];
+            CheckExplicit(t);
             uri = t.GetProperty("uri").GetString();
             label = TrackLabel(t);
         }
         await ApiAsync(HttpMethod.Post, "/v1/me/player/queue?uri=" + Uri.EscapeDataString(uri));
         return label;
+    }
+
+    static void CheckExplicit(JsonElement t)
+    {
+        if (Hub.Settings.SpotifyBlockExplicit && t.TryGetProperty("explicit", out var x) && x.ValueKind == JsonValueKind.True)
+            throw new Exception(TrackLabel(t) + " is marked explicit, and explicit songs are switched off");
     }
 
     static string TrackLabel(JsonElement t)

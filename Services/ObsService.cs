@@ -14,6 +14,13 @@ public partial class ObsService
     // OBS events (scene switched, input volume meters, ...): (eventType, eventData). Raised on a background thread.
     public event Action<string, JsonElement> EventReceived;
 
+    // OBS's stream output stopped (by itself, from its window, or a failed start). Raised on a background thread.
+    public event Action StreamStopped;
+
+    // GiftDeck started OBS's stream for the open LIVE and hasn't stopped it on purpose: if GiftDeck's own OBS
+    // closes and is started again, it streams to the LIVE again (see ObsHost).
+    public bool KeepSending { get; set; }
+
     // obs-websocket event subscriptions: every normal category, plus the high-volume input meters for the audio mixer.
     const int EventSubscriptions = 2047 | (1 << 16);
 
@@ -210,6 +217,13 @@ public partial class ObsService
             {
                 var type = d.GetProperty("eventType").GetString() ?? "";
                 var data = d.TryGetProperty("eventData", out var ed) ? ed.Clone() : default;
+                if (type == "StreamStateChanged" && data.ValueKind == JsonValueKind.Object
+                    && data.TryGetProperty("outputState", out var os) && os.ValueKind == JsonValueKind.String
+                    && os.GetString() == "OBS_WEBSOCKET_OUTPUT_STOPPED")
+                {
+                    Log.Write("OBS stopped streaming");
+                    try { StreamStopped?.Invoke(); } catch (Exception e) { Log.Write("OBS stream-stopped handler failed: " + e.Message); }
+                }
                 try { EventReceived?.Invoke(type, data); } catch (Exception e) { Log.Write($"OBS event {type} handler failed: {e.Message}"); }
                 break;
             }

@@ -13,6 +13,12 @@ public partial class MusicView : UserControl
     bool _loading = true;
     string _coverFor;
 
+    void Duck_Click(object sender, RoutedEventArgs e)
+    {
+        Hub.Settings.MusicDuckForTts = DuckBox.IsChecked == true;
+        Hub.SaveSettings();
+    }
+
     public MusicView()
     {
         InitializeComponent();
@@ -23,6 +29,7 @@ public partial class MusicView : UserControl
         GenreBox.ItemsSource = MusicService.Genres.Select(g => g.Label).ToList();
         GenreBox.SelectedIndex = Math.Max(0, Array.FindIndex(MusicService.Genres, g => g.Tag == s.MusicGenre));
         InstrumentalBox.IsChecked = s.MusicInstrumental;
+        DuckBox.IsChecked = s.MusicDuckForTts;
         _loading = false;
 
         Hub.Music.Changed += () => Dispatcher.BeginInvoke(Refresh);

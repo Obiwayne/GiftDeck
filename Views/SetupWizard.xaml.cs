@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Net.Http;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -133,7 +134,7 @@ public partial class SetupWizard : UserControl
                 StepBody.Text = "OBS Studio is what sends your video to TikTok. GiftDeck runs it for you, hidden in the background, so you don't have to manage it.\n\nGiftDeck downloads the official installer from OBS's own GitHub page. Follow its window when it opens (Windows may ask for permission).";
                 if (!_busy)
                 {
-                    AddButton("Download and install OBS Studio (about 150 MB)", true, () => RunBusy(SetupSteps.InstallObsAsync));
+                    AddButton("Download and install OBS Studio (about 150 MB)", true, () => RunBusy((p, c) => SetupSteps.InstallObsAsync(p, c)));
                     AddButton("obsproject.com", false, () => OpenUrl("https://obsproject.com/download"));
                     AddButton("Check again", false, () => { _message = null; Tick(); });
                 }
@@ -144,7 +145,7 @@ public partial class SetupWizard : UserControl
                 if (!_busy)
                 {
                     if (ObsHost.IsRunning) AddButton("Close OBS", false, () => { ObsHost.FindRunning()?.CloseMainWindow(); });
-                    AddButton("Download and install Aitum Stream Suite", true, () => RunBusy(SetupSteps.InstallAitumAsync), enabled: !ObsHost.IsRunning);
+                    AddButton("Download and install Aitum Stream Suite", true, () => RunBusy((p, c) => SetupSteps.InstallAitumAsync(p, c)), enabled: !ObsHost.IsRunning);
                     AddButton("aitum.tv", false, () => OpenUrl("https://aitum.tv/"));
                     AddButton("Check again", false, () => { _message = null; Tick(); });
                 }
@@ -154,11 +155,7 @@ public partial class SetupWizard : UserControl
                 StepBody.Text = "GiftDeck makes a portrait (1080x1920) copy of your vertical scenes and runs OBS on it, hidden, whenever GiftDeck is open. What OBS sends is then exactly your TikTok layout. Your own OBS scenes aren't changed, and they come back when GiftDeck closes.\n\nNew to OBS? Open OBS, build your TikTok layout in the Vertical canvas (at least one scene), close OBS, then set up portrait OBS.";
                 if (!_busy)
                 {
-                    AddButton("Set up portrait OBS", true, () => RunBusy(async _ =>
-                    {
-                        var convert = ObsHost.PortraitConverter ?? throw new Exception("Setting up the portrait canvas isn't available in this build.");
-                        await Hub.Engine.SetUpPortraitAsync(convert);
-                    }));
+                    AddButton("Set up portrait OBS", true, SetUpPortrait);
                     if (!ObsHost.IsRunning) AddButton("Open OBS", false, OpenObs);
                 }
                 break;
@@ -177,6 +174,7 @@ public partial class SetupWizard : UserControl
             case Step.Ready: status = RenderReady(ref spinning); break;
         }
 
+        if (_busy && _busyCancel != null) AddButton("Cancel", false, CancelBusy);
         ApplyButtons();
         if (_busy) { status = _busyText; spinning = true; }
         else if (_message != null) status = _message;
@@ -204,7 +202,7 @@ public partial class SetupWizard : UserControl
             StepBody.Text = "GiftDeck starts your TikTok LIVE through your Streamlabs login, which is how it gets a stream key. You log in once in Streamlabs Desktop (free) and GiftDeck takes it from there; you won't need Streamlabs open after that.\n\nGiftDeck downloads the installer from Streamlabs' own site. Follow its window when it opens.";
             if (!_busy)
             {
-                AddButton("Download and install Streamlabs (about 275 MB)", true, () => RunBusy(SetupSteps.InstallStreamlabsAsync));
+                AddButton("Download and install Streamlabs (about 275 MB)", true, () => RunBusy((p, c) => SetupSteps.InstallStreamlabsAsync(p, c)));
                 AddButton("streamlabs.com", false, () => OpenUrl("https://streamlabs.com/streamlabs-live-streaming-software"));
                 AddButton("Check again", false, () => { _message = null; Tick(); });
             }
@@ -218,20 +216,26 @@ public partial class SetupWizard : UserControl
     }
 
     DateTime _lastTokenCheck;
+    bool _checkingToken;
 
     // While on the Streamlabs step: pick up the login as soon as Streamlabs has saved it.
-    void PollStreamlabs()
+    // Reading Streamlabs' files happens off the UI thread, so the screen never stutters.
+    async void PollStreamlabs()
     {
-        if (SetupSteps.HasStreamlabsToken || !SetupSteps.StreamlabsInstalled) return;
+        if (_checkingToken || SetupSteps.HasStreamlabsToken || !SetupSteps.StreamlabsInstalled) return;
         if ((DateTime.Now - _lastTokenCheck).TotalSeconds < 2) return;
-        _lastTokenCheck = DateTime.Now;
-        var token = SetupSteps.ReadStreamlabsToken();
-        if (string.IsNullOrEmpty(token)) return;
+        _checkingToken = true;
+        string token;
+        try { token = await Task.Run(SetupSteps.ReadStreamlabsToken); }
+        catch (Exception e) { Log.Write("Couldn't read the Streamlabs login: " + e.Message); return; }
+        finally { _checkingToken = false; _lastTokenCheck = DateTime.Now; }
+        if (string.IsNullOrEmpty(token) || _done || SetupSteps.HasStreamlabsToken) return;
         Hub.TikTok.State.Token = token;
         Hub.TikTok.Save();
         _streamlabsLinkedNow = true;
         Log.Write("Picked up the Streamlabs login from Streamlabs Desktop");
         _ = LearnAccountAsync();
+        Tick();
     }
 
     async Task LearnAccountAsync()
@@ -258,7 +262,7 @@ public partial class SetupWizard : UserControl
             StepBody.Text = "TikTok only sends the chat and gifts of 18+ LIVEs to viewers who are logged in. TikFinity (free) is logged in as you, so GiftDeck reads your LIVE through it. GiftDeck starts it for you, hidden in the background.\n\nGiftDeck downloads it from TikFinity's own site and installs it.";
             if (!_busy)
             {
-                AddButton("Install TikFinity (about 95 MB)", true, () => RunBusy(TikFinityInstaller.InstallAsync, after: () => TikFinityService.UseReader("tikfinity")));
+                AddButton("Install TikFinity (about 95 MB)", true, () => RunBusy((p, cancel) => TikFinityInstaller.InstallAsync(p, cancel), after: () => TikFinityService.UseReader("tikfinity")));
                 AddButton("Check again", false, () => { _message = null; Tick(); });
             }
             return null;
@@ -439,28 +443,85 @@ public partial class SetupWizard : UserControl
         }
     }
 
-    async void RunBusy(Func<IProgress<(double, string)>, Task> work, Action after = null)
+    CancellationTokenSource _busyCancel; // set while a cancellable download or install runs
+    string _cancelMessage;
+
+    // Runs a download, install or setup with its progress on screen. A cancellable one gets a Cancel button;
+    // downloads also give up by themselves if no data arrives for 30 seconds.
+    async void RunBusy(Func<IProgress<(double, string)>, CancellationToken, Task> work, Action after = null, bool cancellable = true)
     {
         if (_busy) return;
         _busy = true;
+        _busyCancel = cancellable ? new CancellationTokenSource() : null;
+        var cancel = _busyCancel?.Token ?? CancellationToken.None;
+        _cancelMessage = null;
         _busyText = "Starting…";
         _busyPart = null;
         _message = null;
         Tick();
         try
         {
-            await work(new Progress<(double part, string text)>(p => { _busyPart = p.part; _busyText = p.text; Render(Current); }));
+            var progress = new Progress<(double part, string text)>(p =>
+            {
+                if (cancel.IsCancellationRequested) return;
+                _busyPart = p.part; _busyText = p.text; Render(Current);
+            });
+            // WaitAsync: Cancel returns at once, even from work that can't stop part-way.
+            await work(progress, cancel).WaitAsync(cancel);
             after?.Invoke();
+        }
+        catch (OperationCanceledException) when (cancel.IsCancellationRequested)
+        {
+            Log.Write("Setup: cancelled");
+            EndBusy();
+            Say(_cancelMessage ?? "Cancelled.", false);
+            return;
         }
         catch (Exception e)
         {
             Log.Write("Setup: " + e.Message);
-            _busy = false;
-            Say(e.Message, true);
+            EndBusy();
+            // Network errors come with technical wording; the ones GiftDeck raises are already plain.
+            Say(e is HttpRequestException ? "Couldn't download it. Check your internet connection and try again." : e.Message, true);
             return;
         }
-        _busy = false;
+        EndBusy();
         Tick();
+    }
+
+    void EndBusy()
+    {
+        _busy = false;
+        _busyCancel = null; // not disposed: work that couldn't stop may still hold its token
+    }
+
+    void CancelBusy()
+    {
+        if (!_busy || _busyCancel == null || _busyCancel.IsCancellationRequested) return;
+        _cancelMessage = _busyText != null && _busyText.StartsWith("Installing")
+            ? "Stopped waiting for the installer. If its window is still open, you can finish it there and then press Check again."
+            : "Download cancelled. Nothing was installed.";
+        _busyText = "Stopping…";
+        _busyCancel.Cancel();
+        Render(Current);
+    }
+
+    // Asks first, like Stream Setup does: this may close the user's own OBS.
+    void SetUpPortrait()
+    {
+        var convert = ObsHost.PortraitConverter;
+        if (convert == null) { Say("Setting up the portrait canvas isn't available in this build.", true); return; }
+        if (!StreamSetupView.ConfirmPortraitSetup()) return;
+        RunBusy(async (_, _) =>
+        {
+            bool wasRunning = ObsHost.IsRunning;
+            try { await Hub.Engine.SetUpPortraitAsync(convert); }
+            catch (Exception ex)
+            {
+                Log.Write("Set up portrait OBS failed: " + ex.Message);
+                throw new Exception(StreamSetupView.PortraitFailureMessage(ex, wasRunning));
+            }
+        }, cancellable: false); // stopping half-way could leave OBS closed with a half-written setup
     }
 
     void Say(string text, bool error)

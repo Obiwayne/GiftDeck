@@ -125,11 +125,33 @@ public class MusicService
 
     public void ApplyVolume()
     {
-        if (_player != null) _player.Volume = Math.Clamp(Hub.Settings.MusicVolume, 0, 100) / 100.0;
+        if (_player == null) return;
+        _duck = DuckTarget();
+        _player.Volume = Math.Clamp(Hub.Settings.MusicVolume, 0, 100) / 100.0 * _duck;
+        if (_duckTimer == null)
+        {
+            // Checks a few times a second whether text to speech is talking, and fades the music down and back up.
+            _duckTimer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
+            _duckTimer.Tick += (_, _) =>
+            {
+                var target = DuckTarget();
+                if (Math.Abs(_duck - target) < 0.01 || _player == null) return;
+                _duck += Math.Clamp(target - _duck, -0.15, 0.05); // down quickly, back up gently
+                _player.Volume = Math.Clamp(Hub.Settings.MusicVolume, 0, 100) / 100.0 * _duck;
+            };
+            _duckTimer.Start();
+        }
     }
+
+    double _duck = 1;
+    System.Windows.Threading.DispatcherTimer _duckTimer;
+    const double DuckedTo = 0.3;
+
+    static double DuckTarget() => Hub.Settings.MusicDuckForTts && Hub.Tts != null && Hub.Tts.IsSpeaking ? DuckedTo : 1;
 
     public void Shutdown()
     {
+        _duckTimer?.Stop();
         try { _player?.Stop(); _player?.Close(); } catch { }
     }
 

@@ -29,6 +29,93 @@ public class RulesEngine
         Hub.Overlays?.PushState(); // the gift menu board hides tiles for events that are switched off
     }
 
+    // ---- Combos (streak gifts like Rose): each update carries the running total, x1, x2, x3... ----
+    // "Count streak gifts once" waits for the end of the combo and counts it all then. If the end never comes
+    // (the feed reconnected mid-combo, or TikTok dropped it) the combo is counted after a few quiet seconds
+    // rather than lost. With the setting off, each update counts only the gifts added since the last one.
+
+    sealed class Streak
+    {
+        public LiveEvent Last;
+        public int Counted;             // gifts of this combo already handled
+        public System.Threading.Timer Timer;
+    }
+
+    readonly Dictionary<string, Streak> _streaks = new Dictionary<string, Streak>();
+    const int StreakQuietMs = 5000;     // no update for this long: the combo is over
+    const int StreakForgetMs = 60000;   // then keep what was counted this long, in case a late update arrives
+
+    static string StreakKey(LiveEvent e) =>
+        (e.Platform ?? "") + ":" + (string.IsNullOrEmpty(e.UserId) ? e.Nickname : e.UserId) + ":" + (e.GiftId != 0 ? e.GiftId.ToString() : e.GiftName);
+
+    // The part of this combo update to handle now, or null for nothing yet.
+    LiveEvent TrackStreak(LiveEvent e)
+    {
+        var key = StreakKey(e);
+        lock (_streaks)
+        {
+            _streaks.TryGetValue(key, out var s);
+            if (s != null && e.RepeatCount < s.Last.RepeatCount) s.Counted = 0; // the count went back down: a new combo
+            if (s == null)
+            {
+                s = new Streak();
+                s.Timer = new System.Threading.Timer(_ => StreakQuiet(key, s));
+                _streaks[key] = s;
+            }
+            s.Last = e;
+
+            if (Hub.Settings.StreakGiftsOnce && !e.RepeatEnd)
+            {
+                s.Timer.Change(StreakQuietMs, Timeout.Infinite);
+                return null;
+            }
+
+            var part = Remaining(s, e);
+            if (e.RepeatEnd) Forget(key, s);
+            else s.Timer.Change(StreakForgetMs, Timeout.Infinite);
+            return part;
+        }
+    }
+
+    // The combo went quiet without its end: count what's left of it now.
+    void StreakQuiet(string key, Streak s)
+    {
+        LiveEvent part;
+        lock (_streaks)
+        {
+            if (!_streaks.TryGetValue(key, out var current) || current != s) return;
+            if (s.Last.RepeatEnd || s.Counted >= s.Last.RepeatCount) { Forget(key, s); return; }
+            part = Remaining(s, s.Last);
+            if (part != null)
+            {
+                part.RepeatEnd = true;
+                Log.Write($"Combo from {s.Last.Nickname} ({s.Last.GiftName} x{s.Last.RepeatCount}) never said it ended; counted it anyway");
+            }
+            s.Timer.Change(StreakForgetMs, Timeout.Infinite);
+            s.Last = s.Last.Copy();
+            s.Last.RepeatEnd = true; // the next quiet timeout just forgets it
+        }
+        if (part != null) Handle(part);
+    }
+
+    // What hasn't been handled yet of a combo that's now up to e.RepeatCount, as its own event.
+    static LiveEvent Remaining(Streak s, LiveEvent e)
+    {
+        int more = e.RepeatCount - s.Counted;
+        if (more <= 0) return null;
+        s.Counted = e.RepeatCount;
+        var part = e.Copy();
+        part.RepeatCount = more;
+        part.GiftType = 0; // already dealt with here, so Handle doesn't track it again
+        return part;
+    }
+
+    void Forget(string key, Streak s)
+    {
+        s.Timer.Dispose();
+        _streaks.Remove(key);
+    }
+
     public void ResetLikeCounters()
     {
         lock (_likeTotals) { _likeTotals.Clear(); _likeBuckets.Clear(); }
@@ -36,8 +123,11 @@ public class RulesEngine
 
     public void Handle(LiveEvent e)
     {
-        if (e.Type == "gift" && Hub.Settings.StreakGiftsOnce && e.GiftType == 1 && !e.RepeatEnd && !e.IsTest)
-            return; // wait for the end of the streak, then count the whole combo once
+        if (e.Type == "gift" && e.GiftType == 1 && !e.IsTest)
+        {
+            e = TrackStreak(e);
+            if (e == null) return; // part of a combo that's counted later (or already counted)
+        }
 
         if (e.Type == "chat" && !e.IsTest)
         {
@@ -317,10 +407,24 @@ public class RulesEngine
         }
     }
 
+    readonly Dictionary<string, DateTime> _lastRequest = new Dictionary<string, DateTime>();
+
     async Task HandleSongRequest(LiveEvent e)
     {
         var query = StripCommand(e.Comment);
         if (query.Length == 0) return;
+        // One chat request per viewer every few minutes, so a single viewer can't fill the queue.
+        int minutes = Math.Max(0, Hub.Settings.SpotifyRequestCooldownMinutes);
+        var who = string.IsNullOrEmpty(e.UserId) ? e.Nickname : e.UserId;
+        lock (_lastRequest)
+        {
+            if (minutes > 0 && _lastRequest.TryGetValue(who, out var last) && (DateTime.Now - last).TotalMinutes < minutes)
+            {
+                Log.Write($"Song request from {e.Nickname} skipped: one every {minutes} min per viewer");
+                return;
+            }
+            _lastRequest[who] = DateTime.Now;
+        }
         try
         {
             var label = await Hub.Spotify.RequestAsync(query);

@@ -50,6 +50,7 @@
                         <Slider x:Name="VolumeSlider" Minimum="0" Maximum="100" ValueChanged="Volume_Changed"/>
                         <TextBlock x:Name="VolumeText" Grid.Column="1" Text="40" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                     </Grid>
+                    <CheckBox x:Name="DuckBox" Content="Turn the music down while text to speech is talking" Click="Duck_Click" Margin="0,-6,0,16"/>
 
                     <Grid>
                         <Grid.ColumnDefinitions>

@@ -14,6 +14,9 @@ public partial class GoLiveView : UserControl
     bool _confirmed;          // TikTok said the LIVE is showing (after Go LIVE)
     bool _sending;            // OBS was started on this LIVE (vertical: while the relay is still running)
     bool _busy;               // Go LIVE, End LIVE or a restart is running: the others wait for it
+    bool _lost;               // OBS or the relay stopped sending by itself: "Not sending", even if TikTok still shows the LIVE
+    bool _obsRestarting;      // GiftDeck's own OBS closed mid-LIVE and is being started again
+    bool _relayTrouble;       // the relay's problem is showing in the status line
     string _previewError;     // last preview error written to the log (so it isn't logged every second)
     DateTime? _liveSince;     // when TikTok (or GiftDeck) first showed us live
     bool _previewOn = true;
@@ -49,6 +52,91 @@ public partial class GoLiveView : UserControl
         Details.RestartRequested += RestartLive;
         Hub.TikFinity.StatusChanged += () => Dispatcher.BeginInvoke(UpdateLive);
         BridgeService.AccountChanged += () => Dispatcher.BeginInvoke(UpdateLive);
+        Hub.Obs.StreamStopped += () => Dispatcher.BeginInvoke(OnStreamStopped);
+        Hub.Engine.StatusChanged += () => Dispatcher.BeginInvoke(OnEngineChanged);
+        Hub.Engine.SendingResumed += ok => Dispatcher.BeginInvoke(() => OnSendingResumed(ok));
+        Hub.Relay.ProblemChanged += () => Dispatcher.BeginInvoke(OnRelayProblem);
+        UpdateLive();
+    }
+
+    // OBS's stream stopped while GiftDeck was sending to the LIVE (GiftDeck's own stops happen while _busy).
+    void OnStreamStopped()
+    {
+        if (!Tt.Live || !_sending || _busy || UseVertical) return;
+        _sending = false;
+        _lost = true;
+        _confirmed = false;
+        Status.Text = "OBS stopped streaming to your LIVE. Press Start sending again, or End LIVE.";
+        Log.Write("OBS stopped streaming during the LIVE");
+        UpdateLive();
+    }
+
+    // GiftDeck's own OBS closed mid-LIVE: ObsHost starts it again and then sends again (OnSendingResumed).
+    void OnEngineChanged()
+    {
+        if (!Tt.Live || UseVertical || !Hub.Obs.KeepSending) { _obsRestarting = false; return; }
+        if (Hub.Engine.Restarting)
+        {
+            if (!_obsRestarting) Log.Write("OBS closed during the LIVE; waiting for GiftDeck to start it again");
+            _obsRestarting = true;
+            _sending = false;
+            _lost = true;
+            _confirmed = false;
+            Status.Text = "OBS closed during the LIVE. GiftDeck is starting it again and will carry on sending…";
+        }
+        else if (_obsRestarting)
+        {
+            _obsRestarting = false;
+            if (!Hub.Obs.Connected)
+                Status.Text = "OBS closed during the LIVE and GiftDeck couldn't start it again. " + (Hub.Engine.LastError ?? "") + " Press Start sending again, or End LIVE.";
+        }
+        else if (_sending && Managed && Hub.Engine.LastError != null && !Hub.Obs.Connected && !ObsHost.IsRunning)
+        {
+            // It keeps closing, so ObsHost stopped starting it again.
+            Log.Write("OBS closed during the LIVE and wasn't started again");
+            _sending = false;
+            _lost = true;
+            _confirmed = false;
+            Status.Text = Hub.Engine.LastError + " Then press Start sending again, or End LIVE.";
+        }
+        UpdateLive();
+    }
+
+    void OnSendingResumed(bool ok)
+    {
+        if (!Tt.Live) return;
+        if (ok)
+        {
+            _sending = true;
+            _lost = false;
+            Status.Text = "OBS closed during the LIVE; GiftDeck started it again and it's sending to the LIVE again.";
+            Log.Write("Sending to the LIVE again after OBS was restarted");
+            _ = ConfirmOnTikTokAsync();
+        }
+        else Status.Text = "OBS is running again, but it couldn't start sending to the LIVE. Press Start sending again, or End LIVE.";
+        UpdateLive();
+    }
+
+    // The relay (vertical canvas) stopped by itself: RelayService restarts it; show what's happening meanwhile.
+    void OnRelayProblem()
+    {
+        var problem = Hub.Relay.Problem;
+        if (problem != null)
+        {
+            _relayTrouble = true;
+            Status.Text = problem;
+            if (!Hub.Relay.Recovering) { _sending = false; _lost = true; _confirmed = false; } // gave up
+        }
+        else if (_relayTrouble)
+        {
+            _relayTrouble = false;
+            if (Hub.Relay.Running && Tt.Live)
+            {
+                _sending = true;
+                _lost = false;
+                Status.Text = "The relay to TikTok is running again and OBS is sending the vertical canvas to the LIVE.";
+            }
+        }
         UpdateLive();
     }
 
@@ -60,16 +148,20 @@ public partial class GoLiveView : UserControl
         bool tiktokSaysLive = Hub.TikFinity.Connected && Hub.TikFinity.TikTokLive == true;
         bool opened = Tt.Live;
         bool live = opened || tiktokSaysLive;
-        bool confirmed = tiktokSaysLive || _confirmed;
-        if (!opened) { _confirmed = false; _sending = false; }
-        if (opened && _sending && UseVertical && !Hub.Relay.Running) _sending = false; // Aitum stopped sending
+        if (!opened) { _confirmed = false; _sending = false; _lost = false; }
+        if (opened && _sending && UseVertical && !Hub.Relay.Running && !Hub.Relay.Recovering) { _sending = false; _lost = true; } // Aitum stopped sending
+        bool relayDown = opened && UseVertical && Hub.Relay.Recovering;
+        bool obsDown = opened && !_sending && Managed && Hub.Engine.Restarting && Hub.Obs.KeepSending;
+        // TikTok keeps showing a LIVE for a while after the picture stops: a stop GiftDeck saw wins.
+        bool confirmed = !_lost && !relayDown && (tiktokSaysLive || _confirmed);
 
         if (live && _liveSince == null) _liveSince = s.StartedAt ?? DateTime.Now;
         if (!live) _liveSince = null;
 
         // Already live (e.g. LIVE Studio): a second LIVE would clash. Opened here but OBS isn't sending:
         // the same button starts sending again with this LIVE's server and key.
-        bool retry = opened && !_sending && !confirmed && !_busy;
+        // Not while GiftDeck is bringing OBS back by itself.
+        bool retry = opened && !_sending && !confirmed && !_busy && !obsDown;
         GoLiveButton.Visibility = !live || retry ? Visibility.Visible : Visibility.Collapsed;
         GoLiveButton.Content = retry ? "Start sending again" : "Go LIVE";
         GoLiveButton.IsEnabled = !_busy;
@@ -87,7 +179,9 @@ public partial class GoLiveView : UserControl
             LiveTimer.Text = $"{(int)t.TotalHours:00}:{t.Minutes:00}:{t.Seconds:00}";
             if (!_pulsing) { _pulse.Begin(); _pulsing = true; }
 
-            if (confirmed) { VerifyText.Text = "\u2713 TikTok confirms you're live"; VerifyText.Foreground = (Brush)FindResource("SuccessBrush"); }
+            if (relayDown) { VerifyText.Text = "✖ Not sending: the relay to TikTok stopped. GiftDeck is restarting it…"; VerifyText.Foreground = (Brush)FindResource("DangerBrush"); }
+            else if (obsDown) { VerifyText.Text = "✖ Not sending: OBS closed. GiftDeck is starting it again…"; VerifyText.Foreground = (Brush)FindResource("DangerBrush"); }
+            else if (confirmed) { VerifyText.Text = "\u2713 TikTok confirms you're live"; VerifyText.Foreground = (Brush)FindResource("SuccessBrush"); }
             else if (_sending) { VerifyText.Text = "Sending\u2026 waiting for TikTok to show the LIVE"; VerifyText.Foreground = (Brush)FindResource("WarnBrush"); }
             else { VerifyText.Text = "\u2716 Not sending: OBS isn't streaming to this LIVE. Press Start sending again, or End LIVE."; VerifyText.Foreground = (Brush)FindResource("DangerBrush"); }
             var liveTitle = s.LiveTitle ?? s.Title; // what the running LIVE uses, not edits that aren't applied yet
@@ -251,6 +345,7 @@ public partial class GoLiveView : UserControl
                 Status.Text = "Starting to send to the open LIVE";
                 bool again = await StartSendingAsync(Tt.State.Server, Tt.State.Key);
                 _sending = again;
+                if (again) _lost = false;
                 if (again) _ = ConfirmOnTikTokAsync();
                 return;
             }
@@ -267,6 +362,7 @@ public partial class GoLiveView : UserControl
             bool sending = await StartSendingAsync(server, key);
             Hub.Overlays.ResetStats(); // every LIVE starts its goals and counters from zero
             _sending = sending;
+            if (sending) _lost = false;
             if (sending) _ = ConfirmOnTikTokAsync();
         }
         catch (Exception ex)
@@ -332,6 +428,9 @@ public partial class GoLiveView : UserControl
 
     async Task StopSendingAsync()
     {
+        // Stopped on purpose: don't bring OBS's stream or the relay back.
+        Hub.Obs.KeepSending = false;
+        Hub.Relay.KeepAlive(false);
         if (Hub.Obs.Connected)
         {
             try
@@ -381,6 +480,7 @@ public partial class GoLiveView : UserControl
             var (server, key) = await Tt.StartAsync();
             bool sending = await StartSendingAsync(server, key);
             _sending = sending;
+            if (sending) _lost = false;
             if (sending) _ = ConfirmOnTikTokAsync();
         }
         catch (Exception ex)
@@ -405,6 +505,7 @@ public partial class GoLiveView : UserControl
             return false;
         }
         await Hub.Obs.StartStreamAsync();
+        Hub.Obs.KeepSending = true;
         Status.Text = Managed ? "LIVE is open and OBS is streaming your portrait canvas to it." : "LIVE is open and OBS is streaming its main canvas to it.";
         Log.Write("OBS given the TikTok stream key and started");
         return true;
@@ -435,6 +536,7 @@ public partial class GoLiveView : UserControl
             {
                 Status.Text = "LIVE is open and OBS is sending the vertical canvas to it. Waiting for TikTok to show it";
                 Log.Write($"Aitum \"{output}\" is streaming to TikTok through the relay");
+                Hub.Relay.KeepAlive(true);
                 return true;
             }
         }

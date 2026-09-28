@@ -19,6 +19,10 @@ public class ObsHost
 
     public event Action StatusChanged;
 
+    // After GiftDeck's own OBS closed mid-LIVE and was started again: true once it streams to the LIVE again,
+    // false if it couldn't. Raised on a background thread.
+    public event Action<bool> SendingResumed;
+
     public string LastError { get; private set; }
 
     // True while GiftDeck is starting OBS and waiting to connect to it (for the "Starting OBS" status).
@@ -218,7 +222,9 @@ public class ObsHost
             return;
         }
         _restarts.Add(DateTime.Now);
-        Log.Write("OBS was closed from its own window; starting it again in the background");
+        Log.Write(Hub.TikTok.Live && Hub.Obs.KeepSending
+            ? "OBS closed while sending to the LIVE; starting it again in the background, then sending again"
+            : "OBS was closed from its own window; starting it again in the background");
         Restarting = true;
         _ = Hub.Obs.DisconnectAsync();
         Notify();
@@ -229,11 +235,48 @@ public class ObsHost
                 for (int i = 0; i < 40 && IsRunning; i++) await Task.Delay(250); // an exiting obs64 lingers a moment
                 if (_appExiting) return;
                 await StartPortraitAsync();
+                await ResumeSendingAsync();
             }
             catch (Exception e) { LastError = e.Message; Log.Write("Could not start OBS again: " + e.Message); }
             finally { Restarting = false; Notify(); }
         });
     }
+
+    // After a restart: if OBS was streaming to the open LIVE, give it the LIVE's server and key again and stream.
+    async Task ResumeSendingAsync()
+    {
+        var s = Hub.TikTok.State;
+        string server = s.Server, key = s.Key;
+        if (!Hub.TikTok.Live || !Hub.Obs.KeepSending || string.IsNullOrEmpty(server) || string.IsNullOrEmpty(key)) return;
+        // End LIVE may be pressed while this runs: only stream if it's still the same LIVE and still wanted.
+        bool stillWanted() => Hub.TikTok.Live && Hub.Obs.KeepSending && Hub.TikTok.State.Key == key;
+        for (int attempt = 1; ; attempt++)
+        {
+            try
+            {
+                if (!stillWanted()) return;
+                await Hub.Obs.SetStreamSettingsAsync(server, key);
+                if (!stillWanted()) return;
+                if (!await Hub.Obs.IsStreamingAsync()) await Hub.Obs.StartStreamAsync();
+                Log.Write("OBS is running again and streaming to the LIVE again");
+                RaiseSendingResumed(true);
+                return;
+            }
+            catch (Exception e) when (attempt < 3 && Hub.Obs.Connected)
+            {
+                Log.Write($"Sending to the LIVE again failed (try {attempt}): {e.Message}");
+                await Task.Delay(2000);
+            }
+            catch (Exception e)
+            {
+                Log.Write("OBS is running again, but couldn't stream to the LIVE: " + e.Message);
+                RaiseSendingResumed(false);
+                return;
+            }
+        }
+    }
+
+    void RaiseSendingResumed(bool ok) { try { SendingResumed?.Invoke(ok); } catch { } }
 
     void Closed()
     {

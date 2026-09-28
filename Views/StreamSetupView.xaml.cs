@@ -185,14 +185,12 @@ public partial class StreamSetupView : UserControl
             EngineSay("Setting up the portrait canvas isn't available in this build yet.", "WarnBrush");
             return;
         }
-        var ask = ObsHost.IsRunning
-            ? "GiftDeck will close OBS, make a \"GiftDeck Portrait\" scene collection and profile (1080x1920) from your current setup, and open OBS again hidden on them. Your own scenes aren't changed.\n\nContinue?"
-            : "GiftDeck will make a \"GiftDeck Portrait\" scene collection and profile (1080x1920) from your current OBS setup, and start OBS hidden on them. Your own scenes aren't changed.\n\nContinue?";
-        if (MessageBox.Show(ask, "GiftDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
+        if (!ConfirmPortraitSetup()) return;
 
         _engineBusy = true;
         UpdateEngine();
         EngineSay("Setting up portrait OBS…", "MutedBrush");
+        bool wasRunning = ObsHost.IsRunning;
         try
         {
             await Hub.Engine.SetUpPortraitAsync(convert);
@@ -201,8 +199,27 @@ public partial class StreamSetupView : UserControl
             _loading = false;
             EngineSay("Done. OBS is running hidden on your portrait canvas.", "SuccessBrush");
         }
-        catch (Exception ex) { EngineSay(ex.Message, "DangerBrush"); Log.Write("Set up portrait OBS failed: " + ex.Message); }
+        catch (Exception ex) { EngineSay(PortraitFailureMessage(ex, wasRunning), "DangerBrush"); Log.Write("Set up portrait OBS failed: " + ex.Message); }
         finally { _engineBusy = false; UpdateEngine(); }
+    }
+
+    // Asked before "Set up portrait OBS" (here and in the setup wizard): it may close the user's own OBS.
+    internal static bool ConfirmPortraitSetup()
+    {
+        var ask = ObsHost.IsRunning
+            ? "GiftDeck will close OBS, make a \"GiftDeck Portrait\" scene collection and profile (1080x1920) from your current setup, and open OBS again hidden on them. Your own scenes aren't changed.\n\nContinue?"
+            : "GiftDeck will make a \"GiftDeck Portrait\" scene collection and profile (1080x1920) from your current OBS setup, and start OBS hidden on them. Your own scenes aren't changed.\n\nContinue?";
+        return MessageBox.Show(ask, "GiftDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes;
+    }
+
+    // What to tell the user when "Set up portrait OBS" fails. The technical reason goes to the log only.
+    internal static string PortraitFailureMessage(Exception ex, bool obsWasRunning)
+    {
+        if (obsWasRunning && !ObsHost.IsRunning)
+            return "GiftDeck closed OBS but couldn't finish setting up portrait OBS. Your own scenes aren't changed. Open OBS again if you need it, or try Set up portrait OBS again.";
+        // GiftDeck's own reasons (e.g. OBS is live right now) are already written for the user.
+        if (ex is InvalidOperationException) return ex.Message;
+        return "GiftDeck couldn't set up portrait OBS. Your own scenes aren't changed. Make sure OBS has at least one scene in the Vertical canvas, then try again.";
     }
 
     void ShowObs_Click(object sender, RoutedEventArgs e)
@@ -257,14 +274,27 @@ public partial class StreamSetupView : UserControl
         UpdateChecklist();
     }
 
-    async void Login_Click(object sender, RoutedEventArgs e)
+    CancellationTokenSource _loginCancel; // set while a browser login is waiting
+
+    // The button starts the login, and while it waits it's the Cancel button.
+    void Login_Click(object sender, RoutedEventArgs e)
     {
-        LoginButton.IsEnabled = false;
+        if (_loginCancel != null) { _loginCancel.Cancel(); return; }
+        StartLogin();
+    }
+
+    async void StartLogin()
+    {
+        if (_loginCancel != null) return;
+        var cancel = _loginCancel = new CancellationTokenSource();
+        LoginButton.Content = "Cancel login";
         TokenError.Text = "";
-        AccountText.Text = "Finish logging in in your browser (you have 5 minutes)";
+        AccountText.Text = "Finish logging in in your browser (you have 5 minutes).";
         try
         {
-            var token = await StreamlabsLogin.LoginAsync(TimeSpan.FromMinutes(5));
+            var token = await StreamlabsLogin.LoginAsync(TimeSpan.FromMinutes(5), cancel.Token);
+            _loginCancel = null;
+            LoginButton.Content = "Log in with TikTok";
             Tt.State.Token = token;
             Tt.Save();
             _loading = true;
@@ -272,8 +302,14 @@ public partial class StreamSetupView : UserControl
             _loading = false;
             await CheckAccount();
         }
+        catch (OperationCanceledException) when (cancel.IsCancellationRequested) { AccountText.Text = "Login cancelled. Nothing was changed."; }
         catch (Exception ex) { AccountText.Text = ""; TokenError.Text = ex.Message; }
-        finally { LoginButton.IsEnabled = true; }
+        finally
+        {
+            if (_loginCancel == cancel) _loginCancel = null;
+            LoginButton.Content = "Log in with TikTok";
+            cancel.Dispose();
+        }
     }
 
     void Import_Click(object sender, RoutedEventArgs e)
@@ -336,29 +372,38 @@ public partial class StreamSetupView : UserControl
         FfmpegButton.Visibility = found != null ? Visibility.Collapsed : Visibility.Visible;
     }
 
+    CancellationTokenSource _ffmpegCancel; // set while ffmpeg downloads; the button is then its Cancel button
+
     async void DownloadFfmpeg_Click(object sender, RoutedEventArgs e)
     {
-        FfmpegButton.IsEnabled = false;
+        if (_ffmpegCancel != null) { _ffmpegCancel.Cancel(); return; }
+        var cancel = _ffmpegCancel = new CancellationTokenSource();
+        var label = FfmpegButton.Content;
+        FfmpegButton.Content = "Cancel";
+        FfmpegProgress.Value = 0;
         FfmpegProgress.Visibility = Visibility.Visible;
         FfmpegStatus.Text = "Downloading ffmpeg\u2026";
+        bool ok = false;
         try
         {
             await FfmpegDownloader.DownloadAsync(new Progress<double>(p =>
             {
+                if (cancel.IsCancellationRequested) return;
                 FfmpegProgress.Value = p;
                 FfmpegStatus.Text = $"Downloading ffmpeg\u2026 {p:P0}";
-            }));
+            }), cancel.Token);
+            ok = true;
         }
-        catch (Exception ex)
+        catch (OperationCanceledException) when (cancel.IsCancellationRequested) { FfmpegStatus.Text = "Download cancelled. Nothing was installed."; }
+        catch (Exception ex) { FfmpegStatus.Text = "Download failed: " + ex.Message; }
+        finally
         {
-            FfmpegStatus.Text = "Download failed: " + ex.Message;
-            FfmpegButton.IsEnabled = true;
+            _ffmpegCancel = null;
+            cancel.Dispose();
+            FfmpegButton.Content = label;
             FfmpegProgress.Visibility = Visibility.Collapsed;
-            return;
         }
-        FfmpegProgress.Visibility = Visibility.Collapsed;
-        FfmpegButton.IsEnabled = true;
-        UpdateFfmpeg();
+        if (ok) UpdateFfmpeg();
     }
 
     void CopyRelayServer_Click(object sender, RoutedEventArgs e) { try { Clipboard.SetText(RelayService.LocalServer); } catch { } }

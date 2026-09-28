@@ -19,6 +19,8 @@ public partial class SpotifyView : UserControl
         RedirectBox.Text = Hub.Spotify.RedirectUri;
         ChatRequests.IsChecked = Hub.Settings.SpotifyChatRequests;
         CommandBox.Text = Hub.Settings.SpotifyRequestCommand;
+        CooldownBox.Text = Hub.Settings.SpotifyRequestCooldownMinutes.ToString();
+        BlockExplicit.IsChecked = Hub.Settings.SpotifyBlockExplicit;
         UpdateCommandHint();
         _loading = false;
 
@@ -122,6 +124,28 @@ public partial class SpotifyView : UserControl
         if (_settingVolume || _loading) return;
         _volumeDebounce.Stop();
         _volumeDebounce.Start();
+    }
+
+    void Cooldown_Changed(object sender, TextChangedEventArgs e)
+    {
+        if (_loading) return;
+        bool ok = int.TryParse(CooldownBox.Text.Trim(), out int m) && m >= 0;
+        if (!ok)
+        {
+            CooldownBox.BorderBrush = System.Windows.Media.Brushes.IndianRed;
+            CooldownBox.ToolTip = "Type a whole number of minutes, 0 or more. Not saved.";
+            return;
+        }
+        CooldownBox.ClearValue(Control.BorderBrushProperty);
+        CooldownBox.ClearValue(ToolTipProperty);
+        Hub.Settings.SpotifyRequestCooldownMinutes = m;
+        Hub.SaveSettings();
+    }
+
+    void BlockExplicit_Click(object sender, RoutedEventArgs e)
+    {
+        Hub.Settings.SpotifyBlockExplicit = BlockExplicit.IsChecked == true;
+        Hub.SaveSettings();
     }
 
     void ChatRequests_Click(object sender, RoutedEventArgs e)

@@ -34,7 +34,7 @@ public partial class StreamSetupView
         steps.Add(new Step(hasToken, "Streamlabs login (for Go LIVE)",
             hasToken ? (string.IsNullOrWhiteSpace(t.AccountUsername) ? "Logged in." : "Logged in as @" + t.AccountUsername + ".")
                      : "Lets GiftDeck open your LIVE and get its stream key. Nothing to install: you log in to Streamlabs in your browser with your TikTok account.",
-            false, hasToken ? Array.Empty<(string, Action, bool)>() : new[] { ("Log in with TikTok", (Action)(() => { TokenCard.BringIntoView(); Login_Click(LoginButton, null); }), true) }));
+            false, hasToken ? Array.Empty<(string, Action, bool)>() : new[] { ("Log in with TikTok", (Action)(() => { TokenCard.BringIntoView(); StartLogin(); }), true) }));
 
         bool obsReady = s.ObsManaged && ObsHost.PortraitExists();
         steps.Add(new Step(obsReady, "OBS set up",

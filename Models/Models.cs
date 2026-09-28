@@ -157,6 +157,8 @@ public class LiveEvent
 
     public int Coins => Diamonds * Math.Max(1, RepeatCount);
 
+    public LiveEvent Copy() => (LiveEvent)MemberwiseClone();
+
     public string Describe()
     {
         var who = string.IsNullOrEmpty(Nickname) ? UserId : Nickname;
@@ -272,11 +274,14 @@ public class AppSettings
     public string JamendoClientId { get; set; } = "";
     public string JamendoApiBase { get; set; } = "https://api.jamendo.com/v3.0";
     public int MusicVolume { get; set; } = 40;
+    public bool MusicDuckForTts { get; set; } = true; // music goes quieter while text to speech talks
     public string MusicGenre { get; set; } = "chillout+lounge";
     public bool MusicInstrumental { get; set; } = true;
     public int SpotifyCallbackPort { get; set; } = 8890;
     public bool SpotifyChatRequests { get; set; } = false;
     public string SpotifyRequestCommand { get; set; } = "!sr";
+    public int SpotifyRequestCooldownMinutes { get; set; } = 5; // per viewer, for chat requests
+    public bool SpotifyBlockExplicit { get; set; } = true;
 
     public string TtsVoice { get; set; } = "";
     public int TtsRate { get; set; } = 0;
