@@ -52,11 +52,13 @@ GiftDeck runs the actions you set: trigger an effect in your game, press a keybo
 sound, show an alert, spin the Gift Spinner, switch an OBS scene, speak text aloud, control Spotify, or
 run a program. Add as many events as you like.
 
-**Games, set up in one click.** The **Games** page finds your game (Steam, Epic or the game's own
-launcher), downloads and installs its mods, backs up every file it replaces, and loads a ready-made set
-of events. **GTA V** gets 416 triggers (every Chaos Mod V effect plus vehicles, weapons, money,
-teleports and more); **Minecraft** gets its own server on your PC with 50+ commands and three
-streamer-vs-viewers mini-games.
+**58 games, set up for you.** The **Games** page is a library you can search and filter. **GTA V**
+and **Minecraft** are set up in one click: GiftDeck finds the game, installs its mods, backs up every
+file it replaces, and loads a ready-made set of events. GTA V gets 416 triggers (every Chaos Mod V
+effect plus vehicles, weapons, money, teleports and more); Minecraft gets its own server on your PC with
+50+ commands and three streamer-vs-viewers mini-games. **7 Days to Die**, **Project Zomboid**,
+**Terraria** and **Left 4 Dead 2** take commands through your own game server's console. 52 more games
+get a set-up guide and key-press ideas.
 
 **One app, OBS in the background.** GiftDeck runs OBS for you, hidden, on a portrait 1080x1920 canvas
 made from your vertical layout. Switch scenes, toggle layers and mix audio from GiftDeck; press
@@ -81,6 +83,8 @@ cleanly and puts your own OBS setup back.
 | ![The setup screen](docs/screenshots/setup-screen.png) | ![The Games page](docs/screenshots/games.png) |
 | **GTA V** | **Minecraft** |
 | ![GTA V game pack](docs/screenshots/game-gta5.png) | ![Minecraft game pack](docs/screenshots/game-minecraft.png) |
+| **Server console game** | **Key-press game** |
+| ![A server console game page (7 Days to Die)](docs/screenshots/game-console.png) | ![A key-press game page (Valheim)](docs/screenshots/game-keys.png) |
 | **Events** | **Text to speech** |
 | ![Events](docs/screenshots/events.png) | ![Text to speech](docs/screenshots/tts.png) |
 | **Scenes** | **Overlays** |
@@ -116,7 +120,7 @@ site when you press the button for it, never bundled.
 | **[Streamlabs Desktop](https://streamlabs.com)** login | the Go LIVE button | log in once with TikTok; GiftDeck picks up the login and you can close Streamlabs |
 | **TikTok account with Streamlabs LIVE access** | the Go LIVE button | granted by TikTok; GiftDeck tells you whether yours has it |
 | **[TikFinity](https://tikfinity.zerody.one)** | reading **18+** LIVEs | TikTok only sends 18+ chat and gifts to logged-in viewers; GiftDeck installs and runs TikFinity hidden |
-| A game from the **Games** page | game mods | GTA V (Legacy, Story Mode) or Minecraft: Java Edition |
+| A game from the **Games** page | game events | GTA V (Legacy, Story Mode), Minecraft: Java Edition, a server console game or a key-press game |
 | Free **[Jamendo](https://devportal.jamendo.com) Client ID** | Music page | optional |
 | **Spotify** Premium + a free developer app | Spotify actions | optional |
 
@@ -173,10 +177,19 @@ buttons wait while one step is running, so you can't start the same LIVE twice.
 
 ## Games: one-click mods
 
-Open **Games**, click a game, and press **Install**. GiftDeck finds the game, downloads each mod from
-its maker, **backs up every file it replaces** and refuses to change anything while the game is running.
-**Uninstall** puts the folder back exactly as it was. An **Installed** tag shows on games that are set up
-(including mods you installed yourself). Nothing changes until you press Install or pick a preset.
+Open **Games** to see a library of 58 games. Type in **Search games or genres**, or pick a filter:
+
+- **Ready to go:** GTA V and Minecraft. One-click mods (or a server) and ready-made presets.
+- **Server console:** 7 Days to Die, Project Zomboid, Terraria and Left 4 Dead 2. GiftDeck sends admin
+  commands to your own game server.
+- **Key presses:** 52 games. Gifts press the game's own keys.
+
+Cover art comes from each game's Steam store image. It's downloaded once and kept on your PC.
+
+For **Ready to go** games, click the game and press **Install**. GiftDeck finds the game, downloads each
+mod from its maker, **backs up every file it replaces** and refuses to change anything while the game is
+running. **Uninstall** puts the folder back exactly as it was. An **Installed** tag shows on games that are
+set up (including mods you installed yourself). Nothing changes until you press Install or pick a preset.
 
 ### GTA V (Legacy, Story Mode only)
 
@@ -208,6 +221,39 @@ drop TNT, strike lightning, change the weather, give items and effects.
 
 Your items, position and health are saved when a game starts and given back after it. Each game has a
 ready-made preset, and the server panel has start/stop buttons.
+
+### Server console games
+
+These games run on a dedicated server (on your PC or a rented one), and you join it like any
+multiplayer game. GiftDeck sends admin commands to that server. Each game's page has:
+
+- a **How to set it up** guide for the server,
+- a connection card: server address, port, password and your player name, with **Test connection**,
+- the list of **Commands** to use in an event with **Run a game command**.
+
+| Game | How GiftDeck connects | Default port | Example commands |
+|---|---|---|---|
+| **7 Days to Die** | telnet console | 8081 | spawn zombies, screamer scouts, wandering horde, air drop |
+| **Project Zomboid** | RCON | 27015 | spawn a horde, helicopter, gunshot, thunderstorm |
+| **Terraria** | TShock's REST API | 7878 | invasions, Blood Moon, slime rain, boss summon items |
+| **Left 4 Dead 2** | RCON | 27015 | horde, endless panic, fast zombies, low gravity |
+
+- **Terraria** can't drop a single mob or boss on you. TShock only allows that for players in the game,
+  not over its REST API, so its commands use invasions, events and items instead.
+- **Left 4 Dead 2** is for your own server only. Most commands need `sv_cheats 1`, which turns off
+  achievements.
+
+### Key-press games
+
+The other 52 games work by pressing keys while you play. Nothing is installed. Each game's page has a
+**How to set it up** guide and a list of **Key ideas**: the game's default keys, each with **Add as event**.
+Press **Use this game's window for key presses** so the keys go to the game.
+
+- The ideas use each game's default keys. If you changed a key in the game, change it in the event too.
+- Some games ignore key presses in exclusive fullscreen. Switch them to windowed or borderless.
+- Games with anti-cheat are for single-player or offline play only (for example Elden Ring).
+- **Palworld** is a key-press game: its server console can only broadcast messages (and its RCON is
+  being retired), so there's nothing useful to connect to.
 
 ## Events: triggers and actions
 
@@ -308,6 +354,7 @@ flowchart LR
     RD -- ws://localhost:21214 / 21213 --> GD[GiftDeck]
     GD -- GameLink ws://127.0.0.1:21216 --> MODS[Game mods<br/>Chaos Mod, GiftDeck GTA]
     GD -- RCON --> MC[Minecraft server]
+    GD -- RCON / telnet / REST --> SRV[Your game server]
     GD -- obs-websocket --> OBS[OBS Studio<br/>hidden, portrait]
     GD -- overlays http://localhost:21300 --> OBS
     GD -- Streamlabs API: open/close LIVE, get key --> SL[Streamlabs]
@@ -344,6 +391,8 @@ flowchart LR
 | **⚠ TikTok isn't showing you as LIVE after 90 seconds** | Check the TikTok app. Make sure LIVE Studio isn't also live on the same account. |
 | GTA: nothing happens | Games → GTA V should say **Connected in game**. Story Mode only, prologue finished, BattlEye off. |
 | Minecraft: commands do nothing | Join the server first (`localhost`); most commands need a player online. |
+| Console game says it can't reach the server | Check the server is running, its console is turned on (telnet, RCON or TShock's REST API), and the port and password match its config. A firewall isn't usually the problem when the server is on the same PC. |
+| Keys don't reach the game | Press **Use this game's window for key presses** on the game's page. Play in windowed or borderless, not exclusive fullscreen. If you rebound a key in the game, change it in the event too. |
 | Music: **"didn't accept that Client ID"** | Copy the Jamendo Client ID again, all of it. |
 | Screen capture is black in *Just Screen* / *Cam + Game* | It only draws while the scene is live or previewed, so switch to it. On a laptop, open *Windows Settings → System → Display → Graphics*, add OBS and pick the graphics card your screen runs on. |
 | **Some saved files couldn't be read** at start-up | The message lists where the old files were kept (in `%APPDATA%\GiftDeck`, ending `.unreadable-<date>`). Those settings or events started over empty; the kept copy is the file as it was. |
@@ -383,10 +432,10 @@ Test harnesses are under `tests/` and `tools/`. The only NuGet packages are `Sys
 ```
 GiftDeck/
 ├─ Services/        TikTok/Kick feeds, rules engine, OBS engine + obs-websocket, Go LIVE (Streamlabs),
-│                   GameLink, game packs installer, Minecraft server + RCON, overlays, spinner, alerts, TTS
+│                   GameLink, game packs installer, Minecraft server + RCON, game server consoles, overlays, spinner, alerts, TTS
 ├─ Views/           the pages: Dashboard, Go LIVE, Scenes, Stream Setup, Games, Events, Profiles, Overlays, ...
 ├─ Overlays/        the HTML overlay pages served to OBS / TikTok LIVE Studio
-├─ Packs/           game packs: pack.json, command lists, presets, bundled mods (gta5, minecraft)
+├─ Packs/           game packs: catalog.json, pack.json, command lists, presets, bundled mods (gta5, minecraft)
 ├─ mods/            source of GiftDeck's own game mods (GTA script, Minecraft plugin)
 ├─ bridge/          bridge.js: reads your TikTok LIVE (Node)
 ├─ docs/            screenshots and design notes (docs/v2.1)
