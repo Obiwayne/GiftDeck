@@ -175,6 +175,7 @@ public partial class MainWindow : Window
         WarnUnreadable();
         if (_shownProfile == Hub.Profiles.Active) return;
         _shownProfile = Hub.Profiles.Active;
+        if (_views.TryGetValue("golive", out var oldGoLive) && oldGoLive is GoLiveView goLive) goLive.Detach();
         foreach (var key in new[] { "events", "overlays", "golive" }) _views.Remove(key);
         if (key_is_current()) Show(_currentPage);
 

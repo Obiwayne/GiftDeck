@@ -48,15 +48,37 @@ public partial class GoLiveView : UserControl
         _clock.Start();
         IsVisibleChanged += (a, b) => { if (IsVisible) _ = PreviewLoopAsync(); };
 
-        Tt.StatusChanged += () => Dispatcher.BeginInvoke(UpdateLive);
+        _onStatus = () => Dispatcher.BeginInvoke(UpdateLive);
+        _onStreamStopped = () => Dispatcher.BeginInvoke(OnStreamStopped);
+        _onEngine = () => Dispatcher.BeginInvoke(OnEngineChanged);
+        _onResumed = ok => Dispatcher.BeginInvoke(() => OnSendingResumed(ok));
+        _onRelay = () => Dispatcher.BeginInvoke(OnRelayProblem);
+        Tt.StatusChanged += _onStatus;
         Details.RestartRequested += RestartLive;
-        Hub.TikFinity.StatusChanged += () => Dispatcher.BeginInvoke(UpdateLive);
-        BridgeService.AccountChanged += () => Dispatcher.BeginInvoke(UpdateLive);
-        Hub.Obs.StreamStopped += () => Dispatcher.BeginInvoke(OnStreamStopped);
-        Hub.Engine.StatusChanged += () => Dispatcher.BeginInvoke(OnEngineChanged);
-        Hub.Engine.SendingResumed += ok => Dispatcher.BeginInvoke(() => OnSendingResumed(ok));
-        Hub.Relay.ProblemChanged += () => Dispatcher.BeginInvoke(OnRelayProblem);
+        Hub.TikFinity.StatusChanged += _onStatus;
+        BridgeService.AccountChanged += _onStatus;
+        Hub.Obs.StreamStopped += _onStreamStopped;
+        Hub.Engine.StatusChanged += _onEngine;
+        Hub.Engine.SendingResumed += _onResumed;
+        Hub.Relay.ProblemChanged += _onRelay;
         UpdateLive();
+    }
+
+    readonly Action _onStatus, _onStreamStopped, _onEngine, _onRelay;
+    readonly Action<bool> _onResumed;
+
+    // The main window drops this page (a profile switch builds a new one): stop listening, so the old page
+    // doesn't keep reacting to OBS and the LIVE next to the new one.
+    public void Detach()
+    {
+        _clock.Stop();
+        Tt.StatusChanged -= _onStatus;
+        Hub.TikFinity.StatusChanged -= _onStatus;
+        BridgeService.AccountChanged -= _onStatus;
+        Hub.Obs.StreamStopped -= _onStreamStopped;
+        Hub.Engine.StatusChanged -= _onEngine;
+        Hub.Engine.SendingResumed -= _onResumed;
+        Hub.Relay.ProblemChanged -= _onRelay;
     }
 
     // OBS's stream stopped while GiftDeck was sending to the LIVE (GiftDeck's own stops happen while _busy).

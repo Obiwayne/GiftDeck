@@ -256,9 +256,6 @@ public partial class RuleEditorWindow : Window, IActionHost
 
     void Fail(string message) => ErrorText.Text = message;
 
-    void Cancel_Click(object sender, RoutedEventArgs e)
-    {
-        DialogResult = false;
-        Close();
-    }
+    // Just Close: setting DialogResult would close too, and a second close would ask "Discard changes?" twice.
+    void Cancel_Click(object sender, RoutedEventArgs e) => Close();
 }

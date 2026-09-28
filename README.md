@@ -83,8 +83,8 @@ cleanly and puts your own OBS setup back.
 | ![GTA V game pack](docs/screenshots/game-gta5.png) | ![Minecraft game pack](docs/screenshots/game-minecraft.png) |
 | **Events** | **Text to speech** |
 | ![Events](docs/screenshots/events.png) | ![Text to speech](docs/screenshots/tts.png) |
-
-![Overlays: the all-in-one overlay](docs/screenshots/overlays.png)
+| **Scenes** | **Overlays** |
+| ![The Scenes page with Create starter scenes](docs/screenshots/scenes.png) | ![Overlays: the all-in-one overlay](docs/screenshots/overlays.png) |
 
 ## Download and install
 
@@ -128,11 +128,16 @@ GiftDeck opens on a setup screen that goes through, in order, only what's still 
    QR code is quickest). GiftDeck spots the login by itself and offers to close Streamlabs.
 2. **OBS Studio** and 3. **Aitum Stream Suite**: download and install, one button each.
 4. **Portrait OBS.** GiftDeck makes a "GiftDeck Portrait" copy of your vertical scenes (your own OBS
-   setup isn't changed) and from then on runs OBS hidden on it.
+   setup isn't changed) and from then on runs OBS hidden on it. If your own OBS is open, it asks
+   before closing it.
 5. **TikFinity** (for 18+ LIVEs): install it, log in with the QR code, and switch off TikFinity's own
    Events (GiftDeck runs your events; otherwise gifts would fire twice).
 6. **Your TikTok username**, filled in from your Streamlabs login.
 7. **Ready check.** Waits until OBS and your LIVE reader are connected, then opens the app.
+
+Every download and install has a **Cancel** button. A download that stalls for 30 seconds stops by
+itself, and half-finished files are deleted, so you can just press the button again. You can also
+cancel the Streamlabs login if you change your mind.
 
 Someone who's already set up only sees the ready check for a few seconds. **Stream Setup** has the same
 steps as a checklist, plus the choice of how GiftDeck reads your LIVE:
@@ -143,9 +148,10 @@ steps as a checklist, plus the choice of how GiftDeck reads your LIVE:
 
 ## Going live
 
-On **Go LIVE**, set the title and category, pick your scene, and press **Go LIVE**. GiftDeck opens the
-LIVE on TikTok, sends OBS the stream key, starts streaming, and shows **✓ TikTok confirms you're live**
-once TikTok shows it (or a clear warning after 90 seconds).
+On **Go LIVE**, set the title and category, pick your scene, and press **Go LIVE**. GiftDeck checks OBS
+is ready first, then opens the LIVE on TikTok, sends OBS the stream key, starts streaming, and shows
+**✓ TikTok confirms you're live** once TikTok shows it (or a clear warning after 90 seconds). The
+buttons wait while one step is running, so you can't start the same LIVE twice.
 
 - **Scenes:** one button per scene (sizes S, M, L; a search box appears when you have lots), with the
   live scene in red. The **Scenes** page adds thumbnails, layers and an audio mixer.
@@ -156,8 +162,12 @@ once TikTok shows it (or a clear warning after 90 seconds).
   **Restart LIVE with these details**: it ends the LIVE and opens a new one straight away. Viewers have
   to rejoin; GiftDeck's own totals keep counting.
 - **TTS on/muted** next to the Go LIVE button, and the music player.
-- **End LIVE** stops OBS and closes the LIVE. Closing GiftDeck shows *Shutting down GiftDeck* until OBS
-  has closed and your own OBS setup is back.
+- **If sending stops:** when OBS stops streaming by itself, Go LIVE says *Not sending* and offers
+  **Start sending again**. If GiftDeck's OBS closes mid-LIVE, GiftDeck starts it again and carries on
+  sending to the same LIVE. The vertical relay to TikTok restarts itself too.
+- **End LIVE** stops OBS and closes the LIVE. If TikTok doesn't answer, press it again. Closing GiftDeck
+  while you're LIVE asks first. Closing it shows *Shutting down GiftDeck* until OBS has closed and your
+  own OBS setup is back.
 
 > **Mature audience (18+)** limits who can see your LIVE, and means GiftDeck has to read it through TikFinity.
 
@@ -221,7 +231,16 @@ each event can listen to TikTok, Kick, or both.
 | Run a program | anything on your PC |
 
 **Combos:** by default a combo (e.g. 15 Roses in a row) runs the event once when the combo ends. Per
-event you can instead run the actions once per gift, with a cap.
+event you can instead run the actions once per gift, with a cap. If TikTok never sends the end of a
+combo, it still counts after 5 quiet seconds.
+
+**The Events page:** type in the search box to filter by name, gift, trigger or action; the count shows
+how many events you have. Double-click an event (or select it and press **Enter**) to edit it, and
+press **Delete** to delete it. The editor asks before throwing away unsaved changes: **Esc** cancels and
+**Ctrl+S** saves. Number boxes accept `1,000` as well as `1000`.
+
+**Test** runs an event straight away. If it presses keys, it counts down 3 seconds first so you can
+click into your game. Test events show their alerts but don't change goals, timers or top gifters.
 
 ## Overlays, alerts and the Gift Spinner
 
@@ -241,10 +260,16 @@ creates the Browser Source for you, sound included):
 
 ## Text to speech
 
-Speak chat messages and event text with a Windows voice or one of two **free Google voices (male and
-female, online)**. Each profile keeps its own voice, speed, volume and chat reading. The speaker button
+Speak chat messages and event text with a Windows voice or one of two **Google voices (male and
+female, online)**. The Google voices need a Google speech API key: paste it on the **Text to speech** page
+(it stays in your settings on this PC). Each profile keeps its own voice, speed, volume and chat reading. The speaker button
 on the right-hand panel and on Go LIVE **mutes** everything at once (it stays muted after a restart, and
 the menu shows *Text to speech (muted)* so you don't forget).
+
+**Reading chat** stays calm on a busy LIVE: commands (`!like this`) aren't read, links are read as
+"a link", each viewer is read at most once every 4 seconds, and when chat is faster than the voice new
+messages are skipped so it keeps up. If you pick a Google voice before adding the key, GiftDeck speaks
+with the Windows voice instead (the page tells you).
 
 ## Kick
 
@@ -263,7 +288,13 @@ duplicate, rename, delete, **Export** a profile as one `.giftdeck` file (with it
 ## Music
 
 The **Music** page (and the player on **Go LIVE**) streams free Creative Commons tracks from Jamendo,
-shuffled, one after another. Pick a style and keep *Instrumental only* on to talk over it.
+shuffled, one after another. Pick a style and keep *Instrumental only* on to talk over it. The music
+turns down while text to speech is talking (**Turn the music down while text to speech is talking** on
+the Music page, on by default).
+
+**Spotify song requests** from chat have a per-viewer wait between requests (5 minutes by default, 0 for
+no limit), and you can tick a box so songs Spotify marks as explicit aren't queued. Both are on the **Spotify**
+page.
 
 > Many Jamendo tracks are licensed for non-commercial use, and a gift-earning LIVE may not count as
 > that. If TikTok ever mutes a moment, skip the track or change style.
@@ -298,6 +329,9 @@ flowchart LR
 - In the app, tokens, stream keys, client IDs and passwords show as dots until you click the eye button.
 - The files in `%APPDATA%\GiftDeck` are plain JSON. Anyone with access to your Windows account can read
   them, so don't share that folder.
+- If a settings or events file can't be read (after a crash, say), GiftDeck keeps the old file aside,
+  untouched, as `<name>.unreadable-<date>`, and tells you where. `log.txt` rolls over to `log.old.txt`
+  at 5 MB.
 
 ## Troubleshooting
 
@@ -311,6 +345,8 @@ flowchart LR
 | GTA: nothing happens | Games → GTA V should say **Connected in game**. Story Mode only, prologue finished, BattlEye off. |
 | Minecraft: commands do nothing | Join the server first (`localhost`); most commands need a player online. |
 | Music: **"didn't accept that Client ID"** | Copy the Jamendo Client ID again, all of it. |
+| Screen capture is black in *Just Screen* / *Cam + Game* | It only draws while the scene is live or previewed, so switch to it. On a laptop, open *Windows Settings → System → Display → Graphics*, add OBS and pick the graphics card your screen runs on. |
+| **Some saved files couldn't be read** at start-up | The message lists where the old files were kept (in `%APPDATA%\GiftDeck`, ending `.unreadable-<date>`). Those settings or events started over empty; the kept copy is the file as it was. |
 
 GiftDeck's own log is at `%APPDATA%\GiftDeck\log.txt`.
 
@@ -362,7 +398,7 @@ GiftDeck/
 
 GiftDeck is an independent project, **not affiliated with or endorsed by TikTok, ByteDance, Kick,
 Streamlabs, OBS, Aitum, TikFinity, Rockstar Games, Take-Two, Mojang, Microsoft, Google, Jamendo or
-Spotify**. Reading a LIVE, opening a LIVE through Streamlabs, the free Google voices and Kick's chat feed
+Spotify**. Reading a LIVE, opening a LIVE through Streamlabs, the Google voices and Kick's chat feed
 rely on unofficial interfaces that can change or stop working at any time. Game mods are for single-player
 / your own server only. Use it at your own risk and within each service's and game's terms.
 

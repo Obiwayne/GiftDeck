@@ -163,7 +163,10 @@ public static class SetupSteps
 
     static async Task<string> DownloadAsync(HttpClient http, string url, string file, string name, IProgress<(double, string)> progress, CancellationToken cancel)
     {
-        var setup = Path.Combine(Path.GetTempPath(), "giftdeck-" + file);
+        // Its own folder each time: a cancelled installer may still have the last download open.
+        var dir = Path.Combine(Path.GetTempPath(), "giftdeck-" + DateTime.Now.ToString("yyyyMMdd-HHmmss-fff"));
+        Directory.CreateDirectory(dir);
+        var setup = Path.Combine(dir, file);
         int shown = -1;
         await DownloadFileAsync(http, url, setup, (done, total) =>
         {

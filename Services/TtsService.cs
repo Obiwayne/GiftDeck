@@ -132,7 +132,12 @@ public class TtsService
             synth.SpeakAsync(text);
             return true;
         }
-        catch (Exception e) { Log.Write("TTS failed: " + e.Message); return false; }
+        catch (Exception e)
+        {
+            Interlocked.Decrement(ref _localPending); // it never started, so it will never complete
+            Log.Write("TTS failed: " + e.Message);
+            return false;
+        }
     }
 
     int _localPending;

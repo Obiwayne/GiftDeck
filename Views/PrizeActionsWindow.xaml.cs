@@ -52,9 +52,6 @@ public partial class PrizeActionsWindow : Window, IActionHost
         Close();
     }
 
-    void Cancel_Click(object sender, RoutedEventArgs e)
-    {
-        DialogResult = false;
-        Close();
-    }
+    // Just Close: setting DialogResult would close too, and a second close would ask "Discard changes?" twice.
+    void Cancel_Click(object sender, RoutedEventArgs e) => Close();
 }

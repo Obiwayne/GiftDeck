@@ -55,7 +55,12 @@ public class RulesEngine
         lock (_streaks)
         {
             _streaks.TryGetValue(key, out var s);
-            if (s != null && e.RepeatCount < s.Last.RepeatCount) s.Counted = 0; // the count went back down: a new combo
+            // A new combo: the count went back down, or this one was already closed (quiet timeout) and the count
+            // didn't go up (a higher count is the same combo carrying on; the same count with an end is its late end).
+            bool lateEnd = e.RepeatEnd && e.RepeatCount == s?.Last.RepeatCount;
+            if (s != null && (e.RepeatCount < s.Last.RepeatCount
+                              || (s.Last.RepeatEnd && e.RepeatCount <= s.Last.RepeatCount && !lateEnd)))
+                s.Counted = 0;
             if (s == null)
             {
                 s = new Streak();

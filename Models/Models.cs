@@ -281,7 +281,7 @@ public class AppSettings
     public bool SpotifyChatRequests { get; set; } = false;
     public string SpotifyRequestCommand { get; set; } = "!sr";
     public int SpotifyRequestCooldownMinutes { get; set; } = 5; // per viewer, for chat requests
-    public bool SpotifyBlockExplicit { get; set; } = true;
+    public bool SpotifyBlockExplicit { get; set; } = false;
 
     public string TtsVoice { get; set; } = "";
     public int TtsRate { get; set; } = 0;

@@ -87,7 +87,11 @@ public class RelayService
         _process.BeginOutputReadLine();
         var p = _process;
         int gen = _generation;
-        _process.Exited += (s, e) => OnExited(p, gen);
+        // ffmpeg can die before the handler is attached (e.g. the port isn't free yet): catch that too, once.
+        int fired = 0;
+        void Fire() { if (Interlocked.Exchange(ref fired, 1) == 0) OnExited(p, gen); }
+        _process.Exited += (s, e) => Fire();
+        if (p.HasExited) Fire();
         _startedAt = DateTime.Now;
 
         Hub.TikTok.State.RelayPid = _process.Id;
