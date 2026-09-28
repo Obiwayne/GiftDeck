@@ -29,11 +29,12 @@ public partial class RuleEditorWindow : Window, IActionHost
         new Choice(TriggerType.Join, "Someone joins the LIVE"),
     };
 
-    public RuleEditorWindow(Rule rule)
+    // isNew: a new event that already has a name (e.g. made from a game's key idea).
+    public RuleEditorWindow(Rule rule, bool isNew = false)
     {
         InitializeComponent();
         _rule = rule;
-        Heading.Text = string.IsNullOrEmpty(rule.Name) ? "New event" : "Edit event";
+        Heading.Text = isNew || string.IsNullOrEmpty(rule.Name) ? "New event" : "Edit event";
         NameBox.Text = rule.Name;
 
         TriggerCombo.ItemsSource = TriggerChoices;

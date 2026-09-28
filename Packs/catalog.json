@@ -1,0 +1,3355 @@
+[
+  {
+    "id": "a-difficult-game-about-climbing",
+    "name": "A Difficult Game About Climbing",
+    "short": "Haul yourself up a mountain using only your arms",
+    "description": "A punishing physics climber where you steer two arms with the mouse and try to reach the top of a huge mountain without falling back down. Almost everything is done with the mouse, but the game also has keyboard keys for grabbing, so gifts can make a hand grab at just the wrong moment.",
+    "tier": "keys",
+    "genre": "Physics climber",
+    "steamAppId": 2497920,
+    "store": "",
+    "windowTitle": "A Difficult Game About Climbing",
+    "warning": "This game is played with the mouse. GiftDeck can't press mouse buttons, so gifts can only use the keyboard grab keys, which leaves you just a few prank ideas.",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy and install A Difficult Game About Climbing on Steam.",
+        "link": "https://store.steampowered.com/app/2497920/A_Difficult_Game_About_Climbing/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Use windowed or borderless",
+        "text": "The game supports windowed and borderless modes. Use one of them if key presses don't seem to reach the game in fullscreen."
+      },
+      {
+        "title": "Bring the game to the front",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and type A Difficult Game About Climbing as the window title."
+      },
+      {
+        "title": "Add the grab events",
+        "text": "Set up the Q and E ideas below. Try them yourself first so you know how rough a surprise grab feels at your skill level."
+      },
+      {
+        "title": "Keep it fair",
+        "text": "One fall can wipe out a lot of progress in this game. Save these pranks for bigger gifts so they don't happen every few seconds."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Grab (one hand)",
+        "keys": "Q",
+        "idea": "A Rose makes one hand grab for a second",
+        "holdMs": 1000
+      },
+      {
+        "name": "Grab (other hand)",
+        "keys": "E",
+        "idea": "A Finger Heart makes the other hand clamp on",
+        "holdMs": 1000
+      }
+    ]
+  },
+  {
+    "id": "baldurs-gate-3",
+    "name": "Baldur's Gate 3",
+    "short": "Lead a party through a huge D&D adventure",
+    "description": "Larian's award-winning role-playing game, based on Dungeons & Dragons, with turn-based combat and a story that changes with your choices. Gifts can make your character jump, sneak, end their turn early or open menus.",
+    "tier": "keys",
+    "genre": "RPG",
+    "steamAppId": 1086940,
+    "store": "",
+    "windowTitle": "Baldur's Gate 3",
+    "warning": "Ending a turn early can hurt in a hard fight. Put that one on a bigger gift, and keep it off during tough battles if you like.",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy Baldur's Gate 3 on Steam or GOG.",
+        "link": "https://store.steampowered.com/app/1086940/Baldurs_Gate_3/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Use borderless or windowed",
+        "text": "The game supports both. Borderless makes switching between the game and GiftDeck smooth."
+      },
+      {
+        "title": "Bring the game to the front",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and type Baldur's Gate 3 as the window title."
+      },
+      {
+        "title": "Keyboard input mode",
+        "text": "If a controller is connected, set Input Mode to Keyboard/Mouse (or leave it on Automatic) so key presses count."
+      },
+      {
+        "title": "Add the events",
+        "text": "Menu and sneak pranks work any time. Jump and end-turn need a character selected, and end-turn only matters in combat."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Jump",
+        "keys": "Z",
+        "idea": "A Rose gets your character ready to jump (you still pick where)",
+        "holdMs": 0
+      },
+      {
+        "name": "Toggle sneak",
+        "keys": "C",
+        "idea": "A Finger Heart makes the party sneak",
+        "holdMs": 0
+      },
+      {
+        "name": "End turn",
+        "keys": "Space",
+        "idea": "A big gift ends your combat turn right now",
+        "holdMs": 0
+      },
+      {
+        "name": "Inventory",
+        "keys": "I",
+        "idea": "A gift opens your bags",
+        "holdMs": 0
+      },
+      {
+        "name": "Map",
+        "keys": "M",
+        "idea": "A gift opens the map",
+        "holdMs": 0
+      },
+      {
+        "name": "Spellbook",
+        "keys": "K",
+        "idea": "A gift opens the spellbook",
+        "holdMs": 0
+      },
+      {
+        "name": "Quicksave",
+        "keys": "F5",
+        "idea": "A gift saves your game, a kind gift that protects you",
+        "holdMs": 0
+      }
+    ]
+  },
+  {
+    "id": "bloons-td-6",
+    "name": "Bloons TD 6",
+    "short": "Pop balloon waves with monkey towers",
+    "description": "A colorful tower defense game where you place monkey towers along a track to pop waves of bloons before they get through. Gifts can speed up the game, flip a tower's targeting or fire off your activated abilities early.",
+    "tier": "keys",
+    "genre": "Tower defense",
+    "steamAppId": 960090,
+    "store": "",
+    "windowTitle": "BloonsTD6",
+    "warning": "Tower hotkeys only pick a tower. Placing it still needs a mouse click, so the key ideas focus on speed, targeting and abilities.",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy and install Bloons TD 6 on Steam.",
+        "link": "https://store.steampowered.com/app/960090/Bloons_TD_6/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Use windowed or borderless",
+        "text": "Both modes are supported. Switch to one if key presses don't reach the game."
+      },
+      {
+        "title": "Bring the game to the front",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and type BloonsTD6 as the window title."
+      },
+      {
+        "title": "Add the events",
+        "text": "Fast-forward and ability pranks are the most fun. Targeting changes only work while a tower is selected."
+      },
+      {
+        "title": "Custom hotkeys",
+        "text": "If you've changed your hotkeys in the settings, update the events to match."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Play / fast forward",
+        "keys": "Space",
+        "idea": "A Rose toggles fast forward, so hold on tight",
+        "holdMs": 0
+      },
+      {
+        "name": "Change targeting",
+        "keys": "Tab",
+        "idea": "A Finger Heart switches the selected tower's targeting",
+        "holdMs": 0
+      },
+      {
+        "name": "Ability 1",
+        "keys": "1",
+        "idea": "A gift fires your first activated ability right now",
+        "holdMs": 0
+      },
+      {
+        "name": "Ability 2",
+        "keys": "2",
+        "idea": "A bigger gift fires your second ability",
+        "holdMs": 0
+      },
+      {
+        "name": "Pause menu",
+        "keys": "Escape",
+        "idea": "A gift pauses the game for a quick breather",
+        "holdMs": 0
+      }
+    ]
+  },
+  {
+    "id": "core-keeper",
+    "name": "Core Keeper",
+    "short": "Mine, craft and explore an underground world",
+    "description": "A top-down mining sandbox where you dig through caverns, farm, craft and fight big bosses, solo or in co-op. Gifts can swap your held item, open the map or inventory, or send you marching into the dark.",
+    "tier": "keys",
+    "genre": "Sandbox",
+    "steamAppId": 1621690,
+    "store": "",
+    "windowTitle": "Core Keeper",
+    "warning": "",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy or install Core Keeper on Steam and play through the start so you have a save to load.",
+        "link": "https://store.steampowered.com/app/1621690/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Let GiftDeck find the window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter \"Core Keeper\" as the window title, so the key presses land in the game even if you clicked on another window."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per gift and pick a key from the ideas below. Start with harmless ones like jump or crouch, and keep bigger pranks for bigger gifts."
+      },
+      {
+        "title": "Check your bindings",
+        "text": "All keys can be remapped in Settings > Controls. If you changed them, use your own keys instead of the defaults below."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Open inventory",
+        "keys": "Tab",
+        "idea": "A Rose pops the inventory open",
+        "holdMs": 0
+      },
+      {
+        "name": "Open map",
+        "keys": "M",
+        "idea": "A gift opens the map",
+        "holdMs": 0
+      },
+      {
+        "name": "Swap to slot 1",
+        "keys": "1",
+        "idea": "Switch to hotbar slot 1",
+        "holdMs": 0
+      },
+      {
+        "name": "Swap to slot 5",
+        "keys": "5",
+        "idea": "Switch to hotbar slot 5",
+        "holdMs": 0
+      },
+      {
+        "name": "Interact",
+        "keys": "E",
+        "idea": "Poke whatever is in front of you",
+        "holdMs": 0
+      },
+      {
+        "name": "Use off-hand",
+        "keys": "Space",
+        "idea": "Use your off-hand item",
+        "holdMs": 0
+      },
+      {
+        "name": "Walk up",
+        "keys": "W",
+        "idea": "Walk up for 2 seconds",
+        "holdMs": 2000
+      },
+      {
+        "name": "Walk left",
+        "keys": "A",
+        "idea": "Walk left for 2 seconds",
+        "holdMs": 2000
+      }
+    ]
+  },
+  {
+    "id": "cult-of-the-lamb",
+    "name": "Cult of the Lamb",
+    "short": "Lead a cult and crawl through roguelike dungeons",
+    "description": "A roguelike action game where a possessed lamb builds a cult of cute followers and fights through dungeons to defeat false prophets. Gifts can make the lamb dodge roll, open the menu or track a quest.",
+    "tier": "keys",
+    "genre": "Roguelike",
+    "steamAppId": 1313140,
+    "store": "",
+    "windowTitle": "Cult of the Lamb",
+    "warning": "",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy or install Cult of the Lamb on Steam and play through the start so you have a save to load.",
+        "link": "https://store.steampowered.com/app/1313140/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Let GiftDeck find the window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter \"Cult of the Lamb\" as the window title, so the key presses land in the game even if you clicked on another window."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per gift and pick a key from the ideas below. Start with harmless ones like jump or crouch, and keep bigger pranks for bigger gifts."
+      },
+      {
+        "title": "Check your bindings",
+        "text": "The game suggests a controller but plays fine on keyboard. If a key below doesn't match, check the controls settings and use the key shown there."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Dodge roll",
+        "keys": "Shift",
+        "idea": "A Rose makes the lamb roll",
+        "holdMs": 0
+      },
+      {
+        "name": "Interact",
+        "keys": "E",
+        "idea": "Interact with what's nearby",
+        "holdMs": 0
+      },
+      {
+        "name": "Open menu",
+        "keys": "Tab",
+        "idea": "Open the menu",
+        "holdMs": 0
+      },
+      {
+        "name": "Track quest",
+        "keys": "T",
+        "idea": "Switch the tracked quest",
+        "holdMs": 0
+      },
+      {
+        "name": "Walk up",
+        "keys": "W",
+        "idea": "Walk up for 2 seconds",
+        "holdMs": 2000
+      }
+    ]
+  },
+  {
+    "id": "cyberpunk-2077",
+    "name": "Cyberpunk 2077",
+    "short": "Carve your path through Night City as V",
+    "description": "CD PROJEKT RED's open-world RPG puts you in Night City as V, a mercenary chasing a one-of-a-kind implant. Gifts can make you jump, crouch, reload, scan, call your car or open the phone at awkward moments.",
+    "tier": "keys",
+    "genre": "Open-world RPG",
+    "steamAppId": 1091500,
+    "store": "",
+    "windowTitle": "Cyberpunk 2077",
+    "warning": "",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Install Cyberpunk 2077 from Steam and play it through once so you know the controls and your save is set up.",
+        "link": "https://store.steampowered.com/app/1091500/",
+        "linkText": "Open on Steam"
+      },
+      {
+        "title": "Use borderless windowed",
+        "text": "Set Window Mode to Windowed Borderless in the video settings. Exclusive fullscreen can minimize when another window takes focus, and borderless makes the bring-to-front step reliable."
+      },
+      {
+        "title": "Point GiftDeck at the game window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter Cyberpunk 2077 as the window title, so key presses land in the game and not in your streaming software."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per idea below and pick a gift for each. Start with cheap gifts for harmless keys and save bigger gifts for the chaotic ones. For example: a Rose presses Space to jump, a bigger gift presses V to call your car."
+      },
+      {
+        "title": "On foot vs. driving",
+        "text": "Some keys do different things in a vehicle (for example, R is the radio and Space is the handbrake). That's part of the fun, but check the ideas still make sense for how you play."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Jump",
+        "keys": "Space",
+        "idea": "A Rose makes V jump (or hits the handbrake while driving)",
+        "holdMs": 0
+      },
+      {
+        "name": "Crouch toggle",
+        "keys": "C",
+        "idea": "A Finger Heart toggles crouch",
+        "holdMs": 0
+      },
+      {
+        "name": "Reload",
+        "keys": "R",
+        "idea": "A gift forces a reload (or changes the radio station in a car)",
+        "holdMs": 0
+      },
+      {
+        "name": "Scanner",
+        "keys": "Tab",
+        "idea": "A gift holds the scanner up",
+        "holdMs": 1500
+      },
+      {
+        "name": "Call vehicle",
+        "keys": "V",
+        "idea": "A mid gift summons your car",
+        "holdMs": 0
+      },
+      {
+        "name": "Phone",
+        "keys": "T",
+        "idea": "A gift opens the phone",
+        "holdMs": 0
+      },
+      {
+        "name": "Inventory",
+        "keys": "I",
+        "idea": "A big gift opens the inventory",
+        "holdMs": 0
+      }
+    ]
+  },
+  {
+    "id": "deep-rock-galactic-survivor",
+    "name": "Deep Rock Galactic: Survivor",
+    "short": "Survive swarms as an auto-shooting dwarf",
+    "description": "A bullet-heaven spin-off of Deep Rock Galactic where your dwarf fires automatically while you steer through swarms of alien bugs and dig through rock. Movement is almost the only control, so gifts can steer you for a moment or pause the game.",
+    "tier": "keys",
+    "genre": "Survivor-like",
+    "steamAppId": 2321470,
+    "store": "",
+    "windowTitle": "Deep Rock Galactic: Survivor",
+    "warning": "The game has no key remapping, so these defaults are what everyone has.",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy and install Deep Rock Galactic: Survivor on Steam.",
+        "link": "https://store.steampowered.com/app/2321470/Deep_Rock_Galactic_Survivor/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Use windowed or borderless",
+        "text": "Both modes are supported. Use one if key presses don't register in fullscreen."
+      },
+      {
+        "title": "Bring the game to the front",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and type Deep Rock Galactic: Survivor as the window title."
+      },
+      {
+        "title": "Add the events",
+        "text": "Since shooting is automatic, steering pranks are what make it fun. Keep them to a second or two so they stay fair."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Move up",
+        "keys": "W",
+        "idea": "A Rose drags your dwarf upward",
+        "holdMs": 1200
+      },
+      {
+        "name": "Move down",
+        "keys": "S",
+        "idea": "A Finger Heart pulls your dwarf downward",
+        "holdMs": 1200
+      },
+      {
+        "name": "Move left",
+        "keys": "A",
+        "idea": "A gift shoves your dwarf left",
+        "holdMs": 1200
+      },
+      {
+        "name": "Move right",
+        "keys": "D",
+        "idea": "A gift shoves your dwarf right",
+        "holdMs": 1200
+      },
+      {
+        "name": "Pause",
+        "keys": "Escape",
+        "idea": "A gift pauses the game for a quick breather",
+        "holdMs": 0
+      }
+    ]
+  },
+  {
+    "id": "dont-starve-together",
+    "name": "Don't Starve Together",
+    "short": "Survive a strange wilderness with friends",
+    "description": "The multiplayer version of Klei's gothic survival game, where you gather, craft and try not to starve, freeze or go insane. Gifts can make you swing at things, grab whatever is nearby, spin the camera or toggle the map.",
+    "tier": "keys",
+    "genre": "Survival",
+    "steamAppId": 322330,
+    "store": "",
+    "windowTitle": "Don't Starve Together",
+    "warning": "The auto-attack key (F) can hit nearby creatures or friendly followers. Keep it for bigger gifts.",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Install Don't Starve Together from Steam and play it through once so you know the controls and your save is set up.",
+        "link": "https://store.steampowered.com/app/322330/",
+        "linkText": "Open on Steam"
+      },
+      {
+        "title": "Point GiftDeck at the game window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter Don't Starve Together as the window title, so key presses land in the game and not in your streaming software."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per idea below and pick a gift for each. Start with cheap gifts for harmless keys and save bigger gifts for the chaotic ones. For example: a Rose rotates the camera with Q, a big gift holds F to auto-attack."
+      },
+      {
+        "title": "The world never pauses",
+        "text": "Even when hosting alone, DST keeps running while the map is open, so the map prank is a real (but fair) distraction at night."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Rotate camera left",
+        "keys": "Q",
+        "idea": "A Rose spins the camera 45 degrees",
+        "holdMs": 0
+      },
+      {
+        "name": "Rotate camera right",
+        "keys": "E",
+        "idea": "A Finger Heart spins the camera the other way",
+        "holdMs": 0
+      },
+      {
+        "name": "Auto-action",
+        "keys": "Space",
+        "idea": "A gift makes you grab or use whatever is nearest",
+        "holdMs": 1000
+      },
+      {
+        "name": "Auto-attack",
+        "keys": "F",
+        "idea": "A big gift makes you attack whatever is closest",
+        "holdMs": 1500
+      },
+      {
+        "name": "Toggle map",
+        "keys": "Tab",
+        "idea": "A gift throws the map over your screen",
+        "holdMs": 0
+      },
+      {
+        "name": "Inventory slot 1",
+        "keys": "1",
+        "idea": "A gift uses or equips the item in slot 1",
+        "holdMs": 0
+      }
+    ]
+  },
+  {
+    "id": "egging-on",
+    "name": "Egging On",
+    "short": "Roll and jump a fragile egg up a deadly climb",
+    "description": "A physics platformer from Egobounds where you guide a very breakable egg out of the hen house and up through a farm shop, a factory and worse. It only uses movement, a jump and a camera zoom, so key pranks are simple, but a well-timed jump can undo minutes of careful climbing.",
+    "tier": "keys",
+    "genre": "Platformer",
+    "steamAppId": 2897610,
+    "store": "",
+    "windowTitle": "Egging On",
+    "warning": "We couldn't confirm the default PC key for jump from an official source, so no key ideas are listed yet. Look it up in the game's controls menu and add it yourself.",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Install Egging On from Steam and play it through once so you know the controls and your save is set up.",
+        "link": "https://store.steampowered.com/app/2897610/",
+        "linkText": "Open on Steam"
+      },
+      {
+        "title": "Point GiftDeck at the game window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter Egging On as the window title, so key presses land in the game and not in your streaming software."
+      },
+      {
+        "title": "Find the jump key",
+        "text": "Open the game's settings and check which key jumps and which moves. Then make an event that presses the jump key, like a Rose that makes the egg hop."
+      },
+      {
+        "title": "Be kind with a rage game",
+        "text": "The standard mode has no checkpoints, so one random jump can cost a lot of progress. Keep jump pranks on pricier gifts, or turn on the drone checkpoints if you want a friendlier stream."
+      }
+    ],
+    "keys": []
+  },
+  {
+    "id": "elden-ring",
+    "name": "ELDEN RING",
+    "short": "Open-world soulslike in the Lands Between",
+    "description": "FromSoftware's open-world action RPG full of brutal bosses and hidden secrets. Gifts can switch your spells, items or weapons, crouch you, or open the map in the middle of a fight.",
+    "tier": "keys",
+    "genre": "Action RPG",
+    "steamAppId": 1245620,
+    "store": "",
+    "windowTitle": "ELDEN RING",
+    "warning": "Play offline. The game uses Easy Anti-Cheat.",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy or install ELDEN RING on Steam and play through the start so you have a save to load.",
+        "link": "https://store.steampowered.com/app/1245620/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Play offline",
+        "text": "Start the game in offline mode (in the Network settings, set the launch setting to Start in Offline Mode) so gift pranks never touch other players. The game uses Easy Anti-Cheat; GiftDeck only presses keys and doesn't change game files."
+      },
+      {
+        "title": "Check your key layout",
+        "text": "Patch 1.12 changed the default keyboard layout for new saves. Look at the Key Settings under Keyboard and Mouse settings, and use the keys shown there if they differ from the list below."
+      },
+      {
+        "title": "Let GiftDeck find the window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter \"ELDEN RING\" as the window title, so the key presses land in the game even if you clicked on another window."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per gift and pick a key from the ideas below. Start with harmless ones like jump or crouch, and keep bigger pranks for bigger gifts."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Switch spell",
+        "keys": "Up",
+        "idea": "Swap to the next sorcery or incantation",
+        "holdMs": 0
+      },
+      {
+        "name": "Switch item",
+        "keys": "Down",
+        "idea": "Swap the quick item",
+        "holdMs": 0
+      },
+      {
+        "name": "Switch left weapon",
+        "keys": "Left",
+        "idea": "Swap the left-hand armament",
+        "holdMs": 0
+      },
+      {
+        "name": "Switch right weapon",
+        "keys": "Right",
+        "idea": "Swap the right-hand armament",
+        "holdMs": 0
+      },
+      {
+        "name": "Open map",
+        "keys": "G",
+        "idea": "A gift opens the map",
+        "holdMs": 0
+      },
+      {
+        "name": "Crouch",
+        "keys": "X",
+        "idea": "Crouch or stand up",
+        "holdMs": 0
+      },
+      {
+        "name": "Walk forward",
+        "keys": "W",
+        "idea": "Walk forward for 2 seconds",
+        "holdMs": 2000
+      }
+    ]
+  },
+  {
+    "id": "escape-from-duckov",
+    "name": "Escape From Duckov",
+    "short": "Loot, shoot and extract in a world of ducks",
+    "description": "A top-down PvE extraction shooter from Team Soda where you're a duck who scavenges raids, builds up a hideout and upgrades gear. Gifts can make you dodge-roll, reload, holster your weapon or switch ammo mid-firefight.",
+    "tier": "keys",
+    "genre": "Extraction shooter",
+    "steamAppId": 3167020,
+    "store": "",
+    "windowTitle": "Duckov",
+    "warning": "",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Install Escape From Duckov from Steam and play it through once so you know the controls and your save is set up.",
+        "link": "https://store.steampowered.com/app/3167020/",
+        "linkText": "Open on Steam"
+      },
+      {
+        "title": "Point GiftDeck at the game window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter Duckov (the game's window name; if it doesn't match, copy the exact title from Task Manager) as the window title, so key presses land in the game and not in your streaming software."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per idea below and pick a gift for each. Start with cheap gifts for harmless keys and save bigger gifts for the chaotic ones. For example: a Rose presses Space to dodge-roll, a bigger gift presses C to put your gun away."
+      },
+      {
+        "title": "Raids are single-player",
+        "text": "Duckov is PvE, so pranks only affect you. Opening the inventory doesn't make you safe, so a Tab prank during a fight is a real challenge."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Dodge roll",
+        "keys": "Space",
+        "idea": "A Rose makes your duck dodge-roll",
+        "holdMs": 0
+      },
+      {
+        "name": "Reload",
+        "keys": "R",
+        "idea": "A Finger Heart forces a reload",
+        "holdMs": 0
+      },
+      {
+        "name": "Holster weapon",
+        "keys": "C",
+        "idea": "A big gift makes you put your weapon away",
+        "holdMs": 0
+      },
+      {
+        "name": "Toggle melee",
+        "keys": "V",
+        "idea": "A gift switches you to melee",
+        "holdMs": 0
+      },
+      {
+        "name": "Switch ammo",
+        "keys": "T",
+        "idea": "A gift swaps your ammo type",
+        "holdMs": 0
+      },
+      {
+        "name": "Run",
+        "keys": "Shift",
+        "idea": "A gift makes you run for two seconds",
+        "holdMs": 2000
+      },
+      {
+        "name": "Inventory",
+        "keys": "Tab",
+        "idea": "A gift opens the inventory",
+        "holdMs": 0
+      }
+    ]
+  },
+  {
+    "id": "feed-and-grow-fish",
+    "name": "Feed and Grow: Fish",
+    "short": "Eat smaller fish and grow into a predator",
+    "description": "An underwater survival game where you start as a small fish, eat others to grow, and try not to get eaten yourself. Gifts can make you sprint, use your special ability, show your stats or hide the HUD.",
+    "tier": "keys",
+    "genre": "Survival",
+    "steamAppId": 429050,
+    "store": "",
+    "windowTitle": "Feed and Grow",
+    "warning": "",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy or install Feed and Grow: Fish on Steam and play through the start so you have a save to load.",
+        "link": "https://store.steampowered.com/app/429050/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Let GiftDeck find the window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter \"Feed and Grow\" as the window title, so the key presses land in the game even if you clicked on another window."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per gift and pick a key from the ideas below. Start with harmless ones like jump or crouch, and keep bigger pranks for bigger gifts."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Swim forward",
+        "keys": "W",
+        "idea": "Swim forward for 2 seconds",
+        "holdMs": 2000
+      },
+      {
+        "name": "Swim back",
+        "keys": "S",
+        "idea": "Back up for 2 seconds",
+        "holdMs": 2000
+      },
+      {
+        "name": "Special ability",
+        "keys": "E",
+        "idea": "Trigger your fish's special ability",
+        "holdMs": 0
+      },
+      {
+        "name": "Show stats",
+        "keys": "Tab",
+        "idea": "Pop up your hidden stats",
+        "holdMs": 0
+      },
+      {
+        "name": "Hide HUD",
+        "keys": "F11",
+        "idea": "Toggle the HUD off (and on)",
+        "holdMs": 0
+      },
+      {
+        "name": "Sprint",
+        "keys": "Shift",
+        "idea": "Burst of speed",
+        "holdMs": 1000
+      }
+    ]
+  },
+  {
+    "id": "getting-over-it",
+    "name": "Getting Over It with Bennett Foddy",
+    "short": "Climb a mountain with a hammer and a pot",
+    "description": "A famously punishing climbing game where a man in a cauldron hauls himself up a mountain of junk using only a sledgehammer, with the developer narrating your failures. The whole game is played with the mouse, so keyboard pranks don't really work here. Use GiftDeck's other kinds of reactions instead.",
+    "tier": "keys",
+    "genre": "Rage climber",
+    "steamAppId": 240720,
+    "store": "",
+    "windowTitle": "Getting Over It",
+    "warning": "Mouse-only game: GiftDeck can't press mouse buttons or move the mouse, so there are no key ideas for this one.",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Install Getting Over It with Bennett Foddy from Steam and play it through once so you know the controls and your save is set up.",
+        "link": "https://store.steampowered.com/app/240720/",
+        "linkText": "Open on Steam"
+      },
+      {
+        "title": "Why there are no key ideas",
+        "text": "The hammer follows your mouse and nothing else. Keyboard presses have no effect during play, so GiftDeck key actions can't change what happens."
+      },
+      {
+        "title": "React without keys",
+        "text": "Set gifts to trigger GiftDeck actions that don't need the game, and let chat cheer or jeer your climb instead of controlling it."
+      }
+    ],
+    "keys": []
+  },
+  {
+    "id": "gta-san-andreas-definitive-edition",
+    "name": "Grand Theft Auto: San Andreas – The Definitive Edition",
+    "short": "Cause chaos across the state of San Andreas",
+    "description": "The remastered version of Rockstar's classic open-world crime game, where you play as CJ and explore Los Santos, San Fierro and Las Venturas. Gifts can honk your horn in the middle of a chase or kick CJ out of the car he's driving.",
+    "tier": "keys",
+    "genre": "Open world",
+    "steamAppId": 1547000,
+    "store": "",
+    "windowTitle": "San Andreas",
+    "warning": "These keys come from the classic PC layout. The Definitive Edition also offers Modern and Modern Alt control schemes, so check Settings > Controls and change the events if your keys are different.",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy it on Steam or the Rockstar Games Launcher. It's also part of GTA: The Trilogy – The Definitive Edition.",
+        "link": "https://store.steampowered.com/app/1547000/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Use borderless or windowed",
+        "text": "Choose a borderless or windowed display mode so the game reacts to key presses reliably while GiftDeck runs."
+      },
+      {
+        "title": "Bring the game to the front",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and type San Andreas as the window title."
+      },
+      {
+        "title": "Check your control scheme",
+        "text": "Open the controls menu and confirm the keys for enter/exit vehicle and horn. Change the events below if your scheme uses other keys."
+      },
+      {
+        "title": "Add the events",
+        "text": "Horn and exit-vehicle work best during driving missions and police chases, when viewers can see the chaos."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Enter / exit vehicle",
+        "keys": "F",
+        "idea": "A Rose kicks CJ out of whatever he's driving",
+        "holdMs": 0
+      },
+      {
+        "name": "Horn",
+        "keys": "H",
+        "idea": "Every Finger Heart honks the horn",
+        "holdMs": 800
+      }
+    ]
+  },
+  {
+    "id": "hades-ii",
+    "name": "Hades II",
+    "short": "Battle through the Underworld as the witch Melinoe",
+    "description": "Supergiant's roguelike sequel sends Melinoe, Princess of the Underworld, on a fight against the Titan of Time with a new set of weapons, spells and godly boons. Gifts can fire off dashes, casts and hexes at random, which can save or doom a run.",
+    "tier": "keys",
+    "genre": "Roguelike",
+    "steamAppId": 1145350,
+    "store": "",
+    "windowTitle": "Hades II",
+    "warning": "",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Install Hades II from Steam and play it through once so you know the controls and your save is set up.",
+        "link": "https://store.steampowered.com/app/1145350/",
+        "linkText": "Open on Steam"
+      },
+      {
+        "title": "Point GiftDeck at the game window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter Hades II as the window title, so key presses land in the game and not in your streaming software."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per idea below and pick a gift for each. Start with cheap gifts for harmless keys and save bigger gifts for the chaotic ones. For example: a Rose presses Space to dash, a bigger gift presses F to fire your hex."
+      },
+      {
+        "title": "Keyboard defaults only",
+        "text": "Attack and Special are on the mouse buttons by default, which GiftDeck can't press. The ideas below use the keyboard actions instead."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Dash",
+        "keys": "Space",
+        "idea": "A Rose makes Melinoe dash in whatever direction she's facing",
+        "holdMs": 0
+      },
+      {
+        "name": "Cast",
+        "keys": "Q",
+        "idea": "A Finger Heart drops a Cast circle on the spot",
+        "holdMs": 0
+      },
+      {
+        "name": "Hex",
+        "keys": "F",
+        "idea": "A big gift fires your Hex, ready or not",
+        "holdMs": 0
+      },
+      {
+        "name": "Interact",
+        "keys": "E",
+        "idea": "A gift makes you interact with whatever is nearby",
+        "holdMs": 0
+      }
+    ]
+  },
+  {
+    "id": "hollow-knight",
+    "name": "Hollow Knight",
+    "short": "Explore a ruined bug kingdom in 2D",
+    "description": "Team Cherry's hand-drawn action platformer set in the vast underground kingdom of Hallownest. Gifts can make the Knight jump, dash, focus to heal or pull up the map mid-platforming.",
+    "tier": "keys",
+    "genre": "Metroidvania",
+    "steamAppId": 367520,
+    "store": "",
+    "windowTitle": "Hollow Knight",
+    "warning": "",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy or install Hollow Knight on Steam and play through the start so you have a save to load.",
+        "link": "https://store.steampowered.com/app/367520/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Let GiftDeck find the window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter \"Hollow Knight\" as the window title, so the key presses land in the game even if you clicked on another window."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per gift and pick a key from the ideas below. Start with harmless ones like jump or crouch, and keep bigger pranks for bigger gifts."
+      },
+      {
+        "title": "Keyboard defaults",
+        "text": "Hollow Knight uses the arrow keys to move and Z, X and C for jump, attack and dash. If you remapped keys in the keyboard options, use your own keys."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Jump",
+        "keys": "Z",
+        "idea": "A Rose makes the Knight jump",
+        "holdMs": 0
+      },
+      {
+        "name": "Dash",
+        "keys": "C",
+        "idea": "Dash forward",
+        "holdMs": 0
+      },
+      {
+        "name": "Focus",
+        "keys": "A",
+        "idea": "Hold to focus and heal (uses Soul)",
+        "holdMs": 1500
+      },
+      {
+        "name": "Quick map",
+        "keys": "Tab",
+        "idea": "Pull up the area map",
+        "holdMs": 2000
+      },
+      {
+        "name": "Inventory",
+        "keys": "I",
+        "idea": "Open the inventory",
+        "holdMs": 0
+      },
+      {
+        "name": "Walk left",
+        "keys": "Left",
+        "idea": "Walk left for 1.5 seconds",
+        "holdMs": 1500
+      },
+      {
+        "name": "Walk right",
+        "keys": "Right",
+        "idea": "Walk right for 1.5 seconds",
+        "holdMs": 1500
+      }
+    ]
+  },
+  {
+    "id": "hollow-knight-silksong",
+    "name": "Hollow Knight: Silksong",
+    "short": "Fight and climb through the kingdom of Pharloom",
+    "description": "The sequel to Hollow Knight follows Hornet through a huge, hand-drawn kingdom full of tough bosses and tricky platforming. Gifts can trigger jumps, attacks, sprints and Hornet's heal, which gets chaotic in the middle of a boss fight.",
+    "tier": "keys",
+    "genre": "Metroidvania",
+    "steamAppId": 1030300,
+    "store": "",
+    "windowTitle": "Hollow Knight Silksong",
+    "warning": "",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Install Hollow Knight: Silksong from Steam and play it through once so you know the controls and your save is set up.",
+        "link": "https://store.steampowered.com/app/1030300/",
+        "linkText": "Open on Steam"
+      },
+      {
+        "title": "Point GiftDeck at the game window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter Hollow Knight Silksong as the window title, so key presses land in the game and not in your streaming software."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per idea below and pick a gift for each. Start with cheap gifts for harmless keys and save bigger gifts for the chaotic ones. For example: a Rose presses Z to jump, a bigger gift presses A to start a bind (heal)."
+      },
+      {
+        "title": "Default keys use Z/X/C",
+        "text": "Out of the box Silksong moves with the arrow keys and uses Z, X, C, A, S, D and F for actions. Many players remap to WASD; if you did, change the events to match your layout."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Jump",
+        "keys": "Z",
+        "idea": "A Rose makes Hornet jump",
+        "holdMs": 0
+      },
+      {
+        "name": "Attack",
+        "keys": "X",
+        "idea": "A Finger Heart makes Hornet swing her needle",
+        "holdMs": 0
+      },
+      {
+        "name": "Sprint",
+        "keys": "C",
+        "idea": "A gift makes Hornet dash forward",
+        "holdMs": 0
+      },
+      {
+        "name": "Bind (heal)",
+        "keys": "A",
+        "idea": "A big gift starts a heal whether you need it or not",
+        "holdMs": 0
+      },
+      {
+        "name": "Needolin",
+        "keys": "D",
+        "idea": "A gift makes Hornet play her needolin",
+        "holdMs": 1500
+      },
+      {
+        "name": "Look up",
+        "keys": "Up",
+        "idea": "A small gift makes Hornet look up",
+        "holdMs": 1000
+      },
+      {
+        "name": "Quick map",
+        "keys": "Tab",
+        "idea": "A gift flashes the quick map",
+        "holdMs": 1500
+      }
+    ]
+  },
+  {
+    "id": "how-to-fish",
+    "name": "How to Fish",
+    "short": "Catch and fight wild fish with your friends",
+    "description": "A physics-based co-op fishing game for friends. You wash up on an island, catch and battle strange sea creatures, sell your catch and upgrade your gear to reach new islands. Gifts can make you sprint, open your inventory or drop the fish you're carrying.",
+    "tier": "keys",
+    "genre": "Co-op fishing",
+    "steamAppId": 4001890,
+    "store": "",
+    "windowTitle": "How to Fish",
+    "warning": "Keys can be rebound and patches may change them. These come from community guides, so check Settings > Controls if something doesn't match.",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy and install How to Fish on Steam.",
+        "link": "https://store.steampowered.com/app/4001890/How_to_Fish/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Use windowed or borderless",
+        "text": "Both modes are supported. Use one if key presses don't register in fullscreen."
+      },
+      {
+        "title": "Bring the game to the front",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and type How to Fish as the window title."
+      },
+      {
+        "title": "Add the events",
+        "text": "Casting and reeling use the mouse, so GiftDeck can't trigger them. Stick to the keyboard pranks below."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Sprint",
+        "keys": "Shift",
+        "idea": "A Rose makes you sprint for two seconds",
+        "holdMs": 2000
+      },
+      {
+        "name": "Drop carried fish",
+        "keys": "G",
+        "idea": "A bigger gift makes you drop the fish you're carrying",
+        "holdMs": 0
+      },
+      {
+        "name": "Inventory",
+        "keys": "Tab",
+        "idea": "A Finger Heart pops open your inventory",
+        "holdMs": 0
+      },
+      {
+        "name": "Interact",
+        "keys": "E",
+        "idea": "A gift makes you interact with whatever is nearby",
+        "holdMs": 0
+      },
+      {
+        "name": "Walk forward",
+        "keys": "W",
+        "idea": "A gift walks you forward, maybe off the dock",
+        "holdMs": 1500
+      }
+    ]
+  },
+  {
+    "id": "hytale",
+    "name": "Hytale",
+    "short": "Explore, build and fight in a blocky adventure world",
+    "description": "Hypixel Studios' block-based sandbox RPG came out in Early Access in January 2026, mixing exploration, building, combat and creative tools. Gifts can make you jump, crouch-roll, sprint, switch camera or drop the item in your hand.",
+    "tier": "keys",
+    "genre": "Sandbox RPG",
+    "steamAppId": 0,
+    "store": "https://hytale.com",
+    "windowTitle": "Hytale",
+    "warning": "Hytale is in Early Access and still changing, so default keys may move. On other people's servers, follow the server rules.",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy Hytale from the official site and install it with the Hytale launcher. It isn't sold on Steam.",
+        "link": "https://hytale.com",
+        "linkText": "Hytale official site"
+      },
+      {
+        "title": "Point GiftDeck at the game window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter Hytale as the window title, so key presses land in the game and not in your streaming software."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per idea below and pick a gift for each. Start with cheap gifts for harmless keys and save bigger gifts for the chaotic ones. For example: a Rose presses Space to jump, a bigger gift presses V to flip the camera."
+      },
+      {
+        "title": "Stay out of builder mode",
+        "text": "Many keys do different things with the builder tools open (Z is undo, for example). Use these pranks in normal adventure play."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Jump",
+        "keys": "Space",
+        "idea": "A Rose makes you jump",
+        "holdMs": 0
+      },
+      {
+        "name": "Crouch / slide / roll",
+        "keys": "Ctrl",
+        "idea": "A Finger Heart makes you crouch or roll",
+        "holdMs": 0
+      },
+      {
+        "name": "Sprint",
+        "keys": "Shift",
+        "idea": "A gift makes you sprint for two seconds",
+        "holdMs": 2000
+      },
+      {
+        "name": "Switch camera",
+        "keys": "V",
+        "idea": "A gift flips between first and third person",
+        "holdMs": 0
+      },
+      {
+        "name": "Drop item",
+        "keys": "G",
+        "idea": "A big gift drops the item in your hand",
+        "holdMs": 0
+      },
+      {
+        "name": "Map",
+        "keys": "M",
+        "idea": "A gift opens the map",
+        "holdMs": 0
+      }
+    ]
+  },
+  {
+    "id": "lethal-company",
+    "name": "Lethal Company",
+    "short": "Scavenge scrap on deadly moons for the Company",
+    "description": "A co-op horror game where you and your crew collect scrap from abandoned moons to hit a profit quota. Gifts can make you dance, point, crouch or drop the scrap you're carrying.",
+    "tier": "keys",
+    "genre": "Co-op horror",
+    "steamAppId": 1966720,
+    "store": "",
+    "windowTitle": "Lethal Company",
+    "warning": "",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy or install Lethal Company on Steam and play through the start so you have a save to load.",
+        "link": "https://store.steampowered.com/app/1966720/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Let GiftDeck find the window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter \"Lethal Company\" as the window title, so the key presses land in the game even if you clicked on another window."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per gift and pick a key from the ideas below. Start with harmless ones like jump or crouch, and keep bigger pranks for bigger gifts."
+      },
+      {
+        "title": "Co-op note",
+        "text": "Pranks only move your own employee. Dropping scrap in a dangerous spot is a big prank, so tie it to a big gift."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Jump",
+        "keys": "Space",
+        "idea": "A Rose makes you jump",
+        "holdMs": 0
+      },
+      {
+        "name": "Crouch",
+        "keys": "Ctrl",
+        "idea": "A gift makes you crouch",
+        "holdMs": 0
+      },
+      {
+        "name": "Dance",
+        "keys": "1",
+        "idea": "Bust out the dance emote",
+        "holdMs": 0
+      },
+      {
+        "name": "Point",
+        "keys": "2",
+        "idea": "Point dramatically at nothing",
+        "holdMs": 0
+      },
+      {
+        "name": "Drop item",
+        "keys": "G",
+        "idea": "Drop the item you're holding",
+        "holdMs": 0
+      },
+      {
+        "name": "Walk forward",
+        "keys": "W",
+        "idea": "Walk forward for 2 seconds",
+        "holdMs": 2000
+      }
+    ]
+  },
+  {
+    "id": "low-budget-repairs",
+    "name": "Low-Budget Repairs",
+    "short": "Fix up 1990s flats as cheaply as possible",
+    "description": "A comedy first-person renovation sim where you run a small handyman business in 1990s Polish apartment blocks and cut corners to make money. Gift key presses can pop open your tool wheel or make you throw whatever you're holding.",
+    "tier": "keys",
+    "genre": "Renovation sim",
+    "steamAppId": 3167920,
+    "store": "",
+    "windowTitle": "Low-Budget Repairs",
+    "warning": "There's no official key list. These keys come from community reports and on-screen prompts, and what a key does can change with the tool you're holding. Test each event first.",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy and install Low-Budget Repairs on Steam. There's also a free demo.",
+        "link": "https://store.steampowered.com/app/3167920/LowBudget_Repairs/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Try windowed if keys don't land",
+        "text": "If gift key presses don't register in fullscreen, switch the game to windowed or borderless."
+      },
+      {
+        "title": "Bring the game to the front",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and type Low-Budget Repairs as the window title."
+      },
+      {
+        "title": "Check the prompts",
+        "text": "Watch the on-screen button prompts while you work. Keys can do different things depending on the tool or job, so change the events if yours differ."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Tool wheel",
+        "keys": "Q",
+        "idea": "A Rose pops open the tool wheel mid-job",
+        "holdMs": 0
+      },
+      {
+        "name": "Interact / pick up / drop",
+        "keys": "E",
+        "idea": "A Finger Heart makes you grab or drop what's in front of you",
+        "holdMs": 0
+      },
+      {
+        "name": "Throw",
+        "keys": "G",
+        "idea": "A bigger gift makes you throw what you're holding",
+        "holdMs": 0
+      }
+    ]
+  },
+  {
+    "id": "megabonk",
+    "name": "Megabonk",
+    "short": "Survive endless hordes in a 3D roguelike",
+    "description": "A 3D horde-survival roguelike where you bonk your way through waves of enemies, collect loot and level up into a ridiculous build. Gifts can make you jump or slide at random, which can dodge a hit or send you straight into a crowd.",
+    "tier": "keys",
+    "genre": "Roguelike",
+    "steamAppId": 3405340,
+    "store": "",
+    "windowTitle": "Megabonk",
+    "warning": "Do not bind R: holding it restarts the run.",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Install Megabonk from Steam and play it through once so you know the controls and your save is set up.",
+        "link": "https://store.steampowered.com/app/3405340/",
+        "linkText": "Open on Steam"
+      },
+      {
+        "title": "Point GiftDeck at the game window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter Megabonk as the window title, so key presses land in the game and not in your streaming software."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per idea below and pick a gift for each. Start with cheap gifts for harmless keys and save bigger gifts for the chaotic ones. For example: a Rose presses Space to jump, a bigger gift presses Ctrl to slide."
+      },
+      {
+        "title": "Limited key list",
+        "text": "Megabonk has only a few keyboard actions and limited rebinding. Guides disagree on the interact key, so it's left out here. Check your in-game settings if you want to add it."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Jump",
+        "keys": "Space",
+        "idea": "A Rose makes you jump",
+        "holdMs": 0
+      },
+      {
+        "name": "Slide",
+        "keys": "Ctrl",
+        "idea": "A Finger Heart makes you slide forward",
+        "holdMs": 0
+      },
+      {
+        "name": "Move forward",
+        "keys": "W",
+        "idea": "A gift pushes you forward into the horde",
+        "holdMs": 1000
+      },
+      {
+        "name": "Move back",
+        "keys": "S",
+        "idea": "A gift pulls you backward",
+        "holdMs": 1000
+      }
+    ]
+  },
+  {
+    "id": "only-climb-better-together",
+    "name": "Only Climb: Better Together",
+    "short": "Race friends up a tall obstacle tower",
+    "description": "A multiplayer climbing platformer for up to 8 players. You jump, bounce and shove your way up a tower full of obstacles, and there are no checkpoints if you fall. We couldn't find the default keys in a public source we trust, so no ready-made key ideas are listed yet.",
+    "tier": "keys",
+    "genre": "Platformer",
+    "steamAppId": 2500750,
+    "store": "",
+    "windowTitle": "Only Climb",
+    "warning": "Default keyboard controls could not be verified, so no key ideas are listed. Check the game's settings or tutorial and add your own.",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy and install Only Climb: Better Together on Steam.",
+        "link": "https://store.steampowered.com/app/2500750/Only_Climb_Better_Together/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Try windowed if keys don't land",
+        "text": "If gift key presses don't seem to register in fullscreen, switch the game to windowed or borderless."
+      },
+      {
+        "title": "Bring the game to the front",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and type Only Climb as the window title."
+      },
+      {
+        "title": "Find your keys",
+        "text": "Check the game's settings or first level to see which keys jump and move you, then add GiftDeck events for them. A short forced jump or step is plenty."
+      },
+      {
+        "title": "No checkpoints",
+        "text": "One fall can cost a lot of height in this game. Keep pranks short and save the big ones for big gifts."
+      }
+    ],
+    "keys": []
+  },
+  {
+    "id": "peak",
+    "name": "PEAK",
+    "short": "Climb a deadly mountain with friends to get rescued",
+    "description": "A co-op climbing game from Aggro Crab and Landfall where a group of lost scouts scramble up a new mountain every day while managing stamina, injuries and snacks. Gift-triggered keys can make your scout emote, jump, crouch or drop what they're holding at the least helpful time.",
+    "tier": "keys",
+    "genre": "Co-op climbing",
+    "steamAppId": 3527290,
+    "store": "",
+    "windowTitle": "PEAK",
+    "warning": "Dropping items on a cliff can lose them for good. Keep the drop prank for big gifts, and let your teammates know chat can mess with you.",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Install PEAK from Steam and play it through once so you know the controls and your save is set up.",
+        "link": "https://store.steampowered.com/app/3527290/",
+        "linkText": "Open on Steam"
+      },
+      {
+        "title": "Point GiftDeck at the game window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter PEAK as the window title, so key presses land in the game and not in your streaming software."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per idea below and pick a gift for each. Start with cheap gifts for harmless keys and save bigger gifts for the chaotic ones. For example: a Rose presses R to emote, a bigger gift holds Shift to sprint and burn stamina."
+      },
+      {
+        "title": "Check your key bindings",
+        "text": "PEAK added key remapping in update 1.30.a. The ideas below use the defaults, so if you changed a binding, update the event to match."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Jump",
+        "keys": "Space",
+        "idea": "A Rose makes your scout jump",
+        "holdMs": 0
+      },
+      {
+        "name": "Emote",
+        "keys": "R",
+        "idea": "A Finger Heart makes you emote on the spot",
+        "holdMs": 0
+      },
+      {
+        "name": "Crouch",
+        "keys": "Ctrl",
+        "idea": "A gift makes you crouch for a moment",
+        "holdMs": 1500
+      },
+      {
+        "name": "Sprint / lunge",
+        "keys": "Shift",
+        "idea": "A gift makes you sprint and drain stamina",
+        "holdMs": 2000
+      },
+      {
+        "name": "Drop item",
+        "keys": "Q",
+        "idea": "A big gift drops whatever you are holding",
+        "holdMs": 0
+      },
+      {
+        "name": "Stash item",
+        "keys": "Tab",
+        "idea": "A mid gift stashes the item in your hands",
+        "holdMs": 0
+      }
+    ]
+  },
+  {
+    "id": "pvz",
+    "name": "Plants vs. Zombies",
+    "short": "Plant defenses to stop a zombie invasion",
+    "description": "PopCap's classic lawn-defense game where you place plants to stop waves of zombies. Play is mostly with the mouse, so gifts work best as pauses and as the game's built-in cheat words that give zombies mustaches or sunglasses.",
+    "tier": "keys",
+    "genre": "Tower defense",
+    "steamAppId": 3590,
+    "store": "",
+    "windowTitle": "Plants vs. Zombies",
+    "warning": "Mostly mouse-driven, so there are few key pranks.",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy or install Plants vs. Zombies GOTY Edition on Steam and play through the start so you have a save to load.",
+        "link": "https://store.steampowered.com/app/3590/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Let GiftDeck find the window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter \"Plants vs. Zombies\" as the window title, so the key presses land in the game even if you clicked on another window."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per gift and pick a key from the ideas below. Start with harmless ones like jump or crouch, and keep bigger pranks for bigger gifts. Escape pauses and opens the menu."
+      },
+      {
+        "title": "Cheat words",
+        "text": "Typing certain words during a level changes the zombies: 'future' gives them sunglasses, 'mustache' gives them mustaches, and 'dance' makes them dance (needs a taller Tree of Wisdom). Type the word again to turn it off. If your event can send several keys in a row, send the letters one by one."
+      },
+      {
+        "title": "Mostly mouse",
+        "text": "Planting and collecting sun need the mouse, which GiftDeck can't press. Keep gift pranks light."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Pause menu",
+        "keys": "Escape",
+        "idea": "A gift pauses the game",
+        "holdMs": 0
+      }
+    ]
+  },
+  {
+    "id": "repo",
+    "name": "R.E.P.O.",
+    "short": "Co-op robots haul loot out of spooky levels",
+    "description": "An online co-op horror game where a team of little robots grabs valuables and drags them to extraction while monsters roam. Gifts can make you tumble, crouch, jump or open the map at the worst time.",
+    "tier": "keys",
+    "genre": "Co-op horror",
+    "steamAppId": 3241660,
+    "store": "",
+    "windowTitle": "R.E.P.O.",
+    "warning": "",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy or install R.E.P.O. on Steam and play through the start so you have a save to load.",
+        "link": "https://store.steampowered.com/app/3241660/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Let GiftDeck find the window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter \"R.E.P.O.\" as the window title, so the key presses land in the game even if you clicked on another window."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per gift and pick a key from the ideas below. Start with harmless ones like jump or crouch, and keep bigger pranks for bigger gifts."
+      },
+      {
+        "title": "Co-op note",
+        "text": "Pranks only move your own robot, but a tumble while carrying something fragile costs the team money. Tie that one to a big gift."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Jump",
+        "keys": "Space",
+        "idea": "A Rose makes you jump",
+        "holdMs": 0
+      },
+      {
+        "name": "Crouch",
+        "keys": "Ctrl",
+        "idea": "A gift makes you crouch",
+        "holdMs": 0
+      },
+      {
+        "name": "Tumble",
+        "keys": "Q",
+        "idea": "Throw yourself into a tumble",
+        "holdMs": 0
+      },
+      {
+        "name": "Open map",
+        "keys": "Tab",
+        "idea": "Open the map",
+        "holdMs": 1500
+      },
+      {
+        "name": "Walk forward",
+        "keys": "W",
+        "idea": "Walk forward for 2 seconds",
+        "holdMs": 2000
+      }
+    ]
+  },
+  {
+    "id": "raft",
+    "name": "Raft",
+    "short": "Survive at sea on a raft you keep expanding",
+    "description": "You start on a few planks in the open ocean, hook floating debris and grow your raft into a floating base while a shark circles below. Gifts can make you jump, crouch, drop what you're holding or open the notebook.",
+    "tier": "keys",
+    "genre": "Survival",
+    "steamAppId": 648800,
+    "store": "",
+    "windowTitle": "Raft",
+    "warning": "",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy or install Raft on Steam and play through the start so you have a save to load.",
+        "link": "https://store.steampowered.com/app/648800/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Let GiftDeck find the window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter \"Raft\" as the window title, so the key presses land in the game even if you clicked on another window."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per gift and pick a key from the ideas below. Start with harmless ones like jump or crouch, and keep bigger pranks for bigger gifts."
+      },
+      {
+        "title": "Careful with Drop item",
+        "text": "Q drops the item in your hand. On the raft that's just a prank, but in the water the item can float away, so save it for big gifts."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Jump",
+        "keys": "Space",
+        "idea": "A Rose makes you jump",
+        "holdMs": 0
+      },
+      {
+        "name": "Crouch",
+        "keys": "Ctrl",
+        "idea": "A gift makes you duck down",
+        "holdMs": 0
+      },
+      {
+        "name": "Drop item",
+        "keys": "Q",
+        "idea": "A big gift drops what you're holding",
+        "holdMs": 0
+      },
+      {
+        "name": "Open inventory",
+        "keys": "Tab",
+        "idea": "Pop the inventory open",
+        "holdMs": 0
+      },
+      {
+        "name": "Notebook",
+        "keys": "T",
+        "idea": "Open the notebook mid-task",
+        "holdMs": 0
+      },
+      {
+        "name": "Hotbar slot 1",
+        "keys": "1",
+        "idea": "Swap to hotbar slot 1",
+        "holdMs": 0
+      },
+      {
+        "name": "Walk forward",
+        "keys": "W",
+        "idea": "Walk forward for 2 seconds (watch the edge!)",
+        "holdMs": 2000
+      }
+    ]
+  },
+  {
+    "id": "rdr2",
+    "name": "Red Dead Redemption 2",
+    "short": "Outlaw life in a huge open Wild West world",
+    "description": "Rockstar's open-world western where you ride, hunt, rob and roam as Arthur Morgan. In Story Mode, gifts can make Arthur jump, whistle for his horse, flip the camera or pop open the map at the worst possible moment.",
+    "tier": "keys",
+    "genre": "Open world",
+    "steamAppId": 1174180,
+    "store": "",
+    "windowTitle": "Red Dead Redemption 2",
+    "warning": "Story Mode only. Don't use gift inputs in Red Dead Online.",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy or install Red Dead Redemption 2 on Steam and play through the start so you have a save to load. The game also needs the Rockstar Games Launcher, which Steam installs for you.",
+        "link": "https://store.steampowered.com/app/1174180/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Use Windowed Borderless",
+        "text": "In Settings > Graphics, set Screen Type to Windowed Borderless. Exclusive fullscreen can drop key presses when another window briefly takes focus."
+      },
+      {
+        "title": "Let GiftDeck find the window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter \"Red Dead Redemption 2\" as the window title, so the key presses land in the game even if you clicked on another window."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per gift and pick a key from the ideas below. Start with harmless ones like jump or crouch, and keep bigger pranks for bigger gifts. A walk-forward event works best with a hold time of about 2 seconds."
+      },
+      {
+        "title": "Story Mode only",
+        "text": "Use gift pranks in Story Mode. Don't use automated inputs in Red Dead Online. Community 'chaos' mods are separate downloads that GiftDeck does not provide."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Jump",
+        "keys": "Space",
+        "idea": "A Rose makes Arthur hop on the spot",
+        "holdMs": 0
+      },
+      {
+        "name": "Whistle for horse",
+        "keys": "H",
+        "idea": "A gift calls your horse over, wanted or not",
+        "holdMs": 0
+      },
+      {
+        "name": "Open map",
+        "keys": "M",
+        "idea": "A bigger gift slams the map open",
+        "holdMs": 0
+      },
+      {
+        "name": "Open satchel",
+        "keys": "B",
+        "idea": "Chat forces a quick look in the satchel",
+        "holdMs": 0
+      },
+      {
+        "name": "Holster weapon",
+        "keys": "Tab",
+        "idea": "A gift holsters (or draws) your weapon",
+        "holdMs": 0
+      },
+      {
+        "name": "Cycle camera",
+        "keys": "V",
+        "idea": "Swap the camera view mid-ride",
+        "holdMs": 0
+      },
+      {
+        "name": "Open journal",
+        "keys": "J",
+        "idea": "Time for Arthur to journal his feelings",
+        "holdMs": 0
+      },
+      {
+        "name": "Walk forward",
+        "keys": "W",
+        "idea": "Arthur strolls forward for 2 seconds",
+        "holdMs": 2000
+      }
+    ]
+  },
+  {
+    "id": "resident-evil-4-remake",
+    "name": "Resident Evil 4",
+    "short": "Rescue the president's daughter in rural Spain",
+    "description": "Capcom's 2023 remake follows Leon S. Kennedy on a mission to rescue Ashley Graham from a cult in a remote Spanish village. Gifts can make Leon spin around, crouch, reload or give Ashley new orders at the worst possible time.",
+    "tier": "keys",
+    "genre": "Survival horror",
+    "steamAppId": 2050650,
+    "store": "",
+    "windowTitle": "RESIDENT EVIL 4",
+    "warning": "This is the 2023 remake (Steam app 2050650), not the 2005 original. Third-party guides disagree on some defaults, so check Options > Controls > Key Bindings before going live.",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Install Resident Evil 4 (the 2023 remake) from Steam and play it through once so you know the controls and your save is set up.",
+        "link": "https://store.steampowered.com/app/2050650/",
+        "linkText": "Open on Steam"
+      },
+      {
+        "title": "Use borderless windowed",
+        "text": "Set the display mode to Borderless Windowed in the graphics settings. Exclusive fullscreen can minimize or lose input when another window takes focus."
+      },
+      {
+        "title": "Point GiftDeck at the game window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter RESIDENT EVIL 4 as the window title, so key presses land in the game and not in your streaming software."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per idea below and pick a gift for each. Start with cheap gifts for harmless keys and save bigger gifts for the chaotic ones. For example: a Rose presses Q for a quick turn, a bigger gift presses Ctrl to make Ashley wait or follow."
+      },
+      {
+        "title": "Check your bindings first",
+        "text": "Guides don't agree on every default key (the knife in particular), so only the actions they all agree on are listed. Confirm them in the key bindings menu."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Quick turn",
+        "keys": "Q",
+        "idea": "A Rose spins Leon 180 degrees",
+        "holdMs": 0
+      },
+      {
+        "name": "Crouch",
+        "keys": "E",
+        "idea": "A Finger Heart makes Leon crouch",
+        "holdMs": 0
+      },
+      {
+        "name": "Reload",
+        "keys": "R",
+        "idea": "A gift forces a reload",
+        "holdMs": 0
+      },
+      {
+        "name": "Command Ashley",
+        "keys": "Ctrl",
+        "idea": "A big gift tells Ashley to wait or follow",
+        "holdMs": 0
+      },
+      {
+        "name": "Run",
+        "keys": "Shift",
+        "idea": "A gift makes Leon run for two seconds",
+        "holdMs": 2000
+      },
+      {
+        "name": "Inventory",
+        "keys": "Tab",
+        "idea": "A gift opens the attache case",
+        "holdMs": 0
+      },
+      {
+        "name": "Map",
+        "keys": "V",
+        "idea": "A gift opens the map",
+        "holdMs": 0
+      }
+    ]
+  },
+  {
+    "id": "roadside-research",
+    "name": "Roadside Research",
+    "short": "Run a gas station as aliens in disguise",
+    "description": "A first-person co-op simulator for 1 to 4 players where you and your friends are aliens pretending to be ordinary gas station staff. You stock shelves, serve customers and quietly study humans without getting caught. The default key layout isn't published anywhere we could check, so open the game's controls menu first and then point gift events at the keys you see there.",
+    "tier": "keys",
+    "genre": "Co-op sim",
+    "steamAppId": 3643170,
+    "store": "",
+    "windowTitle": "Roadside Research",
+    "warning": "Early Access game. We couldn't confirm its default keys from a public source, so no ready-made key ideas are listed. Check Options > Controls in the game and build your own.",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy and install Roadside Research on Steam. It's also on the Microsoft Store and PC Game Pass.",
+        "link": "https://store.steampowered.com/app/3643170/Roadside_Research/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Use windowed or borderless",
+        "text": "Both modes are supported in the game's settings. Borderless keeps the game full-screen and also makes switching back to GiftDeck easier."
+      },
+      {
+        "title": "Bring the game to the front",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and type Roadside Research as the window title."
+      },
+      {
+        "title": "Look up your keys",
+        "text": "Open Options > Controls in the game and write down the keys for things like jump, crouch or interact. Keys can be rebound, so use what your copy shows. Then add a GiftDeck event for each one."
+      },
+      {
+        "title": "Mind your co-op partners",
+        "text": "Gift presses only happen on the streamer's PC. Keep pranks light so the crew's shift doesn't fall apart."
+      }
+    ],
+    "keys": []
+  },
+  {
+    "id": "roblox",
+    "name": "Roblox",
+    "short": "Play millions of player-made games in one app",
+    "description": "Roblox is a free platform full of games made by its community, from obbies to tycoons to roleplay. Because every experience is different, gift pranks here stick to the standard character controls: jumping, walking and turning the camera.",
+    "tier": "keys",
+    "genre": "Platform",
+    "steamAppId": 0,
+    "store": "https://www.roblox.com/download",
+    "windowTitle": "Roblox",
+    "warning": "Only use this on your own gameplay. Key presses are just the normal controls, but Roblox's rules ban exploits and cheats, so never pair GiftDeck with any third-party script or injector. Some experiences change the default controls.",
+    "guide": [
+      {
+        "title": "Get Roblox",
+        "text": "Download the Roblox app for Windows from the official site (the Microsoft Store version also works) and sign in.",
+        "link": "https://www.roblox.com/download",
+        "linkText": "Download Roblox"
+      },
+      {
+        "title": "Point GiftDeck at the game window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter Roblox as the window title, so key presses land in the game and not in your streaming software."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per idea below and pick a gift for each. Start with cheap gifts for harmless keys and save bigger gifts for the chaotic ones. For example: a Rose presses Space to jump, a bigger gift holds W to run you forward."
+      },
+      {
+        "title": "Pick experiences with standard controls",
+        "text": "Obbies and simple platformers use the default keys, so they work best. Avoid binding / (chat), because it opens the chat box and swallows the next key presses."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Jump",
+        "keys": "Space",
+        "idea": "A Rose makes you jump (great during obbies)",
+        "holdMs": 0
+      },
+      {
+        "name": "Walk forward",
+        "keys": "W",
+        "idea": "A gift makes you run forward for a second",
+        "holdMs": 1000
+      },
+      {
+        "name": "Walk back",
+        "keys": "S",
+        "idea": "A gift makes you back up for a second",
+        "holdMs": 1000
+      },
+      {
+        "name": "Strafe left",
+        "keys": "A",
+        "idea": "A gift nudges you left",
+        "holdMs": 700
+      },
+      {
+        "name": "Strafe right",
+        "keys": "D",
+        "idea": "A gift nudges you right",
+        "holdMs": 700
+      },
+      {
+        "name": "Turn camera left",
+        "keys": "Left",
+        "idea": "A small gift spins the camera left",
+        "holdMs": 800
+      },
+      {
+        "name": "Turn camera right",
+        "keys": "Right",
+        "idea": "A small gift spins the camera right",
+        "holdMs": 800
+      }
+    ]
+  },
+  {
+    "id": "schedule-1",
+    "name": "Schedule I",
+    "short": "Build a crime empire in a satirical city",
+    "description": "A satirical co-op business sim where you grow and sell your product, recruit workers and dodge the police. Gifts can make you crouch, pull out your phone, flip to third person or switch on the flashlight.",
+    "tier": "keys",
+    "genre": "Simulation",
+    "steamAppId": 3164500,
+    "store": "",
+    "windowTitle": "Schedule I",
+    "warning": "",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy or install Schedule I on Steam and play through the start so you have a save to load.",
+        "link": "https://store.steampowered.com/app/3164500/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Let GiftDeck find the window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter \"Schedule I\" as the window title, so the key presses land in the game even if you clicked on another window."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per gift and pick a key from the ideas below. Start with harmless ones like jump or crouch, and keep bigger pranks for bigger gifts."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Jump",
+        "keys": "Space",
+        "idea": "A Rose makes you jump",
+        "holdMs": 0
+      },
+      {
+        "name": "Crouch",
+        "keys": "Ctrl",
+        "idea": "A gift makes you crouch",
+        "holdMs": 0
+      },
+      {
+        "name": "Phone",
+        "keys": "Tab",
+        "idea": "Pull out your phone",
+        "holdMs": 0
+      },
+      {
+        "name": "Map",
+        "keys": "M",
+        "idea": "Open the map",
+        "holdMs": 0
+      },
+      {
+        "name": "Flashlight",
+        "keys": "F",
+        "idea": "Toggle the flashlight",
+        "holdMs": 0
+      },
+      {
+        "name": "Third person",
+        "keys": "V",
+        "idea": "Flip to the third-person view",
+        "holdMs": 0
+      },
+      {
+        "name": "Journal",
+        "keys": "J",
+        "idea": "Open the journal",
+        "holdMs": 0
+      },
+      {
+        "name": "Walk forward",
+        "keys": "W",
+        "idea": "Walk forward for 2 seconds",
+        "holdMs": 2000
+      }
+    ]
+  },
+  {
+    "id": "sons-of-the-forest",
+    "name": "Sons of the Forest",
+    "short": "Survive a cannibal-infested island",
+    "description": "A survival horror game where you search for a missing billionaire on an island full of mutants, then build a base to hold out. Gifts can make you crouch, drop your item, flick your lighter or pull out the GPS.",
+    "tier": "keys",
+    "genre": "Survival horror",
+    "steamAppId": 1326470,
+    "store": "",
+    "windowTitle": "Sons Of The Forest",
+    "warning": "",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy or install Sons of the Forest on Steam and play through the start so you have a save to load.",
+        "link": "https://store.steampowered.com/app/1326470/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Let GiftDeck find the window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter \"Sons Of The Forest\" as the window title, so the key presses land in the game even if you clicked on another window."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per gift and pick a key from the ideas below. Start with harmless ones like jump or crouch, and keep bigger pranks for bigger gifts."
+      },
+      {
+        "title": "Co-op note",
+        "text": "In multiplayer the pranks only hit your character. Dropping items near water or mutants is a big prank, so tie it to a big gift."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Jump",
+        "keys": "Space",
+        "idea": "A Rose makes you jump",
+        "holdMs": 0
+      },
+      {
+        "name": "Crouch",
+        "keys": "Ctrl",
+        "idea": "A gift makes you crouch",
+        "holdMs": 0
+      },
+      {
+        "name": "Drop item",
+        "keys": "G",
+        "idea": "A big gift drops what you're holding",
+        "holdMs": 0
+      },
+      {
+        "name": "Inventory",
+        "keys": "I",
+        "idea": "Open the inventory mat",
+        "holdMs": 0
+      },
+      {
+        "name": "GPS",
+        "keys": "M",
+        "idea": "Pull out the GPS tracker",
+        "holdMs": 0
+      },
+      {
+        "name": "Lighter",
+        "keys": "L",
+        "idea": "Flick the lighter or flashlight",
+        "holdMs": 0
+      },
+      {
+        "name": "Walkie-talkie",
+        "keys": "T",
+        "idea": "Grab the walkie-talkie",
+        "holdMs": 0
+      },
+      {
+        "name": "Walk forward",
+        "keys": "W",
+        "idea": "Walk forward for 2 seconds",
+        "holdMs": 2000
+      }
+    ]
+  },
+  {
+    "id": "sort-them-ducks",
+    "name": "Sort Them Ducks",
+    "short": "Sort thousands of rubber ducks onto shelves",
+    "description": "A relaxing organizing game where you pick up more than 4,000 themed rubber ducks around a shop and put each one on the right shelf. Gifts can make you drop the duck you're holding.",
+    "tier": "keys",
+    "genre": "Cozy sim",
+    "steamAppId": 4992070,
+    "store": "",
+    "windowTitle": "Sort Them Ducks",
+    "warning": "Only a couple of default keys could be confirmed. Keys can be rebound, so check the game's settings if something doesn't match.",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy and install Sort Them Ducks on Steam.",
+        "link": "https://store.steampowered.com/app/4992070/Sort_Them_Ducks/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Try windowed if keys don't land",
+        "text": "If gift key presses don't register in fullscreen, switch the game to windowed or borderless."
+      },
+      {
+        "title": "Bring the game to the front",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and type Sort Them Ducks as the window title."
+      },
+      {
+        "title": "Add the events",
+        "text": "Dropping a duck is a gentle prank that fits this cozy game. Just pick it back up."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Drop duck",
+        "keys": "Q",
+        "idea": "A Rose makes you drop the duck you're holding",
+        "holdMs": 0
+      },
+      {
+        "name": "Unlock cursor",
+        "keys": "V",
+        "idea": "A gift frees the mouse cursor for a moment of confusion",
+        "holdMs": 0
+      }
+    ]
+  },
+  {
+    "id": "stardew-valley",
+    "name": "Stardew Valley",
+    "short": "Run a farm and make friends in a cozy town",
+    "description": "A relaxed farming and life game where you inherit an old farm, grow crops, raise animals, fish, mine and get to know the people of Pelican Town. Gifts can make you swing your tool, switch hotbar items, pop up an emote or open the map or journal.",
+    "tier": "keys",
+    "genre": "Farming sim",
+    "steamAppId": 413150,
+    "store": "",
+    "windowTitle": "Stardew Valley",
+    "warning": "",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Install Stardew Valley from Steam and play it through once so you know the controls and your save is set up.",
+        "link": "https://store.steampowered.com/app/413150/",
+        "linkText": "Open on Steam"
+      },
+      {
+        "title": "Run windowed or borderless",
+        "text": "Stardew Valley has windowed and borderless options in its settings. Borderless makes switching between the game and your stream tools smoother."
+      },
+      {
+        "title": "Point GiftDeck at the game window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter Stardew Valley as the window title, so key presses land in the game and not in your streaming software."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per idea below and pick a gift for each. Start with cheap gifts for harmless keys and save bigger gifts for the chaotic ones. For example: a Rose opens the emote menu with Y, a bigger gift swaps your whole toolbar row with Tab."
+      },
+      {
+        "title": "Menus pause single-player",
+        "text": "In single-player, opening the map or journal pauses the game, so those pranks are harmless. In multiplayer the world keeps running."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Use tool",
+        "keys": "C",
+        "idea": "A Rose makes you swing whatever tool you are holding",
+        "holdMs": 0
+      },
+      {
+        "name": "Check / action",
+        "keys": "X",
+        "idea": "A gift makes you interact with whatever is in front of you",
+        "holdMs": 0
+      },
+      {
+        "name": "Emote menu",
+        "keys": "Y",
+        "idea": "A Finger Heart opens the emote menu",
+        "holdMs": 0
+      },
+      {
+        "name": "Shift toolbar",
+        "keys": "Tab",
+        "idea": "A mid gift swaps your hotbar to the next row",
+        "holdMs": 0
+      },
+      {
+        "name": "Pick item slot 1",
+        "keys": "1",
+        "idea": "A gift switches you to the first hotbar slot",
+        "holdMs": 0
+      },
+      {
+        "name": "Map",
+        "keys": "M",
+        "idea": "A gift opens the map",
+        "holdMs": 0
+      },
+      {
+        "name": "Journal",
+        "keys": "F",
+        "idea": "A gift opens the quest journal",
+        "holdMs": 0
+      }
+    ]
+  },
+  {
+    "id": "supermarket-chaos",
+    "name": "Supermarket Chaos",
+    "short": "Tidy a wrecked supermarket, shelf by shelf",
+    "description": "A cozy first-person organizing game where you put thousands of products back on the right shelves in a messy supermarket, alone or with up to 4 friends. There's no timer and no way to lose. We couldn't confirm the default keys from a reliable source, so no key ideas are listed yet.",
+    "tier": "keys",
+    "genre": "Cozy sim",
+    "steamAppId": 4800590,
+    "store": "",
+    "windowTitle": "Supermarket Chaos",
+    "warning": "Default keys weren't documented anywhere we trust. Check the game's controls or help screen and add your own events.",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy and install Supermarket Chaos on Steam.",
+        "link": "https://store.steampowered.com/app/4800590/Supermarket_Chaos/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Try windowed if keys don't land",
+        "text": "If gift key presses don't register in fullscreen, switch to windowed or borderless."
+      },
+      {
+        "title": "Bring the game to the front",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and type Supermarket Chaos as the window title."
+      },
+      {
+        "title": "Find your keys",
+        "text": "Look in the game's controls or help screen for keys like drop or jump, then add GiftDeck events for them. Making you drop what you're carrying is a gentle, fair prank."
+      }
+    ],
+    "keys": []
+  },
+  {
+    "id": "supermarket-simulator",
+    "name": "Supermarket Simulator",
+    "short": "Run and grow your own grocery store",
+    "description": "A store-management sim where you stock shelves, set prices, run the till and expand your supermarket. Gifts can make you jump, wander off mid-restock or close the box you're holding.",
+    "tier": "keys",
+    "genre": "Simulation",
+    "steamAppId": 2670630,
+    "store": "",
+    "windowTitle": "Supermarket Simulator",
+    "warning": "",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy or install Supermarket Simulator on Steam and play through the start so you have a save to load.",
+        "link": "https://store.steampowered.com/app/2670630/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Let GiftDeck find the window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter \"Supermarket Simulator\" as the window title, so the key presses land in the game even if you clicked on another window."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per gift and pick a key from the ideas below. Start with harmless ones like jump or crouch, and keep bigger pranks for bigger gifts."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Jump",
+        "keys": "Space",
+        "idea": "A Rose makes you jump",
+        "holdMs": 0
+      },
+      {
+        "name": "Close box",
+        "keys": "C",
+        "idea": "Close the box you're holding",
+        "holdMs": 0
+      },
+      {
+        "name": "Walk forward",
+        "keys": "W",
+        "idea": "Walk forward for 2 seconds",
+        "holdMs": 2000
+      },
+      {
+        "name": "Walk back",
+        "keys": "S",
+        "idea": "Back up for 2 seconds",
+        "holdMs": 2000
+      },
+      {
+        "name": "Run",
+        "keys": "Shift",
+        "idea": "Hold run for a second",
+        "holdMs": 1000
+      }
+    ]
+  },
+  {
+    "id": "supermarket-together",
+    "name": "Supermarket Together",
+    "short": "Free co-op supermarket management",
+    "description": "A free co-op store sim where you and friends stock shelves, work the checkout and keep customers happy. Gifts can make you jump, wander away from the till or open the builder menu.",
+    "tier": "keys",
+    "genre": "Simulation",
+    "steamAppId": 2709570,
+    "store": "",
+    "windowTitle": "Supermarket Together",
+    "warning": "",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Supermarket Together is free on Steam. Install it and start or join a store.",
+        "link": "https://store.steampowered.com/app/2709570/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Let GiftDeck find the window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter \"Supermarket Together\" as the window title, so the key presses land in the game even if you clicked on another window."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per gift and pick a key from the ideas below. Start with harmless ones like jump or crouch, and keep bigger pranks for bigger gifts."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Jump",
+        "keys": "Space",
+        "idea": "A Rose makes you jump",
+        "holdMs": 0
+      },
+      {
+        "name": "Open builder",
+        "keys": "Tab",
+        "idea": "Open the builder menu",
+        "holdMs": 0
+      },
+      {
+        "name": "Walk forward",
+        "keys": "W",
+        "idea": "Walk forward for 2 seconds",
+        "holdMs": 2000
+      },
+      {
+        "name": "Walk back",
+        "keys": "S",
+        "idea": "Back up for 2 seconds",
+        "holdMs": 2000
+      }
+    ]
+  },
+  {
+    "id": "tcg-card-shop-simulator",
+    "name": "TCG Card Shop Simulator",
+    "short": "Run a trading card shop and rip packs",
+    "description": "A shop sim where you stock trading cards, set prices, host play tables and open packs hoping for rare pulls. Gifts can make you rip open a pack or walk away from the counter.",
+    "tier": "keys",
+    "genre": "Simulation",
+    "steamAppId": 3070070,
+    "store": "",
+    "windowTitle": "Card Shop Simulator",
+    "warning": "",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy or install TCG Card Shop Simulator on Steam and play through the start so you have a save to load.",
+        "link": "https://store.steampowered.com/app/3070070/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Windowed mode",
+        "text": "Alt+Enter switches between fullscreen and windowed if you need it."
+      },
+      {
+        "title": "Let GiftDeck find the window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter \"Card Shop Simulator\" as the window title, so the key presses land in the game even if you clicked on another window."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per gift and pick a key from the ideas below. Start with harmless ones like jump or crouch, and keep bigger pranks for bigger gifts."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Open pack",
+        "keys": "R",
+        "idea": "A gift makes you rip open a pack",
+        "holdMs": 0
+      },
+      {
+        "name": "Walk forward",
+        "keys": "W",
+        "idea": "Walk forward for 2 seconds",
+        "holdMs": 2000
+      },
+      {
+        "name": "Walk back",
+        "keys": "S",
+        "idea": "Back up for 2 seconds",
+        "holdMs": 2000
+      },
+      {
+        "name": "Walk left",
+        "keys": "A",
+        "idea": "Walk left for 2 seconds",
+        "holdMs": 2000
+      }
+    ]
+  },
+  {
+    "id": "the-escapists-2",
+    "name": "The Escapists 2",
+    "short": "Plan and pull off a prison break",
+    "description": "A top-down sandbox where you follow the prison routine, craft tools in secret and plot your escape, alone or with friends. Gift key presses can make you interact with things, open the crafting menu at a bad time or climb onto a desk in front of the guards.",
+    "tier": "keys",
+    "genre": "Sandbox",
+    "steamAppId": 641990,
+    "store": "",
+    "windowTitle": "The Escapists 2",
+    "warning": "Keys are rebindable, and the only public lists we found were from third-party sites. If something doesn't match, check Options > Controls in the game.",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy and install The Escapists 2 on Steam.",
+        "link": "https://store.steampowered.com/app/641990/The_Escapists_2/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Use windowed or borderless",
+        "text": "Both modes are available in the settings. Use one if key presses don't register in fullscreen."
+      },
+      {
+        "title": "Bring the game to the front",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and type The Escapists 2 as the window title."
+      },
+      {
+        "title": "Check the control input setting",
+        "text": "If you also have a controller plugged in, set Control Input to include keyboard so gift key presses still count."
+      },
+      {
+        "title": "Add the events",
+        "text": "Menu pranks like opening the crafting or journal screen are harmless and funny. Use a bigger gift for the desk-climb prank because the guards may notice."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Interact",
+        "keys": "E",
+        "idea": "A Rose makes you interact with whatever is nearby",
+        "holdMs": 0
+      },
+      {
+        "name": "Use item",
+        "keys": "Space",
+        "idea": "A Finger Heart makes you use the item in your hand",
+        "holdMs": 0
+      },
+      {
+        "name": "Stand on desk / view profile",
+        "keys": "F",
+        "idea": "A bigger gift makes you hop up on a desk",
+        "holdMs": 0
+      },
+      {
+        "name": "Crafting menu",
+        "keys": "C",
+        "idea": "A gift pops open the crafting menu mid-routine",
+        "holdMs": 0
+      },
+      {
+        "name": "Journal",
+        "keys": "J",
+        "idea": "A gift makes you read your journal",
+        "holdMs": 0
+      },
+      {
+        "name": "Inventory",
+        "keys": "I",
+        "idea": "A gift opens your inventory",
+        "holdMs": 0
+      }
+    ]
+  },
+  {
+    "id": "the-forest",
+    "name": "The Forest",
+    "short": "Survive a cannibal-filled forest after a plane crash",
+    "description": "A first-person survival horror game where you crash on a wooded peninsula, build a camp and try to find your missing son while the locals hunt you. Gifts can make you jump, crouch, flick your lighter on and off or flip open the survival book at the worst possible moment.",
+    "tier": "keys",
+    "genre": "Survival horror",
+    "steamAppId": 242760,
+    "store": "",
+    "windowTitle": "TheForest",
+    "warning": "",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Install The Forest from Steam and play it through once so you know the controls and your save is set up.",
+        "link": "https://store.steampowered.com/app/242760/",
+        "linkText": "Open on Steam"
+      },
+      {
+        "title": "Point GiftDeck at the game window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter TheForest (the Unity window name; if it does not match, copy the exact title from Task Manager) as the window title, so key presses land in the game and not in your streaming software."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per idea below and pick a gift for each. Start with cheap gifts for harmless keys and save bigger gifts for the chaotic ones. For example: a Rose presses Space to jump, a bigger gift toggles the lighter with L."
+      },
+      {
+        "title": "Keep pranks survivable",
+        "text": "Avoid binding the sleep key (Z) or build-mode keys, which can waste resources. Opening the survival book (B) is a safe but annoying interruption."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Jump",
+        "keys": "Space",
+        "idea": "A Rose makes you hop in place",
+        "holdMs": 0
+      },
+      {
+        "name": "Crouch",
+        "keys": "Ctrl",
+        "idea": "A Finger Heart makes you duck and sneak for a second",
+        "holdMs": 1500
+      },
+      {
+        "name": "Sprint",
+        "keys": "Shift",
+        "idea": "Gifts make you sprint for two seconds (burns stamina)",
+        "holdMs": 2000
+      },
+      {
+        "name": "Lighter / torch",
+        "keys": "L",
+        "idea": "A small gift flicks your lighter on or off",
+        "holdMs": 0
+      },
+      {
+        "name": "Survival book",
+        "keys": "B",
+        "idea": "A mid gift opens the survival book mid-fight",
+        "holdMs": 0
+      },
+      {
+        "name": "Inventory",
+        "keys": "I",
+        "idea": "A bigger gift opens the backpack screen",
+        "holdMs": 0
+      },
+      {
+        "name": "Map",
+        "keys": "M",
+        "idea": "A gift pulls out the map",
+        "holdMs": 0
+      }
+    ]
+  },
+  {
+    "id": "witcher3",
+    "name": "The Witcher 3: Wild Hunt",
+    "short": "Monster hunting RPG as Geralt of Rivia",
+    "description": "CD PROJEKT RED's open-world RPG where Geralt hunts monsters and searches for Ciri across a war-torn continent. Gifts can call Roach, cast a sign, sheathe his sword or open the map mid-conversation.",
+    "tier": "keys",
+    "genre": "RPG",
+    "steamAppId": 292030,
+    "store": "",
+    "windowTitle": "The Witcher 3",
+    "warning": "",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy or install The Witcher 3: Wild Hunt on Steam and play through the start so you have a save to load.",
+        "link": "https://store.steampowered.com/app/292030/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Use borderless mode",
+        "text": "In the video options, set the display mode to Borderless Window so key presses keep landing when windows switch."
+      },
+      {
+        "title": "Let GiftDeck find the window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter \"The Witcher 3\" as the window title, so the key presses land in the game even if you clicked on another window."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per gift and pick a key from the ideas below. Start with harmless ones like jump or crouch, and keep bigger pranks for bigger gifts."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Jump",
+        "keys": "Space",
+        "idea": "A Rose makes Geralt jump",
+        "holdMs": 0
+      },
+      {
+        "name": "Call Roach",
+        "keys": "X",
+        "idea": "A gift whistles for Roach",
+        "holdMs": 0
+      },
+      {
+        "name": "Cast sign",
+        "keys": "Q",
+        "idea": "Cast the selected sign",
+        "holdMs": 0
+      },
+      {
+        "name": "Sheathe sword",
+        "keys": "C",
+        "idea": "Put the sword away",
+        "holdMs": 0
+      },
+      {
+        "name": "Draw steel sword",
+        "keys": "1",
+        "idea": "Draw the steel sword",
+        "holdMs": 0
+      },
+      {
+        "name": "Open map",
+        "keys": "M",
+        "idea": "Open the map",
+        "holdMs": 0
+      },
+      {
+        "name": "Meditate",
+        "keys": "N",
+        "idea": "Open the meditation screen",
+        "holdMs": 0
+      },
+      {
+        "name": "Walk forward",
+        "keys": "W",
+        "idea": "Walk forward for 2 seconds",
+        "holdMs": 2000
+      }
+    ]
+  },
+  {
+    "id": "totally-accurate-battle-simulator",
+    "name": "Totally Accurate Battle Simulator",
+    "short": "Stage wobbly battles between silly armies",
+    "description": "A goofy physics battle sandbox where you place wobbly warriors, from farmers to knights, and watch them clash. Gifts can start the fight, freeze time, switch on extra-slow motion or drop you into a unit to fight in person.",
+    "tier": "keys",
+    "genre": "Battle sandbox",
+    "steamAppId": 508440,
+    "store": "",
+    "windowTitle": "TotallyAccurateBattleSimulator",
+    "warning": "",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy and install Totally Accurate Battle Simulator on Steam.",
+        "link": "https://store.steampowered.com/app/508440/Totally_Accurate_Battle_Simulator/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Use windowed or borderless",
+        "text": "Both modes are supported. Use one if key presses don't register in fullscreen."
+      },
+      {
+        "title": "Bring the game to the front",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and type TotallyAccurateBattleSimulator as the window title (check your taskbar and change it if yours looks different)."
+      },
+      {
+        "title": "Add the events",
+        "text": "Tab starts the battle, and pressing it again during a battle takes you back to placement. Pausing time and extra-slow motion only work while a battle is running."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Start / end battle",
+        "keys": "Tab",
+        "idea": "A big gift starts the battle, ready or not",
+        "holdMs": 0
+      },
+      {
+        "name": "Pause time",
+        "keys": "T",
+        "idea": "A Rose freezes the battle mid-swing",
+        "holdMs": 0
+      },
+      {
+        "name": "Super slow motion",
+        "keys": "G",
+        "idea": "A Finger Heart switches on extra-slow motion",
+        "holdMs": 0
+      },
+      {
+        "name": "Possess unit",
+        "keys": "F",
+        "idea": "A gift drops you into a unit to fight yourself",
+        "holdMs": 0
+      },
+      {
+        "name": "Fly up",
+        "keys": "Space",
+        "idea": "A gift lifts the camera high above the fight",
+        "holdMs": 1500
+      }
+    ]
+  },
+  {
+    "id": "ultimate-epic-battle-simulator-2",
+    "name": "Ultimate Epic Battle Simulator 2",
+    "short": "Set up gigantic battles with huge armies",
+    "description": "A sandbox battle simulator where you pit enormous armies against each other and watch the chaos from a free camera. Gifts can switch on slow motion, drop you into a soldier's body or flip to the cinematic camera.",
+    "tier": "keys",
+    "genre": "Battle sandbox",
+    "steamAppId": 1468720,
+    "store": "",
+    "windowTitle": "UEBS2",
+    "warning": "Keys come from the series' published controls, which were written for the first game. The game also has no in-game key remapping and no windowed mode, so test each event before you go live.",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy and install Ultimate Epic Battle Simulator 2 on Steam.",
+        "link": "https://store.steampowered.com/app/1468720/Ultimate_Epic_Battle_Simulator_2/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Fullscreen only",
+        "text": "The game has no windowed or borderless option. Let GiftDeck bring the game to the front before each key press, and don't alt-tab away during a battle."
+      },
+      {
+        "title": "Bring the game to the front",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter the title shown on the game's taskbar button, for example UEBS2."
+      },
+      {
+        "title": "Add the events",
+        "text": "Slow motion and the cinematic camera look great on stream. Possessing a unit only works when the camera is pointed at one."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Slow motion",
+        "keys": "P",
+        "idea": "A Rose drops the battle into slow motion",
+        "holdMs": 0
+      },
+      {
+        "name": "Possess unit",
+        "keys": "F",
+        "idea": "A Finger Heart drops you into the soldier you're looking at",
+        "holdMs": 0
+      },
+      {
+        "name": "Cinematic camera",
+        "keys": "C",
+        "idea": "A gift switches to the cinematic camera",
+        "holdMs": 0
+      },
+      {
+        "name": "RTS mode",
+        "keys": "R",
+        "idea": "A bigger gift switches to commander (RTS) view",
+        "holdMs": 0
+      }
+    ]
+  },
+  {
+    "id": "ultrakill",
+    "name": "ULTRAKILL",
+    "short": "Blast demons in a lightning-fast retro shooter",
+    "description": "A super-fast retro first-person shooter where you play as a machine fighting through Hell, and you heal by getting close and covered in blood. Gifts can make you dash, slide, jump, punch or switch weapons in the middle of a fight.",
+    "tier": "keys",
+    "genre": "FPS",
+    "steamAppId": 1229490,
+    "store": "",
+    "windowTitle": "ULTRAKILL",
+    "warning": "",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy and install ULTRAKILL on Steam.",
+        "link": "https://store.steampowered.com/app/1229490/ULTRAKILL/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Use windowed mode if needed",
+        "text": "The game has a windowed mode (it has no borderless setting). Use it if key presses don't register in fullscreen."
+      },
+      {
+        "title": "Bring the game to the front",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and type ULTRAKILL as the window title."
+      },
+      {
+        "title": "Add the events",
+        "text": "Movement pranks are the most visible. A random dash or slide can send you flying off a ledge, so link those to bigger gifts."
+      },
+      {
+        "title": "Rebound keys",
+        "text": "If you've changed any keys in the options, update the events to match."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Dash",
+        "keys": "Shift",
+        "idea": "A Rose makes you dash",
+        "holdMs": 0
+      },
+      {
+        "name": "Slide",
+        "keys": "Ctrl",
+        "idea": "A Finger Heart sends you into a slide",
+        "holdMs": 800
+      },
+      {
+        "name": "Jump",
+        "keys": "Space",
+        "idea": "A gift makes you jump",
+        "holdMs": 0
+      },
+      {
+        "name": "Punch",
+        "keys": "F",
+        "idea": "A gift throws a punch",
+        "holdMs": 0
+      },
+      {
+        "name": "Change fist",
+        "keys": "G",
+        "idea": "A gift swaps your arm",
+        "holdMs": 0
+      },
+      {
+        "name": "Whiplash",
+        "keys": "R",
+        "idea": "A gift fires the grappling hook",
+        "holdMs": 0
+      },
+      {
+        "name": "Revolver",
+        "keys": "1",
+        "idea": "A gift forces you back to the revolver",
+        "holdMs": 0
+      },
+      {
+        "name": "Rocket launcher",
+        "keys": "5",
+        "idea": "A big gift switches to the rocket launcher",
+        "holdMs": 0
+      }
+    ]
+  },
+  {
+    "id": "undermine",
+    "name": "UnderMine",
+    "short": "Dig through a mine as a doomed peasant",
+    "description": "A roguelike dungeon crawler where you play as a peasant sent into an ever-changing mine to find gold, relics and secrets. Gift key presses can drop bombs, make you jump, drink a potion or flip your speed boots.",
+    "tier": "keys",
+    "genre": "Roguelike",
+    "steamAppId": 656350,
+    "store": "",
+    "windowTitle": "UnderMine",
+    "warning": "",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy and install UnderMine on Steam.",
+        "link": "https://store.steampowered.com/app/656350/UnderMine/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Try windowed if keys don't land",
+        "text": "If gift key presses don't register in fullscreen, switch the game to windowed or borderless in its video settings."
+      },
+      {
+        "title": "Bring the game to the front",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and type UnderMine as the window title."
+      },
+      {
+        "title": "Add the events",
+        "text": "Bombs and jumps are the crowd favorites. A surprise bomb can hurt you, so link it to a slightly bigger gift."
+      },
+      {
+        "title": "Rebound keys",
+        "text": "Most keys can be changed in the options menu. If you've changed any, update the events to match."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Drop bomb",
+        "keys": "R",
+        "idea": "A Rose drops a bomb right at your feet",
+        "holdMs": 0
+      },
+      {
+        "name": "Jump",
+        "keys": "Space",
+        "idea": "A Finger Heart makes you jump",
+        "holdMs": 0
+      },
+      {
+        "name": "Drink potion",
+        "keys": "Q",
+        "idea": "A gift makes you drink the potion you have ready",
+        "holdMs": 0
+      },
+      {
+        "name": "Swap potion",
+        "keys": "Z",
+        "idea": "A gift swaps to a different potion",
+        "holdMs": 0
+      },
+      {
+        "name": "Toggle speed boots",
+        "keys": "V",
+        "idea": "A gift flips your speed boots on or off",
+        "holdMs": 0
+      },
+      {
+        "name": "Journal",
+        "keys": "Tab",
+        "idea": "A gift opens the journal for a quick read",
+        "holdMs": 0
+      }
+    ]
+  },
+  {
+    "id": "unturned",
+    "name": "Unturned",
+    "short": "Free zombie survival with blocky style",
+    "description": "A free-to-play zombie survival sandbox where you scavenge, build and fight to stay alive, solo or on servers. Gifts can make you go prone, crouch, switch camera or open the map.",
+    "tier": "keys",
+    "genre": "Survival",
+    "steamAppId": 304930,
+    "store": "",
+    "windowTitle": "Unturned",
+    "warning": "",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Unturned is free on Steam. Install it and start a singleplayer world or join a server.",
+        "link": "https://store.steampowered.com/app/304930/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Let GiftDeck find the window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter \"Unturned\" as the window title, so the key presses land in the game even if you clicked on another window."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per gift and pick a key from the ideas below. Start with harmless ones like jump or crouch, and keep bigger pranks for bigger gifts."
+      },
+      {
+        "title": "Singleplayer is safest",
+        "text": "Many servers run BattlEye and have their own rules. Gift pranks are just normal key presses, but singleplayer or friendly servers are the best fit."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Jump",
+        "keys": "Space",
+        "idea": "A Rose makes you jump",
+        "holdMs": 0
+      },
+      {
+        "name": "Crouch",
+        "keys": "X",
+        "idea": "A gift makes you crouch",
+        "holdMs": 0
+      },
+      {
+        "name": "Go prone",
+        "keys": "Z",
+        "idea": "Hit the dirt!",
+        "holdMs": 0
+      },
+      {
+        "name": "Swap camera",
+        "keys": "H",
+        "idea": "Flip between first and third person",
+        "holdMs": 0
+      },
+      {
+        "name": "Inventory",
+        "keys": "G",
+        "idea": "Open the inventory",
+        "holdMs": 0
+      },
+      {
+        "name": "Open map",
+        "keys": "M",
+        "idea": "Pop the map open",
+        "holdMs": 0
+      },
+      {
+        "name": "Walk forward",
+        "keys": "W",
+        "idea": "Walk forward for 2 seconds",
+        "holdMs": 2000
+      }
+    ]
+  },
+  {
+    "id": "valheim",
+    "name": "Valheim",
+    "short": "Viking survival: build, sail and fight bosses",
+    "description": "A survival game set in a Norse afterlife where you gather, build longhouses and hunt down legendary bosses, alone or with friends. Gifts can make your Viking sit down, sneak, sheathe their weapon or auto-walk into trouble.",
+    "tier": "keys",
+    "genre": "Survival",
+    "steamAppId": 892970,
+    "store": "",
+    "windowTitle": "Valheim",
+    "warning": "",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy or install Valheim on Steam and play through the start so you have a save to load.",
+        "link": "https://store.steampowered.com/app/892970/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Let GiftDeck find the window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter \"Valheim\" as the window title, so the key presses land in the game even if you clicked on another window."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per gift and pick a key from the ideas below. Start with harmless ones like jump or crouch, and keep bigger pranks for bigger gifts."
+      },
+      {
+        "title": "Mind your friends",
+        "text": "On a shared server the pranks only affect your own Viking, but auto-walk near a cliff can still end badly. Keep the risky ones for big gifts."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Jump",
+        "keys": "Space",
+        "idea": "A Rose makes your Viking jump",
+        "holdMs": 0
+      },
+      {
+        "name": "Sneak",
+        "keys": "Ctrl",
+        "idea": "A gift puts you into sneak mode",
+        "holdMs": 0
+      },
+      {
+        "name": "Sit down",
+        "keys": "X",
+        "idea": "Chat orders a sit-down break",
+        "holdMs": 0
+      },
+      {
+        "name": "Hide weapons",
+        "keys": "R",
+        "idea": "Put the weapons away mid-fight",
+        "holdMs": 0
+      },
+      {
+        "name": "Auto walk",
+        "keys": "Q",
+        "idea": "Auto-walk switches on and off you go",
+        "holdMs": 0
+      },
+      {
+        "name": "Open map",
+        "keys": "M",
+        "idea": "Open the map for a surprise look",
+        "holdMs": 0
+      },
+      {
+        "name": "Open inventory",
+        "keys": "Tab",
+        "idea": "A gift pops the inventory open",
+        "holdMs": 0
+      },
+      {
+        "name": "Walk forward",
+        "keys": "W",
+        "idea": "March forward for 2 seconds",
+        "holdMs": 2000
+      }
+    ]
+  },
+  {
+    "id": "waterpark-simulator",
+    "name": "Waterpark Simulator",
+    "short": "Build and run your own waterpark",
+    "description": "A first-person management sim where you design slides and pools, keep guests happy and grow your park, alone or with friends. Gifts can make you jump, sprint, drop what you're carrying or pop open the build menu and park tablet.",
+    "tier": "keys",
+    "genre": "Management sim",
+    "steamAppId": 3293260,
+    "store": "",
+    "windowTitle": "Waterpark Simulator",
+    "warning": "Sprinting into guests can knock them down. That's usually part of the fun, but it can hurt your park rating.",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Install Waterpark Simulator from Steam and play it through once so you know the controls and your save is set up.",
+        "link": "https://store.steampowered.com/app/3293260/",
+        "linkText": "Open on Steam"
+      },
+      {
+        "title": "Point GiftDeck at the game window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter Waterpark Simulator as the window title, so key presses land in the game and not in your streaming software."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per idea below and pick a gift for each. Start with cheap gifts for harmless keys and save bigger gifts for the chaotic ones. For example: a Rose presses Space to jump, a bigger gift presses B to throw you into build mode."
+      },
+      {
+        "title": "Keys can change",
+        "text": "The game is still updating its controls. If a key doesn't do what the idea says, check the in-game key bindings and update the event."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Jump",
+        "keys": "Space",
+        "idea": "A Rose makes you jump",
+        "holdMs": 0
+      },
+      {
+        "name": "Sprint",
+        "keys": "Shift",
+        "idea": "A Finger Heart makes you sprint for two seconds",
+        "holdMs": 2000
+      },
+      {
+        "name": "Drop item",
+        "keys": "Q",
+        "idea": "A gift drops whatever you're carrying",
+        "holdMs": 0
+      },
+      {
+        "name": "Park tablet",
+        "keys": "Tab",
+        "idea": "A gift opens the park management tablet",
+        "holdMs": 0
+      },
+      {
+        "name": "Build menu",
+        "keys": "B",
+        "idea": "A big gift drops you into build mode",
+        "holdMs": 0
+      }
+    ]
+  },
+  {
+    "id": "wobbly-life",
+    "name": "Wobbly Life",
+    "short": "Goofy physics sandbox full of odd jobs",
+    "description": "A colorful physics sandbox where your wobbly character takes on silly jobs, drives vehicles and explores an island, alone or in co-op. Gifts can make you flop over as a ragdoll, jump, honk or open the map.",
+    "tier": "keys",
+    "genre": "Sandbox",
+    "steamAppId": 1211020,
+    "store": "",
+    "windowTitle": "Wobbly Life",
+    "warning": "",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Buy or install Wobbly Life on Steam and play through the start so you have a save to load.",
+        "link": "https://store.steampowered.com/app/1211020/",
+        "linkText": "Steam page"
+      },
+      {
+        "title": "Let GiftDeck find the window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter \"Wobbly Life\" as the window title, so the key presses land in the game even if you clicked on another window."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per gift and pick a key from the ideas below. Start with harmless ones like jump or crouch, and keep bigger pranks for bigger gifts."
+      },
+      {
+        "title": "Ragdoll recovery",
+        "text": "X turns you into a ragdoll. Press Space to get back up."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Jump",
+        "keys": "Space",
+        "idea": "A Rose makes you jump",
+        "holdMs": 0
+      },
+      {
+        "name": "Go ragdoll",
+        "keys": "X",
+        "idea": "Flop over like a noodle",
+        "holdMs": 0
+      },
+      {
+        "name": "Honk",
+        "keys": "H",
+        "idea": "Honk the horn while driving",
+        "holdMs": 0
+      },
+      {
+        "name": "Open map",
+        "keys": "M",
+        "idea": "Pop the map open",
+        "holdMs": 0
+      },
+      {
+        "name": "Interact",
+        "keys": "F",
+        "idea": "Interact with whatever's nearby",
+        "holdMs": 0
+      },
+      {
+        "name": "Walk forward",
+        "keys": "W",
+        "idea": "Wobble forward for 2 seconds",
+        "holdMs": 2000
+      }
+    ]
+  },
+  {
+    "id": "yapyap",
+    "name": "YAPYAP",
+    "short": "Wreck a wizard's tower with voice-cast spells",
+    "description": "A co-op game for up to six players where you're minions sent to vandalize a rival wizard's tower, casting spells by saying them out loud. Gifts can make you ragdoll, emote, crouch, jump or drop your item right when your team needs you.",
+    "tier": "keys",
+    "genre": "Co-op party",
+    "steamAppId": 3834090,
+    "store": "",
+    "windowTitle": "YAPYAP",
+    "warning": "",
+    "guide": [
+      {
+        "title": "Get the game",
+        "text": "Install YAPYAP from Steam and play it through once so you know the controls and your save is set up.",
+        "link": "https://store.steampowered.com/app/3834090/",
+        "linkText": "Open on Steam"
+      },
+      {
+        "title": "Point GiftDeck at the game window",
+        "text": "In GiftDeck, turn on \"Bring a window to the front before pressing keys\" and enter YAPYAP as the window title, so key presses land in the game and not in your streaming software."
+      },
+      {
+        "title": "Add your gift events",
+        "text": "Create one event per idea below and pick a gift for each. Start with cheap gifts for harmless keys and save bigger gifts for the chaotic ones. For example: a Rose presses V to ragdoll, a bigger gift presses Q to drop what you're carrying."
+      },
+      {
+        "title": "Your mic is part of the game",
+        "text": "Spells are cast by voice, so keep your stream alerts quiet enough that they don't get picked up by your mic and trigger spells by accident."
+      }
+    ],
+    "keys": [
+      {
+        "name": "Ragdoll",
+        "keys": "V",
+        "idea": "A Rose makes your minion flop over",
+        "holdMs": 0
+      },
+      {
+        "name": "Jump",
+        "keys": "Space",
+        "idea": "A Finger Heart makes you jump",
+        "holdMs": 0
+      },
+      {
+        "name": "Emote",
+        "keys": "T",
+        "idea": "A gift makes you emote",
+        "holdMs": 1500
+      },
+      {
+        "name": "Crouch",
+        "keys": "Ctrl",
+        "idea": "A gift makes you crouch",
+        "holdMs": 1500
+      },
+      {
+        "name": "Drop item",
+        "keys": "Q",
+        "idea": "A big gift drops whatever you are holding",
+        "holdMs": 0
+      },
+      {
+        "name": "Swap hands",
+        "keys": "F",
+        "idea": "A gift swaps the items in your hands",
+        "holdMs": 0
+      }
+    ]
+  }
+]

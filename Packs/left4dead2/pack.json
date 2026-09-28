@@ -1,0 +1,63 @@
+{
+  "id": "left4dead2",
+  "name": "Left 4 Dead 2",
+  "short": "Hordes, endless panic, fast zombies, low gravity and slow motion on your own server",
+  "description": "You run Valve's free Left 4 Dead 2 Dedicated Server on this PC and join it. GiftDeck sends console commands over RCON, so gifts start hordes and endless panic events, make zombies faster, tougher or more numerous, change the difficulty, switch god mode and infinite ammo, lower gravity, slow the game down, freeze the survivor bots, or clear the horde.",
+  "cover": "cover.png",
+  "warning": "Only on your own server. Most of these commands need sv_cheats 1, which GiftDeck turns on for you and which turns off achievements. Never try this on Valve or community servers. Spawning a single Tank, Witch or special, and giving items or health, don't work from the server console (they need a player's console), so they aren't here.",
+  "tier": "console",
+  "genre": "Co-op Shooter",
+  "steamAppId": 550,
+  "windowTitle": "Left 4 Dead 2",
+  "detect": [],
+  "exe": "",
+  "mustBeClosed": [],
+  "requirements": [
+    "Left 4 Dead 2 on Steam",
+    { "text": "Left 4 Dead 2 Dedicated Server", "detail": "Free for Left 4 Dead 2 owners: Steam > Library > the menu above your game list > tick Tools > Left 4 Dead 2 Dedicated Server > Install." },
+    { "text": "Your own server with sv_cheats", "detail": "Cheat commands only belong on your own server, played alone or with friends who know. VAC looks for cheat programs on your PC, not for server settings, but starting the server with -insecure (see the guide) turns VAC off on it entirely." }
+  ],
+  "components": [],
+  "edits": [],
+  "presets": [],
+  "commands": "commands.json",
+  "targets": ["left4dead2:console"],
+  "console": {
+    "protocol": "rcon",
+    "host": "127.0.0.1",
+    "port": 27015,
+    "passwordLabel": "RCON password (rcon_password)",
+    "playerLabel": "",
+    "testCommand": "status",
+    "errorMarks": [
+      "Unknown command",
+      "Can't use cheat"
+    ]
+  },
+  "guide": [
+    {
+      "title": "Install the dedicated server",
+      "text": "In Steam: Library, open the menu above your game list and tick Tools, then install \"Left 4 Dead 2 Dedicated Server\". By default it goes to C:\\Program Files (x86)\\Steam\\steamapps\\common\\Left 4 Dead 2 Dedicated Server (or the steamapps\\common folder of the library you picked)."
+    },
+    {
+      "title": "Set an RCON password",
+      "text": "In the dedicated server folder, open left4dead2\\cfg and create a text file named server.cfg (make sure Windows doesn't save it as server.cfg.txt). Put these lines in it, with your own password:\nrcon_password \"pick-a-password\"\nsv_lan 1\nsv_allow_lobby_connect_only 0\nsv_cheats 1\nsv_allow_lobby_connect_only 0 lets you join by IP instead of through a lobby. The server runs server.cfg every time a map loads."
+    },
+    {
+      "title": "Start the server",
+      "text": "In the dedicated server folder, make a shortcut to srcds.exe and put this after the path in the shortcut's Target:\n-console -game left4dead2 -insecure +map c1m1_hotel\n(-insecure turns VAC off on this server; c1m1_hotel is the first map of Dead Center.) Start it from the shortcut. If Windows Firewall asks, allow it on private networks. Keep the server window open while you play."
+    },
+    {
+      "title": "Join your server",
+      "text": "In Left 4 Dead 2: Options > Keyboard/Mouse > Allow Developer Console: Enabled. Press the ~ key (below Esc) to open the console, type connect 127.0.0.1:27015 and press Enter. Bots fill the empty survivor slots."
+    },
+    {
+      "title": "Connect GiftDeck",
+      "text": "On this page type host 127.0.0.1, port 27015 and the rcon_password from server.cfg. No player name is needed: these commands affect the whole game. Press Test: GiftDeck asks the server for its status. RCON uses the same port as the game (TCP 27015)."
+    },
+    {
+      "title": "Add gift events",
+      "text": "In an event, add the action \"Run a game command\" and pick a Left 4 Dead 2 command, for example a Horde for a bigger gift or Low gravity for a Rose. Commands that switch something on (endless horde, god mode, infinite ammo, freeze bots, low gravity, slow motion) stay on until the matching off command, so give the off command its own gift or add it after a Wait."
+    }
+  ]
+}

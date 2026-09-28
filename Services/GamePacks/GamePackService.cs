@@ -54,10 +54,30 @@ public class GamePackService
                 }
                 catch (Exception e) { Log.Write($"Game pack {Path.GetFileName(dir)} couldn't be read: {e.Message}"); }
             }
+            // Packs\catalog.json: the rest of the game catalog, games with a page and a guide but no pack folder.
+            var catalog = Path.Combine(packsDir, "catalog.json");
+            if (File.Exists(catalog))
+            {
+                try
+                {
+                    var have = new HashSet<string>(list.Select(p => p.Id), StringComparer.OrdinalIgnoreCase);
+                    foreach (var p in JsonSerializer.Deserialize<List<GamePack>>(File.ReadAllText(catalog), Json) ?? new List<GamePack>())
+                    {
+                        if (p == null || string.IsNullOrWhiteSpace(p.Id) || !have.Add(p.Id)) continue;
+                        if (p.Tier == "ready") p.Tier = "keys"; // only a pack folder can install things
+                        p.Cover = "";
+                        list.Add(p);
+                    }
+                }
+                catch (Exception e) { Log.Write("The game catalog couldn't be read: " + e.Message); }
+            }
         }
-        _packs = list;
+        // Ready to go first, then server consoles, then key presses; by name within each.
+        _packs = list.OrderBy(p => TierOrder(p.Tier)).ThenBy(p => p.Name, StringComparer.OrdinalIgnoreCase).ToList();
         Changed?.Invoke();
     }
+
+    public static int TierOrder(string tier) => tier switch { "ready" => 0, "console" => 1, _ => 2 };
 
     // ---- The game's folder ----
 

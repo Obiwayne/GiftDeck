@@ -25,8 +25,57 @@ public class GamePack
     // Packs that run a server on this PC instead of copying mods into a game (Minecraft): see plan.md section 5.
     public PackServer Server { get; set; }
 
+    // ---- The game catalog (Games page): every game GiftDeck has a page for, not only the ones with mods ----
+    // tier: "ready"   GiftDeck installs everything (mods or a server) and has ready-made presets (GTA V, Minecraft)
+    //       "console" GiftDeck sends commands to the game's own server console (RCON, telnet, web API): "console" below
+    //       "keys"    events press the game's own keys; "keys" below suggests some, "guide" explains the set-up
+    public string Tier { get; set; } = "ready";
+    public string Genre { get; set; } = "";
+    public int SteamAppId { get; set; }                 // cover art (Steam's header image) and "find it on Steam"
+    public string Store { get; set; } = "";             // where to get it when it isn't on Steam, e.g. "https://www.roblox.com"
+    public string WindowTitle { get; set; } = "";       // part of the game window's title, for "bring the game to the front"
+    public List<PackGuideStep> Guide { get; set; } = new List<PackGuideStep>();
+    public List<PackKeyIdea> Keys { get; set; } = new List<PackKeyIdea>();
+    public PackConsole Console { get; set; }
+
     [JsonIgnore] public string Dir { get; set; } = "";
-    [JsonIgnore] public string CoverPath => string.IsNullOrWhiteSpace(Cover) ? null : Path.Combine(Dir, Cover);
+    [JsonIgnore] public string CoverPath => string.IsNullOrWhiteSpace(Cover) || string.IsNullOrEmpty(Dir) ? null : Path.Combine(Dir, Cover);
+    [JsonIgnore] public string CoverUrl => SteamAppId > 0 ? $"https://cdn.cloudflare.steamstatic.com/steam/apps/{SteamAppId}/header.jpg" : null;
+    [JsonIgnore] public bool IsCatalogOnly => string.IsNullOrEmpty(Dir); // from catalog.json, no pack folder
+}
+
+// One numbered step of a game's "How to set it up" guide. link: an https page to open (optional).
+public class PackGuideStep
+{
+    public string Title { get; set; } = "";
+    public string Text { get; set; } = "";
+    public string Link { get; set; } = "";
+    public string LinkText { get; set; } = "";
+}
+
+// A key-press idea for a game: what it does in the game, the default key, and a gift it suits.
+public class PackKeyIdea
+{
+    public string Name { get; set; } = "";      // "Jump", "Drop the held item"
+    public string Keys { get; set; } = "";      // KeySender format: "Space", "Q", "Ctrl+Shift+C"
+    public string Idea { get; set; } = "";      // "A Rose makes you jump"
+    public int HoldMs { get; set; }             // 0 = the usual tap; longer for "hold W to run forward"
+}
+
+// "console" packs: how GiftDeck reaches the game's server console.
+//   protocol "rcon":   Source RCON (host, port, password); same as Minecraft's
+//   protocol "telnet": a line-based telnet console with an optional password prompt (7 Days to Die)
+//   protocol "tshock": TShock's REST API for Terraria (host, port, REST token as the password)
+// commands.json uses the Minecraft pack's format; templates can use {player} (the name set on the page).
+public class PackConsole
+{
+    public string Protocol { get; set; } = "rcon";
+    public string Host { get; set; } = "127.0.0.1";
+    public int Port { get; set; }
+    public string PasswordLabel { get; set; } = "Password";   // what the password is called in this game
+    public string PlayerLabel { get; set; } = "";            // empty: commands don't need a player name
+    public string TestCommand { get; set; } = "";            // harmless command used by "Test connection"
+    public List<string> ErrorMarks { get; set; } = new List<string>(); // reply starts that mean the command failed
 }
 
 // Where to look for the game: {"type":"steam","appId":271590}, {"type":"epic","appName":"…"},

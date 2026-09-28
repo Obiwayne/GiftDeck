@@ -1,0 +1,146 @@
+[
+  {
+    "id": "horde", "name": "Spawn a horde", "category": "Enemies",
+    "description": "Zombies appear within about 10 tiles of you (up to 500).",
+    "args": [{"name": "count", "label": "How many zombies", "type": "number", "default": "10"}],
+    "run": "createhorde {count} \"{player}\""
+  },
+  {
+    "id": "chopper", "name": "Helicopter", "category": "Enemies",
+    "description": "The helicopter event: a chopper flies over a player and drags zombies along behind it.",
+    "args": [],
+    "run": "chopper"
+  },
+  {
+    "id": "gunshot", "name": "Gunshot", "category": "Enemies",
+    "description": "A loud gunshot goes off in the distance and nearby zombies go to check it out.",
+    "args": [],
+    "run": "gunshot"
+  },
+  {
+    "id": "horde_party", "name": "Zombie party", "category": "Enemies",
+    "description": "A horde around you, then the helicopter and a gunshot to bring more.",
+    "args": [{"name": "count", "label": "How many zombies", "type": "number", "default": "15"}],
+    "run": ["createhorde {count} \"{player}\"", "chopper", "gunshot"]
+  },
+  {
+    "id": "god_on", "name": "Invincible", "category": "Help",
+    "description": "Turns on god mode for you (Build 42). Pair it with \"Not invincible\" on a timer or another gift.",
+    "args": [],
+    "run": "godmodplayer \"{player}\" -true"
+  },
+  {
+    "id": "god_off", "name": "Not invincible", "category": "Help",
+    "description": "Turns god mode off again (Build 42).",
+    "args": [],
+    "run": "godmodplayer \"{player}\" -false"
+  },
+  {
+    "id": "add_xp", "name": "Skill XP", "category": "Help",
+    "description": "Adds XP to one of your skills.",
+    "args": [
+      {"name": "skill", "label": "Skill", "type": "choice", "default": "Fitness",
+       "choices": ["Fitness", "Strength", "Sprinting", "Lightfoot", "Nimble", "Sneak", "Axe", "Blunt", "SmallBlunt", "LongBlade", "SmallBlade", "Spear", "Maintenance", "Aiming", "Reloading", "Woodwork", "Cooking", "Farming", "Doctor", "Electricity", "MetalWelding", "Mechanics", "Tailoring", "Fishing", "Trapping", "PlantScavenging"]},
+      {"name": "xp", "label": "XP", "type": "number", "default": "100"}
+    ],
+    "run": "addxp \"{player}\" {skill}={xp}"
+  },
+  {
+    "id": "give_supplies", "name": "Give supplies", "category": "Items",
+    "description": "Puts food, drinks, medicine, ammo or tools straight into your inventory (up to 100).",
+    "args": [
+      {"name": "item", "label": "Item", "type": "choice", "default": "Base.Bandage",
+       "choices": ["Base.Bandage", "Base.Bandaid", "Base.AlcoholWipes", "Base.Pills", "Base.PillsBeta", "Base.Antibiotics", "Base.TinnedBeans", "Base.CannedChili", "Base.Crisps", "Base.Chocolate", "Base.Burger", "Base.Pizza", "Base.Pop", "Base.PopBottle", "Base.BeerCan", "Base.Wine", "Base.Bullets9mmBox", "Base.ShotgunShellsBox", "Base.556Box", "Base.Nails", "Base.Plank", "Base.Log", "Base.Battery", "Base.Lighter", "Base.Money", "Base.Rubberducky", "Base.Crayons"]},
+      {"name": "amount", "label": "Amount", "type": "number", "default": "3"}
+    ],
+    "run": "additem \"{player}\" {item} {amount}"
+  },
+  {
+    "id": "give_weapon", "name": "Give a weapon or tool", "category": "Items",
+    "description": "Puts a weapon or tool into your inventory.",
+    "args": [
+      {"name": "item", "label": "Weapon or tool", "type": "choice", "default": "Base.BaseballBat",
+       "choices": ["Base.BaseballBat", "Base.Axe", "Base.Crowbar", "Base.Katana", "Base.Machete", "Base.Sledgehammer", "Base.Shovel", "Base.Nightstick", "Base.LeadPipe", "Base.Pan", "Base.Plunger", "Base.HuntingKnife", "Base.KitchenKnife", "Base.Hammer", "Base.Pistol", "Base.Shotgun", "Base.HuntingRifle", "Base.AssaultRifle", "Base.HandTorch"]}
+    ],
+    "run": "additem \"{player}\" {item} 1"
+  },
+  {
+    "id": "give_explosive", "name": "Give explosives", "category": "Items",
+    "description": "Molotovs, pipe bombs, aerosol bombs or smoke bombs.",
+    "args": [
+      {"name": "item", "label": "Explosive", "type": "choice", "default": "Base.Molotov", "choices": ["Base.Molotov", "Base.PipeBomb", "Base.Aerosolbomb", "Base.SmokeBomb"]},
+      {"name": "amount", "label": "Amount", "type": "number", "default": "2"}
+    ],
+    "run": "additem \"{player}\" {item} {amount}"
+  },
+  {
+    "id": "spiffo", "name": "Spiffo plush", "category": "Items",
+    "description": "A big Spiffo plush, for moral support.",
+    "args": [],
+    "run": "additem \"{player}\" Base.SpiffoBig 1"
+  },
+  {
+    "id": "vehicle", "name": "Spawn a car", "category": "Items",
+    "description": "A repaired car with its key appears next to you. Only works outdoors on the ground floor.",
+    "args": [
+      {"name": "car", "label": "Vehicle", "type": "choice", "default": "Base.SportsCar",
+       "choices": ["Base.SportsCar", "Base.CarLuxury", "Base.CarNormal", "Base.SmallCar", "Base.SUV", "Base.OffRoad", "Base.PickUpTruck", "Base.StepVan", "Base.VanAmbulance", "Base.CarLightsPolice", "Base.PickUpVanLightsFire"]}
+    ],
+    "run": "addvehicle {car} \"{player}\""
+  },
+  {
+    "id": "rain", "name": "Start rain", "category": "World",
+    "description": "Starts rain. Intensity 1 to 100.",
+    "args": [{"name": "intensity", "label": "Intensity (1-100)", "type": "number", "default": "100"}],
+    "run": "startrain {intensity}"
+  },
+  {
+    "id": "stop_rain", "name": "Stop rain", "category": "World",
+    "description": "Stops the rain.",
+    "args": [],
+    "run": "stoprain"
+  },
+  {
+    "id": "storm", "name": "Thunderstorm", "category": "World",
+    "description": "Starts a thunderstorm for the number of game hours you pick.",
+    "args": [{"name": "hours", "label": "Game hours", "type": "number", "default": "2"}],
+    "run": "startstorm {hours}"
+  },
+  {
+    "id": "stop_weather", "name": "Clear the weather", "category": "World",
+    "description": "Stops rain, storms and any other weather.",
+    "args": [],
+    "run": "stopweather"
+  },
+  {
+    "id": "thunder", "name": "Thunder", "category": "World",
+    "description": "A thunderclap right over you.",
+    "args": [],
+    "run": "thunder \"{player}\""
+  },
+  {
+    "id": "servermsg", "name": "Server message", "category": "World",
+    "description": "Shows a message to everyone on the server.",
+    "args": [{"name": "message", "label": "Message", "type": "text", "default": "{user} is watching you"}],
+    "run": "servermsg {message:str}"
+  },
+  {
+    "id": "lightning", "name": "Lightning strike", "category": "Chaos",
+    "description": "Lightning strikes right where you are.",
+    "args": [{"name": "count", "label": "How many", "type": "number", "default": "1"}],
+    "repeat": "count", "maxRepeat": 10,
+    "run": "lightning \"{player}\""
+  },
+  {
+    "id": "doom_storm", "name": "Doom storm", "category": "Chaos",
+    "description": "A thunderstorm, lightning on your head and a horde around you.",
+    "args": [{"name": "count", "label": "How many zombies", "type": "number", "default": "20"}],
+    "run": ["startstorm 2", "lightning \"{player}\"", "createhorde {count} \"{player}\""]
+  },
+  {
+    "id": "players", "name": "List players", "category": "Server",
+    "description": "Asks the server who is online. Handy to check the exact spelling of your username.",
+    "args": [],
+    "run": "players"
+  }
+]

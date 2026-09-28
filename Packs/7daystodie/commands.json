@@ -1,0 +1,170 @@
+[
+  {
+    "id": "spawn_zombie", "name": "Spawn zombies", "category": "Enemies",
+    "description": "Spawns zombies around you. Feral, Radiated, Charged and Infernal versions are tougher.",
+    "args": [
+      {"name": "zombie", "label": "Zombie", "type": "choice", "default": "zombieBoe",
+       "choices": ["zombieBoe", "zombieJoe", "zombieArlene", "zombieMoe", "zombieDarlene", "zombieMarlene", "zombieYo", "zombieSteve", "zombieSteveCrawler", "zombieTomClark", "zombieBusinessMan", "zombieBurnt", "zombieRancher", "zombieInmate", "zombieJanitor", "zombieNurse", "zombiePartyGirl", "zombieLab", "zombieMaleHazmat", "zombieUtilityWorker", "zombieBiker", "zombieLumberjack", "zombieFemaleFat", "zombieFatHawaiian", "zombieBowler", "zombieFatCop", "zombieSkateboarder", "zombieSoldier", "zombieChuck", "zombieSpider", "zombieScreamer", "zombieMutated", "zombieWightFeral", "zombieDemolition",
+                   "zombieBoeFeral", "zombieJoeRadiated", "zombieFatCopRadiated", "zombieSoldierCharged", "zombieSpiderInfernal", "zombieWightRadiated", "zombieWightInfernal", "zombieMutatedInfernal", "zombieScreamerRadiated"]},
+      {"name": "count", "label": "How many (1-100)", "type": "number", "default": "1"}
+    ],
+    "run": "spawnentity {player} {zombie} {count}"
+  },
+  {
+    "id": "spawn_demolisher", "name": "Demolisher", "category": "Enemies",
+    "description": "A Demolisher zombie. Hit the glowing charge on its chest and it explodes.",
+    "args": [],
+    "run": "spawnentity {player} zombieDemolition 1"
+  },
+  {
+    "id": "spawn_animal", "name": "Spawn animals", "category": "Enemies",
+    "description": "Wild animals around you: zombie dogs, wolves, bears, vultures, bee swarms, or harmless ones.",
+    "args": [
+      {"name": "animal", "label": "Animal", "type": "choice", "default": "animalZombieDog",
+       "choices": ["animalZombieDog", "animalWolf", "animalDireWolf", "animalCoyote", "animalMountainLion", "animalBear", "animalBearSmall", "animalZombieBear", "animalZombieVulture", "animalZombieVultureRadiated", "animalSnake", "animalBoar", "animalZombieBoar", "animalChickenHostile", "animalBeeSwarm", "animalInsectSwarm", "animalChicken", "animalRabbit", "animalPig", "animalStag", "animalDoe"]},
+      {"name": "count", "label": "How many (1-100)", "type": "number", "default": "1"}
+    ],
+    "run": "spawnentity {player} {animal} {count}"
+  },
+  {
+    "id": "spawn_scouts", "name": "Screamer scouts", "category": "Enemies",
+    "description": "Screamers come looking for you, and their screams call in more zombies.",
+    "args": [],
+    "run": "spawnscouts {player}"
+  },
+  {
+    "id": "wandering_horde", "name": "Wandering horde", "category": "Enemies",
+    "description": "Spawns a wandering horde, the roaming group that normally shows up every few days.",
+    "args": [],
+    "run": "spawnwandering h"
+  },
+  {
+    "id": "full_heal", "name": "Full heal", "category": "Help",
+    "description": "Refills your health and removes bleeding, broken bones, infection and other injuries.",
+    "args": [],
+    "run": "buffplayer {player} twitch_insta_regen"
+  },
+  {
+    "id": "good_buff", "name": "Good buff", "category": "Help",
+    "description": "One of the game's helpful timed buffs (the icons show on your screen).",
+    "args": [
+      {"name": "buff", "label": "Buff", "type": "choice", "default": "twitch_regen",
+       "choices": ["twitch_regen", "twitch_buffFast", "twitch_buffJump", "twitch_energize", "twitch_buffInfiniteAmmo", "twitch_buffToughness", "twitch_buffPackMule", "twitch_buffStayStill"]}
+    ],
+    "run": "buffplayer {player} {buff}"
+  },
+  {
+    "id": "kill_enemies", "name": "Kill all enemies", "category": "Help",
+    "description": "Kills every enemy in the world (never players). A lifesaver.",
+    "args": [],
+    "run": "killall"
+  },
+  {
+    "id": "give_xp", "name": "Give XP", "category": "Help",
+    "description": "Gives you experience points.",
+    "args": [{"name": "xp", "label": "XP", "type": "number", "default": "1000"}],
+    "run": "givexp {player} {xp}"
+  },
+  {
+    "id": "give_supplies", "name": "Give supplies", "category": "Items",
+    "description": "Drops food, drinks, medicine, ammo, explosives or materials in front of you.",
+    "args": [
+      {"name": "item", "label": "Item", "type": "choice", "default": "medicalFirstAidKit",
+       "choices": ["medicalFirstAidKit", "medicalFirstAidBandage", "medicalBandage", "drugPainkillers", "drugAntibiotics", "foodCanChili", "foodCanBeef", "drinkJarBoiledWater", "drinkCanMegaCrush", "drinkJarBeer", "drinkJarGrandpasMoonshine", "foodRottingFlesh", "ammo9mmBulletBall", "ammoShotgunShell", "ammo762mmBulletBall", "ammoRocketHE", "thrownAmmoPipeBomb", "thrownGrenade", "thrownDynamite", "thrownAmmoMolotovCocktail", "resourceDuctTape", "resourceScrapIron", "resourceWood", "resourceForgedSteel", "resourceSnowBall", "casinoCoin"]},
+      {"name": "amount", "label": "Amount", "type": "number", "default": "5"}
+    ],
+    "run": "give {player} {item} {amount}"
+  },
+  {
+    "id": "give_weapon", "name": "Give a weapon or tool", "category": "Items",
+    "description": "Drops a weapon or tool in front of you at the quality you pick (1 = worst, 6 = best).",
+    "args": [
+      {"name": "item", "label": "Weapon or tool", "type": "choice", "default": "gunHandgunT1Pistol",
+       "choices": ["gunHandgunT1Pistol", "gunShotgunT1DoubleBarrel", "gunMGT1AK47", "gunExplosivesT3RocketLauncher", "meleeWpnClubT1BaseballBat", "meleeToolTorch", "meleeToolPickT2SteelPickaxe", "meleeToolAxeT3Chainsaw"]},
+      {"name": "quality", "label": "Quality (1-6)", "type": "number", "default": "3"}
+    ],
+    "run": "give {player} {item} 1 {quality}"
+  },
+  {
+    "id": "air_drop", "name": "Air drop", "category": "Items",
+    "description": "A supply plane flies over and drops a crate of loot somewhere near the players.",
+    "args": [],
+    "run": "spawnairdrop"
+  },
+  {
+    "id": "time", "name": "Make it day or night", "category": "World",
+    "description": "Jumps the clock to day or night. At night zombies run.",
+    "args": [{"name": "when", "label": "Time", "type": "choice", "default": "night", "choices": ["day", "night"]}],
+    "run": "settime {when}"
+  },
+  {
+    "id": "weather", "name": "Change the weather", "category": "World",
+    "description": "Full rain, snow or clouds until you use \"Weather back to normal\".",
+    "args": [{"name": "kind", "label": "Weather", "type": "choice", "default": "Rain", "choices": ["Rain", "SnowFall", "Clouds"]}],
+    "run": "weather {kind} 1"
+  },
+  {
+    "id": "wind", "name": "Wind", "category": "World",
+    "description": "Sets the wind speed (0 to 200) until you use \"Weather back to normal\".",
+    "args": [{"name": "speed", "label": "Wind (0-200)", "type": "number", "default": "150"}],
+    "run": "weather Wind {speed}"
+  },
+  {
+    "id": "storm", "name": "Storm", "category": "World",
+    "description": "Starts a storm in the biome you pick (pick the biome you're in).",
+    "args": [
+      {"name": "hours", "label": "Game hours", "type": "number", "default": "1"},
+      {"name": "biome", "label": "Biome", "type": "choice", "default": "pine_forest", "choices": ["pine_forest", "burnt_forest", "desert", "snow", "wasteland"]}
+    ],
+    "run": "weather Storm {hours} {biome}"
+  },
+  {
+    "id": "weather_normal", "name": "Weather back to normal", "category": "World",
+    "description": "Undoes the weather changes above.",
+    "args": [],
+    "run": "weather Defaults"
+  },
+  {
+    "id": "say", "name": "Server message", "category": "World",
+    "description": "Shows a message in the game chat.",
+    "args": [{"name": "message", "label": "Message", "type": "text", "default": "{user} says hi!"}],
+    "run": "say {message:str}"
+  },
+  {
+    "id": "bad_buff", "name": "Nasty effect", "category": "Chaos",
+    "description": "One of the game's Twitch-style timed effects: trippy or black screen, slow, swapped controls, silly sounds and more.",
+    "args": [
+      {"name": "buff", "label": "Effect", "type": "choice", "default": "twitch_buffTrippy",
+       "choices": ["twitch_buffTrippy", "twitch_buffBlind", "twitch_buffBlur", "twitch_buffMonochrome", "twitch_buffPainting", "twitch_buffDistort", "twitch_buffVisionAlt", "twitch_buffConfused", "twitch_buffSlow", "twitch_buffWeakJump", "twitch_buffNoRunning", "twitch_buffKeepMoving", "twitch_buffEncumbered", "twitch_buffDeafen", "twitch_buffSillySounds", "twitch_hurt"]}
+    ],
+    "run": "buffplayer {player} {buff}"
+  },
+  {
+    "id": "injury", "name": "Injury", "category": "Chaos",
+    "description": "Bleeding, a broken leg or arm, a concussion, or a knockdown.",
+    "args": [
+      {"name": "buff", "label": "Injury", "type": "choice", "default": "buffInjuryBleeding",
+       "choices": ["buffInjuryBleeding", "buffLegBroken", "buffArmBroken", "buffLegSprained", "buffInjuryConcussion", "buffInjuryStunned01", "buffInjuryKnockdown01"]}
+    ],
+    "run": "buffplayer {player} {buff}"
+  },
+  {
+    "id": "night_horde", "name": "Nightmare", "category": "Chaos",
+    "description": "Night falls and zombies appear around you.",
+    "args": [{"name": "count", "label": "Zombies (1-100)", "type": "number", "default": "8"}],
+    "run": ["settime night", "spawnentity {player} zombieBoeFeral {count}"]
+  },
+  {
+    "id": "kill_player", "name": "Kill the player", "category": "Chaos",
+    "description": "Kills you on the spot. You drop your backpack.",
+    "warning": "You lose your backpack where you die.",
+    "args": [],
+    "run": "kill {player}"
+  },
+  {
+    "id": "list_players", "name": "List players (find your entity ID)", "category": "Server",
+    "description": "Asks the server for its player list. Your entity ID is the number after id= next to your name.",
+    "args": [],
+    "run": "listplayers"
+  }
+]

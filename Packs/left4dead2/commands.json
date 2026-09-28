@@ -1,0 +1,154 @@
+[
+  {
+    "id": "horde", "name": "Horde (panic event)", "category": "Enemies",
+    "description": "The Director sends a panic event: a big wave of common infected.",
+    "args": [],
+    "run": ["sv_cheats 1", "director_force_panic_event"]
+  },
+  {
+    "id": "endless_horde_on", "name": "Endless horde: on", "category": "Enemies",
+    "description": "Starts a panic event that never ends until \"Endless horde: off\".",
+    "args": [],
+    "run": ["sv_cheats 1", "director_panic_forever 1", "director_force_panic_event"]
+  },
+  {
+    "id": "endless_horde_off", "name": "Endless horde: off", "category": "Help",
+    "description": "Panic events end again as usual.",
+    "args": [],
+    "run": ["sv_cheats 1", "director_panic_forever 0"]
+  },
+  {
+    "id": "more_zombies", "name": "More zombies at once", "category": "Enemies",
+    "description": "How many common infected can be alive at once. Normal is 30. High numbers can slow the game down.",
+    "args": [
+      {"name": "count", "label": "Most at once (normal 30)", "type": "number", "default": "60"}
+    ],
+    "run": ["sv_cheats 1", "z_common_limit {count}"]
+  },
+  {
+    "id": "fast_zombies", "name": "Fast zombies", "category": "Enemies",
+    "description": "Common infected run faster. Normal speed is 250.",
+    "args": [
+      {"name": "speed", "label": "Speed (normal 250)", "type": "number", "default": "350"}
+    ],
+    "run": ["sv_cheats 1", "z_speed {speed}"]
+  },
+  {
+    "id": "tough_zombies", "name": "Tough zombies", "category": "Enemies",
+    "description": "Common infected get more health. Normal is 50.",
+    "args": [
+      {"name": "health", "label": "Health (normal 50)", "type": "number", "default": "150"}
+    ],
+    "run": ["sv_cheats 1", "z_health {health}"]
+  },
+  {
+    "id": "difficulty", "name": "Change difficulty", "category": "Enemies",
+    "description": "Easy, Normal, Advanced (Hard) or Expert (Impossible).",
+    "args": [
+      {"name": "level", "label": "Difficulty", "type": "choice", "default": "Hard", "choices": ["Easy", "Normal", "Hard", "Impossible"]}
+    ],
+    "run": "z_difficulty {level}"
+  },
+  {
+    "id": "zombies_normal", "name": "Zombies back to normal", "category": "Help",
+    "description": "Puts the zombie count, speed and health back to normal and ends an endless horde.",
+    "args": [],
+    "run": ["sv_cheats 1", "z_common_limit 30", "z_speed 250", "z_health 50", "director_panic_forever 0"]
+  },
+  {
+    "id": "clear_horde", "name": "Clear the horde", "category": "Help",
+    "description": "Removes every common infected and Witch on the map. Special infected and Tanks stay.",
+    "args": [],
+    "run": ["sv_cheats 1", "nb_delete_all"]
+  },
+  {
+    "id": "director_stop", "name": "Peace and quiet", "category": "Help",
+    "description": "The Director stops spawning wanderers, hordes, specials and bosses until \"Director back on\".",
+    "args": [],
+    "run": ["sv_cheats 1", "director_stop"]
+  },
+  {
+    "id": "director_start", "name": "Director back on", "category": "Enemies",
+    "description": "The Director spawns zombies, specials and bosses again.",
+    "args": [],
+    "run": ["sv_cheats 1", "director_start"]
+  },
+  {
+    "id": "no_specials_on", "name": "No special infected: on", "category": "Help",
+    "description": "No Boomers, Smokers, Hunters, Spitters, Jockeys or Chargers until switched off.",
+    "args": [],
+    "run": ["sv_cheats 1", "director_no_specials 1"]
+  },
+  {
+    "id": "no_specials_off", "name": "No special infected: off", "category": "Enemies",
+    "description": "Special infected spawn again.",
+    "args": [],
+    "run": ["sv_cheats 1", "director_no_specials 0"]
+  },
+  {
+    "id": "god_on", "name": "God mode: on", "category": "Help",
+    "description": "Survivors take no damage until \"God mode: off\". Affects all survivors.",
+    "args": [],
+    "run": ["sv_cheats 1", "god 1"]
+  },
+  {
+    "id": "god_off", "name": "God mode: off", "category": "Chaos",
+    "description": "Survivors take damage again.",
+    "args": [],
+    "run": ["sv_cheats 1", "god 0"]
+  },
+  {
+    "id": "infinite_ammo_on", "name": "Infinite ammo: on", "category": "Help",
+    "description": "Weapons never run out of ammo until switched off. Affects everyone.",
+    "args": [],
+    "run": ["sv_cheats 1", "sv_infinite_ammo 1"]
+  },
+  {
+    "id": "infinite_ammo_off", "name": "Infinite ammo: off", "category": "Chaos",
+    "description": "Ammo runs out again.",
+    "args": [],
+    "run": ["sv_cheats 1", "sv_infinite_ammo 0"]
+  },
+  {
+    "id": "low_gravity", "name": "Low gravity", "category": "Chaos",
+    "description": "Moon jumps. Normal gravity is 800.",
+    "args": [
+      {"name": "gravity", "label": "Gravity (normal 800)", "type": "number", "default": "300"}
+    ],
+    "run": "sv_gravity {gravity}"
+  },
+  {
+    "id": "gravity_normal", "name": "Normal gravity", "category": "Chaos",
+    "description": "Gravity back to 800.",
+    "args": [],
+    "run": "sv_gravity 800"
+  },
+  {
+    "id": "timescale", "name": "Slow motion / fast forward", "category": "Chaos",
+    "description": "Speeds the whole game up or slows it down. 1 is normal speed.",
+    "args": [
+      {"name": "scale", "label": "Game speed", "type": "choice", "default": "0.5", "choices": ["0.25", "0.5", "0.75", "1", "1.5", "2"]}
+    ],
+    "run": ["sv_cheats 1", "host_timescale {scale}"]
+  },
+  {
+    "id": "freeze_bots", "name": "Freeze the survivor bots", "category": "Chaos",
+    "description": "Survivor bots stand still until \"Unfreeze the survivor bots\".",
+    "args": [],
+    "run": ["sv_cheats 1", "sb_stop 1"]
+  },
+  {
+    "id": "unfreeze_bots", "name": "Unfreeze the survivor bots", "category": "Help",
+    "description": "Survivor bots move and fight again.",
+    "args": [],
+    "run": ["sv_cheats 1", "sb_stop 0"]
+  },
+  {
+    "id": "say", "name": "Message in chat", "category": "Messages",
+    "description": "A chat message from the server (shown as Console).",
+    "args": [
+      {"name": "text", "label": "Message", "type": "text", "default": "{user} sent {gift}!"}
+    ],
+    "run": "say {text:str}"
+  }
+]

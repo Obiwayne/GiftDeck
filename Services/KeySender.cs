@@ -132,12 +132,14 @@ public static class WindowFocus
         if (string.IsNullOrWhiteSpace(titlePart)) return false;
         IntPtr found = IntPtr.Zero;
         var sb = new StringBuilder(512);
+        // Spaces don't count, so "TheForest" finds "The Forest" and the other way round.
+        var want = titlePart.Replace(" ", "");
         EnumWindows((h, l) =>
         {
             if (!IsWindowVisible(h)) return true;
             sb.Clear();
             GetWindowText(h, sb, sb.Capacity);
-            if (sb.Length > 0 && sb.ToString().IndexOf(titlePart, StringComparison.OrdinalIgnoreCase) >= 0)
+            if (sb.Length > 0 && sb.ToString().Replace(" ", "").IndexOf(want, StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 found = h;
                 return false;

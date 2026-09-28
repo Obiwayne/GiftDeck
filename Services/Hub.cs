@@ -25,6 +25,10 @@ public static class Hub
     public static GameLinkService GameLink { get; private set; }
     public static MinecraftTarget Minecraft { get; private set; }
     public static GamePackService Packs { get; private set; }
+    static readonly Dictionary<string, ConsoleTarget> _consoles = new Dictionary<string, ConsoleTarget>(StringComparer.OrdinalIgnoreCase);
+
+    // The server-console target of a "console" game pack (null for other games).
+    public static ConsoleTarget Console(string packId) => packId != null && _consoles.TryGetValue(packId, out var t) ? t : null;
     public static SpinnerService Spinners { get; private set; }
     public static AlertService Alerts { get; private set; }
     public static KickService Kick { get; private set; }
@@ -58,6 +62,13 @@ public static class Hub
         Minecraft.Start();
         Packs = new GamePackService();
         Packs.Load();
+        foreach (var p in Packs.Packs.Where(p => p.Tier == "console" && p.Console != null && !p.IsCatalogOnly))
+        {
+            var console = new ConsoleTarget(p);
+            _consoles[p.Id] = console;
+            GameLink.Register(console);
+            console.Start();
+        }
         Spinners = new SpinnerService();
         Alerts = new AlertService();
 
@@ -129,6 +140,7 @@ public static class Hub
         try { GameLink?.Stop(); } catch { }
         if (Minecraft?.Server.OwnsProcess == true && Minecraft.Settings.StopWithGiftDeck) step("Stopping the Minecraft server (saving the world)…");
         try { Minecraft?.Shutdown(); } catch { }
+        foreach (var c in _consoles.Values) try { c.Dispose(); } catch { }
         step("Stopping TikFinity and the TikTok connection…");
         try { TikFinity?.Stop(); } catch { }
         try { TikFinity?.CloseIfHidden(); } catch { }

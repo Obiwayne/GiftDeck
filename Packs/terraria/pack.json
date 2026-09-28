@@ -1,0 +1,89 @@
+{
+  "id": "terraria",
+  "name": "Terraria",
+  "short": "Invasions, blood moons, buffs, items, slaps and fireworks through a TShock server",
+  "description": "You run a TShock server (the free, open-source Terraria server) on this PC and join it from Terraria. GiftDeck sends commands to TShock's REST API, so gifts start invasions, blood moons, eclipses and slime rain, give items, boss summons and coins, buff or debuff your character, slap you, launch fireworks, change the time and weather, and more.",
+  "cover": "cover.png",
+  "warning": "Commands go through TShock's REST API, and TShock only lets in-game players use /spawnmob, /spawnboss, /item, /buff and /tp. So gifts can't drop a single mob or boss on you; enemies come from invasions, moons, eclipses and slime rain, and boss summon items are given to you to use.",
+  "tier": "console",
+  "genre": "Sandbox / Action",
+  "steamAppId": 105600,
+  "windowTitle": "Terraria",
+  "detect": [],
+  "exe": "",
+  "mustBeClosed": [],
+  "requirements": [
+    { "text": "Terraria on Steam (PC)", "detail": "Your Terraria version must match the TShock version. TShock's download page says which Terraria version each release is for. If Steam updates Terraria first, wait for the matching TShock release." },
+    { "text": "TShock for Windows", "detail": "The free Terraria server from github.com/Pryaxis/TShock. Download the win-x64 zip from the latest release." },
+    { "text": "The .NET 9 Runtime (x64)", "detail": "TShock is built on .NET 9. If TShock.Server.exe says .NET is missing, install the .NET 9 Runtime from Microsoft." },
+    { "text": "A REST token in TShock's config.json", "detail": "The guide below shows the three lines to add. The token is the password GiftDeck uses." }
+  ],
+  "components": [],
+  "edits": [],
+  "presets": [],
+  "commands": "commands.json",
+  "targets": ["terraria:console"],
+  "console": {
+    "protocol": "tshock",
+    "host": "127.0.0.1",
+    "port": 7878,
+    "passwordLabel": "REST token",
+    "playerLabel": "Your character's name",
+    "testCommand": "/playing",
+    "errorMarks": [
+      "Invalid command entered",
+      "You do not have access",
+      "You do not have permission",
+      "You must use this command in-game",
+      "Invalid syntax",
+      "Invalid target player",
+      "Invalid player",
+      "Could not find any player",
+      "Unable to find any player",
+      "More than one match found",
+      "Invalid item type",
+      "Player does not have free slots",
+      "You cannot spawn banned items",
+      "Invalid buff ID",
+      "Unable to find any buff",
+      "You can't heal a dead player",
+      "is already dead",
+      "Invalid event type",
+      "Invalid invasion type",
+      "Invalid pumpkin moon event wave",
+      "Invalid frost moon event wave",
+      "Invalid time string",
+      "Invalid wind speed",
+      "Slime rain cannot be activated",
+      "Not authorized"
+    ]
+  },
+  "guide": [
+    {
+      "title": "Download TShock",
+      "text": "Download the latest TShock release for Windows (the file ending in win-x64-Release.zip) and unzip it into a folder of its own, for example C:\\TShock. Don't put it in Program Files. Check that the release says it's for the same Terraria version you have (Terraria's title screen shows your version in the corner). TShock needs the .NET 9 Runtime (x64); install it from Microsoft if TShock says it's missing.",
+      "link": "https://github.com/Pryaxis/TShock/releases/latest",
+      "linkText": "TShock releases"
+    },
+    {
+      "title": "Start the server once and make a world",
+      "text": "Double-click TShock.Server.exe. A console window opens and asks you to choose a world: type n and press Enter to make a new one, then answer the questions (size, difficulty, name). Press Enter to keep the default port 7777 and no password. When the world has loaded, type off in the console and press Enter. This saves the world and closes the server. On that first run TShock also created a tshock folder next to TShock.Server.exe."
+    },
+    {
+      "title": "Turn on the REST API and make a token",
+      "text": "Open tshock\\config.json (in the folder you unzipped, e.g. C:\\TShock\\tshock\\config.json) in Notepad. Inside \"Settings\", set \"RestApiEnabled\": true and keep \"RestApiPort\": 7878. Find \"ApplicationRestTokens\": {} and change it to\n\"ApplicationRestTokens\": { \"PUT-A-LONG-SECRET-HERE\": { \"Username\": \"GiftDeck\", \"UserGroupName\": \"superadmin\" } }\nUse your own long random text for the token and keep it secret: anyone with it can run any command on your server. Save the file. TShock only reads tokens when it starts, so restart the server after changing them."
+    },
+    {
+      "title": "Start the server and join it",
+      "text": "Start TShock.Server.exe again and pick your world (type its number). In Terraria: Multiplayer > Join via IP, pick your character, type 127.0.0.1 as the address and 7777 as the port. Keep the server window open while you stream."
+    },
+    {
+      "title": "Connect GiftDeck",
+      "text": "On this page type host 127.0.0.1, port 7878, your REST token as the password, and your character's name exactly as it shows in game. Press Test: GiftDeck asks TShock who is online. If it says the token isn't valid, check the token in config.json and restart TShock."
+    },
+    {
+      "title": "Add gift events",
+      "text": "In an event, add the action \"Run a game command\" and pick a Terraria command, for example a blood moon for a big gift or a firework for a Rose. Messages in game say that \"GiftDeck\" did it (the Username from your token). Blood moon, eclipse, rain, slime rain, sandstorm, god mode and lanterns switch on and off, so the same gift twice turns them off again. Starting an invasion while one is running ends it instead."
+    }
+  ]
+}

@@ -1,0 +1,216 @@
+[
+  {
+    "id": "invasion", "name": "Start an invasion", "category": "Enemies",
+    "description": "Goblin Army, Frost Legion, Pirates or Martian Madness. If an invasion is already running, this ends it instead. Terraria only starts an invasion when a player has at least 200 max life.",
+    "args": [
+      {"name": "type", "label": "Invasion", "type": "choice", "default": "goblins", "choices": ["goblins", "snowmen", "pirates", "martians"]}
+    ],
+    "run": "/worldevent invasion {type}"
+  },
+  {
+    "id": "pumpkin_moon", "name": "Pumpkin Moon", "category": "Enemies",
+    "description": "Starts the Pumpkin Moon at the chosen wave. Very hard before late Hardmode. It only lasts until morning, so use it at night.",
+    "args": [
+      {"name": "wave", "label": "Wave (1 to 15)", "type": "number", "default": "1"}
+    ],
+    "run": "/worldevent invasion pumpkinmoon {wave}"
+  },
+  {
+    "id": "frost_moon", "name": "Frost Moon", "category": "Enemies",
+    "description": "Starts the Frost Moon at the chosen wave. Very hard before late Hardmode. It only lasts until morning, so use it at night.",
+    "args": [
+      {"name": "wave", "label": "Wave (1 to 20)", "type": "number", "default": "1"}
+    ],
+    "run": "/worldevent invasion frostmoon {wave}"
+  },
+  {
+    "id": "blood_moon", "name": "Blood Moon (on/off)", "category": "Enemies",
+    "description": "Switches a Blood Moon on, or off if one is already up. Best at night.",
+    "args": [],
+    "run": "/worldevent bloodmoon"
+  },
+  {
+    "id": "eclipse", "name": "Solar Eclipse (on/off)", "category": "Enemies",
+    "description": "Switches a Solar Eclipse on, or off if one is already happening. Best during the day.",
+    "args": [],
+    "run": "/worldevent eclipse"
+  },
+  {
+    "id": "slime_rain", "name": "Slime Rain (on/off)", "category": "Enemies",
+    "description": "Slimes fall from the sky, or the slime rain stops if one is going. Doesn't start while it's raining normally.",
+    "args": [],
+    "run": "/worldevent rain slime"
+  },
+  {
+    "id": "meteor", "name": "Drop a meteorite", "category": "World",
+    "description": "A meteorite crashes somewhere in the world, with Meteor Heads around it.",
+    "args": [],
+    "run": "/worldevent meteor"
+  },
+  {
+    "id": "meteor_shower", "name": "Meteor shower (on/off)", "category": "World",
+    "description": "Starts a meteor shower, or stops the one that's going.",
+    "args": [],
+    "run": "/worldevent meteorshower"
+  },
+  {
+    "id": "heal", "name": "Heal fully", "category": "Help",
+    "description": "Heals the player to full life. Does nothing if they're dead.",
+    "args": [],
+    "run": "/heal {player:str}"
+  },
+  {
+    "id": "respawn", "name": "Respawn now", "category": "Help",
+    "description": "Brings the player back straight away when they're dead.",
+    "args": [],
+    "run": "/respawn {player:str}"
+  },
+  {
+    "id": "god_mode", "name": "God mode (on/off)", "category": "Help",
+    "description": "Switches god mode for the player: on the first time, off the next.",
+    "args": [],
+    "run": "/godmode {player:str}"
+  },
+  {
+    "id": "good_buff", "name": "Give a good buff", "category": "Help",
+    "description": "A potion buff for the player.",
+    "args": [
+      {"name": "buff", "label": "Buff", "type": "choice", "default": "Regeneration",
+       "choices": ["Regeneration", "Swiftness", "Ironskin", "Shine", "Night Owl", "Featherfall", "Invisibility", "Hunter", "Spelunker", "Mining", "Builder", "Heartreach", "Lifeforce", "Endurance", "Rage", "Wrath", "Dangersense", "Titan", "Water Walking", "Gills", "Flipper", "Inferno", "Mana Regeneration", "Magic Power", "Archery", "Thorns", "Warmth", "Happy!"]},
+      {"name": "seconds", "label": "Seconds", "type": "number", "default": "60"}
+    ],
+    "run": "/gbuff {player:str} {buff:str} {seconds}"
+  },
+  {
+    "id": "butcher", "name": "Kill all enemies", "category": "Help",
+    "description": "Kills every enemy in the world (town NPCs are safe). Bosses too.",
+    "args": [],
+    "run": "/butcher"
+  },
+  {
+    "id": "give_item", "name": "Give an item", "category": "Items",
+    "description": "Puts an item in the player's inventory. Needs a free inventory slot.",
+    "args": [
+      {"name": "item", "label": "Item", "type": "choice", "default": "Healing Potion",
+       "choices": ["Healing Potion", "Lesser Healing Potion", "Greater Healing Potion", "Life Crystal", "Life Fruit", "Mana Crystal", "Fallen Star", "Torch", "Rope", "Wood", "Stone Block", "Dirt Block", "Bomb", "Sticky Bomb", "Dynamite", "Grenade", "Bacon", "Cooked Fish", "Diamond", "Magic Mirror", "Hermes Boots", "Cloud in a Bottle", "Rod of Discord", "Megashark", "Terraprisma", "Zenith", "Copper Shortsword", "Wooden Sword", "Bunny", "Whoopie Cushion", "Toilet", "Confetti"]},
+      {"name": "count", "label": "How many", "type": "number", "default": "1"}
+    ],
+    "run": "/give {item:str} {player:str} {count}"
+  },
+  {
+    "id": "boss_summon", "name": "Give a boss or event summon", "category": "Items",
+    "description": "Gives the player an item that summons a boss or starts an event when they use it.",
+    "args": [
+      {"name": "item", "label": "Summon item", "type": "choice", "default": "Suspicious Looking Eye",
+       "choices": ["Slime Crown", "Suspicious Looking Eye", "Worm Food", "Bloody Spine", "Abeemination", "Deer Thing", "Mechanical Eye", "Mechanical Worm", "Mechanical Skull", "Goblin Battle Standard", "Snow Globe", "Pirate Map", "Bloody Tear", "Pumpkin Moon Medallion", "Naughty Present"]}
+    ],
+    "run": "/give {item:str} {player:str} 1"
+  },
+  {
+    "id": "coins", "name": "Give coins", "category": "Items",
+    "description": "Money for the player.",
+    "args": [
+      {"name": "coin", "label": "Coin", "type": "choice", "default": "Gold Coin", "choices": ["Silver Coin", "Gold Coin", "Platinum Coin"]},
+      {"name": "count", "label": "How many", "type": "number", "default": "5"}
+    ],
+    "run": "/give {coin:str} {player:str} {count}"
+  },
+  {
+    "id": "coin_rain", "name": "Coin rain (on/off)", "category": "Items",
+    "description": "It rains coins, or the coin rain stops if one is going.",
+    "args": [],
+    "run": "/worldevent rain coin"
+  },
+  {
+    "id": "slap", "name": "Slap", "category": "Chaos",
+    "description": "Hurts the player and tells everyone about it.",
+    "args": [
+      {"name": "damage", "label": "Damage", "type": "number", "default": "20"},
+      {"name": "count", "label": "How many slaps", "type": "number", "default": "1"}
+    ],
+    "repeat": "count", "maxRepeat": 10,
+    "run": "/slap {player:str} {damage}"
+  },
+  {
+    "id": "kill", "name": "Kill the player", "category": "Chaos",
+    "description": "The player dies on the spot.",
+    "args": [],
+    "run": "/kill {player:str}"
+  },
+  {
+    "id": "bad_buff", "name": "Give a debuff", "category": "Chaos",
+    "description": "Poisoned, On Fire!, Confused, Darkness and other debuffs.",
+    "args": [
+      {"name": "buff", "label": "Debuff", "type": "choice", "default": "Confused",
+       "choices": ["Poisoned", "On Fire!", "Confused", "Slow", "Darkness", "Blackout", "Cursed", "Weak", "Silenced", "Frozen", "Stoned", "Chilled", "Obstructed", "Webbed", "Stinky", "Tipsy", "Wet", "Lovestruck", "Midas", "Electrified", "Bleeding", "Broken Armor", "Ichor", "Cursed Inferno", "Frostburn", "Shadowflame", "Oiled", "Dazed", "Potion Sickness", "Gravitation", "Battle"]},
+      {"name": "seconds", "label": "Seconds", "type": "number", "default": "10"}
+    ],
+    "run": "/gbuff {player:str} {buff:str} {seconds}"
+  },
+  {
+    "id": "annoy", "name": "Annoy", "category": "Chaos",
+    "description": "Spams the player with a sound effect for a while (TShock's /annoy).",
+    "args": [
+      {"name": "seconds", "label": "Seconds", "type": "number", "default": "10"}
+    ],
+    "run": "/annoy {player:str} {seconds}"
+  },
+  {
+    "id": "firework", "name": "Firework", "category": "Chaos",
+    "description": "A firework goes off just above the player.",
+    "args": [
+      {"name": "color", "label": "Firework", "type": "choice", "default": "red", "choices": ["red", "green", "blue", "yellow", "star", "spiral", "rings", "flower"]},
+      {"name": "count", "label": "How many", "type": "number", "default": "1"}
+    ],
+    "repeat": "count", "maxRepeat": 20,
+    "run": "/firework {player:str} {color}"
+  },
+  {
+    "id": "wind", "name": "Change the wind", "category": "World",
+    "description": "Sets the wind speed in mph: -40 (strong to the left) to 40 (strong to the right).",
+    "args": [
+      {"name": "mph", "label": "Wind in mph (-40 to 40)", "type": "number", "default": "40"}
+    ],
+    "run": "/wind {mph}"
+  },
+  {
+    "id": "sandstorm", "name": "Sandstorm (on/off)", "category": "World",
+    "description": "Starts a sandstorm, or stops the one that's blowing. You see it in the desert.",
+    "args": [],
+    "run": "/worldevent sandstorm"
+  },
+  {
+    "id": "time", "name": "Set the time", "category": "World",
+    "description": "Jumps to dawn, night, noon or midnight.",
+    "args": [
+      {"name": "when", "label": "Time", "type": "choice", "default": "night", "choices": ["day", "noon", "night", "midnight"]}
+    ],
+    "run": "/time {when}"
+  },
+  {
+    "id": "rain", "name": "Rain (on/off)", "category": "World",
+    "description": "Starts rain, or stops it if it's raining.",
+    "args": [],
+    "run": "/worldevent rain"
+  },
+  {
+    "id": "full_moon", "name": "Full moon", "category": "World",
+    "description": "Makes tonight a full moon.",
+    "args": [],
+    "run": "/worldevent fullmoon"
+  },
+  {
+    "id": "lanterns", "name": "Lantern Night (on/off)", "category": "World",
+    "description": "Floating lanterns fill the sky, or they go away if they're up.",
+    "args": [],
+    "run": "/worldevent lanterns"
+  },
+  {
+    "id": "broadcast", "name": "Message in chat", "category": "Messages",
+    "description": "A server broadcast everyone in the game sees.",
+    "args": [
+      {"name": "text", "label": "Message", "type": "text", "default": "{user} sent {gift}!"}
+    ],
+    "run": "/bc {text}"
+  }
+]

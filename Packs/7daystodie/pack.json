@@ -1,0 +1,59 @@
+{
+  "id": "7daystodie",
+  "name": "7 Days to Die",
+  "short": "Gifts spawn zombies, call air drops, change the weather and buff or hurt you, through the server's telnet console.",
+  "description": "GiftDeck talks to your 7 Days to Die dedicated server over its telnet console, the same console server admins use. Gifts can spawn zombies and animals next to you, send screamer scouts or a wandering horde, drop an air drop, hand you items and XP, heal you, change the time and weather, or hit you with the game's own Twitch-style buffs (trippy vision, blindness, slow, swapped controls). You play on a dedicated server (on this PC or a rented one) and join it like any multiplayer game.",
+  "cover": "",
+  "tier": "console",
+  "genre": "Survival horror",
+  "steamAppId": 251570,
+  "windowTitle": "7 Days To Die",
+  "warning": "Needs a dedicated server with telnet turned on and a telnet password. A game hosted from the main menu has no telnet console.",
+  "detect": [],
+  "requirements": [
+    "7 Days to Die on Steam",
+    "The free \"7 Days to Die Dedicated Server\" (Steam Library > Tools), or a rented server that gives you telnet access",
+    "TelnetEnabled set to true and a TelnetPassword in serverconfig.xml",
+    "Your player's entity ID (a number the server gives your character; see the guide)"
+  ],
+  "presets": [],
+  "commands": "commands.json",
+  "targets": ["7daystodie:console"],
+  "console": {
+    "protocol": "telnet",
+    "host": "127.0.0.1",
+    "port": 8081,
+    "passwordLabel": "Telnet password (TelnetPassword in serverconfig.xml)",
+    "playerLabel": "Your entity ID (the number after id= when the server lists players)",
+    "testCommand": "version",
+    "errorMarks": ["*** ERROR", "Wrong number of arguments", "Playername or entity"]
+  },
+  "guide": [
+    {
+      "title": "Install the dedicated server",
+      "text": "In Steam, open Library, switch the list from Games to Tools and install \"7 Days to Die Dedicated Server\". It's free if you own the game. It installs to C:\\Program Files (x86)\\Steam\\steamapps\\common\\7 Days to Die Dedicated Server (or the same path in whichever Steam library you picked). Keep it on the same version as your game. Renting a server works too, as long as your host gives you the telnet port and password.",
+      "link": "https://7daystodie.wiki.gg/wiki/Server:_serverconfig.xml",
+      "linkText": "serverconfig.xml settings"
+    },
+    {
+      "title": "Turn on telnet and set a password",
+      "text": "In the server folder, open serverconfig.xml in Notepad. Find these lines and set them: TelnetEnabled = true, TelnetPort = 8081, TelnetPassword = a password you make up. Save the file. With no password the server only accepts telnet from this PC. Set one anyway, and never forward port 8081 on your router. A server update can replace serverconfig.xml, so keep a copy of your edited file."
+    },
+    {
+      "title": "Start the server and join it",
+      "text": "Double-click startdedicated.bat in the server folder and wait until the log says the world has loaded. (A world is generated the first time, which can take a few minutes.) Then start 7 Days to Die, choose Join a Game > Connect to IP, and enter 127.0.0.1 with port 26900. If the server runs on another PC, use that PC's IP address instead."
+    },
+    {
+      "title": "Find your entity ID",
+      "text": "7 Days to Die's spawn command needs your character's entity ID, which is a number, not your name. When you join, the server log shows a line with PlayerSpawnedInWorld ... EntityID=171 ... PlayerName='you'. Or, once GiftDeck is connected, run the listplayers command and look for id=171 next to your name. The ID stays the same for your character on this save. A new world or a new character gets a new one."
+    },
+    {
+      "title": "Connect GiftDeck",
+      "text": "On this page, enter Host 127.0.0.1 (or your server's IP), Port 8081 (or your TelnetPort), your telnet password, and your entity ID. Press Test. GiftDeck runs the harmless version command and shows the server's reply. If it fails, check that the server is running, TelnetEnabled is true, and the password matches."
+    },
+    {
+      "title": "Add gift events",
+      "text": "Go to Events, add an event for a gift (for example a Rose), and choose the action \"Run a game command\". Pick 7 Days to Die and one of the commands, such as Spawn zombies or Air drop, and set its options. Use Test on the event while you're in the game to see it work. Commands sent over telnet run with full admin rights, so they work even with cheats turned off."
+    }
+  ]
+}

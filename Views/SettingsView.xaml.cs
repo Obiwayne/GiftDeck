@@ -12,6 +12,14 @@ public partial class SettingsView : UserControl
     public SettingsView()
     {
         InitializeComponent();
+        Load();
+        // The page is kept between visits; other pages (a game's "use this window") can change these meanwhile.
+        IsVisibleChanged += (_, _) => { if (IsVisible) Load(); };
+    }
+
+    void Load()
+    {
+        _loading = true;
         var s = Hub.Settings;
         AutoLaunch.IsChecked = s.AutoLaunchTikFinity;
         ExeBox.Text = s.TikFinityExe;

@@ -1,0 +1,56 @@
+{
+  "id": "palworld",
+  "name": "Palworld",
+  "short": "Gifts press Palworld's own keys: jump, roll, throw a Pal Sphere, swap Pals",
+  "description": "Gifts press Palworld's keys while you play: jump, roll, crouch, run forward, throw a Pal Sphere, call out or recall your Pal, use its partner skill, reload or swap to another Pal. Works in single player, co-op and on servers, because nothing is installed and nothing talks to a server.",
+  "cover": "cover.png",
+  "warning": "Key presses only. Palworld's server console (RCON, and its newer REST API) can only broadcast messages, save, list, kick and ban players, and shut down. It can't spawn Pals or items or change the weather, so there's no console to connect here. Key presses go to whichever window is in front.",
+  "tier": "keys",
+  "genre": "Survival / Creature collecting",
+  "steamAppId": 1623730,
+  "windowTitle": "Pal",
+  "detect": [],
+  "exe": "",
+  "mustBeClosed": [],
+  "requirements": [
+    "Palworld on Steam (PC)",
+    { "text": "Default keys", "detail": "The ideas below use Palworld's default keyboard layout. If you changed a key in Palworld's options, change it in the GiftDeck event too." }
+  ],
+  "components": [],
+  "edits": [],
+  "presets": [],
+  "keys": [
+    { "name": "Jump", "keys": "Space", "idea": "A Rose makes you jump" },
+    { "name": "Roll", "keys": "Ctrl", "idea": "A small gift makes you dodge-roll" },
+    { "name": "Crouch", "keys": "C", "idea": "Ice Cream makes you crouch" },
+    { "name": "Run forward", "keys": "W", "holdMs": 2000, "idea": "Hold W for 2 seconds: a gift sends you running ahead" },
+    { "name": "Run backwards", "keys": "S", "holdMs": 1500, "idea": "Hold S: a viewer drags you back" },
+    { "name": "Throw a Pal Sphere", "keys": "Q", "idea": "A viewer throws a Pal Sphere wherever you're looking" },
+    { "name": "Call out or recall your Pal", "keys": "E", "idea": "A gift sends your Pal out, or back into its sphere" },
+    { "name": "Partner skill", "keys": "F", "idea": "A big gift fires your Pal's partner skill" },
+    { "name": "Reload", "keys": "R", "idea": "Reload at the worst moment" },
+    { "name": "Swap Pal (left)", "keys": "1", "idea": "Switch the Pal you have selected" },
+    { "name": "Swap Pal (right)", "keys": "3", "idea": "Switch the Pal you have selected the other way" },
+    { "name": "Change sphere", "keys": "2", "idea": "Switch which Pal Sphere you throw" }
+  ],
+  "guide": [
+    {
+      "title": "Start Palworld",
+      "text": "Play in single player, co-op or on a server: key presses work everywhere, because GiftDeck only presses keys on this PC. Windowed or borderless is easiest while streaming."
+    },
+    {
+      "title": "Let GiftDeck bring the game to the front",
+      "text": "Key presses go to the window that's in front. Press \"Use this game's window for key presses\" on this page: GiftDeck then brings the window with Pal in its title to the front before pressing keys. If a key press lands somewhere else, check the exact title of Palworld's window (hover over it in the taskbar) and put that in GiftDeck's settings instead."
+    },
+    {
+      "title": "Add gift events",
+      "text": "In an event, add the action \"Press keys\" and type a key from the ideas on this page, for example Space for a Rose (jump) or Q for a bigger gift (throw a Pal Sphere). For \"run forward\", set how long to hold W. Pair key presses with GiftDeck's own sound, alert or text to speech so viewers see who did it."
+    },
+    {
+      "title": "Why there's no console for Palworld",
+      "text": "Palworld's dedicated server has RCON and a REST API, but they only broadcast messages, save the world, list, kick, ban and unban players, and shut the server down. Nothing spawns Pals, gives items or changes the world. Pocketpair also says RCON is deprecated and will stop working in a future update, and RCON's Broadcast cuts messages at the first space. For on-screen messages, GiftDeck's alerts and text to speech do a better job.",
+      "link": "https://docs.palworldgame.com/settings-and-operation/commands",
+      "linkText": "Palworld server commands"
+    }
+  ]
+}

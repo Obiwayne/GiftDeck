@@ -1,0 +1,57 @@
+{
+  "id": "projectzomboid",
+  "name": "Project Zomboid",
+  "short": "Gifts spawn hordes, send the helicopter, fire gunshots, drop items and change the weather, through the server's RCON console.",
+  "description": "GiftDeck sends admin commands to your Project Zomboid server over RCON. Gifts can spawn a horde around you, send the helicopter or a gunshot that pulls every zombie nearby, strike lightning, start rain or a thunderstorm, add items, skill XP or a car, or make you invincible for a while. You play on a server (the free dedicated server on this PC, or a rented one) and join it from the game's Join menu.",
+  "cover": "",
+  "tier": "console",
+  "genre": "Survival horror",
+  "steamAppId": 108600,
+  "windowTitle": "Project Zomboid",
+  "warning": "Written for Build 42. RCON only starts when RCONPassword is set in the server's .ini file.",
+  "detect": [],
+  "requirements": [
+    "Project Zomboid on Steam",
+    "The free \"Project Zomboid Dedicated Server\" (Steam Library > Tools) on the same build as your game, or a rented server that gives you RCON access",
+    "An RCONPassword in the server's .ini file (C:\\Users\\<you>\\Zomboid\\Server\\servertest.ini by default)",
+    "The username you log in to the server with (not your character's name)"
+  ],
+  "presets": [],
+  "commands": "commands.json",
+  "targets": ["projectzomboid:console"],
+  "console": {
+    "protocol": "rcon",
+    "host": "127.0.0.1",
+    "port": 27015,
+    "passwordLabel": "RCON password (RCONPassword in the server's .ini)",
+    "playerLabel": "Your server username (the name you log in with)",
+    "testCommand": "players",
+    "errorMarks": ["Unknown command", "No such user", "User \"", "Can't find player", "Pass a username", "Specify a player", "Wrong arguments", "Invalid", "Unknown vehicle script", "Z coordinate must be 0", "ERROR", "List of available perks", "A InvocationTargetException", "A IllegalAccessException", "A InstantiationException"]
+  },
+  "guide": [
+    {
+      "title": "Install the dedicated server",
+      "text": "In Steam, open Library, switch the list from Games to Tools and install \"Project Zomboid Dedicated Server\". It's free. It must be on the same build as your game: if you play a beta branch (for example the Build 42 unstable branch), right-click the server, open Properties > Betas and pick the same branch. Renting a server works too, as long as your host gives you the RCON port and password."
+    },
+    {
+      "title": "Give the server enough memory and run it once",
+      "text": "In the server's install folder (C:\\Program Files (x86)\\Steam\\steamapps\\common\\Project Zomboid Dedicated Server by default), right-click StartServer64.bat > Edit. If your PC has less than 16 GB of RAM, lower the -Xms and -Xmx values (for example -Xms4g -Xmx4g) and save. Double-click StartServer64.bat. The first time, it asks you to make an admin password; type it twice. When the log says the server has started, type quit in that window to stop it. This creates the settings files."
+    },
+    {
+      "title": "Turn on RCON with a password",
+      "text": "Open C:\\Users\\<you>\\Zomboid\\Server\\servertest.ini in Notepad. (servertest is the default server name. If you started the server with -servername, the file has that name.) Set RCONPort=27015 and RCONPassword= a password you make up, then save. The server only opens RCON when RCONPassword isn't empty. Don't forward port 27015 on your router. Start StartServer64.bat again."
+    },
+    {
+      "title": "Join your server",
+      "text": "Start Project Zomboid, choose Join, and enter IP 127.0.0.1 and port 16261 (or that PC's IP if the server runs somewhere else). Pick a username and password. The first login creates your account. The username is the name GiftDeck needs, not your character's name."
+    },
+    {
+      "title": "Connect GiftDeck",
+      "text": "On this page, enter Host 127.0.0.1 (or your server's IP), Port 27015 (or your RCONPort), your RCON password, and your server username. Press Test. GiftDeck runs the harmless players command and shows the list of connected players. If it fails, check the server is running, RCONPassword is set, and you restarted the server after changing the .ini."
+    },
+    {
+      "title": "Add gift events",
+      "text": "Go to Events, add an event for a gift, and choose the action \"Run a game command\". Pick Project Zomboid and a command, such as Spawn a horde or Helicopter, and set its options. While you're in the game, use Test on the event to try it. RCON commands run as the server admin, so your own account doesn't need admin rights."
+    }
+  ]
+}
