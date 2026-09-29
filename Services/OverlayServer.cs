@@ -132,7 +132,11 @@ public class OverlayServer
     void ServeTileImage(HttpListenerContext ctx, string idText)
     {
         var tile = Guid.TryParse(idText, out var id) ? _svc.FindTile(id) : null;
-        ServeFile(ctx, tile == null ? null : _svc.ResolveTileImage(tile));
+        var src = tile == null ? null : _svc.ResolveTileImage(tile);
+        // Web pictures come from GiftDeck's cache; either way a solid black background is made see-through.
+        if (!string.IsNullOrEmpty(src) && !File.Exists(src) && src.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+            src = GiftImages.CachedFileAsync(src).GetAwaiter().GetResult() ?? src;
+        ServeFile(ctx, ImageCleanup.WithoutBlackBackground(src));
     }
 
     // A gift event's gift picture (the gift list template).
