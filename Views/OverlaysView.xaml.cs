@@ -40,6 +40,7 @@ public partial class OverlaysView : UserControl
         CountersList.ItemsSource = _counters;
         stats.PropertyChanged += (s, e) => Dispatcher.BeginInvoke(() => { foreach (var c in _counters) c.Refresh(); });
 
+        LoadMenuStyle();
         MenuTitle.Text = cfg.Menu.Title;
         MenuColumns.Text = cfg.Menu.Columns.ToString();
         MenuTileSize.Text = cfg.Menu.TileSize.ToString();
@@ -102,7 +103,13 @@ public partial class OverlaysView : UserControl
         int tiles = Math.Max(1, Hub.Overlays.VisibleTileCount);
         int rows = (int)Math.Ceiling(tiles / (double)cols);
         double boardW, boardH;
-        if (m.TileSize > 0)
+        var (lw, lh) = LayoutSize(m);
+        if (m.Layout is "sides" or "carousel" or "ticker")
+        {
+            boardW = lw;
+            boardH = lh;
+        }
+        else if (m.TileSize > 0)
         {
             boardW = cols * (m.TileSize + gap);
             boardH = m.TileSize * 0.22 * 1.15 + 14 + rows * (m.TileSize + gap);
@@ -112,7 +119,7 @@ public partial class OverlaysView : UserControl
             boardW = 1250;
             boardH = 700;
         }
-        double zoom = Math.Min(400.0 / boardW, 1.0);
+        double zoom = Math.Min(Math.Min(400.0 / boardW, 420.0 / boardH), 1.0);
         Preview.Height = Math.Clamp(boardH * zoom, 120, 420);
         Preview.ZoomFactor = zoom;
     }
@@ -126,6 +133,9 @@ public partial class OverlaysView : UserControl
         int hidden = m.Tiles.Count - visible;
         int rows = (int)Math.Ceiling(Math.Max(1, visible) / (double)cols);
         var hiddenNote = hidden > 0 ? $" {hidden} tile{(hidden == 1 ? " is" : "s are")} hidden because the event is switched off." : "";
+        var (lw, lh) = LayoutSize(m);
+        if (m.Layout == "sides") { MenuSizeHint.Text = $"Side columns cover the whole screen: make the Browser Source {lw} x {lh} (or 1920 x 1080 for landscape) and put it over the game. The middle stays see-through.{hiddenNote}"; return; }
+        if (m.Layout is "carousel" or "ticker") { MenuSizeHint.Text = $"A strip across the screen: a Browser Source of {lw} x {lh} works well; place it where you like.{hiddenNote}"; return; }
         if (m.TileSize > 0)
         {
             int w = cols * (m.TileSize + gap);
@@ -184,6 +194,19 @@ public partial class OverlaysView : UserControl
         if (MenuFont.Text.Trim().Length > 0) m.Font = MenuFont.Text.Trim();
         m.ShowSubtitle = MenuShowSubtitle.IsChecked == true;
         m.Transparent = MenuTransparent.IsChecked == true;
+        m.Layout = TagOf(MenuLayout) is { Length: > 0 } layout ? layout : "grid";
+        m.Look = TagOf(MenuLook) is { Length: > 0 } look ? look : "classic";
+        m.CardColor = Hex(MenuCardColor.Text, m.CardColor);
+        m.CardColor2 = Hex(MenuCardColor2.Text, m.CardColor2);
+        m.TextColor = Hex(MenuTextColor.Text, m.TextColor);
+        m.Speed = (int)Math.Round(MenuSpeed.Value);
+        m.Direction = TagOf(MenuDirection);
+        if (int.TryParse(MenuPerView.Text.Trim(), out int per) && per >= 1 && per <= 12) m.PerView = per;
+        m.TextOutline = MenuOutline.IsChecked == true;
+        m.Highlight = MenuHighlight.IsChecked == true;
+        ShowMenuFields();
+        UpdateSizeHint();
+        FitPreview();
         Hub.Overlays.Touch();
     }
 
@@ -209,7 +232,152 @@ public partial class OverlaysView : UserControl
     }
 
     void CopyMenu_Click(object sender, RoutedEventArgs e) => Copy(Url("/overlay/menu"));
-    async void ObsMenu_Click(object sender, RoutedEventArgs e) => await AddToObs("GiftDeck gift menu", Url("/overlay/menu"), 1250, 700);
+    async void ObsMenu_Click(object sender, RoutedEventArgs e)
+    {
+        var (w, h) = LayoutSize(Hub.Overlays.Config.Menu);
+        await AddToObs("GiftDeck gift menu", Url("/overlay/menu"), w, h);
+    }
+
+    // ---- Gift menu board styles ----
+
+    // The Browser Source size each layout wants.
+    static (int W, int H) LayoutSize(MenuConfig m) => m.Layout switch
+    {
+        "sides" => (1080, 1920),
+        "carousel" => (1080, 300),
+        "ticker" => (1080, 300),
+        _ => (1250, 700),
+    };
+
+    static void Select(ComboBox box, string tag)
+    {
+        box.SelectedItem = box.Items.OfType<ComboBoxItem>().FirstOrDefault(i => (string)i.Tag == tag) ?? box.Items.OfType<ComboBoxItem>().FirstOrDefault();
+    }
+
+    static string TagOf(ComboBox box) => (box.SelectedItem as ComboBoxItem)?.Tag as string ?? "";
+
+    void LoadMenuStyle()
+    {
+        bool was = _loading;
+        _loading = true;
+        var m = Hub.Overlays.Config.Menu;
+        Select(MenuLayout, m.Layout);
+        Select(MenuLook, m.Look);
+        MenuCardColor.Text = m.CardColor;
+        MenuCardColor2.Text = m.CardColor2;
+        MenuTextColor.Text = m.TextColor;
+        MenuSpeed.Value = Math.Clamp(m.Speed, 1, 10);
+        MenuPerView.Text = m.PerView.ToString();
+        MenuOutline.IsChecked = m.TextOutline;
+        MenuHighlight.IsChecked = m.Highlight;
+        FillDirections(m.Layout, m.Direction);
+        ShowMenuFields();
+        _loading = was;
+    }
+
+    void FillDirections(string layout, string current)
+    {
+        MenuDirection.Items.Clear();
+        var items = layout == "ticker"
+            ? new[] { ("up", "Bottom to top"), ("down", "Top to bottom") }
+            : new[] { ("left", "Right to left"), ("right", "Left to right") };
+        foreach (var (tag, text) in items) MenuDirection.Items.Add(new ComboBoxItem { Tag = tag, Content = text });
+        Select(MenuDirection, string.IsNullOrEmpty(current) ? items[0].Item1 : current);
+    }
+
+    // Only the settings that do something in this layout and look.
+    void ShowMenuFields()
+    {
+        var layout = TagOf(MenuLayout);
+        var look = TagOf(MenuLook);
+        bool grid = layout == "grid" || layout == "";
+        bool moving = layout is "carousel" or "ticker";
+        // Columns, square size and header colour also shape the carousel (tiles across, tile size, bar colour).
+        MenuGridRow.Visibility = grid || layout == "carousel" ? Visibility.Visible : Visibility.Collapsed;
+        MenuLinesRow.Visibility = grid || (layout == "carousel" && look == "classic") ? Visibility.Visible : Visibility.Collapsed;
+        MenuColumnsLabel.Text = layout == "carousel" ? "Tiles across" : "Columns";
+        MenuHeaderColorLabel.Text = layout == "carousel" ? "Bar colour" : "Header colour";
+        MenuTransparent.Visibility = grid ? Visibility.Visible : Visibility.Collapsed;
+        MenuMotionRow.Visibility = moving ? Visibility.Visible : Visibility.Collapsed;
+        MenuPerViewPanel.Visibility = layout == "ticker" ? Visibility.Visible : Visibility.Collapsed;
+        MenuSpeedLabel.Text = layout == "ticker" ? "How often it rolls" : "Speed";
+        MenuCardColorPanel.Visibility = MenuCardColor2Panel.Visibility = look == "cards" ? Visibility.Visible : Visibility.Collapsed;
+        MenuTitleLabel.Text = grid ? "Header text" : "Title (big text above the tiles; leave blank for none)";
+    }
+
+    void MenuCombo_Changed(object sender, SelectionChangedEventArgs e)
+    {
+        if (_loading || MenuLayout == null || MenuDirection == null) return;
+        if (sender == MenuLayout)
+        {
+            _loading = true;
+            FillDirections(TagOf(MenuLayout), "");
+            _loading = false;
+        }
+        Menu_Changed(sender, e);
+    }
+
+    void MenuSpeed_Changed(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (_loading || MenuLayout == null) return;
+        Menu_Changed(sender, e);
+    }
+
+    void TileSide_Changed(object sender, SelectionChangedEventArgs e)
+    {
+        if (_loading || !IsLoaded) return;
+        Hub.Overlays.Touch();
+    }
+
+    // Quick styles: set the layout, look and colours in one go (the tiles stay as they are).
+    void MenuPreset_Click(object sender, RoutedEventArgs e)
+    {
+        var m = Hub.Overlays.Config.Menu;
+        switch ((sender as FrameworkElement)?.Tag as string)
+        {
+            case "grid":
+                m.Layout = "grid"; m.Look = "classic"; m.ShowLines = true; m.LineColor = "#FFFFFF"; m.Transparent = false; m.TextColor = "#FFFFFF";
+                break;
+            case "neongrid":
+                m.Layout = "grid"; m.Look = "cards"; m.CardColor = "#EC4899"; m.CardColor2 = "#BE185D"; m.ShowLines = true; m.LineColor = "#831843"; m.LineWidth = 3;
+                m.Transparent = true; m.TextColor = "#FFFFFF"; m.TextOutline = true;
+                break;
+            case "sidecards":
+                m.Layout = "sides"; m.Look = "cards"; m.CardColor = "#22C55E"; m.CardColor2 = "#15803D"; m.TextColor = "#FFFFFF"; m.TextOutline = true;
+                break;
+            case "sideicons":
+                m.Layout = "sides"; m.Look = "clean"; m.TextColor = "#FFFFFF"; m.TextOutline = true;
+                break;
+            case "carousel":
+                m.Layout = "carousel"; m.Look = "cards"; m.CardColor = "#7C3AED"; m.CardColor2 = "#DB2777"; m.TextColor = "#FFFFFF"; m.TextOutline = true;
+                m.HeaderColor = "#F59E0B"; m.Speed = 4; m.Direction = "left";
+                if (m.Columns < 3) m.Columns = 5;
+                break;
+            case "ticker":
+                m.Layout = "ticker"; m.Look = "cards"; m.CardColor = "#7C3AED"; m.CardColor2 = "#DB2777"; m.TextColor = "#FFFFFF"; m.TextOutline = true;
+                m.Speed = 4; m.Direction = "up"; m.PerView = 4;
+                break;
+            default: return;
+        }
+        LoadMenuStyle();
+        MenuHeaderColor.Text = m.HeaderColor;
+        MenuColumns.Text = m.Columns.ToString();
+        MenuShowLines.IsChecked = m.ShowLines;
+        MenuLineColor.Text = m.LineColor;
+        MenuLineWidth.Text = m.LineWidth.ToString();
+        MenuTransparent.IsChecked = m.Transparent;
+        UpdateSizeHint();
+        FitPreview();
+        Hub.Overlays.Touch();
+        Status.Text = "Board style changed. The preview and your stream show it straight away.";
+    }
+
+    static string Hex(string text, string fallback)
+    {
+        var c = (text ?? "").Trim();
+        if (c.Length > 0 && !c.StartsWith("#")) c = "#" + c;
+        return System.Text.RegularExpressions.Regex.IsMatch(c, "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$") ? c : fallback;
+    }
 
     static T Of<T>(object sender) where T : class => (sender as FrameworkElement)?.Tag as T;
 

@@ -31,7 +31,7 @@
                         </StackPanel>
                         <StackPanel>
                             <TextBlock Text="Gift menu board" Style="{StaticResource H2}"/>
-                            <TextBlock Text="The 'what the gifts do' board: a header bar and a grid of tiles with the gift picture and a label. Built from your events, and it updates in OBS as you edit. Browser Source size 1250 x 700 works well; any size will do." Style="{StaticResource Muted}" Margin="0,3,0,0"/>
+                            <TextBlock Text="The 'what the gifts do' board: every gift's picture and what it does. Built from your events, and it updates on stream as you edit. Pick a style below: a grid, columns down the sides of the screen, a scrolling strip or a rolling ticker." Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,3,0,0"/>
                         </StackPanel>
                     </DockPanel>
 
@@ -41,9 +41,83 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <StackPanel Margin="0,0,16,0">
-                            <TextBlock Text="Header text" Style="{StaticResource Label}"/>
-                            <TextBox x:Name="MenuTitle" LostFocus="Menu_Changed" Margin="0,0,0,10"/>
+                            <TextBlock Text="Quick styles" Style="{StaticResource Label}"/>
+                            <WrapPanel Margin="0,0,0,12">
+                                <Button Content="Grid" Style="{StaticResource Small}" Tag="grid" Click="MenuPreset_Click" Margin="0,0,6,6" ToolTip="The classic board: a header bar and a grid of tiles"/>
+                                <Button Content="Neon grid" Style="{StaticResource Small}" Tag="neongrid" Click="MenuPreset_Click" Margin="0,0,6,6" ToolTip="A grid of bright pink cards"/>
+                                <Button Content="Side cards" Style="{StaticResource Small}" Tag="sidecards" Click="MenuPreset_Click" Margin="0,0,6,6" ToolTip="Big coloured cards down both sides of the screen, the middle clear for the game"/>
+                                <Button Content="Side icons" Style="{StaticResource Small}" Tag="sideicons" Click="MenuPreset_Click" Margin="0,0,6,6" ToolTip="Just the gift picture and a label down both sides, nothing behind them"/>
+                                <Button Content="Carousel" Style="{StaticResource Small}" Tag="carousel" Click="MenuPreset_Click" Margin="0,0,6,6" ToolTip="A strip of gifts scrolling right to left"/>
+                                <Button Content="Ticker" Style="{StaticResource Small}" Tag="ticker" Click="MenuPreset_Click" Margin="0,0,6,6" ToolTip="One line of gifts that rolls up to the next ones every few seconds"/>
+                            </WrapPanel>
                             <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Margin="0,0,10,0">
+                                    <TextBlock Text="Layout" Style="{StaticResource Label}"/>
+                                    <ComboBox x:Name="MenuLayout" SelectionChanged="MenuCombo_Changed">
+                                        <ComboBoxItem Tag="grid" Content="Grid"/>
+                                        <ComboBoxItem Tag="sides" Content="Side columns (full screen)"/>
+                                        <ComboBoxItem Tag="carousel" Content="Carousel (scrolling strip)"/>
+                                        <ComboBoxItem Tag="ticker" Content="Ticker (rolling line)"/>
+                                    </ComboBox>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock Text="Tile look" Style="{StaticResource Label}"/>
+                                    <ComboBox x:Name="MenuLook" SelectionChanged="MenuCombo_Changed">
+                                        <ComboBoxItem Tag="classic" Content="Classic (dark tiles)"/>
+                                        <ComboBoxItem Tag="cards" Content="Cards (bright colours)"/>
+                                        <ComboBoxItem Tag="clean" Content="Clean (picture and text only)"/>
+                                    </ComboBox>
+                                </StackPanel>
+                            </Grid>
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel x:Name="MenuCardColorPanel" Margin="0,0,10,0">
+                                    <TextBlock Text="Card colour" Style="{StaticResource Label}"/>
+                                    <TextBox x:Name="MenuCardColor" FontFamily="Consolas" LostFocus="Menu_Changed" ToolTip="Hex colour, e.g. #7C3AED. A tile's own colour (in its row below) wins."/>
+                                </StackPanel>
+                                <StackPanel x:Name="MenuCardColor2Panel" Grid.Column="1" Margin="0,0,10,0">
+                                    <TextBlock Text="Fades into" Style="{StaticResource Label}"/>
+                                    <TextBox x:Name="MenuCardColor2" FontFamily="Consolas" LostFocus="Menu_Changed"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="Text colour" Style="{StaticResource Label}"/>
+                                    <TextBox x:Name="MenuTextColor" FontFamily="Consolas" LostFocus="Menu_Changed"/>
+                                </StackPanel>
+                            </Grid>
+                            <Grid x:Name="MenuMotionRow" Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="130"/>
+                                    <ColumnDefinition Width="110"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Margin="0,0,10,0">
+                                    <TextBlock x:Name="MenuSpeedLabel" Text="Speed" Style="{StaticResource Label}"/>
+                                    <Slider x:Name="MenuSpeed" Minimum="1" Maximum="10" IsSnapToTickEnabled="True" TickFrequency="1" ValueChanged="MenuSpeed_Changed"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                                    <TextBlock Text="Direction" Style="{StaticResource Label}"/>
+                                    <ComboBox x:Name="MenuDirection" SelectionChanged="MenuCombo_Changed"/>
+                                </StackPanel>
+                                <StackPanel x:Name="MenuPerViewPanel" Grid.Column="2">
+                                    <TextBlock Text="Tiles in the line" Style="{StaticResource Label}"/>
+                                    <TextBox x:Name="MenuPerView" LostFocus="Menu_Changed"/>
+                                </StackPanel>
+                            </Grid>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                                <CheckBox x:Name="MenuOutline" Content="Thick outline on the text" Click="Menu_Changed" Margin="0,0,20,0"/>
+                                <CheckBox x:Name="MenuHighlight" Content="Light up a tile when its gift arrives" Click="Menu_Changed"/>
+                            </StackPanel>
+                            <TextBlock x:Name="MenuTitleLabel" Text="Header text" Style="{StaticResource Label}"/>
+                            <TextBox x:Name="MenuTitle" LostFocus="Menu_Changed" Margin="0,0,0,10"/>
+                            <Grid x:Name="MenuGridRow" Margin="0,0,0,10">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="90"/>
                                     <ColumnDefinition Width="110"/>
@@ -51,7 +125,7 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Margin="0,0,10,0">
-                                    <TextBlock Text="Columns" Style="{StaticResource Label}"/>
+                                    <TextBlock x:Name="MenuColumnsLabel" Text="Columns" Style="{StaticResource Label}"/>
                                     <TextBox x:Name="MenuColumns" LostFocus="Menu_Changed"/>
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" Margin="0,0,10,0">
@@ -59,7 +133,7 @@
                                     <TextBox x:Name="MenuTileSize" LostFocus="Menu_Changed" ToolTip="Size of each square tile. 0 stretches the tiles to fill the Browser Source instead."/>
                                 </StackPanel>
                                 <StackPanel Grid.Column="2" Margin="0,0,10,0">
-                                    <TextBlock Text="Header colour" Style="{StaticResource Label}"/>
+                                    <TextBlock x:Name="MenuHeaderColorLabel" Text="Header colour" Style="{StaticResource Label}"/>
                                     <TextBox x:Name="MenuHeaderColor" FontFamily="Consolas" LostFocus="Menu_Changed"/>
                                 </StackPanel>
                                 <StackPanel Grid.Column="3">
@@ -71,7 +145,7 @@
                                 <CheckBox x:Name="MenuShowSubtitle" Content="Show the coin value under each label" Click="Menu_Changed" Margin="0,0,20,0"/>
                                 <CheckBox x:Name="MenuTransparent" Content="See-through background" Click="Menu_Changed"/>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal">
+                            <StackPanel x:Name="MenuLinesRow" Orientation="Horizontal">
                                 <CheckBox x:Name="MenuShowLines" Content="Grid lines between tiles" Click="Menu_Changed" Margin="0,0,20,0" VerticalAlignment="Center"/>
                                 <TextBlock Text="Line colour" Style="{StaticResource Label}" VerticalAlignment="Center" Margin="0,0,6,0"/>
                                 <TextBox x:Name="MenuLineColor" Width="100" FontFamily="Consolas" LostFocus="Menu_Changed" Margin="0,0,16,0"/>
@@ -108,6 +182,8 @@
                                             <ColumnDefinition Width="120"/>
                                             <ColumnDefinition Width="1.4*"/>
                                             <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="92"/>
+                                            <ColumnDefinition Width="92"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
                                         <Border Width="44" Height="44" Background="Black" CornerRadius="6" VerticalAlignment="Center" Margin="0,0,12,0">
@@ -126,7 +202,21 @@
                                             <TextBox Text="{Binding ImageUrl, UpdateSourceTrigger=LostFocus}" LostFocus="Field_Changed"/>
                                         </StackPanel>
                                         <Button Grid.Column="4" Content="Browse" Style="{StaticResource Small}" Tag="{Binding}" Click="TileBrowse_Click" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
-                                        <StackPanel Grid.Column="5" Orientation="Horizontal" VerticalAlignment="Bottom">
+                                        <StackPanel Grid.Column="5" Margin="0,0,8,0">
+                                            <TextBlock Text="Colour" Style="{StaticResource Label}"/>
+                                            <TextBox Text="{Binding Color, UpdateSourceTrigger=LostFocus}" FontFamily="Consolas" LostFocus="Field_Changed"
+                                                     ToolTip="This tile's own card colour, e.g. #16A34A for green or #DC2626 for red. Blank uses the board's."/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="6" Margin="0,0,8,0">
+                                            <TextBlock Text="Side" Style="{StaticResource Label}"/>
+                                            <ComboBox SelectedValuePath="Tag" SelectedValue="{Binding Side, Mode=TwoWay}" SelectionChanged="TileSide_Changed"
+                                                      ToolTip="For the side columns layout. Auto puts the first half on the left and the rest on the right.">
+                                                <ComboBoxItem Tag="auto" Content="Auto"/>
+                                                <ComboBoxItem Tag="left" Content="Left"/>
+                                                <ComboBoxItem Tag="right" Content="Right"/>
+                                            </ComboBox>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="7" Orientation="Horizontal" VerticalAlignment="Bottom">
                                             <Button MinHeight="0" Content="▲" Style="{StaticResource Ghost}" Tag="{Binding}" Click="TileUp_Click" Padding="8,4"/>
                                             <Button MinHeight="0" Content="▼" Style="{StaticResource Ghost}" Tag="{Binding}" Click="TileDown_Click" Padding="8,4"/>
                                             <Button MinHeight="0" Content="✕" Style="{StaticResource Ghost}" Foreground="{StaticResource DangerBrush}" Tag="{Binding}" Click="TileRemove_Click" Padding="8,4"/>

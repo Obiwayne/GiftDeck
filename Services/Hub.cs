@@ -88,7 +88,7 @@ public static class Hub
 
         Overlays = new OverlayService();
         Overlays.Load();
-        Rules.Handled += (e, fired) => Overlays.OnEvent(e);
+        Rules.Handled += (e, fired) => { Overlays.OnEvent(e); Overlays.OnFired(fired); };
         Web = new OverlayServer(Overlays);
 
         TikTok = new TikTokLiveService();

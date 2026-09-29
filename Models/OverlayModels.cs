@@ -121,6 +121,14 @@ public class MenuTile : Observable
     string _subtitle = "";
     public string Subtitle { get => _subtitle; set { _subtitle = value ?? ""; Raise(nameof(Subtitle)); } }
 
+    // Its own card colour ("#22C55E"), e.g. green for gifts that help and red for ones that hurt. Blank: the board's.
+    string _color = "";
+    public string Color { get => _color; set { _color = value ?? ""; Raise(nameof(Color)); } }
+
+    // Side columns layout: "auto" (first half left, second half right), "left" or "right".
+    string _side = "auto";
+    public string Side { get => _side; set { _side = string.IsNullOrEmpty(value) ? "auto" : value; Raise(nameof(Side)); } }
+
     // A web address or a file on this PC. Blank means "use the event's gift picture".
     string _imageUrl = "";
     public string ImageUrl
@@ -191,6 +199,24 @@ public class MenuConfig
     public string HeaderColor { get; set; } = "#1D5FB4";
     public string Font { get; set; } = "Impact";
     public List<MenuTile> Tiles { get; set; } = new List<MenuTile>();
+
+    // How the board is laid out:
+    //   grid      rows and columns with a header bar (the original board)
+    //   sides     tiles down the left and right edges of a full-screen page, the middle left clear for the game
+    //   carousel  one strip of tiles scrolling sideways, round and round
+    //   ticker    one line of tiles that rolls up to the next ones every few seconds
+    public string Layout { get; set; } = "grid";
+    // How each tile looks: classic (dark square), cards (coloured gradient card, bold outlined text),
+    // clean (just the picture and outlined text, nothing behind them).
+    public string Look { get; set; } = "classic";
+    public string CardColor { get; set; } = "#7C3AED";
+    public string CardColor2 { get; set; } = "#DB2777";
+    public string TextColor { get; set; } = "#FFFFFF";
+    public bool TextOutline { get; set; } = true;
+    public int Speed { get; set; } = 5;                 // 1 (slow) to 10 (fast): carousel scroll, ticker roll
+    public string Direction { get; set; } = "";         // carousel: "left" (default) or "right"; ticker: "up" (default) or "down"
+    public int PerView { get; set; } = 4;               // ticker: tiles in the line
+    public bool Highlight { get; set; } = true;         // a tile lights up when its event fires
 }
 
 public class OverlayConfig

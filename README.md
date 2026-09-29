@@ -303,6 +303,18 @@ creates the Browser Source for you, sound included):
   (Common, Uncommon, Rare, Epic, Legendary) right in the event editor.
 - **Goal bars, counters, countdown timers** viewers extend with gifts, the **gift menu board**, a
   **gift list** and a **top 3 gifters** strip, all built from your events and live stats.
+- **Gift menu board styles:** show viewers what each gift does the way you like. Pick a **Quick style**
+  or set it up yourself:
+  - **Layout:** a **Grid**, **Side columns** down both edges of the screen (the middle stays clear for
+    the game), a **Carousel** strip that scrolls right to left, or a **Ticker** line that rolls up to the
+    next gifts every few seconds.
+  - **Tile look:** **Classic** dark tiles, bright **Cards**, or **Clean** (just the picture and outlined
+    text over the game).
+  - Give tiles their own colour (green for gifts that help, red for ones that hurt), choose which side
+    each one sits on, add a big title like *FOLLOW TO BARREL ROLL*, and set the speed and direction.
+  - **Light up a tile when its gift arrives:** the tile glows and pops the moment someone sends it.
+
+![Gift menu board styles: side cards, side icons, a neon grid and a carousel](docs/screenshots/board-styles.png)
 
 ## Text to speech
 

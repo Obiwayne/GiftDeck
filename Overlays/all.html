@@ -22,6 +22,8 @@
   .z-bottom { bottom: 0; left: 0; right: 0; align-items: center; }
   .z-bottomRight { bottom: 0; right: 0; align-items: flex-end; }
   .part { position: relative; flex: none; overflow: hidden; }
+  /* The board as side columns covers the whole page (the columns hug its edges), like the alerts. */
+  .part.full { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
   iframe { position: absolute; left: 0; top: 0; border: 0; background: transparent; transform-origin: 0 0; }
   .spinner { position: absolute; z-index: 10; }
   .spinner iframe { position: static; width: 100%; height: 100%; }
@@ -44,11 +46,11 @@
   // The parts that should be on the page, from the settings in GiftDeck.
   function wanted(s) {
     const c = s.allInOne || {}, out = [];
-    const add = (part, kind, src) => out.push({ kind, src, spot: spots.includes(part.spot) ? part.spot : 'middle', width: part.width || 100, id: kind + '|' + src + '|' + part.spot });
+    const add = (part, kind, src, full) => out.push({ kind, src, full: !!full, spot: spots.includes(part.spot) ? part.spot : 'middle', width: part.width || 100, id: kind + '|' + src + '|' + part.spot + (full ? '|full' : '') });
     if (c.strip && c.strip.on) add(c.strip, 'strip', '/overlay/strip?embed=1');
     if (c.goals && c.goals.on) (s.goals || []).forEach(g => add(c.goals, 'goal', '/overlay/goal/' + g.id + '?embed=1'));
     if (c.giftList && c.giftList.on) add(c.giftList, 'giftlist', '/overlay/giftlist?embed=1');
-    if (c.board && c.board.on) add(c.board, 'board', '/overlay/menu?embed=1');
+    if (c.board && c.board.on) add(c.board, 'board', '/overlay/menu?embed=1', s.menu && s.menu.layout === 'sides');
     if (c.spinner && c.spinner.on && (s.spinners || []).length) add(c.spinner, 'spinner', '/overlay/spinner?embed=1&id=any' + (c.spinnerOnlyWhileSpinning ? '&idle=hide' : ''));
     if (c.alerts && c.alerts.on) add(c.alerts, 'alerts', '/overlay/alerts?embed=1&pos=' + encodeURIComponent(c.alerts.spot || 'middle'));
     return out;
@@ -68,6 +70,7 @@
         let wrap = frame;
         if (p.kind === 'alerts') { frame.id = 'alerts'; document.body.appendChild(frame); }
         else if (p.kind === 'spinner') { wrap = document.createElement('div'); wrap.className = 'spinner'; wrap.appendChild(frame); safe.appendChild(wrap); }
+        else if (p.full) { wrap = document.createElement('div'); wrap.className = 'part full'; wrap.appendChild(frame); safe.appendChild(wrap); }
         else { wrap = document.createElement('div'); wrap.className = 'part'; wrap.appendChild(frame); zones[p.spot].appendChild(wrap); }
         f = { frame, wrap };
         frames.set(p.id, f);
@@ -104,6 +107,11 @@
         s.width = innerWidth / z + 'px'; s.height = innerHeight / z + 'px'; s.transform = 'scale(' + z + ')';
         continue;
       }
+      if (f.full) {
+        // Side columns: the board page is as big as the (safe part of the) page, whatever width is set.
+        s.width = W / z + 'px'; s.height = H / z + 'px'; s.transform = 'scale(' + z + ')';
+        continue;
+      }
       const w = Math.round(W * f.width / 100);
       if (f.kind === 'spinner') {
         // The wheel page sizes itself to its box: as wide as set, and a bit taller for the name above it.
@@ -115,8 +123,9 @@
       }
       const iw = w / z;
       let ih;
-      if (f.kind === 'board' && !(m.tileSize > 0)) {
-        // The board stretches to fill its page, so give it square tiles plus the header.
+      if (f.kind === 'board' && !(m.tileSize > 0) && (!m.layout || m.layout === 'grid')) {
+        // The grid board stretches to fill its page, so give it square tiles plus the header.
+        // (The carousel and ticker size themselves from the width, so they are measured.)
         const cols = m.columns || 5, rows = Math.max(1, Math.ceil(((m.tiles || []).length || 1) / cols));
         ih = iw / cols * rows + (m.title ? 52 : 0);
       } else ih = measure(f.frame) || 1;
