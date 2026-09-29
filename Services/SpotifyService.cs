@@ -95,11 +95,11 @@ public class SpotifyService
                         else if (q.TryGetValue("state", out var st) && st == state && q.TryGetValue("code", out var c))
                         {
                             code = c;
-                            body = "GiftDeck is now linked to Spotify. You can close this window.";
+                            body = "MayhemDeck is now linked to Spotify. You can close this window.";
                         }
-                        else body = "Unexpected reply from Spotify. Please try again from GiftDeck.";
+                        else body = "Unexpected reply from Spotify. Please try again from MayhemDeck.";
                     }
-                    else body = "GiftDeck is waiting for Spotify.";
+                    else body = "MayhemDeck is waiting for Spotify.";
                     var html = "<html><body style='font-family:Segoe UI;background:#0F1117;color:#E8EAF0;display:flex;align-items:center;justify-content:center;height:100vh'><h2>" + body + "</h2></body></html>";
                     var resp = "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: " + Encoding.UTF8.GetByteCount(html) + "\r\nConnection: close\r\n\r\n" + html;
                     var rb = Encoding.UTF8.GetBytes(resp);

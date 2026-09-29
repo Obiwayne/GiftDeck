@@ -4,12 +4,12 @@
         xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
         Title="TikTok chat" Width="480" Height="820" Background="{StaticResource BgBrush}"
         WindowStartupLocation="CenterOwner" ShowInTaskbar="False" FontFamily="Segoe UI">
-    <!-- TikTok's own LIVE page, logged in as the streamer, so GiftDeck can post chat messages the normal way.
+    <!-- TikTok's own LIVE page, logged in as the streamer, so MayhemDeck can post chat messages the normal way.
          Shown to log in (or look), otherwise kept hidden; closing it only hides it. -->
     <DockPanel>
         <Border DockPanel.Dock="Top" Background="{StaticResource PanelBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="0,0,0,1" Padding="16,10">
             <TextBlock x:Name="Hint" TextWrapping="Wrap" Style="{StaticResource Muted}"
-                       Text="Log in to TikTok here once so GiftDeck can send your chat messages. Google sign-in doesn't work inside apps: choose &quot;Use QR code&quot; and scan it with the TikTok app on your phone. Close this window when you're done; you stay logged in."/>
+                       Text="Log in to TikTok here once so MayhemDeck can send your chat messages. Google sign-in doesn't work inside apps: choose &quot;Use QR code&quot; and scan it with the TikTok app on your phone. Close this window when you're done; you stay logged in."/>
         </Border>
         <wv2:WebView2 x:Name="Web" DefaultBackgroundColor="#0F1117"/>
     </DockPanel>

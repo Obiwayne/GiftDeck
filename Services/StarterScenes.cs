@@ -179,7 +179,7 @@ public static class StarterScenes
             {
                 _screenChecked = true;
                 if (!await PickFirstAsync(Screen, "monitor_id") && !await PickFirstAsync(Screen, "monitor"))
-                    _result.Notes.Add("GiftDeck couldn't choose a screen to capture. In Edit in OBS, double-click \"GiftDeck Screen\" and pick your monitor.");
+                    _result.Notes.Add("MayhemDeck couldn't choose a screen to capture. In Edit in OBS, double-click \"GiftDeck Screen\" and pick your monitor.");
                 _result.Notes.Add("\"GiftDeck Screen\" shows your whole monitor. For a game you can swap it for Game Capture in Edit in OBS; if it stays black on a laptop, that's Windows' graphics setting for OBS.");
             }
             return id;

@@ -1,5 +1,5 @@
-// Shared by the overlay pages. GD.listen(fn) calls fn with every message from GiftDeck.
-// On its own a page reads GiftDeck's live stream (/events). Inside the all-in-one page (?embed=1) the
+// Shared by the overlay pages. GD.listen(fn) calls fn with every message from MayhemDeck.
+// On its own a page reads MayhemDeck's live stream (/events). Inside the all-in-one page (?embed=1) the
 // all-in-one page passes its messages down instead, so one link keeps a single connection open
 // however many parts it shows (browsers only allow a few open connections to one server).
 window.GD = (function () {

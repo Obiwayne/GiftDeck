@@ -254,7 +254,7 @@ public partial class OverlaysView : UserControl
     async void ObsMenu_Click(object sender, RoutedEventArgs e)
     {
         var (w, h) = BoardSize(Hub.Overlays.Config.Menu);
-        await AddToObs("GiftDeck gift menu", Url("/overlay/menu"), w, h);
+        await AddToObs("MayhemDeck gift menu", Url("/overlay/menu"), w, h);
     }
 
     // ---- Gift menu board styles ----
@@ -461,7 +461,7 @@ public partial class OverlaysView : UserControl
     void RemoveGoal_Click(object sender, RoutedEventArgs e) { var g = Of<Goal>(sender); if (g != null) Hub.Overlays.RemoveGoal(g); }
     void ResetGoal_Click(object sender, RoutedEventArgs e) { var g = Of<Goal>(sender); if (g == null) return; g.Progress = 0; Hub.Overlays.Touch(); }
     void CopyGoal_Click(object sender, RoutedEventArgs e) { var g = Of<Goal>(sender); if (g != null) Copy(Url("/overlay/goal/" + g.Id)); }
-    async void ObsGoal_Click(object sender, RoutedEventArgs e) { var g = Of<Goal>(sender); if (g != null) await AddToObs("GiftDeck goal: " + g.Title, Url("/overlay/goal/" + g.Id), 800, 140); }
+    async void ObsGoal_Click(object sender, RoutedEventArgs e) { var g = Of<Goal>(sender); if (g != null) await AddToObs("MayhemDeck goal: " + g.Title, Url("/overlay/goal/" + g.Id), 800, 140); }
 
     // Countdowns
     void AddCountdown_Click(object sender, RoutedEventArgs e) => Hub.Overlays.AddCountdown();
@@ -477,20 +477,20 @@ public partial class OverlaysView : UserControl
     void AddTenMinutes_Click(object sender, RoutedEventArgs e) { var c = Of<Countdown>(sender); if (c == null) return; c.Add(600); Hub.Overlays.Touch(); }
     void SetCountdown_Click(object sender, RoutedEventArgs e) { var c = Of<Countdown>(sender); if (c == null) return; c.Set(Math.Max(0, c.SetMinutes) * 60); Hub.Overlays.Touch(); }
     void CopyCountdown_Click(object sender, RoutedEventArgs e) { var c = Of<Countdown>(sender); if (c != null) Copy(Url("/overlay/countdown/" + c.Id)); }
-    async void ObsCountdown_Click(object sender, RoutedEventArgs e) { var c = Of<Countdown>(sender); if (c != null) await AddToObs("GiftDeck countdown: " + c.Title, Url("/overlay/countdown/" + c.Id), 500, 150); }
+    async void ObsCountdown_Click(object sender, RoutedEventArgs e) { var c = Of<Countdown>(sender); if (c != null) await AddToObs("MayhemDeck countdown: " + c.Title, Url("/overlay/countdown/" + c.Id), 500, 150); }
 
     // Counters
     void CopyCounter_Click(object sender, RoutedEventArgs e) { var c = Of<CounterRow>(sender); if (c != null) Copy(Url("/overlay/counter/" + c.Metric)); }
-    async void ObsCounter_Click(object sender, RoutedEventArgs e) { var c = Of<CounterRow>(sender); if (c != null) await AddToObs("GiftDeck counter: " + c.Label, Url("/overlay/counter/" + c.Metric), 400, 100); }
+    async void ObsCounter_Click(object sender, RoutedEventArgs e) { var c = Of<CounterRow>(sender); if (c != null) await AddToObs("MayhemDeck counter: " + c.Label, Url("/overlay/counter/" + c.Metric), 400, 100); }
     void ResetStats_Click(object sender, RoutedEventArgs e)
     {
-        if (MessageBox.Show("Reset this stream's totals to zero? Goals keep their progress.", "GiftDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
+        if (MessageBox.Show("Reset this stream's totals to zero? Goals keep their progress.", "MayhemDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
         Hub.Overlays.ResetStats();
     }
 
     // Alerts and style
     void CopyAlerts_Click(object sender, RoutedEventArgs e) => Copy(Url("/overlay/alerts"));
-    async void ObsAlerts_Click(object sender, RoutedEventArgs e) => await AddToObs("GiftDeck alerts", Url("/overlay/alerts"), 800, 250, audioViaObs: true); // alert videos' sound
+    async void ObsAlerts_Click(object sender, RoutedEventArgs e) => await AddToObs("MayhemDeck alerts", Url("/overlay/alerts"), 800, 250, audioViaObs: true); // alert videos' sound
     void TestAlert_Click(object sender, RoutedEventArgs e) => Hub.Overlays.TestAlert();
 
     void Style_Changed(object sender, RoutedEventArgs e)

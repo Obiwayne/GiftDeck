@@ -165,7 +165,7 @@ public class GamePackService
             var (folder, _) = LocateGame(p);
             var record = PackInstaller.LoadRecord(p.Id);
             if (record != null && GameLocator.IsGameFolder(p, record.GameFolder)) folder = record.GameFolder;
-            if (folder == null) throw new Exception($"GiftDeck can't find {p.Name}. Press \"Choose folder…\" and pick the folder it's installed in.");
+            if (folder == null) throw new Exception($"MayhemDeck can't find {p.Name}. Press \"Choose folder…\" and pick the folder it's installed in.");
             await Task.Run(() => new PackInstaller(p, progress).InstallAsync(folder, manualFiles));
         }
         finally { Leave(p); }
@@ -180,7 +180,7 @@ public class GamePackService
 
     void Enter(GamePack p)
     {
-        lock (_busy) if (!_busy.Add(p.Id)) throw new Exception($"GiftDeck is already installing or removing {p.Name}.");
+        lock (_busy) if (!_busy.Add(p.Id)) throw new Exception($"MayhemDeck is already installing or removing {p.Name}.");
         Changed?.Invoke();
     }
 

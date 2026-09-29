@@ -30,9 +30,9 @@ static class GameCatalog
 
     public static string TierExplain(string tier) => tier switch
     {
-        Console => "GiftDeck sends commands to the game's own server console. Set up the server once, then gifts can run its commands.",
+        Console => "MayhemDeck sends commands to the game's own server console. Set up the server once, then gifts can run its commands.",
         Keys => "Gifts press the game's own keys. Nothing to install: pick a key idea below and choose which gift sets it off.",
-        _ => "GiftDeck installs everything this game needs and has ready-made events for it.",
+        _ => "MayhemDeck installs everything this game needs and has ready-made events for it.",
     };
 
     // Segoe Fluent Icons: check mark, command prompt, keyboard.

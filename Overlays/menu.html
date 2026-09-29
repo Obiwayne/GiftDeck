@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>GiftDeck gift menu</title>
+<title>MayhemDeck gift menu</title>
 <style>
   :root { --font: Impact; --header: #1D5FB4; --cols: 5; --tile: 150px; --line: #ffffff; --gap: 2px;
           --text: #ffffff; --c1: #7C3AED; --c2: #DB2777; --bar1: #3b82f6; --bar2: #1D5FB4; --pop: 1.2; }
@@ -242,14 +242,14 @@
       $('alt').innerHTML = '';
       setVar('--pop', 1.12);
       $('head').textContent = m.title || '';
-      if (!m.tiles.length) { $('grid').innerHTML = '<div class="empty">Add tiles on the Overlays page in GiftDeck</div>'; return; }
+      if (!m.tiles.length) { $('grid').innerHTML = '<div class="empty">Add tiles on the Overlays page in MayhemDeck</div>'; return; }
       // Fill out the last row, so the gaps there match the page instead of showing the line colour.
       const cols = Math.max(1, m.columns || 5), spare = (cols - m.tiles.length % cols) % cols;
       $('grid').innerHTML = m.tiles.map(t => tileHtml(t, m, v)).join('') + '<div class="filler"></div>'.repeat(spare);
       return;
     }
     $('grid').innerHTML = ''; $('head').textContent = '';
-    if (!m.tiles.length) { $('alt').innerHTML = (m.title ? '<div class="title-big" style="font-size:60px;padding:10px">' + esc(m.title) + '</div>' : '') + '<div class="msg">Add tiles on the Overlays page in GiftDeck</div>'; return; }
+    if (!m.tiles.length) { $('alt').innerHTML = (m.title ? '<div class="title-big" style="font-size:60px;padding:10px">' + esc(m.title) + '</div>' : '') + '<div class="msg">Add tiles on the Overlays page in MayhemDeck</div>'; return; }
     if (layout === 'sides') renderSides(m, v);
     else if (layout === 'carousel') renderCarousel(m, v);
     else renderTicker(m, v);

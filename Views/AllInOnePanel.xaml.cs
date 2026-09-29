@@ -138,7 +138,7 @@ public partial class AllInOnePanel : UserControl
         {
             if (!Hub.Obs.Connected) await Hub.Obs.ConnectAsync();
             var (w, h) = SourceSize;
-            Status.Text = await Hub.Obs.AddBrowserSourceAsync("GiftDeck all-in-one", Hub.Web.BaseUrl + Path_, w, h, audioViaObs: true);
+            Status.Text = await Hub.Obs.AddBrowserSourceAsync("MayhemDeck all-in-one", Hub.Web.BaseUrl + Path_, w, h, audioViaObs: true);
         }
         catch (Exception ex)
         {

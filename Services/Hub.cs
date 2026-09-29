@@ -111,7 +111,7 @@ public static class Hub
         Kick = new KickService(() => Settings.KickEnabled, () => Settings.KickChannel);
         Kick.EventReceived += e => Rules.Handle(e);
 
-        Log.Write("GiftDeck started");
+        Log.Write("MayhemDeck started");
         Web.Start();
         TikFinity.Start();
         Kick.Start();
@@ -158,6 +158,6 @@ public static class Hub
         try { SaveSettings(); } catch { }
         try { Tts?.Stop(); } catch { }
         try { Music?.Shutdown(); } catch { }
-        Log.Write("GiftDeck closed");
+        Log.Write("MayhemDeck closed");
     }
 }

@@ -103,9 +103,9 @@ public static class StreamlabsLogin
         bool ok = values.TryGetValue("success", out var s) && s == "true" && values.ContainsKey("code");
         // Neither a code nor a success flag: not Streamlabs' answer (a favicon, a stray request). Ignore it and keep waiting.
         bool unrelated = !values.ContainsKey("code") && !values.ContainsKey("success");
-        var body = ok ? "<h2 style='font-family:sans-serif'>GiftDeck is logged in to Streamlabs. You can close this tab.</h2>"
+        var body = ok ? "<h2 style='font-family:sans-serif'>MayhemDeck is logged in to Streamlabs. You can close this tab.</h2>"
                  : unrelated ? ""
-                 : "<h2 style='font-family:sans-serif'>Login didn't complete. Go back to GiftDeck and try again.</h2>";
+                 : "<h2 style='font-family:sans-serif'>Login didn't complete. Go back to MayhemDeck and try again.</h2>";
         var bytes = Encoding.UTF8.GetBytes(body);
         var status = ok ? "200 OK" : unrelated ? "404 Not Found" : "400 Bad Request";
         var header = $"HTTP/1.1 {status}\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: {bytes.Length}\r\nConnection: close\r\n\r\n";

@@ -59,7 +59,7 @@ public class GameLinkService
             LastError = null;
             _ = Task.Run(AcceptLoop);
             _ = Task.Run(KeepAlive);
-            Log.Write("Game mods can connect to GiftDeck at " + Url);
+            Log.Write("Game mods can connect to MayhemDeck at " + Url);
         }
         catch (Exception e)
         {
@@ -74,7 +74,7 @@ public class GameLinkService
         if (!Running) return;
         Running = false;
         try { _cts?.Cancel(); } catch { }
-        foreach (var t in _live.Keys) { t.MarkDisconnected(); _ = t.CloseAsync("GiftDeck is closing"); }
+        foreach (var t in _live.Keys) { t.MarkDisconnected(); _ = t.CloseAsync("MayhemDeck is closing"); }
         _live.Clear();
         try { _listener?.Stop(); } catch { }
         try { _listener?.Close(); } catch { }
@@ -99,7 +99,7 @@ public class GameLinkService
             // A plain browser visit: say what this is instead of an empty error.
             try
             {
-                var text = Encoding.UTF8.GetBytes("GiftDeck GameLink. Game mods connect here with a WebSocket: " + Url);
+                var text = Encoding.UTF8.GetBytes("MayhemDeck GameLink. Game mods connect here with a WebSocket: " + Url);
                 ctx.Response.ContentType = "text/plain; charset=utf-8";
                 ctx.Response.StatusCode = 426; // Upgrade Required
                 ctx.Response.OutputStream.Write(text, 0, text.Length);

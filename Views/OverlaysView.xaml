@@ -54,7 +54,7 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="32,28,32,28" MaxWidth="1180" HorizontalAlignment="Left">
             <TextBlock Text="Overlays" Style="{StaticResource H1}"/>
-            <TextBlock Text="Goal bars, live counters, countdown timers and gift alerts for OBS. Each one is a web page GiftDeck serves on this PC; add it to OBS as a Browser Source, or press Add to OBS and GiftDeck does it for you." Style="{StaticResource Muted}" Margin="0,4,0,18"/>
+            <TextBlock Text="Goal bars, live counters, countdown timers and gift alerts for OBS. Each one is a web page MayhemDeck serves on this PC; add it to OBS as a Browser Source, or press Add to OBS and MayhemDeck does it for you." Style="{StaticResource Muted}" Margin="0,4,0,18"/>
 
             <Border Style="{StaticResource Card}" Margin="0,0,0,14">
                 <DockPanel>

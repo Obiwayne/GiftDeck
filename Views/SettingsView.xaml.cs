@@ -30,7 +30,7 @@ public partial class SettingsView : UserControl
         HoldBox.Text = s.KeyHoldMs.ToString();
         SoundVolume.Value = s.SoundVolume;
         SoundLabel.Text = "Master volume: " + s.SoundVolume;
-        VersionText.Text = "GiftDeck " + (typeof(App).Assembly.GetName().Version?.ToString(3) ?? "") + ". Rides on TikFinity's local event feed; not affiliated with TikFinity or TikTok.";
+        VersionText.Text = "MayhemDeck " + (typeof(App).Assembly.GetName().Version?.ToString(3) ?? "") + ". Rides on TikFinity's local event feed; not affiliated with TikFinity or TikTok.";
         DataFolder.Text = Storage.Dir;
         _loading = false;
     }
@@ -96,6 +96,12 @@ public partial class SettingsView : UserControl
     {
         Directory.CreateDirectory(Storage.Dir);
         Process.Start(new ProcessStartInfo(Storage.Dir) { UseShellExecute = true });
+    }
+
+    // The welcome pages live on the setup screen that covers the main window.
+    void ShowWelcome_Click(object sender, RoutedEventArgs e)
+    {
+        if (Window.GetWindow(this)?.FindName("Setup") is SetupWizard setup) setup.ShowWelcome();
     }
 
     void OpenLog_Click(object sender, RoutedEventArgs e)

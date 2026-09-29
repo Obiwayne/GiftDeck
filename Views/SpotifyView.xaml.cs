@@ -43,7 +43,7 @@ public partial class SpotifyView : UserControl
     void UpdateStatus()
     {
         var sp = Hub.Spotify;
-        LinkStatus.Text = sp.Linking ? "Waiting for you to approve GiftDeck in the browser."
+        LinkStatus.Text = sp.Linking ? "Waiting for you to approve MayhemDeck in the browser."
             : sp.Linked ? "Linked" + (sp.AccountName != null ? " as " + sp.AccountName : "") + "."
             : "Not linked.";
         LinkButton.IsEnabled = !sp.Linking;

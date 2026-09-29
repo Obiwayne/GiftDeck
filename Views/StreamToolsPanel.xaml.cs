@@ -108,10 +108,10 @@ public partial class StreamToolsPanel : UserControl
 
     async void PreviewGiftList_Click(object sender, RoutedEventArgs e) => await StartPreview("/overlay/giftlist", "Gift list", 420, 800);
     void CopyGiftList_Click(object sender, RoutedEventArgs e) => Copy(Url("/overlay/giftlist"));
-    async void ObsGiftList_Click(object sender, RoutedEventArgs e) => await AddToObs("GiftDeck gift list", Url("/overlay/giftlist"), 420, 800);
+    async void ObsGiftList_Click(object sender, RoutedEventArgs e) => await AddToObs("MayhemDeck gift list", Url("/overlay/giftlist"), 420, 800);
     async void PreviewStrip_Click(object sender, RoutedEventArgs e) => await StartPreview("/overlay/strip", "Top 3 gifters and next goal", 900, 90);
     void CopyStrip_Click(object sender, RoutedEventArgs e) => Copy(Url("/overlay/strip"));
-    async void ObsStrip_Click(object sender, RoutedEventArgs e) => await AddToObs("GiftDeck top gifters", Url("/overlay/strip"), 900, 90);
+    async void ObsStrip_Click(object sender, RoutedEventArgs e) => await AddToObs("MayhemDeck top gifters", Url("/overlay/strip"), 900, 90);
 
     // ---- Gift Spinner ----
 
@@ -123,7 +123,7 @@ public partial class StreamToolsPanel : UserControl
     {
         var s = Of<Spinner>(sender);
         if (s == null) return;
-        if (MessageBox.Show($"Remove the spinner \"{s.Name}\" and its other prizes? Events on it move to the first spinner.", "GiftDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
+        if (MessageBox.Show($"Remove the spinner \"{s.Name}\" and its other prizes? Events on it move to the first spinner.", "MayhemDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
         Hub.Overlays.RemoveSpinner(s);
     }
 
@@ -181,7 +181,7 @@ public partial class StreamToolsPanel : UserControl
 
     async void PreviewSpinner_Click(object sender, RoutedEventArgs e) { var s = Of<Spinner>(sender); if (s != null) await StartPreview(SpinnerPath(s), s.Name, 600, 700); }
     void CopySpinner_Click(object sender, RoutedEventArgs e) { var s = Of<Spinner>(sender); if (s != null) Copy(Url(SpinnerPath(s))); }
-    async void ObsSpinner_Click(object sender, RoutedEventArgs e) { var s = Of<Spinner>(sender); if (s != null) await AddToObs("GiftDeck spinner: " + s.Name, Url(SpinnerPath(s)), 600, 700); }
+    async void ObsSpinner_Click(object sender, RoutedEventArgs e) { var s = Of<Spinner>(sender); if (s != null) await AddToObs("MayhemDeck spinner: " + s.Name, Url(SpinnerPath(s)), 600, 700); }
 
     // ---- Alerts and interrupts ----
 
@@ -191,7 +191,7 @@ public partial class StreamToolsPanel : UserControl
     {
         var a = Of<AlertDef>(sender);
         if (a == null) return;
-        if (MessageBox.Show($"Remove the alert \"{a.Name}\"? Events that show it will skip it.", "GiftDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
+        if (MessageBox.Show($"Remove the alert \"{a.Name}\"? Events that show it will skip it.", "MayhemDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
         Hub.Overlays.RemoveCustomAlert(a);
     }
 

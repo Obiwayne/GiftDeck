@@ -18,7 +18,7 @@ public static class GiftImages
     static HttpClient MakeClient()
     {
         var c = new HttpClient { Timeout = TimeSpan.FromSeconds(15) };
-        c.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 GiftDeck");
+        c.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 MayhemDeck");
         return c;
     }
 

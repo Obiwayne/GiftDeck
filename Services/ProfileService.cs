@@ -56,7 +56,7 @@ public class ProfileService
         if (!Directory.Exists(DirOf(name)))
         {
             Changed?.Invoke(); // refresh lists that still show it
-            throw new Exception($"\"{name}\" isn't there any more (it was deleted or renamed outside GiftDeck). Still using \"{Active}\".");
+            throw new Exception($"\"{name}\" isn't there any more (it was deleted or renamed outside MayhemDeck). Still using \"{Active}\".");
         }
         SaveActive();
         Hub.Settings.ActiveProfile = name;
@@ -185,7 +185,7 @@ public class ProfileService
     public string Import(string zipPath)
     {
         using var zip = ZipFile.OpenRead(zipPath);
-        var manifest = zip.GetEntry("profile.json") ?? throw new Exception("That isn't a GiftDeck profile file.");
+        var manifest = zip.GetEntry("profile.json") ?? throw new Exception("That isn't a MayhemDeck profile file.");
         string name;
         using (var s = manifest.Open())
             name = JsonDocument.Parse(s).RootElement.TryGetProperty("name", out var n) ? n.GetString() : null;

@@ -56,8 +56,58 @@ public partial class SetupWizard : UserControl
     public void Start()
     {
         Visibility = Visibility.Visible;
+        SetupCard.Visibility = Visibility.Visible;
+        // First run (or first run since the welcome pages were added): the welcome pages come before the steps.
+        // The steps only start once it's closed, so the ready check can't finish behind it.
+        if (!Hub.Settings.WelcomeSeen)
+        {
+            Welcome.Show(replay: false, upgraded: LooksUpgraded(), done: () =>
+            {
+                Hub.Settings.WelcomeSeen = true;
+                Hub.SaveSettings();
+                Log.Write("Welcome pages seen");
+                StartSteps();
+            });
+            return;
+        }
+        StartSteps();
+    }
+
+    void StartSteps()
+    {
         _timer.Start();
         Tick();
+    }
+
+    // Settings' "Show the welcome pages again": just the welcome, then back to wherever the user was.
+    public void ShowWelcome()
+    {
+        if (Welcome.IsShowing) return;
+        bool setupRunning = Visibility == Visibility.Visible && !_done;
+        BeginAnimation(OpacityProperty, null);
+        Opacity = 1;
+        Visibility = Visibility.Visible;
+        if (!setupRunning) SetupCard.Visibility = Visibility.Hidden; // the finished setup isn't shown behind it
+        Welcome.Show(replay: true, upgraded: false, done: () =>
+        {
+            if (setupRunning) return;
+            var fade = new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(250));
+            fade.Completed += (_, _) => { Visibility = Visibility.Collapsed; BeginAnimation(OpacityProperty, null); Opacity = 1; };
+            BeginAnimation(OpacityProperty, fade);
+        });
+    }
+
+    // Someone upgrading from GiftDeck already has settings or events: the welcome mentions the new name.
+    static bool LooksUpgraded()
+    {
+        try
+        {
+            return !string.IsNullOrWhiteSpace(Hub.Settings.BridgeUsername)
+                || !string.IsNullOrWhiteSpace(Hub.Settings.KickChannel)
+                || Hub.Settings.TikFinityConfirmed
+                || Hub.Rules?.Rules.Count > 0;
+        }
+        catch { return false; }
     }
 
     bool IsDone(Step s) => _skipped.Contains(s) || s switch
@@ -131,7 +181,7 @@ public partial class SetupWizard : UserControl
             case Step.Streamlabs: status = RenderStreamlabs(ref spinning); break;
             case Step.Obs:
                 StepTitle.Text = "Install OBS Studio";
-                StepBody.Text = "OBS Studio is what sends your video to TikTok. GiftDeck runs it for you, hidden in the background, so you don't have to manage it.\n\nGiftDeck downloads the official installer from OBS's own GitHub page. Follow its window when it opens (Windows may ask for permission).";
+                StepBody.Text = "OBS Studio is what sends your video to TikTok. MayhemDeck runs it for you, hidden in the background, so you don't have to manage it.\n\nMayhemDeck downloads the official installer from OBS's own GitHub page. Follow its window when it opens (Windows may ask for permission).";
                 if (!_busy)
                 {
                     AddButton("Download and install OBS Studio (about 150 MB)", true, () => RunBusy((p, c) => SetupSteps.InstallObsAsync(p, c)));
@@ -141,7 +191,7 @@ public partial class SetupWizard : UserControl
                 break;
             case Step.Aitum:
                 StepTitle.Text = "Add the vertical canvas";
-                StepBody.Text = "Aitum Stream Suite (free) adds a vertical, portrait canvas to OBS. That's where you build your TikTok layout: camera, game, overlays.\n\nClose OBS first if it's open, then GiftDeck downloads the installer from Aitum's GitHub page. Follow its window when it opens.";
+                StepBody.Text = "Aitum Stream Suite (free) adds a vertical, portrait canvas to OBS. That's where you build your TikTok layout: camera, game, overlays.\n\nClose OBS first if it's open, then MayhemDeck downloads the installer from Aitum's GitHub page. Follow its window when it opens.";
                 if (!_busy)
                 {
                     if (ObsHost.IsRunning) AddButton("Close OBS", false, () => { ObsHost.FindRunning()?.CloseMainWindow(); });
@@ -152,7 +202,7 @@ public partial class SetupWizard : UserControl
                 break;
             case Step.Portrait:
                 StepTitle.Text = "Set up portrait OBS";
-                StepBody.Text = "GiftDeck makes a portrait (1080x1920) copy of your vertical scenes and runs OBS on it, hidden, whenever GiftDeck is open. What OBS sends is then exactly your TikTok layout. Your own OBS scenes aren't changed, and they come back when GiftDeck closes.\n\nNew to OBS? Open OBS, build your TikTok layout in the Vertical canvas (at least one scene), close OBS, then set up portrait OBS.";
+                StepBody.Text = "MayhemDeck makes a portrait (1080x1920) copy of your vertical scenes and runs OBS on it, hidden, whenever MayhemDeck is open. What OBS sends is then exactly your TikTok layout. Your own OBS scenes aren't changed, and they come back when MayhemDeck closes.\n\nNew to OBS? Open OBS, build your TikTok layout in the Vertical canvas (at least one scene), close OBS, then set up portrait OBS.";
                 if (!_busy)
                 {
                     AddButton("Set up portrait OBS", true, SetUpPortrait);
@@ -162,12 +212,12 @@ public partial class SetupWizard : UserControl
             case Step.TikFinity: status = RenderTikFinity(); break;
             case Step.Username:
                 StepTitle.Text = "Your TikTok username";
-                StepBody.Text = "Which TikTok account do you go LIVE on? GiftDeck reads that LIVE's chat, gifts and viewers. It's the part after @ in your profile link.";
+                StepBody.Text = "Which TikTok account do you go LIVE on? MayhemDeck reads that LIVE's chat, gifts and viewers. It's the part after @ in your profile link.";
                 AddButton("Save", true, SaveUsername);
                 break;
             case Step.Kick:
                 StepTitle.Text = "Your Kick channel";
-                StepBody.Text = "You've switched Kick on, so GiftDeck also reads your Kick chat, follows, subs and Kicks gifts. Which channel? It's the part after kick.com/ in your channel link.";
+                StepBody.Text = "You've switched Kick on, so MayhemDeck also reads your Kick chat, follows, subs and Kicks gifts. Which channel? It's the part after kick.com/ in your channel link.";
                 AddButton("Save", true, SaveKick);
                 AddButton("Don't use Kick", false, () => { Hub.Settings.KickEnabled = false; Hub.SaveSettings(); Hub.Kick.Restart(); Tick(); });
                 break;
@@ -191,7 +241,7 @@ public partial class SetupWizard : UserControl
         {
             StepTitle.Text = "Got your Streamlabs login ✓";
             var who = string.IsNullOrWhiteSpace(Hub.TikTok.State.AccountUsername) ? "" : " (@" + Hub.TikTok.State.AccountUsername + ")";
-            StepBody.Text = "GiftDeck has your TikTok login" + who + " and can now start your LIVE and get its stream key.\n\nYou can close Streamlabs: GiftDeck doesn't need it open." + (_streamlabsNote != null ? "\n\n" + _streamlabsNote : "");
+            StepBody.Text = "MayhemDeck has your TikTok login" + who + " and can now start your LIVE and get its stream key.\n\nYou can close Streamlabs: MayhemDeck doesn't need it open." + (_streamlabsNote != null ? "\n\n" + _streamlabsNote : "");
             if (SetupSteps.StreamlabsRunning) AddButton("Close Streamlabs and continue", true, () => { SetupSteps.CloseStreamlabs(); _streamlabsLinkedNow = false; Tick(); });
             AddButton(SetupSteps.StreamlabsRunning ? "Leave it open and continue" : "Continue", !SetupSteps.StreamlabsRunning, () => { _streamlabsLinkedNow = false; Tick(); });
             return null;
@@ -199,7 +249,7 @@ public partial class SetupWizard : UserControl
         if (!SetupSteps.StreamlabsInstalled)
         {
             StepTitle.Text = "Install Streamlabs";
-            StepBody.Text = "GiftDeck starts your TikTok LIVE through your Streamlabs login, which is how it gets a stream key. You log in once in Streamlabs Desktop (free) and GiftDeck takes it from there; you won't need Streamlabs open after that.\n\nGiftDeck downloads the installer from Streamlabs' own site. Follow its window when it opens.";
+            StepBody.Text = "MayhemDeck starts your TikTok LIVE through your Streamlabs login, which is how it gets a stream key. You log in once in Streamlabs Desktop (free) and MayhemDeck takes it from there; you won't need Streamlabs open after that.\n\nMayhemDeck downloads the installer from Streamlabs' own site. Follow its window when it opens.";
             if (!_busy)
             {
                 AddButton("Download and install Streamlabs (about 275 MB)", true, () => RunBusy((p, c) => SetupSteps.InstallStreamlabsAsync(p, c)));
@@ -209,7 +259,7 @@ public partial class SetupWizard : UserControl
             return null;
         }
         StepTitle.Text = "Log in to Streamlabs with TikTok";
-        StepBody.Text = "1.  Open Streamlabs.\n2.  Log in with TikTok. Use the QR code: scan it with the TikTok app on your phone. It's the quickest way, and it works even if you normally sign in with Google.\n3.  That's it. GiftDeck spots your login by itself and moves on.";
+        StepBody.Text = "1.  Open Streamlabs.\n2.  Log in with TikTok. Use the QR code: scan it with the TikTok app on your phone. It's the quickest way, and it works even if you normally sign in with Google.\n3.  That's it. MayhemDeck spots your login by itself and moves on.";
         if (!SetupSteps.StreamlabsRunning) AddButton("Open Streamlabs", true, SetupSteps.OpenStreamlabs);
         spinning = true;
         return SetupSteps.StreamlabsRunning ? "Waiting for you to log in to Streamlabs…" : "Waiting for Streamlabs…";
@@ -248,7 +298,7 @@ public partial class SetupWizard : UserControl
                 Hub.TikTok.State.AccountUsername = a.Username.Trim().TrimStart('@');
                 Hub.TikTok.Save();
             }
-            _streamlabsNote = a.CanBeLive ? null : "Heads up: this TikTok account can't go LIVE from a computer through Streamlabs yet. TikTok decides that (it depends on your account). GiftDeck still works for everything else.";
+            _streamlabsNote = a.CanBeLive ? null : "Heads up: this TikTok account can't go LIVE from a computer through Streamlabs yet. TikTok decides that (it depends on your account). MayhemDeck still works for everything else.";
         }
         catch (Exception e) { Log.Write("Streamlabs account check failed: " + e.Message); }
         Tick();
@@ -259,7 +309,7 @@ public partial class SetupWizard : UserControl
         if (!TikFinityInstaller.Installed)
         {
             StepTitle.Text = "Install TikFinity";
-            StepBody.Text = "TikTok only sends the chat and gifts of 18+ LIVEs to viewers who are logged in. TikFinity (free) is logged in as you, so GiftDeck reads your LIVE through it. GiftDeck starts it for you, hidden in the background.\n\nGiftDeck downloads it from TikFinity's own site and installs it.";
+            StepBody.Text = "TikTok only sends the chat and gifts of 18+ LIVEs to viewers who are logged in. TikFinity (free) is logged in as you, so MayhemDeck reads your LIVE through it. MayhemDeck starts it for you, hidden in the background.\n\nMayhemDeck downloads it from TikFinity's own site and installs it.";
             if (!_busy)
             {
                 AddButton("Install TikFinity (about 95 MB)", true, () => RunBusy((p, cancel) => TikFinityInstaller.InstallAsync(p, cancel), after: () => TikFinityService.UseReader("tikfinity")));
@@ -268,7 +318,7 @@ public partial class SetupWizard : UserControl
             return null;
         }
         StepTitle.Text = "Log in to TikFinity";
-        StepBody.Text = "1.  Show TikFinity and log in with your TikTok account. Use the QR code: scan it with the TikTok app on your phone. It's quicker, and Google sign-in is often blocked there.\n2.  In TikFinity, go to Events and switch every event off. GiftDeck runs your events; if TikFinity's stay on, every gift fires twice.\n3.  Press Done. GiftDeck hides TikFinity again and keeps it running in the background.";
+        StepBody.Text = "1.  Show TikFinity and log in with your TikTok account. Use the QR code: scan it with the TikTok app on your phone. It's quicker, and Google sign-in is often blocked there.\n2.  In TikFinity, go to Events and switch every event off. MayhemDeck runs your events; if TikFinity's stay on, every gift fires twice.\n3.  Press Done. MayhemDeck hides TikFinity again and keeps it running in the background.";
         AddButton("Show TikFinity", false, ShowTikFinity);
         AddButton("Done", true, () =>
         {
@@ -335,21 +385,21 @@ public partial class SetupWizard : UserControl
             StepBody.Text = "Everything's installed and connected.";
             if (_allOkSince == default) _allOkSince = DateTime.Now;
             if ((DateTime.Now - _allOkSince).TotalSeconds >= 1.5) Finish();
-            AddButton("Open GiftDeck", true, Finish);
+            AddButton("Open MayhemDeck", true, Finish);
             return null;
         }
         _allOkSince = default;
         StepTitle.Text = error ? "Something's not right" : "Getting everything ready";
         StepBody.Text = error
-            ? "GiftDeck couldn't get everything connected. The line in red says what's wrong. You can try again, or open GiftDeck anyway and fix it from Stream Setup."
+            ? "MayhemDeck couldn't get everything connected. The line in red says what's wrong. You can try again, or open MayhemDeck anyway and fix it from Stream Setup."
             : "Starting OBS and TikFinity in the background and connecting to them. This usually takes a few seconds.";
         if (error)
         {
             AddButton("Try again", true, Retry);
-            AddButton("Open GiftDeck anyway", false, Finish);
+            AddButton("Open MayhemDeck anyway", false, Finish);
         }
         else if ((DateTime.Now - _readySince).TotalSeconds > 20)
-            AddButton("Open GiftDeck anyway", false, Finish);
+            AddButton("Open MayhemDeck anyway", false, Finish);
         return null;
     }
 

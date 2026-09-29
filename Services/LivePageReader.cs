@@ -58,7 +58,7 @@ public class LivePageReader
 
             if (!page.Reading)
             {
-                if (!await page.IsLoggedInAsync()) { Say("Log in to TikTok (the TikTok login button) so GiftDeck can read your LIVE."); return; }
+                if (!await page.IsLoggedInAsync()) { Say("Log in to TikTok (the TikTok login button) so MayhemDeck can read your LIVE."); return; }
                 await page.StartReadingAsync();
                 _quietChecks = 0;
                 Say("Reading your LIVE through the TikTok page.");

@@ -150,7 +150,7 @@ window.GDChroma = (function () {
     requestAnimationFrame(frame);
   }
 
-  // The colour to remove, read from a video's corners (the "Pick from video" button in GiftDeck).
+  // The colour to remove, read from a video's corners (the "Pick from video" button in MayhemDeck).
   function pickFromUrl(url) {
     return new Promise((resolve, reject) => {
       const v = document.createElement('video');

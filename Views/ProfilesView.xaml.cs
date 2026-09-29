@@ -50,7 +50,7 @@ public partial class ProfilesView : UserControl
         Run(() =>
         {
             var created = P.Create(name);
-            if (MessageBox.Show(Owner, $"Switch to \"{created}\" now? It starts empty: add events on the Events page.", "GiftDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (MessageBox.Show(Owner, $"Switch to \"{created}\" now? It starts empty: add events on the Events page.", "MayhemDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 Dispatcher.BeginInvoke(() => (Owner as MainWindow)?.SwitchProfile(created));
         }, $"Created \"{name}\".");
     }
@@ -74,7 +74,7 @@ public partial class ProfilesView : UserControl
     void Delete_Click(object sender, RoutedEventArgs e)
     {
         var name = Name(sender);
-        if (MessageBox.Show(Owner, $"Delete the \"{name}\" profile and all its events and overlays? Export it first if you might want it back.", "GiftDeck", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes) return;
+        if (MessageBox.Show(Owner, $"Delete the \"{name}\" profile and all its events and overlays? Export it first if you might want it back.", "MayhemDeck", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes) return;
         Run(() => P.Delete(name), $"Deleted \"{name}\".");
     }
 
@@ -84,7 +84,7 @@ public partial class ProfilesView : UserControl
         var dlg = new Microsoft.Win32.SaveFileDialog
         {
             FileName = name + ProfileService.FileExtension,
-            Filter = "GiftDeck profile|*" + ProfileService.FileExtension,
+            Filter = "MayhemDeck profile|*" + ProfileService.FileExtension,
             Title = "Export profile",
         };
         if (dlg.ShowDialog(Owner) != true) return;
@@ -93,7 +93,7 @@ public partial class ProfilesView : UserControl
 
     void Import_Click(object sender, RoutedEventArgs e)
     {
-        var dlg = new Microsoft.Win32.OpenFileDialog { Filter = "GiftDeck profile|*" + ProfileService.FileExtension + "|All files|*.*", Title = "Import profile" };
+        var dlg = new Microsoft.Win32.OpenFileDialog { Filter = "MayhemDeck profile|*" + ProfileService.FileExtension + "|All files|*.*", Title = "Import profile" };
         if (dlg.ShowDialog(Owner) != true) return;
         string imported = null;
         Run(() => imported = P.Import(dlg.FileName), null);

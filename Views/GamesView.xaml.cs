@@ -226,7 +226,7 @@ public partial class GamesView : UserControl
         if (all.Count == 0)
         {
             EmptyTitle.Text = "No games here yet";
-            EmptyText.Text = "Game packs live in the Packs folder next to GiftDeck.";
+            EmptyText.Text = "Game packs live in the Packs folder next to MayhemDeck.";
             EmptyButton.Visibility = Visibility.Collapsed;
         }
         else if (q.Length > 0)
@@ -450,7 +450,7 @@ public partial class GamesView : UserControl
         if (!show || _guideFor == p.Id) return;
         _guideFor = p.Id;
         GuideIntro.Text = tier == GameCatalog.Console
-            ? "Do this once. After that, GiftDeck reaches the server by itself whenever it's running."
+            ? "Do this once. After that, MayhemDeck reaches the server by itself whenever it's running."
             : tier == GameCatalog.Keys ? "Do this once before you go LIVE." : "Do this once.";
         GuideRows.Children.Clear();
         for (int i = 0; i < p.Guide.Count; i++) GuideRows.Children.Add(GuideStep(i + 1, p.Guide[i], i == p.Guide.Count - 1));
@@ -527,7 +527,7 @@ public partial class GamesView : UserControl
                 Children =
                 {
                     new TextBlock { Text = "Connection", Style = (Style)FindResource("H2"), Margin = new Thickness(0, 0, 0, 6) },
-                    new TextBlock { Text = "This version of GiftDeck can't reach this game's console yet. Update GiftDeck to connect to it.", Style = (Style)FindResource("Muted") },
+                    new TextBlock { Text = "This version of MayhemDeck can't reach this game's console yet. Update MayhemDeck to connect to it.", Style = (Style)FindResource("Muted") },
                 },
             };
         }
@@ -558,7 +558,7 @@ public partial class GamesView : UserControl
         if (target == null || commands.Count == 0)
         {
             CommandRows.Children.Add(Row("–", "MutedBrush", target == null ? "No commands yet" : "This game has no commands listed",
-                target == null ? "Once GiftDeck can reach this game's console, its commands show here." : "You can still send any command by hand under Connection."));
+                target == null ? "Once MayhemDeck can reach this game's console, its commands show here." : "You can still send any command by hand under Connection."));
             return;
         }
 
@@ -655,7 +655,7 @@ public partial class GamesView : UserControl
         if (!show) return;
         var title = p.WindowTitle.Trim();
         bool using_ = Hub.Settings.FocusWindowBeforeKeys && string.Equals((Hub.Settings.FocusWindowTitle ?? "").Trim(), title, StringComparison.OrdinalIgnoreCase);
-        WindowIntro.Text = $"Key presses go to whichever window is in front. GiftDeck can bring {p.Name} to the front first, so the keys land in the game even while you're clicking around in GiftDeck or OBS.";
+        WindowIntro.Text = $"Key presses go to whichever window is in front. MayhemDeck can bring {p.Name} to the front first, so the keys land in the game even while you're clicking around in MayhemDeck or OBS.";
         FocusWindowButton.Content = using_ ? "Using this game's window ✓" : "Use this game's window for key presses";
         FocusWindowButton.Style = (Style)FindResource(using_ ? typeof(Button) : "Primary");
         FocusWindowButton.IsEnabled = !using_;
@@ -679,7 +679,7 @@ public partial class GamesView : UserControl
         Hub.Settings.FocusWindowTitle = p.WindowTitle.Trim();
         try { Hub.SaveSettings(); }
         catch (Exception ex) { _windowMessage = null; FocusWindowStatus.Text = "Couldn't save: " + ex.Message; FocusWindowStatus.Foreground = Brush("DangerBrush"); return; }
-        _windowMessage = $"Done ✓  Before pressing keys, GiftDeck now brings the window with “{p.WindowTitle.Trim()}” in its title to the front.";
+        _windowMessage = $"Done ✓  Before pressing keys, MayhemDeck now brings the window with “{p.WindowTitle.Trim()}” in its title to the front.";
         RenderWindowCard(p, TierOf(p));
     }
 
@@ -801,7 +801,7 @@ public partial class GamesView : UserControl
             ServerHost.Content = new Border
             {
                 Style = (Style)FindResource("Card"), Margin = new Thickness(0, 0, 0, 14),
-                Child = new TextBlock { Text = "This version of GiftDeck can't run this kind of server yet.", Style = (Style)FindResource("Muted") },
+                Child = new TextBlock { Text = "This version of MayhemDeck can't run this kind of server yet.", Style = (Style)FindResource("Muted") },
             };
     }
 
@@ -822,7 +822,7 @@ public partial class GamesView : UserControl
         else
         {
             buttons.Add(("Choose folder…", () => ChooseFolder(p), true));
-            GameRows.Children.Add(Row("○", "WarnBrush", $"GiftDeck can't find {p.Name}",
+            GameRows.Children.Add(Row("○", "WarnBrush", $"MayhemDeck can't find {p.Name}",
                 $"It looked in Steam, Epic Games and the game's launcher. If it's installed, press Choose folder… and pick the folder with {p.Exe} in it.", buttons.ToArray()));
         }
     }
@@ -861,14 +861,14 @@ public partial class GamesView : UserControl
         bool installed = st.AnyInstalledByUs;
         ModsIntro.Text = installed
             ? $"Installed in {st.Installed.GameFolder}. Uninstall removes them and puts back any file they replaced."
-            : "GiftDeck downloads each of these from its maker, copies them into the game folder and backs up any file it replaces.";
+            : "MayhemDeck downloads each of these from its maker, copies them into the game folder and backs up any file it replaces.";
 
         foreach (var c in st.Components)
         {
             string mark, brush, line;
             if (c.UpdateAvailable) { mark = "↑"; brush = "AccentBrush"; line = $"Installed {c.InstalledVersion}. Newer: {c.LatestVersion}."; }
             else if (c.InstalledVersion != null) { mark = "✓"; brush = "SuccessBrush"; line = $"Installed {c.InstalledVersion}."; }
-            else if (c.OnDisk) { mark = "○"; brush = "MutedBrush"; line = $"Already in the game folder{(c.DiskVersion != null ? " (" + c.DiskVersion + ")" : "")}, not put there by GiftDeck. Installing replaces it and keeps a backup."; }
+            else if (c.OnDisk) { mark = "○"; brush = "MutedBrush"; line = $"Already in the game folder{(c.DiskVersion != null ? " (" + c.DiskVersion + ")" : "")}, not put there by MayhemDeck. Installing replaces it and keeps a backup."; }
             else { mark = "○"; brush = "MutedBrush"; line = "Not installed" + (c.LatestVersion != null ? $". Newest: {c.LatestVersion}." : "."); }
             if (c.InstalledVersion == null && c.OnDisk && c.LatestVersion != null) line += $" Newest: {c.LatestVersion}.";
             var detail = line + (string.IsNullOrWhiteSpace(c.Component.License) ? "" : "\n" + c.Component.License);
@@ -891,9 +891,9 @@ public partial class GamesView : UserControl
         if (manual)
         {
             ManualTitle.Text = $"Download {_manual.Component.Name} yourself";
-            ManualText.Text = $"{_manual.Component.Name}'s site doesn't let GiftDeck download it directly. Open its page in your browser and download it there."
+            ManualText.Text = $"{_manual.Component.Name}'s site doesn't let MayhemDeck download it directly. Open its page in your browser and download it there."
                               + (string.IsNullOrWhiteSpace(_manual.Instructions) ? "" : "\n" + _manual.Instructions)
-                              + "\nGiftDeck then finishes the install with that file.";
+                              + "\nMayhemDeck then finishes the install with that file.";
             ManualOpenButton.Content = "Open " + (Uri.TryCreate(_manual.PageUrl, UriKind.Absolute, out var u) ? u.Host : "its page");
             ManualOpenButton.Visibility = string.IsNullOrEmpty(_manual.PageUrl) ? Visibility.Collapsed : Visibility.Visible;
         }
@@ -1015,7 +1015,7 @@ public partial class GamesView : UserControl
                 RenderStatus();
             }), manual);
             _manualFiles.Remove(p.Id);
-            _message = "Installed ✓  Start the game, load Story Mode, and look for GiftDeck's green greeting.";
+            _message = "Installed ✓  Start the game, load Story Mode, and look for MayhemDeck's green greeting.";
             if (Packs.Presets(p).Count > 0) _message += " Then pick a preset below.";
             _messageIsError = false;
         }
@@ -1065,8 +1065,8 @@ public partial class GamesView : UserControl
         var p = _selected;
         if (p == null || _busyPack != null || _status?.Installed == null) return;
         if (MessageBox.Show(Window.GetWindow(this),
-                $"Remove {p.Name}'s mods from {_status.Installed.GameFolder}?\n\nGiftDeck deletes the files it put there and puts back any file they replaced. Your profiles and events stay.",
-                "GiftDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
+                $"Remove {p.Name}'s mods from {_status.Installed.GameFolder}?\n\nMayhemDeck deletes the files it put there and puts back any file they replaced. Your profiles and events stay.",
+                "MayhemDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
         _busyPack = p;
         _busyText = "Removing the mods…";
         _busyPart = -1;
@@ -1100,7 +1100,7 @@ public partial class GamesView : UserControl
         {
             var answer = MessageBox.Show(owner,
                 $"You already have this preset as the \"{name}\" profile.\n\nYes: switch to it (with any changes you made).\nNo: add a fresh copy as a new profile.",
-                "GiftDeck", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                "MayhemDeck", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
             if (answer == MessageBoxResult.Cancel) return;
             if (answer == MessageBoxResult.No) name = null;
         }

@@ -2,10 +2,10 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:GiftDeck.Views">
-    <!-- Covers the whole window when GiftDeck opens: checks (and if needed, walks through) everything
-         GiftDeck needs, and only then lets the user into the app. -->
+    <!-- Covers the whole window when MayhemDeck opens: checks (and if needed, walks through) everything
+         MayhemDeck needs, and only then lets the user into the app. -->
     <Grid Background="{StaticResource BgBrush}">
-        <Border Style="{StaticResource Card}" Width="960" Height="560" Margin="40" Padding="0"
+        <Border x:Name="SetupCard" Style="{StaticResource Card}" Width="960" Height="560" Margin="40" Padding="0"
                 HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -19,7 +19,7 @@
                         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,22">
                             <Image Source="{StaticResource LogoImage}" Width="34" Height="34" Margin="0,0,10,0"/>
                             <StackPanel VerticalAlignment="Center">
-                                <TextBlock Text="GiftDeck" FontSize="17" FontWeight="SemiBold" Foreground="{StaticResource TextBrush}"/>
+                                <TextBlock Text="MayhemDeck" FontSize="17" FontWeight="SemiBold" Foreground="{StaticResource TextBrush}"/>
                                 <TextBlock x:Name="Subtitle" Text="Getting ready" Style="{StaticResource Muted}" FontSize="12"/>
                             </StackPanel>
                         </StackPanel>
@@ -68,5 +68,8 @@
                 </DockPanel>
             </Grid>
         </Border>
+
+        <!-- Welcome pages: shown first, until they've been seen once (and again from Settings). -->
+        <local:WelcomeOverlay x:Name="Welcome" Panel.ZIndex="10"/>
     </Grid>
 </UserControl>

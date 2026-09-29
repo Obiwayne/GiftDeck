@@ -74,7 +74,7 @@
                     <TextBlock x:Name="KeyStatus" Text="Not set up yet." Margin="0,0,0,12"/>
                     <TextBlock Text="One-time setup, free, about two minutes." Style="{StaticResource Muted}" Margin="0,0,0,8"/>
                     <TextBlock Style="{StaticResource Muted}" Margin="0,0,0,2" Text="1.  Open devportal.jamendo.com and sign up (or log in)."/>
-                    <TextBlock Style="{StaticResource Muted}" Margin="0,0,0,2" Text="2.  Go to My Applications and create a new app. Any name (e.g. GiftDeck) and any website address are fine."/>
+                    <TextBlock Style="{StaticResource Muted}" Margin="0,0,0,2" Text="2.  Go to My Applications and create a new app. Any name (e.g. MayhemDeck) and any website address are fine."/>
                     <TextBlock Style="{StaticResource Muted}" Margin="0,0,0,12" Text="3.  Copy the Client ID it shows you into the box below and click Save."/>
                     <Grid>
                         <Grid.ColumnDefinitions>

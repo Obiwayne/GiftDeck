@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <Reference Include="GiftDeck">
-      <HintPath>$(GiftDeckDir)\GiftDeck.dll</HintPath>
+      <HintPath>$(GiftDeckDir)\MayhemDeck.dll</HintPath>
     </Reference>
   </ItemGroup>
 

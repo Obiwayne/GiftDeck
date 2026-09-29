@@ -44,7 +44,7 @@ public static class StartupStatus
         {
             _obsWaitingSince = null;
             return ObsHost.PortraitExists()
-                ? (StatusKind.Error, "OBS isn't running. It starts again when you Go LIVE, or restart GiftDeck.")
+                ? (StatusKind.Error, "OBS isn't running. It starts again when you Go LIVE, or restart MayhemDeck.")
                 : (StatusKind.Error, "OBS isn't set up yet: Stream Setup, Set up portrait OBS.");
         }
         if (TooLong(ref _obsWaitingSince, true))
@@ -93,7 +93,7 @@ public static class StartupStatus
             return (StatusKind.Error, "TikFinity isn't running. Open TikFinity.");
         }
         if (TooLong(ref _readerWaitingSince, true))
-            return (StatusKind.Error, "Something's wrong: GiftDeck can't connect to TikFinity" + Reason(t));
+            return (StatusKind.Error, "Something's wrong: MayhemDeck can't connect to TikFinity" + Reason(t));
         return (StatusKind.Loading, t.ProcessRunning ? "Connecting to TikFinity…" : "Starting TikFinity…");
     }
 
@@ -114,7 +114,7 @@ public static class StartupStatus
         var err = k.LastError;
         if (!string.IsNullOrWhiteSpace(err) && err.StartsWith("There's no Kick channel")) return (StatusKind.Error, err);
         if (slow)
-            return (StatusKind.Error, "Something's wrong: GiftDeck can't connect to Kick" + (string.IsNullOrWhiteSpace(err) ? "." : " (" + err.TrimEnd('.') + ")."));
+            return (StatusKind.Error, "Something's wrong: MayhemDeck can't connect to Kick" + (string.IsNullOrWhiteSpace(err) ? "." : " (" + err.TrimEnd('.') + ")."));
         return (StatusKind.Loading, "Connecting to kick.com/" + k.ChannelName + "…");
     }
 

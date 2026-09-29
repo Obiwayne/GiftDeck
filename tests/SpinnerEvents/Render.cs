@@ -28,7 +28,7 @@ static class Render
     {
         Directory.CreateDirectory(outDir);
         var app = new Application { ShutdownMode = ShutdownMode.OnExplicitShutdown };
-        app.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("pack://application:,,,/GiftDeck;component/Theme.xaml") });
+        app.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("pack://application:,,,/MayhemDeck;component/Theme.xaml") });
 
         var gifts = new GiftCatalog();
         gifts.Load();

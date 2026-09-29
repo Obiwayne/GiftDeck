@@ -183,7 +183,7 @@ public partial class MinecraftServerPanel : UserControl
         int min = need ?? Server.Info?.JavaMin ?? 0;
         if (min == 0)
         {
-            JavaText.Text = "Java: GiftDeck checks this when you set up the server.";
+            JavaText.Text = "Java: MayhemDeck checks this when you set up the server.";
             JavaButton.Visibility = Visibility.Collapsed;
             return null;
         }
@@ -224,7 +224,7 @@ public partial class MinecraftServerPanel : UserControl
             if (Server.IsInstalled && installed.Version != build.Version &&
                 MessageBox.Show(Window.GetWindow(this),
                     $"Change the server from Minecraft {installed.Version} to {build.Version}?\n\nYour world is kept. Minecraft can bring a world up to a newer version, but a world opened on a newer version can't go back to an older one.",
-                    "GiftDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+                    "MayhemDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                 return;
 
             var java = await CheckJavaAsync(build.JavaMin);
@@ -247,8 +247,8 @@ public partial class MinecraftServerPanel : UserControl
     async Task<bool> OfferJavaAsync(int min, IProgress<InstallProgress> progress)
     {
         if (MessageBox.Show(Window.GetWindow(this),
-                $"This Minecraft version needs Java {min} or newer.\n\nDownload Eclipse Temurin Java (free, about 55 MB) into GiftDeck's folder now? It isn't installed system-wide and only GiftDeck's server uses it.",
-                "GiftDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+                $"This Minecraft version needs Java {min} or newer.\n\nDownload Eclipse Temurin Java (free, about 55 MB) into MayhemDeck's folder now? It isn't installed system-wide and only MayhemDeck's server uses it.",
+                "MayhemDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
         {
             ShowError($"The server can't run without Java {min}.");
             return false;
@@ -411,7 +411,7 @@ public partial class MinecraftServerPanel : UserControl
         {
             var reply = MinecraftTarget.CleanReply(await Target.RunRawAsync(line));
             if (reply.StartsWith("Unknown or incomplete command", StringComparison.OrdinalIgnoreCase))
-                reply = "The GiftDeck Games plugin isn't loaded. Stop and start the server so GiftDeck can install it.";
+                reply = "The GiftDeck Games plugin isn't loaded. Stop and start the server so MayhemDeck can install it.";
             GameStatusText.Text = reply;
             AppendConsole(reply);
         }
@@ -443,9 +443,9 @@ public partial class MinecraftServerPanel : UserControl
                 var reply = MinecraftTarget.StripColors(await Target.RunRawAsync(line));
                 if (reply.Length > 0) AppendConsole(reply);
             }
-            catch (Exception ex) { AppendConsole("[GiftDeck] " + ex.Message); }
+            catch (Exception ex) { AppendConsole("[MayhemDeck] " + ex.Message); }
         }
         else if (Server.OwnsProcess) Server.SendConsole(line); // still starting: the console answers in the log
-        else AppendConsole("[GiftDeck] The server isn't running.");
+        else AppendConsole("[MayhemDeck] The server isn't running.");
     }
 }

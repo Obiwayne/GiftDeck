@@ -83,14 +83,14 @@ public class BridgeService
         var node = dir != null && File.Exists(Path.Combine(dir, "node.exe")) ? Path.Combine(dir, "node.exe") : FindNode();
         if (dir == null || node == null)
         {
-            if (!_loggedMissing) Log.Write(dir == null ? "Bridge not found (bridge\\bridge.js next to GiftDeck)" : "Bridge needs Node.js, which was not found (reinstall GiftDeck, or install Node.js)");
+            if (!_loggedMissing) Log.Write(dir == null ? "Bridge not found (bridge\\bridge.js next to MayhemDeck)" : "Bridge needs Node.js, which was not found (reinstall MayhemDeck, or install Node.js)");
             _loggedMissing = true;
             return;
         }
         var user = (Hub.Settings.BridgeUsername ?? "").Trim().TrimStart('@');
         if (user.Length == 0)
         {
-            if (!_loggedNoUser) Log.Write("Set your TikTok username on the Stream Setup page so GiftDeck can read your LIVE");
+            if (!_loggedNoUser) Log.Write("Set your TikTok username on the Stream Setup page so MayhemDeck can read your LIVE");
             _loggedNoUser = true;
             return;
         }

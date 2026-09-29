@@ -2,10 +2,10 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>GiftDeck all-in-one overlay</title>
+<title>MayhemDeck all-in-one overlay</title>
 <style>
   /* One page for everything: each part is the real overlay page in a frame (so the drawing code lives in one
-     place), sized and placed as set on GiftDeck's Overlays page. Only this page listens to GiftDeck; it
+     place), sized and placed as set on MayhemDeck's Overlays page. Only this page listens to GiftDeck; it
      passes every message down to the parts. */
   html, body { height: 100%; }
   body { margin: 0; background: transparent; overflow: hidden; color-scheme: normal; }
@@ -43,7 +43,7 @@
   // How big the parts are drawn: the Scale setting, relative to a 1080 px wide (or tall) page.
   function zoom() { return ((state && state.allInOne && state.allInOne.scale) || 130) / 100 * Math.min(innerWidth, innerHeight) / 1080; }
 
-  // The parts that should be on the page, from the settings in GiftDeck.
+  // The parts that should be on the page, from the settings in MayhemDeck.
   function wanted(s) {
     const c = s.allInOne || {}, out = [];
     const add = (part, kind, src, full) => out.push({ kind, src, full: !!full, spot: spots.includes(part.spot) ? part.spot : 'middle', width: part.width || 100, id: kind + '|' + src + '|' + part.spot + (full ? '|full' : '') });

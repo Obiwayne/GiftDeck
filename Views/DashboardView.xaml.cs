@@ -54,16 +54,16 @@ public partial class DashboardView : UserControl
         if (BridgeService.NeedsUsername)
         {
             TikTitle.Text = "TikTok LIVE";
-            TikStatus.Text = "Set your TikTok username so GiftDeck knows whose LIVE to read. Logging in with TikTok on Stream Setup fills it in for you.";
+            TikStatus.Text = "Set your TikTok username so MayhemDeck knows whose LIVE to read. Logging in with TikTok on Stream Setup fills it in for you.";
             TikButton.Content = "Go to Stream Setup";
             TikButton.Visibility = Visibility.Visible;
         }
         else if (BridgeService.InUse)
         {
             TikTitle.Text = "TikTok LIVE";
-            TikStatus.Text = !t.Connected ? "GiftDeck's TikTok bridge is starting."
-                : t.TikTokLive == true ? "Connected to your LIVE. Every gift, follow, like and chat message reaches GiftDeck."
-                : "Waiting for you to go LIVE. GiftDeck connects by itself within about 30 seconds of the LIVE starting (it doesn't need TikFinity).";
+            TikStatus.Text = !t.Connected ? "MayhemDeck's TikTok bridge is starting."
+                : t.TikTokLive == true ? "Connected to your LIVE. Every gift, follow, like and chat message reaches MayhemDeck."
+                : "Waiting for you to go LIVE. MayhemDeck connects by itself within about 30 seconds of the LIVE starting (it doesn't need TikFinity).";
             TikButton.Visibility = Visibility.Collapsed;
         }
         else
@@ -74,10 +74,10 @@ public partial class DashboardView : UserControl
         TikStatus.Text = t.Connected && t.TikTokLive == false
                 ? (Hub.TikTok.Live
                     ? "Running, but TikFinity is NOT on your LIVE, so gifts and chat won't arrive. In TikFinity, click Connect (or restart it)."
-                    : "Connected. Waiting for you to go LIVE; every gift, follow, like and chat message will reach GiftDeck.")
-            : t.Connected ? "Running and connected. Every gift, follow, like and chat message reaches GiftDeck."
+                    : "Connected. Waiting for you to go LIVE; every gift, follow, like and chat message will reach MayhemDeck.")
+            : t.Connected ? "Running and connected. Every gift, follow, like and chat message reaches MayhemDeck."
             : t.ProcessRunning ? "Running. Waiting for its event feed to open."
-            : "Not running. GiftDeck needs it for the TikTok connection.";
+            : "Not running. MayhemDeck needs it for the TikTok connection.";
         TikButton.Visibility = t.ProcessRunning ? Visibility.Collapsed : Visibility.Visible;
         }
 

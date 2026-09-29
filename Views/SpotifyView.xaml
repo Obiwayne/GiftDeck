@@ -19,7 +19,7 @@
                         <Button Content="Copy" Style="{StaticResource Ghost}" Click="CopyRedirect_Click" Margin="6,0,0,0"/>
                     </StackPanel>
                     <TextBlock Style="{StaticResource Muted}" Margin="0,0,0,2" Text="3.  Tick Web API, save, then copy the Client ID from the app's settings page into the box below."/>
-                    <TextBlock Style="{StaticResource Muted}" Margin="0,0,0,12" Text="4.  Click Link Spotify. A browser tab opens so you can approve GiftDeck."/>
+                    <TextBlock Style="{StaticResource Muted}" Margin="0,0,0,12" Text="4.  Click Link Spotify. A browser tab opens so you can approve MayhemDeck."/>
 
                     <TextBlock Text="Client ID" Style="{StaticResource Label}"/>
                     <Grid>

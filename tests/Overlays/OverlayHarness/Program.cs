@@ -136,7 +136,7 @@ static class Program
     static void RenderWpf()
     {
         var app = new Application();
-        app.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("pack://application:,,,/GiftDeck;component/Theme.xaml") });
+        app.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("pack://application:,,,/MayhemDeck;component/Theme.xaml") });
         Snap(new GiftDeck.Views.AllInOnePanel(), 1000, "wpf-all-in-one-card.png");
         var tools = new GiftDeck.Views.StreamToolsPanel();
         Snap(tools, 1000, "wpf-stream-tools.png");

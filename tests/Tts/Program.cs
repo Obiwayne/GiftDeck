@@ -34,7 +34,7 @@ static class Program
         Environment.SetEnvironmentVariable("GIFTDECK_DATA", _data); // before Storage is touched
 
         var app = new Application { ShutdownMode = ShutdownMode.OnExplicitShutdown };
-        app.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("pack://application:,,,/GiftDeck;component/Theme.xaml") });
+        app.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("pack://application:,,,/MayhemDeck;component/Theme.xaml") });
         int code = 0;
         app.Startup += async (_, _) =>
         {

@@ -65,7 +65,7 @@ public sealed class MinecraftServer : IDisposable
     {
         var h = new HttpClient { Timeout = TimeSpan.FromMinutes(10) };
         // PaperMC asks API users to identify themselves with a contact URL.
-        h.DefaultRequestHeaders.UserAgent.ParseAdd("GiftDeck/2.1 (+https://github.com/Obiwayne/GiftDeck)");
+        h.DefaultRequestHeaders.UserAgent.ParseAdd("MayhemDeck/2.3 (+https://github.com/Obiwayne/MayhemDeck)");
         return h;
     }
 
@@ -125,7 +125,7 @@ public sealed class MinecraftServer : IDisposable
         MinecraftServerState.Starting => "Starting… (the first start takes a minute or two)",
         MinecraftServerState.Running => RconConnected
             ? "Running" + (PlayersOnline >= 0 ? $", {PlayersOnline} {(PlayersOnline == 1 ? "player" : "players")} online" : "")
-                + (OwnsProcess ? "" : " (started outside GiftDeck)")
+                + (OwnsProcess ? "" : " (started outside MayhemDeck)")
             : "Running, connecting…",
         MinecraftServerState.Stopping => "Stopping… (saving the world)",
         _ => _state.ToString(),
@@ -173,7 +173,7 @@ public sealed class MinecraftServer : IDisposable
         Directory.CreateDirectory(Folder);
         File.WriteAllText(Path.Combine(Folder, "eula.txt"),
             $"#By changing the setting below to TRUE you are indicating your agreement to our EULA ({EulaUrl}).\n" +
-            $"#Accepted in GiftDeck by the server's owner on {DateTime.Now:yyyy-MM-dd HH:mm}\n" +
+            $"#Accepted in MayhemDeck by the server's owner on {DateTime.Now:yyyy-MM-dd HH:mm}\n" +
             "eula=true\n");
         Changed?.Invoke();
     }
@@ -334,7 +334,7 @@ public sealed class MinecraftServer : IDisposable
             catch { }
         }
 
-        TryDirs(JavaRoot, "*", "Downloaded by GiftDeck", 3);
+        TryDirs(JavaRoot, "*", "Downloaded by MayhemDeck", 3);
         var home = Environment.GetEnvironmentVariable("JAVA_HOME");
         if (!string.IsNullOrEmpty(home)) Try(Path.Combine(home, "bin", "java.exe"), "JAVA_HOME");
         foreach (var dir in (Environment.GetEnvironmentVariable("PATH") ?? "").Split(';', StringSplitOptions.RemoveEmptyEntries))
@@ -425,7 +425,7 @@ public sealed class MinecraftServer : IDisposable
         var exe = Path.Combine(target, "bin", "java.exe");
         var ver = ReadJavaVersion(exe) ?? major.ToString();
         progress?.Report(new InstallProgress($"Java {ver} is ready", 1));
-        return new JavaInstall(exe, MajorOf(ver), ver, "Downloaded by GiftDeck");
+        return new JavaInstall(exe, MajorOf(ver), ver, "Downloaded by MayhemDeck");
     }
 
     // ---------------- server.properties ----------------
@@ -435,7 +435,7 @@ public sealed class MinecraftServer : IDisposable
     {
         Directory.CreateDirectory(Folder);
         var path = Path.Combine(Folder, "server.properties");
-        var lines = File.Exists(path) ? File.ReadAllLines(path).ToList() : new List<string> { "#Minecraft server properties (GiftDeck sets the RCON and address lines)" };
+        var lines = File.Exists(path) ? File.ReadAllLines(path).ToList() : new List<string> { "#Minecraft server properties (MayhemDeck sets the RCON and address lines)" };
         void Set(string key, string value, bool onlyIfMissing = false)
         {
             int i = lines.FindIndex(l => !l.TrimStart().StartsWith('#') && l.Split('=')[0].Trim() == key);
@@ -452,7 +452,7 @@ public sealed class MinecraftServer : IDisposable
         Set("server-port", Settings.ServerPort.ToString());
         Set("online-mode", "true", onlyIfMissing: true);
         Set("enable-query", "false", onlyIfMissing: true);
-        Set("motd", "GiftDeck TikTok LIVE server", onlyIfMissing: true);
+        Set("motd", "MayhemDeck TikTok LIVE server", onlyIfMissing: true);
         File.WriteAllLines(path, lines);
     }
 
@@ -493,9 +493,9 @@ public sealed class MinecraftServer : IDisposable
     {
         try
         {
-            foreach (var p in InstallPlugins()) AddConsole($"[GiftDeck] Installed the server plugin {p}");
+            foreach (var p in InstallPlugins()) AddConsole($"[MayhemDeck] Installed the server plugin {p}");
         }
-        catch (Exception ex) { AddConsole("[GiftDeck] Couldn't copy GiftDeck's server plugins: " + ex.Message); }
+        catch (Exception ex) { AddConsole("[MayhemDeck] Couldn't copy MayhemDeck's server plugins: " + ex.Message); }
     }
 
     // The version line of a plugin jar's plugin.yml (or paper-plugin.yml), or "".
@@ -561,7 +561,7 @@ public sealed class MinecraftServer : IDisposable
         foreach (var a in new[] { $"-Xms{Math.Min(1024, mem)}M", $"-Xmx{mem}M", "-Dstdout.encoding=UTF-8", "-Dstderr.encoding=UTF-8", "-Dfile.encoding=UTF-8", "-jar", info.Jar, "--nogui" })
             psi.ArgumentList.Add(a);
 
-        AddConsole($"[GiftDeck] Starting Paper {info.Version} with Java {java.Version} ({java.Exe})");
+        AddConsole($"[MayhemDeck] Starting Paper {info.Version} with Java {java.Version} ({java.Exe})");
         SetState(MinecraftServerState.Starting, "");
         var p = new Process { StartInfo = psi, EnableRaisingEvents = true };
         p.OutputDataReceived += (_, a) => OnServerLine(a.Data);
@@ -600,7 +600,7 @@ public sealed class MinecraftServer : IDisposable
             }
             await Task.Delay(1000);
         }
-        if (OwnsProcess) SetState(MinecraftServerState.Running, "GiftDeck couldn't connect to it over RCON");
+        if (OwnsProcess) SetState(MinecraftServerState.Running, "MayhemDeck couldn't connect to it over RCON");
     }
 
     void OnExited(Process p)
@@ -608,7 +608,7 @@ public sealed class MinecraftServer : IDisposable
         if (p != _proc) return;
         int code = -1;
         try { code = p.ExitCode; } catch { }
-        AddConsole($"[GiftDeck] The server stopped (exit code {code})");
+        AddConsole($"[MayhemDeck] The server stopped (exit code {code})");
         _rcon.Dispose();
         _proc = null;
         PlayersOnline = -1;
@@ -624,7 +624,7 @@ public sealed class MinecraftServer : IDisposable
         bool external = proc == null && RconConnected;
         if (proc == null && !external) { SetState(IsInstalled ? MinecraftServerState.Stopped : MinecraftServerState.NotInstalled); return; }
         SetState(MinecraftServerState.Stopping);
-        AddConsole("[GiftDeck] Stopping the server (saving the world)…");
+        AddConsole("[MayhemDeck] Stopping the server (saving the world)…");
         bool sent = false;
         if (RconConnected)
         {
@@ -643,7 +643,7 @@ public sealed class MinecraftServer : IDisposable
             try { await proc.WaitForExitAsync(cts.Token); }
             catch (OperationCanceledException)
             {
-                AddConsole("[GiftDeck] The server didn't stop in time, closing it forcefully");
+                AddConsole("[MayhemDeck] The server didn't stop in time, closing it forcefully");
                 try { proc.Kill(true); } catch { }
                 try { proc.WaitForExit(5000); } catch { }
             }
@@ -698,7 +698,7 @@ public sealed class MinecraftServer : IDisposable
     public async Task<string> ExecuteAsync(string command, TimeSpan? timeout = null)
     {
         if (!_rcon.IsConnected && !await TryConnectAsync(TimeSpan.FromSeconds(3)))
-            throw new IOException("The Minecraft server isn't running (or GiftDeck can't reach it over RCON).");
+            throw new IOException("The Minecraft server isn't running (or MayhemDeck can't reach it over RCON).");
         try { return await _rcon.ExecuteAsync(command, timeout ?? TimeSpan.FromSeconds(10)); }
         catch
         {

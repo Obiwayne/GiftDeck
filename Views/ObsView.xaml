@@ -11,7 +11,7 @@
                 <StackPanel>
                     <TextBlock Text="Connection" Style="{StaticResource H2}" Margin="0,0,0,8"/>
                     <TextBlock x:Name="Status" Text="Not connected." Margin="0,0,0,12"/>
-                    <TextBlock Style="{StaticResource Muted}" Margin="0,0,0,12" Text="In OBS open Tools, then WebSocket Server Settings, and tick Enable WebSocket server. GiftDeck reads the port and password from OBS's own settings, so you usually only need to press Connect."/>
+                    <TextBlock Style="{StaticResource Muted}" Margin="0,0,0,12" Text="In OBS open Tools, then WebSocket Server Settings, and tick Enable WebSocket server. MayhemDeck reads the port and password from OBS's own settings, so you usually only need to press Connect."/>
                     <Grid Margin="0,0,0,12">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>

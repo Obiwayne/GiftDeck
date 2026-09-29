@@ -112,13 +112,13 @@ public class RelayService
             if (_failures > RestartDelays.Length)
             {
                 _keepAlive = false;
-                Log.Write("The relay to TikTok keeps stopping; GiftDeck stopped restarting it");
-                SetProblem("Not sending: the relay to TikTok keeps stopping, so GiftDeck stopped restarting it. Press Start sending again, or End LIVE." + Why(), false);
+                Log.Write("The relay to TikTok keeps stopping; MayhemDeck stopped restarting it");
+                SetProblem("Not sending: the relay to TikTok keeps stopping, so MayhemDeck stopped restarting it. Press Start sending again, or End LIVE." + Why(), false);
                 return;
             }
             wait = RestartDelays[_failures - 1];
             Log.Write($"The relay to TikTok stopped while LIVE; restarting it in {wait}s (try {_failures} of {RestartDelays.Length})");
-            SetProblem($"The relay to TikTok stopped. GiftDeck is restarting it (try {_failures} of {RestartDelays.Length})…" + Why(), true);
+            SetProblem($"The relay to TikTok stopped. MayhemDeck is restarting it (try {_failures} of {RestartDelays.Length})…" + Why(), true);
         }
         _ = Task.Run(() => RestartAsync(gen, wait));
     }
@@ -145,7 +145,7 @@ public class RelayService
             {
                 if (gen != _generation) return;
                 _keepAlive = false;
-                SetProblem("Not sending: GiftDeck couldn't restart the relay to TikTok. Press Start sending again, or End LIVE.", false);
+                SetProblem("Not sending: MayhemDeck couldn't restart the relay to TikTok. Press Start sending again, or End LIVE.", false);
             }
             return;
         }
