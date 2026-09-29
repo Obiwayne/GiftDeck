@@ -2,13 +2,15 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>GiftDeck gift menu</title>
+<title>MayhemDeck gift menu</title>
 <style>
-  :root { --font: Impact; --header: #1D5FB4; --cols: 5; --tile: 150px; --line: #ffffff; --gap: 2px; }
+  :root { --font: Impact; --header: #1D5FB4; --cols: 5; --tile: 150px; --line: #ffffff; --gap: 2px;
+          --text: #ffffff; --c1: #7C3AED; --c2: #DB2777; --bar1: #3b82f6; --bar2: #1D5FB4; --pop: 1.2; }
   html, body { height: 100%; }
   body { margin: 0; background: #000; font-family: var(--font), 'Arial Black', 'Segoe UI', sans-serif; color: #fff; overflow: hidden; }
-  body.transparent, body.fixed { background: transparent; }
+  body.transparent, body.fixed, body.alt { background: transparent; }
   .board { display: flex; flex-direction: column; height: 100vh; box-sizing: border-box; }
+  body.alt .board { display: none; }
   /* Fixed square tiles: the board is exactly as big as its tiles, so the Browser Source can be any size. */
   body.fixed .board { height: auto; width: max-content; background: #000; }
   body.fixed.transparent .board { background: transparent; }
@@ -25,15 +27,98 @@
   .grid { flex: 1; display: grid; grid-template-columns: repeat(var(--cols), 1fr); grid-auto-rows: 1fr; gap: var(--gap); background: var(--line); min-height: 0; }
   body.nolines .grid { gap: 0; background: transparent; }
   body.transparent .grid { background: transparent; gap: 6px; padding: 6px; }
-  .tile { background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6px 8px; min-height: 0; overflow: hidden; }
+  .tile { background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6px 8px; min-height: 0; overflow: hidden; position: relative; }
   body.transparent .tile { background: rgba(0,0,0,.78); border: var(--gap) solid var(--line); border-radius: 10px; }
   body.transparent.nolines .tile { border: none; }
   .pic { flex: 1; min-height: 0; width: 100%; display: flex; align-items: center; justify-content: center; }
   .pic img { max-height: 100%; max-width: 70%; object-fit: contain; filter: drop-shadow(0 4px 8px rgba(0,0,0,.6)); }
   .pic .emoji { font-size: 56px; font-family: 'Segoe UI Emoji', sans-serif; line-height: 1; }
-  .label { font-size: 22px; line-height: 1.1; text-transform: uppercase; text-align: center; margin-top: 4px; text-shadow: 0 2px 4px rgba(0,0,0,.7); flex: none; }
-  .sub { font-size: 14px; opacity: .8; text-transform: uppercase; margin-top: 2px; font-family: 'Segoe UI', sans-serif; font-weight: 600; flex: none; }
+  .label { font-size: 22px; line-height: 1.1; text-transform: uppercase; text-align: center; margin-top: 4px; text-shadow: 0 2px 4px rgba(0,0,0,.7); flex: none; color: var(--text); }
+  .sub { font-size: 14px; opacity: .8; text-transform: uppercase; margin-top: 2px; font-family: 'Segoe UI', sans-serif; font-weight: 600; flex: none; color: var(--text); }
+  .filler { background: #000; }
+  body.transparent .filler, body.look-clean .filler, body.nolines .filler { background: transparent; }
   .empty { grid-column: 1 / -1; display: flex; align-items: center; justify-content: center; font-family: 'Segoe UI', sans-serif; font-size: 20px; color: #bbb; background: #000; }
+
+  /* ---- Looks (grid and the other layouts) ---- */
+  /* cards: a vivid gradient card with a light inner rim */
+  body.look-cards .tile { background: linear-gradient(160deg, var(--c1), var(--c2)); }
+  body.look-cards .grid .tile { box-shadow: inset 0 0 0 2px rgba(255,255,255,.35), inset 0 0 18px rgba(255,255,255,.25); }
+  body.look-cards.transparent .grid .tile { border-radius: 10px; }
+  /* clean: nothing behind the picture and text */
+  body.look-clean .tile { background: transparent !important; border: none !important; box-shadow: none !important; }
+  body.look-clean .grid { background: transparent; }
+  /* Thick dark outline on the text (not for the original grid look) */
+  body.outline .label, body.outline .sub, .title-big {
+    --o: .085em; --oc: #000;
+    text-shadow:
+      var(--o) 0 0 var(--oc), calc(var(--o) * -1) 0 0 var(--oc), 0 var(--o) 0 var(--oc), 0 calc(var(--o) * -1) 0 var(--oc),
+      calc(var(--o) * .71) calc(var(--o) * .71) 0 var(--oc), calc(var(--o) * -.71) calc(var(--o) * .71) 0 var(--oc),
+      calc(var(--o) * .71) calc(var(--o) * -.71) 0 var(--oc), calc(var(--o) * -.71) calc(var(--o) * -.71) 0 var(--oc),
+      calc(var(--o) * .92) calc(var(--o) * .38) 0 var(--oc), calc(var(--o) * -.92) calc(var(--o) * .38) 0 var(--oc),
+      calc(var(--o) * .92) calc(var(--o) * -.38) 0 var(--oc), calc(var(--o) * -.92) calc(var(--o) * -.38) 0 var(--oc),
+      calc(var(--o) * .38) calc(var(--o) * .92) 0 var(--oc), calc(var(--o) * -.38) calc(var(--o) * .92) 0 var(--oc),
+      calc(var(--o) * .38) calc(var(--o) * -.92) 0 var(--oc), calc(var(--o) * -.38) calc(var(--o) * -.92) 0 var(--oc),
+      0 calc(var(--o) * 1.9) calc(var(--o) * .5) rgba(0,0,0,.6);
+  }
+  body.outline .sub { --o: .11em; opacity: 1; }
+  body.outline .grid .label { letter-spacing: .5px; }
+
+  /* ---- Layouts other than the grid: see-through page, big outlined title ---- */
+  #alt { display: none; }
+  body.alt #alt { display: block; }
+  .title-big { text-transform: uppercase; text-align: center; color: var(--text); line-height: 1.02; letter-spacing: .02em; overflow-wrap: anywhere; }
+  .title-big:empty { display: none; }
+  body.alt .tile { box-sizing: border-box; flex: none; overflow: visible; }
+  body.alt .pic img { max-width: 88%; }
+  body.alt .label { width: 100%; margin-top: 0; line-height: 1.02; letter-spacing: .02em; overflow-wrap: anywhere; }
+  body.alt .sub { font-family: var(--font), 'Arial Black', sans-serif; font-weight: 400; letter-spacing: .04em; opacity: 1; margin-top: .15em; white-space: nowrap; line-height: 1.15; }
+  body.alt:not(.outline) .sub { opacity: .9; }
+  /* classic: today's dark tile */
+  body.alt.look-classic .tile { background: rgba(0,0,0,.78); border: var(--gap) solid var(--line); border-radius: calc(var(--s) * .08); }
+  body.alt.look-classic.nolines .tile { border: none; }
+  /* cards */
+  body.alt.look-cards .tile { border-radius: calc(var(--s) * .13);
+    box-shadow: inset 0 0 0 calc(var(--s) * .022) rgba(255,255,255,.6), inset 0 0 calc(var(--s) * .14) rgba(255,255,255,.35),
+                inset 0 calc(var(--s) * -.18) calc(var(--s) * .16) rgba(0,0,0,.28), 0 calc(var(--s) * .03) calc(var(--s) * .07) rgba(0,0,0,.55); }
+  body.alt.look-cards .tile::before { content: ''; position: absolute; left: 6%; right: 6%; top: 3%; height: 34%; border-radius: calc(var(--s) * .1) calc(var(--s) * .1) 50% 50% / calc(var(--s) * .1) calc(var(--s) * .1) 30% 30%;
+    background: linear-gradient(rgba(255,255,255,.32), rgba(255,255,255,0)); pointer-events: none; }
+  body.alt .pic img, body.alt .pic .emoji { filter: drop-shadow(0 calc(var(--s) * .025) calc(var(--s) * .03) rgba(0,0,0,.55)); position: relative; }
+  body.alt .tile { padding: calc(var(--s) * .06) calc(var(--s) * .05) calc(var(--s) * .07); }
+  body.alt .pic .emoji { font-size: calc(var(--s) * .44); }
+  body.alt .label { font-size: calc(var(--s) * .16); position: relative; }
+  body.alt .sub { font-size: calc(var(--s) * .1); position: relative; }
+  body.alt.look-clean .tile { padding: calc(var(--s) * .02); }
+  body.alt.look-clean .pic .emoji { font-size: calc(var(--s) * .52); }
+  .msg { font-family: 'Segoe UI', sans-serif; font-size: 22px; color: #eee; background: rgba(0,0,0,.75); padding: 14px 22px; border-radius: 12px; text-align: center; width: max-content; max-width: 90%; margin: 20px auto; }
+
+  /* sides: a column down each edge */
+  .sides { position: fixed; inset: 0; }
+  .sides .col { position: absolute; display: grid; align-content: center; }
+  .sides .title-big { position: absolute; }
+
+  /* carousel: a banner strip scrolling sideways */
+  .strip .title-big { padding: 0 2% .12em; }
+  .bar { position: relative; overflow-x: clip; overflow-y: visible; }
+  body:not(.look-clean) .bar { background: linear-gradient(180deg, var(--bar1), var(--bar2)); box-shadow: inset 0 3px 0 rgba(255,255,255,.45), inset 0 -4px 0 rgba(0,0,0,.25), 0 4px 14px rgba(0,0,0,.45); }
+  body:not(.look-clean):not(.nolines) .bar { border-top: var(--gap) solid var(--line); border-bottom: var(--gap) solid var(--line); }
+  .track { display: flex; width: max-content; will-change: transform; }
+
+  /* ticker: one line that rolls to the next tiles */
+  .tick { position: relative; overflow: hidden; margin: 0 auto; }
+  .roll { will-change: transform; }
+  .line { display: flex; justify-content: center; box-sizing: border-box; }
+
+  /* A tile lights up when its gift or event comes in */
+  .tile.hit { z-index: 5; animation: pop 1.2s ease-out; }
+  @keyframes pop {
+    0%   { transform: scale(1); filter: brightness(1); }
+    12%  { transform: scale(var(--pop)); filter: brightness(1.55) drop-shadow(0 0 10px #fff) drop-shadow(0 0 26px #ffd84a); }
+    28%  { transform: scale(calc(2 - var(--pop) * .98)); }
+    42%  { transform: scale(calc(1 + (var(--pop) - 1) * .45)); filter: brightness(1.4) drop-shadow(0 0 10px #fff) drop-shadow(0 0 26px #ffd84a); }
+    58%  { transform: scale(1); }
+    75%  { filter: brightness(1.3) drop-shadow(0 0 8px #fff) drop-shadow(0 0 20px #ffd84a); }
+    100% { transform: scale(1); filter: brightness(1); }
+  }
 </style>
 <script src="/lib/common.js"></script>
 </head>
@@ -42,36 +127,273 @@
   <div class="head" id="head"></div>
   <div class="grid" id="grid"></div>
 </div>
+<div id="alt"></div>
 <script>
   const $ = s => document.getElementById(s);
   const emoji = { gift: '🎁', anygift: '🪙', follow: '❤️', like: '👍', share: '🔁', subscribe: '⭐', join: '👋', chat: '💬', custom: '🎁' };
   function esc(t) { return String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
-  let lastJson = '';
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const setVar = (k, v) => document.documentElement.style.setProperty(k, v);
+
+  // Colours: "#abc" / "#aabbcc" only, so nothing odd reaches the style sheet.
+  function hex(c, d) { return /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(c || '') ? c : d; }
+  function rgb(h) { h = h.slice(1); if (h.length === 3) h = h.replace(/./g, '$&$&'); const n = parseInt(h, 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
+  function mix(h, to, a) { return 'rgb(' + rgb(h).map((x, i) => Math.round(x + (to[i] - x) * a)).join(',') + ')'; }
+  const lighter = (h, a) => mix(h, [255, 255, 255], a), darker = (h, a) => mix(h, [0, 0, 0], a);
+
+  let M = null, lastJson = '', anims = [], ticker = null, lastW = 0, lastH = 0;
+  const hitUntil = {};
+
+  function pic(t, v) {
+    const e = emoji[t.kind] || emoji.custom;
+    if (!t.image) return '<div class="emoji">' + e + '</div>';
+    const src = /^data:/i.test(t.image) ? t.image : t.image + (t.image.includes('?') ? '&' : '?') + 'v=' + v;
+    return '<img src="' + esc(src) + '" onerror="this.outerHTML=\'<div class=emoji>' + e + '</div>\'">';
+  }
+  function tileHtml(t, m, v, css) {
+    const c = hex(t.color, '');
+    const st = (c ? '--c1:' + lighter(c, .2) + ';--c2:' + darker(c, .4) + ';' : '') + (css || '');
+    const style = st ? ' style="' + st + '"' : '';
+    const hot = m.highlight && hitUntil[t.id] > Date.now() ? ' hit' : '';
+    const sub = m.showSubtitle && t.subtitle ? '<div class="sub">' + esc(t.subtitle) + '</div>' : '';
+    return '<div class="tile' + hot + '" data-id="' + esc(t.id) + '"' + style + '><div class="pic">' + pic(t, v) + '</div><div class="label">' + esc(t.label) + '</div>' + sub + '</div>';
+  }
+
+  // Shrink text until it fits its box in at most `lines` lines.
+  function fit(el, max, min, lines) {
+    let fs = max;
+    el.style.fontSize = fs + 'px';
+    for (let i = 0; i < 30 && fs > min; i++) {
+      const lh = parseFloat(getComputedStyle(el).lineHeight) || fs * 1.05;
+      if (el.scrollWidth <= el.clientWidth + 1 && Math.round(el.scrollHeight / lh) <= lines) break;
+      fs = Math.max(min, fs * 0.92);
+      el.style.fontSize = fs + 'px';
+    }
+    return fs;
+  }
+  // Strip titles: one line, shrunk to the width, and never more than about a third of the page's height.
+  // (Inside the all-in-one overlay the page is as tall as its content, so there it may take two lines.)
+  function fitTitle(title, m, W) {
+    if (!m.title) return;
+    const max = Math.min(W * .085, 120, GD.embedded ? 120 : Math.max(24, innerHeight * .3));
+    fit(title, max, 18, GD.embedded ? 2 : 1);
+  }
+  // As its own Browser Source a strip must fit the page's height: the room left under the title.
+  // Inside the all-in-one overlay the width decides (that page is as tall as its content), so no limit there.
+  function roomUnder(title) {
+    if (GD.embedded) return Infinity;
+    return innerHeight - (title && title.textContent ? title.offsetHeight : 0) - 6;
+  }
+  // Fit every tile's label (and coin line) once per tile id; repeated copies get the same size.
+  function fitTiles(root, s) {
+    const done = {};
+    for (const tile of root.querySelectorAll('.tile')) {
+      const id = tile.dataset.id, lab = tile.querySelector('.label'), sub = tile.querySelector('.sub');
+      if (done[id]) { lab.style.fontSize = done[id][0]; if (sub) sub.style.fontSize = done[id][1]; continue; }
+      // One big line if the label allows it, otherwise two lines.
+      const max = s * (M.look === 'clean' ? .19 : .165);
+      let fs = fit(lab, max, s * .115, 1);
+      if (Math.round(lab.scrollHeight / (parseFloat(getComputedStyle(lab).lineHeight) || fs)) > 1 || lab.scrollWidth > lab.clientWidth + 1) fs = fit(lab, max, s * .07, 2);
+      if (sub) fit(sub, Math.min(s * .12, fs * .75), s * .06, 1);
+      done[id] = [lab.style.fontSize, sub ? sub.style.fontSize : ''];
+    }
+  }
+
+  function stopMotion() {
+    anims.forEach(a => a.cancel()); anims = [];
+    if (ticker) { clearInterval(ticker.timer); ticker = null; }
+  }
+
   function render(s) {
     const m = s.menu;
     if (!m) return;
     const json = JSON.stringify(m);
     if (json === lastJson) return;
     lastJson = json;
-    document.documentElement.style.setProperty('--font', "'" + (m.font || 'Impact') + "'");
-    document.documentElement.style.setProperty('--header', m.headerColor || '#1D5FB4');
-    document.documentElement.style.setProperty('--cols', m.columns || 5);
-    document.documentElement.style.setProperty('--tile', (m.tileSize > 0 ? m.tileSize : 150) + 'px');
-    document.body.classList.toggle('fixed', m.tileSize > 0);
-    document.documentElement.style.setProperty('--line', m.lineColor || '#ffffff');
-    document.documentElement.style.setProperty('--gap', (m.lineWidth || 2) + 'px');
-    document.body.classList.toggle('nolines', m.showLines === false);
-    document.body.classList.toggle('transparent', !!m.transparent);
-    $('head').textContent = m.title || '';
-    if (!m.tiles.length) { $('grid').innerHTML = '<div class="empty">Add tiles on the Overlays page in GiftDeck</div>'; return; }
-    $('grid').innerHTML = m.tiles.map(t => {
-      const pic = t.image ? '<img src="' + esc(t.image) + '?v=' + Date.now() + '" onerror="this.outerHTML=\'<div class=emoji>' + (emoji[t.kind] || emoji.custom) + '</div>\'">'
-                          : '<div class="emoji">' + (emoji[t.kind] || emoji.custom) + '</div>';
-      const sub = m.showSubtitle && t.subtitle ? '<div class="sub">' + esc(t.subtitle) + '</div>' : '';
-      return '<div class="tile"><div class="pic">' + pic + '</div><div class="label">' + esc(t.label) + '</div>' + sub + '</div>';
-    }).join('');
+    M = m;
+    m.tiles = m.tiles || [];
+    const layout = ['sides', 'carousel', 'ticker'].includes(m.layout) ? m.layout : 'grid';
+    const look = ['cards', 'clean'].includes(m.look) ? m.look : 'classic';
+    m.layout = layout; m.look = look;
+    const b = document.body;
+    setVar('--font', "'" + (m.font || 'Impact') + "'");
+    setVar('--header', m.headerColor || '#1D5FB4');
+    setVar('--cols', m.columns || 5);
+    setVar('--tile', (m.tileSize > 0 ? m.tileSize : 150) + 'px');
+    setVar('--line', m.lineColor || '#ffffff');
+    setVar('--gap', (m.lineWidth || 2) + 'px');
+    setVar('--text', hex(m.textColor, '#ffffff'));
+    setVar('--c1', hex(m.cardColor, '#7C3AED'));
+    setVar('--c2', hex(m.cardColor2, '#DB2777'));
+    const bar = hex(m.headerColor, '#1D5FB4');
+    setVar('--bar1', lighter(bar, .25)); setVar('--bar2', darker(bar, .15));
+    b.classList.toggle('fixed', layout === 'grid' && m.tileSize > 0);
+    b.classList.toggle('nolines', m.showLines === false);
+    b.classList.toggle('transparent', !!m.transparent);
+    b.classList.toggle('alt', layout !== 'grid');
+    b.className = b.className.replace(/\b(look|layout)-\w+/g, '').trim();
+    b.classList.add('look-' + look, 'layout-' + layout);
+    // The original board (grid + classic) keeps its soft text shadow.
+    b.classList.toggle('outline', m.outline !== false && !(layout === 'grid' && look === 'classic'));
+    stopMotion();
+    lastW = innerWidth; lastH = innerHeight;
+    const v = Date.now();
+    if (layout === 'grid') {
+      $('alt').innerHTML = '';
+      setVar('--pop', 1.12);
+      $('head').textContent = m.title || '';
+      if (!m.tiles.length) { $('grid').innerHTML = '<div class="empty">Add tiles on the Overlays page in MayhemDeck</div>'; return; }
+      // Fill out the last row, so the gaps there match the page instead of showing the line colour.
+      const cols = Math.max(1, m.columns || 5), spare = (cols - m.tiles.length % cols) % cols;
+      $('grid').innerHTML = m.tiles.map(t => tileHtml(t, m, v)).join('') + '<div class="filler"></div>'.repeat(spare);
+      return;
+    }
+    $('grid').innerHTML = ''; $('head').textContent = '';
+    if (!m.tiles.length) { $('alt').innerHTML = (m.title ? '<div class="title-big" style="font-size:60px;padding:10px">' + esc(m.title) + '</div>' : '') + '<div class="msg">Add tiles on the Overlays page in MayhemDeck</div>'; return; }
+    if (layout === 'sides') renderSides(m, v);
+    else if (layout === 'carousel') renderCarousel(m, v);
+    else renderTicker(m, v);
   }
-  GD.listen(m => { if (m.type === 'state') render(m); });
+
+  // ---- Side columns: tiles hug the left and right edges, the middle stays clear for the game ----
+  function renderSides(m, v) {
+    const W = innerWidth, H = innerHeight, u = Math.min(W, H) / 1080, tiles = m.tiles, n = tiles.length;
+    setVar('--pop', 1.2);
+    // "auto" tiles fill the left side up to half of all tiles, then the right; set sides win.
+    const expL = tiles.filter(t => t.side === 'left').length;
+    const autos = tiles.filter(t => t.side !== 'left' && t.side !== 'right').length;
+    let toLeft = clamp(Math.ceil(n / 2) - expL, 0, autos);
+    const L = [], R = [];
+    for (const t of tiles) {
+      if (t.side === 'left') L.push(t);
+      else if (t.side === 'right') R.push(t);
+      else if (toLeft > 0) { L.push(t); toLeft--; }
+      else R.push(t);
+    }
+    const pad = Math.round(22 * u), g = Math.round((m.look === 'clean' ? 8 : 16) * u), availH = H - 2 * pad;
+    const count = Math.max(L.length, R.length, 1);
+    // Up to 3 columns per side when there are many tiles: pick whatever gives the biggest tiles.
+    const band = [0, 270, 400, 480].map(x => x * u);
+    let best = { c: 1, s: 0 };
+    for (let c = 1; c <= 3 && c <= count; c++) {
+      const rows = Math.ceil(count / c);
+      const s = Math.floor(Math.min((band[c] - (c - 1) * g) / c, (availH - (rows - 1) * g) / rows));
+      if (s > best.s * 1.04) best = { c, s };
+    }
+    const { c, s } = best, bandW = c * s + (c - 1) * g;
+    const col = (list, side) => '<div class="col" style="' + side + ':' + pad + 'px;top:' + pad + 'px;bottom:' + pad + 'px;gap:' + g + 'px;grid-template-columns:repeat(' + c + ',' + s + 'px);grid-auto-rows:' + s + 'px">' + list.map(t => tileHtml(t, m, v)).join('') + '</div>';
+    const tl = pad + bandW + Math.round(18 * u);
+    $('alt').innerHTML = '<div class="sides" style="--s:' + s + 'px">' + col(L, 'left') + col(R, 'right') +
+      '<div class="title-big" style="left:' + tl + 'px;right:' + tl + 'px;top:' + pad + 'px">' + esc(m.title || '') + '</div></div>';
+    const title = $('alt').querySelector('.title-big');
+    if (m.title) fit(title, 118 * u, 34 * u, 3);
+    fitTiles($('alt'), s);
+  }
+
+  // ---- Carousel: a banner strip whose tiles scroll sideways round and round ----
+  function renderCarousel(m, v, limit) {
+    const W = innerWidth, n = m.tiles.length;
+    let w, g;
+    if (m.tileSize > 0) { w = m.tileSize; g = Math.max(4, Math.round(w * .07)); }
+    else { const unit = W / clamp(m.columns || 5, 1, 12); g = Math.max(4, Math.round(unit * .07)); w = Math.floor(unit - g); }
+    if (limit && w > limit) { w = limit; g = Math.max(4, Math.round(w * .07)); }
+    const p = Math.round(w * .09), unit = w + g;
+    setVar('--pop', 1.1);
+    // Repeat the tiles until one set is wider than the page, then show two sets back to back:
+    // sliding exactly one set's width and starting again is seamless.
+    const k = Math.max(1, Math.ceil((W + unit) / (n * unit)));
+    const set = [];
+    for (let i = 0; i < k; i++) set.push(...m.tiles);
+    const setW = set.length * unit;
+    const tiles = set.concat(set).map(t => tileHtml(t, m, v, 'width:' + w + 'px;height:' + w + 'px;margin:0 ' + (g / 2) + 'px')).join('');
+    $('alt').innerHTML = '<div class="strip" style="--s:' + w + 'px"><div class="title-big">' + esc(m.title || '') + '</div>' +
+      '<div class="bar" style="padding:' + p + 'px 0"><div class="track">' + tiles + '</div></div></div>';
+    const title = $('alt').querySelector('.title-big');
+    fitTitle(title, m, W);
+    fitTiles($('alt'), w);
+    const fits = Math.floor((roomUnder(title) - 2 * (m.lineWidth || 2)) / 1.18);
+    if (!limit && fits < w) return renderCarousel(m, v, Math.max(40, fits));
+    const pps = 30 + (clamp(m.speed || 5, 1, 10) - 1) * 30;   // 30..300 px a second
+    const frames = [{ transform: 'translateX(0)' }, { transform: 'translateX(' + -setW + 'px)' }];
+    if (m.direction === 'right') frames.reverse();
+    anims.push($('alt').querySelector('.track').animate(frames, { duration: setW / pps * 1000, iterations: Infinity }));
+  }
+
+  // ---- Ticker: one line of tiles that rolls up to the next ones every few seconds ----
+  function renderTicker(m, v, limit) {
+    const W = innerWidth, per = clamp(m.perView || 4, 1, 12), n = m.tiles.length;
+    let w, h, g;
+    if (m.tileSize > 0) { w = h = m.tileSize; g = Math.max(4, Math.round(w * .07)); }
+    else { const unit = W / per; g = Math.max(4, Math.round(unit * .06)); w = Math.floor(unit - g); h = Math.min(w, Math.round(Math.min(W, 1080 * 1.5) * .3)); }
+    if (limit && h > limit) { h = limit; if (m.tileSize > 0) { w = limit; g = Math.max(4, Math.round(w * .07)); } }
+    const s = Math.min(w, h), p = Math.round(s * .08), lineH = h + 2 * p;
+    setVar('--pop', 1.1);
+    const pages = [];
+    for (let i = 0; i < n; i += per) pages.push(m.tiles.slice(i, i + per));
+    const width = m.tileSize > 0 ? per * (w + g) + 'px' : '100%';
+    const lineHtml = pg => '<div class="line" style="height:' + lineH + 'px;padding:' + p + 'px 0">' +
+      pg.map(t => tileHtml(t, m, v, 'width:' + w + 'px;height:' + h + 'px;margin:0 ' + (g / 2) + 'px')).join('') + '</div>';
+    $('alt').innerHTML = '<div class="strip" style="--s:' + s + 'px"><div class="title-big">' + esc(m.title || '') + '</div>' +
+      '<div class="tick" style="height:' + lineH + 'px;width:' + width + '"><div class="roll">' + pages.map(lineHtml).join('') + '</div></div></div>';
+    const title = $('alt').querySelector('.title-big');
+    fitTitle(title, m, W);
+    const fits = Math.floor(roomUnder(title) / 1.16);
+    if (!limit && fits < h) return renderTicker(m, v, Math.max(40, fits));
+    const roll = $('alt').querySelector('.roll');
+    fitTiles(roll, s);
+    const lines = [...roll.children];
+    lines.slice(1).forEach(l => l.remove());
+    const step = (6 - (clamp(m.speed || 5, 1, 10) - 1) * 5 / 9) * 1000;   // 6 s .. 1 s
+    const dur = Math.min(650, step * .45), down = m.direction === 'down';
+    const t = ticker = { lines, idx: 0, busy: false, timer: 0 };
+    t.go = to => {
+      if (t.busy || to === t.idx || lines.length < 2) return;
+      t.busy = true;
+      const cur = lines[t.idx], next = lines[to];
+      if (down) roll.insertBefore(next, cur); else roll.appendChild(next);
+      const a = roll.animate(down ? [{ transform: 'translateY(' + -lineH + 'px)' }, { transform: 'translateY(0)' }]
+                                  : [{ transform: 'translateY(0)' }, { transform: 'translateY(' + -lineH + 'px)' }],
+                             { duration: dur, easing: 'cubic-bezier(.5,0,.25,1.15)', fill: 'forwards' });
+      anims.push(a);
+      // Swap in the new line and drop the slide in the same frame, so nothing jumps.
+      a.onfinish = () => { cur.remove(); a.cancel(); t.idx = to; t.busy = false; anims = anims.filter(x => x !== a); };
+    };
+    t.restart = () => { clearInterval(t.timer); if (lines.length > 1) t.timer = setInterval(() => t.go((t.idx + 1) % lines.length), step); };
+    // A tile that just fired and isn't showing: roll straight to it.
+    t.show = id => {
+      const i = lines.findIndex(l => l.querySelector('.tile[data-id="' + CSS.escape(id) + '"]'));
+      if (i < 0 || i === t.idx) return;
+      t.go(i); t.restart();
+    };
+    t.restart();
+  }
+
+  // A tile's gift or event just came in: light it up.
+  function hit(id) {
+    if (!M || !M.highlight || id == null) return;
+    id = String(id);
+    hitUntil[id] = Date.now() + 1200;
+    if (ticker) ticker.show(id);
+    const els = new Set(document.querySelectorAll('.tile[data-id="' + CSS.escape(id) + '"]'));
+    if (ticker) ticker.lines.forEach(l => l.querySelectorAll('.tile[data-id="' + CSS.escape(id) + '"]').forEach(e => els.add(e)));
+    for (const el of els) {
+      el.classList.remove('hit'); void el.offsetWidth; el.classList.add('hit');
+      clearTimeout(el._hit); el._hit = setTimeout(() => el.classList.remove('hit'), 1250);
+    }
+  }
+
+  // The side columns fit the page; the strips fit its width.
+  let resizeTimer = 0;
+  addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      if (!M || M.layout === 'grid') return;
+      if (innerWidth === lastW && (M.layout !== 'sides' || innerHeight === lastH)) return;
+      lastJson = ''; render({ menu: M });
+    }, 120);
+  });
+
+  GD.listen(m => { if (m.type === 'state') render(m); else if (m.type === 'tile') hit(m.id); });
 </script>
 </body>
 </html>

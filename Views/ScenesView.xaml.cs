@@ -278,7 +278,7 @@ public partial class ScenesView : UserControl
         StarterPanel.Visibility = missing.Count > 0 || _makingStarters ? Visibility.Visible : Visibility.Collapsed;
         if (_makingStarters) return;
         StarterText.Text = missing.Count == StarterScenes.Names.Length
-            ? "Make " + string.Join(", ", StarterScenes.Names) + " in one click, with your camera, screen and GiftDeck overlay already in place. Your own scenes aren't changed."
+            ? "Make " + string.Join(", ", StarterScenes.Names) + " in one click, with your camera, screen and MayhemDeck overlay already in place. Your own scenes aren't changed."
             : "Add the ones you don't have yet: " + string.Join(", ", missing) + ". Scenes you already have aren't changed.";
     }
 

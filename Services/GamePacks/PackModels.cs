@@ -275,7 +275,7 @@ public class ManualDownloadNeeded : Exception
     public string Instructions { get; }
 
     public ManualDownloadNeeded(PackComponent component, string pageUrl, string instructions, string why)
-        : base($"GiftDeck couldn't download {component.Name} by itself{(string.IsNullOrEmpty(why) ? "" : " (" + why.TrimEnd('.') + ")")}. Download it from its page, then pick the file.")
+        : base($"MayhemDeck couldn't download {component.Name} by itself{(string.IsNullOrEmpty(why) ? "" : " (" + why.TrimEnd('.') + ")")}. Download it from its page, then pick the file.")
     {
         Component = component;
         PageUrl = pageUrl;

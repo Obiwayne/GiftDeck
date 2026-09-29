@@ -144,7 +144,7 @@ public partial class GameConsolePanel : UserControl
 
     void Save_Click(object sender, RoutedEventArgs e)
     {
-        if (Apply()) Say("Saved ✓  Press Test connection to check GiftDeck can reach the server.", true);
+        if (Apply()) Say("Saved ✓  Press Test connection to check MayhemDeck can reach the server.", true);
     }
 
     async void Test_Click(object sender, RoutedEventArgs e)
@@ -157,7 +157,7 @@ public partial class GameConsolePanel : UserControl
             var r = await Target.TestAsync();
             _lastTestOk = r?.Ok == true;
             var msg = string.IsNullOrWhiteSpace(r?.Message) ? "" : r.Message.Trim();
-            Say(_lastTestOk == true ? "Connected ✓  " + msg : (msg.Length > 0 ? msg : "GiftDeck couldn't reach the server."), _lastTestOk);
+            Say(_lastTestOk == true ? "Connected ✓  " + msg : (msg.Length > 0 ? msg : "MayhemDeck couldn't reach the server."), _lastTestOk);
         }
         catch (Exception ex)
         {

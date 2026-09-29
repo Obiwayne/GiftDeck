@@ -98,6 +98,7 @@ public class OverlayServer
             else if (path.StartsWith("/overlay/giftlist")) page = "giftlist.html";
             else if (path.StartsWith("/overlay/strip")) page = "strip.html";
             else if (path.StartsWith("/overlay/all")) page = "all.html";
+            else if (path.StartsWith("/overlay/preview")) page = "preview.html";
             else if (path == "/") page = "index.html";
 
             if (page == null)
@@ -131,7 +132,11 @@ public class OverlayServer
     void ServeTileImage(HttpListenerContext ctx, string idText)
     {
         var tile = Guid.TryParse(idText, out var id) ? _svc.FindTile(id) : null;
-        ServeFile(ctx, tile == null ? null : _svc.ResolveTileImage(tile));
+        var src = tile == null ? null : _svc.ResolveTileImage(tile);
+        // Web pictures come from GiftDeck's cache; either way a solid black background is made see-through.
+        if (!string.IsNullOrEmpty(src) && !File.Exists(src) && src.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+            src = GiftImages.CachedFileAsync(src).GetAwaiter().GetResult() ?? src;
+        ServeFile(ctx, ImageCleanup.WithoutBlackBackground(src));
     }
 
     // A gift event's gift picture (the gift list template).

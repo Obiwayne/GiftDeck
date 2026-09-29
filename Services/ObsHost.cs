@@ -98,7 +98,7 @@ public class ObsHost
             }
         }
         finally { Starting = false; Notify(); }
-        throw new TimeoutException("OBS started, but GiftDeck couldn't connect to it. Check OBS's WebSocket server is on (Tools, WebSocket Server Settings).");
+        throw new TimeoutException("OBS started, but MayhemDeck couldn't connect to it. Check OBS's WebSocket server is on (Tools, WebSocket Server Settings).");
     }
 
     public Task StartPortraitAsync() => StartHiddenAsync(PortraitCollection, PortraitProfile);
@@ -110,7 +110,7 @@ public class ObsHost
     {
         if (!IsRunning) return null;
         if (!Hub.Obs.Connected) try { await Hub.Obs.ConnectAsync(true); } catch { }
-        if (!Hub.Obs.Connected) return "not answering GiftDeck, so it can't tell whether OBS is live";
+        if (!Hub.Obs.Connected) return "not answering MayhemDeck, so it can't tell whether OBS is live";
 
         async Task<bool> Active(string request)
         {
@@ -216,7 +216,7 @@ public class ObsHost
         _restarts.RemoveAll(t => (DateTime.Now - t).TotalMinutes > 3);
         if (_restarts.Count >= 3)
         {
-            LastError = "OBS keeps closing, so GiftDeck stopped restarting it. Restart GiftDeck, or check OBS.";
+            LastError = "OBS keeps closing, so MayhemDeck stopped restarting it. Restart MayhemDeck, or check OBS.";
             Log.Write(LastError);
             Notify();
             return;
@@ -430,7 +430,7 @@ public class ObsHost
         {
             try
             {
-                if (IsRunning) { Log.Write("OBS is already open; GiftDeck won't start its own"); return; }
+                if (IsRunning) { Log.Write("OBS is already open; MayhemDeck won't start its own"); return; }
                 if (!PortraitExists()) { Log.Write("OBS engine is on, but there's no GiftDeck Portrait setup yet (Stream Setup, Set up portrait OBS)"); return; }
                 await StartPortraitAsync();
             }

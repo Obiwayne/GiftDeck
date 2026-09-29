@@ -55,7 +55,8 @@
                     <TextBlock x:Name="DataFolder" Style="{StaticResource Muted}" FontFamily="Consolas" Margin="0,0,0,10"/>
                     <StackPanel Orientation="Horizontal">
                         <Button Content="Open data folder" Click="OpenFolder_Click" Margin="0,0,8,0"/>
-                        <Button Content="Open log" Style="{StaticResource Ghost}" Click="OpenLog_Click"/>
+                        <Button Content="Open log" Style="{StaticResource Ghost}" Click="OpenLog_Click" Margin="0,0,8,0"/>
+                        <Button Content="Show the welcome pages again" Style="{StaticResource Ghost}" Click="ShowWelcome_Click"/>
                     </StackPanel>
                 </StackPanel>
             </Border>

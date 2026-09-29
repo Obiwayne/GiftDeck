@@ -166,7 +166,7 @@
                     <TextBlock Grid.Column="1" x:Name="GameStatus" Style="{StaticResource Muted}" TextWrapping="Wrap" VerticalAlignment="Bottom" Margin="12,0,0,6"/>
                 </Grid>
                 <TextBlock x:Name="NoGames" Style="{StaticResource Muted}" TextWrapping="Wrap"
-                           Text="No games yet. Install a game on the Games page, or start a game with its GiftDeck mod, and its commands show up here."/>
+                           Text="No games yet. Install a game on the Games page, or start a game with its MayhemDeck mod, and its commands show up here."/>
 
                 <StackPanel x:Name="CommandPicker">
                     <Grid Margin="0,0,0,6">

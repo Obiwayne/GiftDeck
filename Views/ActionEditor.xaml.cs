@@ -294,7 +294,7 @@ public partial class ActionEditor : UserControl
     void PlaySound_Click(object sender, RoutedEventArgs e)
     {
         try { Hub.Sounds.Play(SoundPath.Text.Trim(), Int(SoundVol.Text) > 0 ? Int(SoundVol.Text) : 100); }
-        catch (Exception ex) { MessageBox.Show(ex.Message, "GiftDeck"); }
+        catch (Exception ex) { MessageBox.Show(ex.Message, "MayhemDeck"); }
     }
 
     void BrowseProgram_Click(object sender, RoutedEventArgs e)
@@ -323,7 +323,7 @@ public partial class ActionEditor : UserControl
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Could not get scenes from OBS: " + ex.Message, "GiftDeck");
+            MessageBox.Show("Could not get scenes from OBS: " + ex.Message, "MayhemDeck");
         }
     }
 

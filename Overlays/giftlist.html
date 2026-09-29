@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>GiftDeck gift list</title>
+<title>MayhemDeck gift list</title>
 <style>
   :root { --accent: #7C5CFF; --font: 'Segoe UI'; }
   body { margin: 0; background: transparent; font-family: var(--font), 'Segoe UI', sans-serif; color: #fff; overflow: hidden; }
@@ -39,7 +39,7 @@
     if (json === last) return;
     last = json;
     $('head').textContent = g.title || '';
-    if (!g.items.length) { $('rows').innerHTML = '<div class="empty">Add gift events in GiftDeck and they show up here</div>'; return; }
+    if (!g.items.length) { $('rows').innerHTML = '<div class="empty">Add gift events in MayhemDeck and they show up here</div>'; return; }
     $('rows').innerHTML = g.items.map(i => {
       const fallback = '<div class=emoji>' + (i.anyGift ? coin : gift) + '</div>';
       const pic = i.image ? '<img src="' + esc(i.image) + '" onerror="this.outerHTML=\'' + fallback + '\'">' : fallback;

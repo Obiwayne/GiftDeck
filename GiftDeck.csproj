@@ -6,8 +6,11 @@
     <UseWPF>true</UseWPF>
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <AssemblyName>GiftDeck</AssemblyName>
+    <!-- MayhemDeck was called GiftDeck: the program is MayhemDeck.exe, the code keeps its GiftDeck namespace. -->
+    <AssemblyName>MayhemDeck</AssemblyName>
     <RootNamespace>GiftDeck</RootNamespace>
+    <Product>MayhemDeck</Product>
+    <AssemblyTitle>MayhemDeck</AssemblyTitle>
     <ApplicationIcon>Assets\giftdeck.ico</ApplicationIcon>
     <Version>0.1.0</Version>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>

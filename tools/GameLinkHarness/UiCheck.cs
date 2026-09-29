@@ -24,7 +24,7 @@ static class UiCheck
         var t = new Thread(() =>
         {
             var app = new Application { ShutdownMode = ShutdownMode.OnExplicitShutdown };
-            app.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("pack://application:,,,/GiftDeck;component/Theme.xaml") });
+            app.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("pack://application:,,,/MayhemDeck;component/Theme.xaml") });
             app.Startup += async (s, e) =>
             {
                 try { await Steps(svc, shotsDir, check); }

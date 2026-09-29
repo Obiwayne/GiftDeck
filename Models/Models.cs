@@ -250,6 +250,8 @@ public class AppSettings
     // Ticked on the setup checklist: logged in to TikFinity and its own Events are off (so gifts don't fire twice).
     public bool TikFinityConfirmed { get; set; }
     public bool StreakGiftsOnce { get; set; } = true;
+    // The welcome pages have been seen (or skipped). Missing from older settings files, so upgraders see them once too.
+    public bool WelcomeSeen { get; set; }
 
     public bool FocusWindowBeforeKeys { get; set; } = false;
     public string FocusWindowTitle { get; set; } = "Grand Theft Auto V";

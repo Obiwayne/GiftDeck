@@ -3,10 +3,58 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:GiftDeck.Views"
              xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <!-- Small grey capitals over a group of settings -->
+        <Style x:Key="GroupHead" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource MutedBrush}"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+        </Style>
+        <!-- Quick style chips: a little drawing and a name; the style in use is highlighted -->
+        <Style x:Key="PresetChip" TargetType="RadioButton">
+            <Setter Property="Foreground" Value="{StaticResource MutedBrush}"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Margin" Value="0,0,8,8"/>
+            <Setter Property="GroupName" Value="BoardPreset"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="Bd" CornerRadius="10" Padding="12,9,14,9" Background="{StaticResource Panel2Brush}"
+                                BorderBrush="{StaticResource LineBrush}" BorderThickness="1">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource Panel3Brush}"/>
+                                <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource AccentDimBrush}"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+                                <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#A08CFF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="PresetText" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+    </UserControl.Resources>
     <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel Margin="32,28,32,28" MaxWidth="1000" HorizontalAlignment="Left">
+        <StackPanel Margin="32,28,32,28" MaxWidth="1180" HorizontalAlignment="Left">
             <TextBlock Text="Overlays" Style="{StaticResource H1}"/>
-            <TextBlock Text="Goal bars, live counters, countdown timers and gift alerts for OBS. Each one is a web page GiftDeck serves on this PC; add it to OBS as a Browser Source, or press Add to OBS and GiftDeck does it for you." Style="{StaticResource Muted}" Margin="0,4,0,18"/>
+            <TextBlock Text="Goal bars, live counters, countdown timers and gift alerts for OBS. Each one is a web page MayhemDeck serves on this PC; add it to OBS as a Browser Source, or press Add to OBS and MayhemDeck does it for you." Style="{StaticResource Muted}" Margin="0,4,0,18"/>
 
             <Border Style="{StaticResource Card}" Margin="0,0,0,14">
                 <DockPanel>
@@ -24,115 +72,348 @@
             <!-- Gift menu board -->
             <Border Style="{StaticResource Card}" Margin="0,0,0,14">
                 <StackPanel>
-                    <DockPanel Margin="0,0,0,6">
-                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                    <DockPanel Margin="0,0,0,14">
+                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Top">
                             <Button Content="Copy URL" Style="{StaticResource Small}" Click="CopyMenu_Click" Margin="0,0,6,0"/>
                             <Button Content="Add to OBS" Style="{StaticResource Small}" Click="ObsMenu_Click"/>
                         </StackPanel>
                         <StackPanel>
                             <TextBlock Text="Gift menu board" Style="{StaticResource H2}"/>
-                            <TextBlock Text="The 'what the gifts do' board: a header bar and a grid of tiles with the gift picture and a label. Built from your events, and it updates in OBS as you edit. Browser Source size 1250 x 700 works well; any size will do." Style="{StaticResource Muted}" Margin="0,3,0,0"/>
+                            <TextBlock Text="Shows viewers what every gift does. Built from your events; changes show on stream straight away." Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,3,0,0"/>
                         </StackPanel>
                     </DockPanel>
 
-                    <Grid Margin="0,10,0,0">
+                    <!-- Quick styles: a little drawing of each one; the one in use is highlighted -->
+                    <WrapPanel x:Name="PresetPanel" Margin="0,0,0,14">
+                        <RadioButton Style="{StaticResource PresetChip}" Tag="grid" Click="MenuPreset_Click" ToolTip="The classic board: a header bar and a grid of dark tiles">
+                            <StackPanel Orientation="Horizontal">
+                                <Canvas Width="30" Height="20" Margin="0,0,8,0">
+                                    <Rectangle Width="30" Height="4" Fill="#1D5FB4"/>
+                                    <Rectangle Canvas.Top="6" Width="9" Height="6" Fill="#3A3F52"/><Rectangle Canvas.Left="10.5" Canvas.Top="6" Width="9" Height="6" Fill="#3A3F52"/><Rectangle Canvas.Left="21" Canvas.Top="6" Width="9" Height="6" Fill="#3A3F52"/>
+                                    <Rectangle Canvas.Top="14" Width="9" Height="6" Fill="#3A3F52"/><Rectangle Canvas.Left="10.5" Canvas.Top="14" Width="9" Height="6" Fill="#3A3F52"/><Rectangle Canvas.Left="21" Canvas.Top="14" Width="9" Height="6" Fill="#3A3F52"/>
+                                </Canvas>
+                                <TextBlock Text="Grid" Style="{StaticResource PresetText}"/>
+                            </StackPanel>
+                        </RadioButton>
+                        <RadioButton Style="{StaticResource PresetChip}" Tag="neongrid" Click="MenuPreset_Click" ToolTip="A grid of bright pink cards">
+                            <StackPanel Orientation="Horizontal">
+                                <Canvas Width="30" Height="20" Margin="0,0,8,0">
+                                    <Rectangle Width="9" Height="9" RadiusX="2" RadiusY="2" Fill="#EC4899"/><Rectangle Canvas.Left="10.5" Width="9" Height="9" RadiusX="2" RadiusY="2" Fill="#EC4899"/><Rectangle Canvas.Left="21" Width="9" Height="9" RadiusX="2" RadiusY="2" Fill="#EC4899"/>
+                                    <Rectangle Canvas.Top="11" Width="9" Height="9" RadiusX="2" RadiusY="2" Fill="#EC4899"/><Rectangle Canvas.Left="10.5" Canvas.Top="11" Width="9" Height="9" RadiusX="2" RadiusY="2" Fill="#EC4899"/><Rectangle Canvas.Left="21" Canvas.Top="11" Width="9" Height="9" RadiusX="2" RadiusY="2" Fill="#EC4899"/>
+                                </Canvas>
+                                <TextBlock Text="Neon grid" Style="{StaticResource PresetText}"/>
+                            </StackPanel>
+                        </RadioButton>
+                        <RadioButton Style="{StaticResource PresetChip}" Tag="sidecards" Click="MenuPreset_Click" ToolTip="Big coloured cards down both sides of the screen, the middle clear for the game">
+                            <StackPanel Orientation="Horizontal">
+                                <Canvas Width="30" Height="20" Margin="0,0,8,0">
+                                    <Rectangle Width="30" Height="20" RadiusX="2" RadiusY="2" Stroke="#3A3F52" StrokeThickness="1"/>
+                                    <Rectangle Canvas.Left="2" Canvas.Top="2" Width="7" Height="7" RadiusX="1.5" RadiusY="1.5" Fill="#22C55E"/><Rectangle Canvas.Left="2" Canvas.Top="11" Width="7" Height="7" RadiusX="1.5" RadiusY="1.5" Fill="#22C55E"/>
+                                    <Rectangle Canvas.Left="21" Canvas.Top="2" Width="7" Height="7" RadiusX="1.5" RadiusY="1.5" Fill="#EF4444"/><Rectangle Canvas.Left="21" Canvas.Top="11" Width="7" Height="7" RadiusX="1.5" RadiusY="1.5" Fill="#EF4444"/>
+                                </Canvas>
+                                <TextBlock Text="Side cards" Style="{StaticResource PresetText}"/>
+                            </StackPanel>
+                        </RadioButton>
+                        <RadioButton Style="{StaticResource PresetChip}" Tag="sideicons" Click="MenuPreset_Click" ToolTip="Just the gift picture and a label down both sides, nothing behind them">
+                            <StackPanel Orientation="Horizontal">
+                                <Canvas Width="30" Height="20" Margin="0,0,8,0">
+                                    <Rectangle Width="30" Height="20" RadiusX="2" RadiusY="2" Stroke="#3A3F52" StrokeThickness="1"/>
+                                    <Ellipse Canvas.Left="3" Canvas.Top="3" Width="5" Height="5" Fill="#FACC15"/><Ellipse Canvas.Left="3" Canvas.Top="11" Width="5" Height="5" Fill="#F472B6"/>
+                                    <Ellipse Canvas.Left="22" Canvas.Top="3" Width="5" Height="5" Fill="#60A5FA"/><Ellipse Canvas.Left="22" Canvas.Top="11" Width="5" Height="5" Fill="#A78BFA"/>
+                                </Canvas>
+                                <TextBlock Text="Side icons" Style="{StaticResource PresetText}"/>
+                            </StackPanel>
+                        </RadioButton>
+                        <RadioButton Style="{StaticResource PresetChip}" Tag="carousel" Click="MenuPreset_Click" ToolTip="A strip of gifts scrolling right to left">
+                            <StackPanel Orientation="Horizontal">
+                                <Canvas Width="30" Height="20" Margin="0,0,8,0">
+                                    <Rectangle Canvas.Top="4" Width="30" Height="12" RadiusX="2" RadiusY="2" Fill="#F59E0B"/>
+                                    <Rectangle Canvas.Left="2" Canvas.Top="6" Width="7" Height="8" RadiusX="1.5" RadiusY="1.5" Fill="#7C3AED"/><Rectangle Canvas.Left="11.5" Canvas.Top="6" Width="7" Height="8" RadiusX="1.5" RadiusY="1.5" Fill="#DB2777"/><Rectangle Canvas.Left="21" Canvas.Top="6" Width="7" Height="8" RadiusX="1.5" RadiusY="1.5" Fill="#7C3AED"/>
+                                    <Path Canvas.Top="17" Data="M 18,1.5 L 12,1.5 M 14,0 L 12,1.5 L 14,3" Stroke="#9AA0B4" StrokeThickness="1"/>
+                                </Canvas>
+                                <TextBlock Text="Carousel" Style="{StaticResource PresetText}"/>
+                            </StackPanel>
+                        </RadioButton>
+                        <RadioButton Style="{StaticResource PresetChip}" Tag="ticker" Click="MenuPreset_Click" ToolTip="One line of gifts that rolls up to the next ones every few seconds">
+                            <StackPanel Orientation="Horizontal">
+                                <Canvas Width="30" Height="20" Margin="0,0,8,0">
+                                    <Rectangle Canvas.Top="7" Width="8" Height="8" RadiusX="1.5" RadiusY="1.5" Fill="#7C3AED"/><Rectangle Canvas.Left="10" Canvas.Top="7" Width="8" Height="8" RadiusX="1.5" RadiusY="1.5" Fill="#DB2777"/><Rectangle Canvas.Left="20" Canvas.Top="7" Width="8" Height="8" RadiusX="1.5" RadiusY="1.5" Fill="#7C3AED"/>
+                                    <Path Data="M 14,5 L 14,0 M 12,2 L 14,0 L 16,2" Stroke="#9AA0B4" StrokeThickness="1"/>
+                                    <Rectangle Canvas.Top="17" Width="28" Height="3" RadiusX="1" RadiusY="1" Fill="#3A3F52"/>
+                                </Canvas>
+                                <TextBlock Text="Ticker" Style="{StaticResource PresetText}"/>
+                            </StackPanel>
+                        </RadioButton>
+                    </WrapPanel>
+
+                    <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <StackPanel Margin="0,0,16,0">
-                            <TextBlock Text="Header text" Style="{StaticResource Label}"/>
-                            <TextBox x:Name="MenuTitle" LostFocus="Menu_Changed" Margin="0,0,0,10"/>
-                            <Grid Margin="0,0,0,10">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="90"/>
-                                    <ColumnDefinition Width="110"/>
-                                    <ColumnDefinition Width="110"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <StackPanel Margin="0,0,10,0">
-                                    <TextBlock Text="Columns" Style="{StaticResource Label}"/>
-                                    <TextBox x:Name="MenuColumns" LostFocus="Menu_Changed"/>
-                                </StackPanel>
-                                <StackPanel Grid.Column="1" Margin="0,0,10,0">
-                                    <TextBlock Text="Square size px" Style="{StaticResource Label}"/>
-                                    <TextBox x:Name="MenuTileSize" LostFocus="Menu_Changed" ToolTip="Size of each square tile. 0 stretches the tiles to fill the Browser Source instead."/>
-                                </StackPanel>
-                                <StackPanel Grid.Column="2" Margin="0,0,10,0">
-                                    <TextBlock Text="Header colour" Style="{StaticResource Label}"/>
-                                    <TextBox x:Name="MenuHeaderColor" FontFamily="Consolas" LostFocus="Menu_Changed"/>
-                                </StackPanel>
-                                <StackPanel Grid.Column="3">
-                                    <TextBlock Text="Font" Style="{StaticResource Label}"/>
-                                    <TextBox x:Name="MenuFont" LostFocus="Menu_Changed"/>
-                                </StackPanel>
-                            </Grid>
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                <CheckBox x:Name="MenuShowSubtitle" Content="Show the coin value under each label" Click="Menu_Changed" Margin="0,0,20,0"/>
-                                <CheckBox x:Name="MenuTransparent" Content="See-through background" Click="Menu_Changed"/>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <CheckBox x:Name="MenuShowLines" Content="Grid lines between tiles" Click="Menu_Changed" Margin="0,0,20,0" VerticalAlignment="Center"/>
-                                <TextBlock Text="Line colour" Style="{StaticResource Label}" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                                <TextBox x:Name="MenuLineColor" Width="100" FontFamily="Consolas" LostFocus="Menu_Changed" Margin="0,0,16,0"/>
-                                <TextBlock Text="Thickness px" Style="{StaticResource Label}" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                                <TextBox x:Name="MenuLineWidth" Width="60" LostFocus="Menu_Changed"/>
-                            </StackPanel>
-                            <TextBlock x:Name="MenuSizeHint" Style="{StaticResource Muted}" Margin="0,8,0,0"/>
-                        </StackPanel>
-                        <Border Grid.Column="1" Width="400" Background="#000" BorderBrush="{StaticResource LineBrush}" BorderThickness="1" CornerRadius="8" VerticalAlignment="Top">
-                            <StackPanel>
-                                <wv2:WebView2 x:Name="Preview" Height="230" DefaultBackgroundColor="Black"/>
-                                <DockPanel Margin="8,4,8,6">
-                                    <Button MinHeight="0" DockPanel.Dock="Right" Content="Refresh" Style="{StaticResource Ghost}" Click="RefreshPreview_Click" Padding="8,3"/>
-                                    <TextBlock Text="Live preview" Style="{StaticResource Muted}" VerticalAlignment="Center"/>
-                                </DockPanel>
-                            </StackPanel>
-                        </Border>
-                    </Grid>
-                    <Border Height="12"/>
 
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                        <Button Content="+  Add tiles from events" Style="{StaticResource Primary}" Click="MenuFromEvents_Click" Margin="0,0,6,0"/>
-                        <Button Content="+  Add a custom tile" Click="MenuCustom_Click"/>
-                    </StackPanel>
+                        <!-- Settings, in groups -->
+                        <StackPanel Margin="0,0,18,0">
+                            <Border Style="{StaticResource SubCard}" Padding="14,12" Margin="0,0,0,10">
+                                <StackPanel>
+                                    <TextBlock Text="LAYOUT AND LOOK" Style="{StaticResource GroupHead}"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Margin="0,0,10,0">
+                                            <TextBlock Text="Layout" Style="{StaticResource Label}"/>
+                                            <ComboBox x:Name="MenuLayout" SelectionChanged="MenuCombo_Changed">
+                                                <ComboBoxItem Tag="grid" Content="Grid"/>
+                                                <ComboBoxItem Tag="sides" Content="Side columns (full screen)"/>
+                                                <ComboBoxItem Tag="carousel" Content="Carousel (scrolling strip)"/>
+                                                <ComboBoxItem Tag="ticker" Content="Ticker (rolling line)"/>
+                                            </ComboBox>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1">
+                                            <TextBlock Text="Tile look" Style="{StaticResource Label}"/>
+                                            <ComboBox x:Name="MenuLook" SelectionChanged="MenuCombo_Changed">
+                                                <ComboBoxItem Tag="classic" Content="Classic (dark tiles)"/>
+                                                <ComboBoxItem Tag="cards" Content="Cards (bright colours)"/>
+                                                <ComboBoxItem Tag="clean" Content="Clean (picture and text only)"/>
+                                            </ComboBox>
+                                        </StackPanel>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource SubCard}" Padding="14,12" Margin="0,0,0,10">
+                                <StackPanel>
+                                    <TextBlock Text="TITLE AND TEXT" Style="{StaticResource GroupHead}"/>
+                                    <TextBlock x:Name="MenuTitleLabel" Text="Header text" Style="{StaticResource Label}"/>
+                                    <TextBox x:Name="MenuTitle" LostFocus="Menu_Changed" Margin="0,0,0,10"/>
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Margin="0,0,10,0">
+                                            <TextBlock Text="Font" Style="{StaticResource Label}"/>
+                                            <TextBox x:Name="MenuFont" LostFocus="Menu_Changed" ToolTip="Any font installed on this PC, e.g. Impact, Arial Black, Segoe UI"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1">
+                                            <TextBlock Text="Text colour" Style="{StaticResource Label}"/>
+                                            <local:ColorBox x:Name="MenuTextColor" Changed="Menu_Changed"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <WrapPanel>
+                                        <CheckBox x:Name="MenuOutline" Content="Thick outline on the text" Click="Menu_Changed" Margin="0,0,20,4"/>
+                                        <CheckBox x:Name="MenuShowSubtitle" Content="Show the small text (coin value)" Click="Menu_Changed" Margin="0,0,0,4"/>
+                                    </WrapPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <Border x:Name="MenuColorsGroup" Style="{StaticResource SubCard}" Padding="14,12" Margin="0,0,0,10">
+                                <StackPanel>
+                                    <TextBlock Text="COLOURS" Style="{StaticResource GroupHead}"/>
+                                    <!-- Hidden colours take no room, so the rest line up from the left -->
+                                    <UniformGrid Columns="3">
+                                        <StackPanel x:Name="MenuCardColorPanel" Margin="0,0,10,0">
+                                            <TextBlock Text="Card colour" Style="{StaticResource Label}"/>
+                                            <local:ColorBox x:Name="MenuCardColor" Changed="Menu_Changed" ToolTip="The cards' colour. A tile's own colour (in the list below) wins."/>
+                                        </StackPanel>
+                                        <StackPanel x:Name="MenuCardColor2Panel" Margin="0,0,10,0">
+                                            <TextBlock Text="Fades into" Style="{StaticResource Label}"/>
+                                            <local:ColorBox x:Name="MenuCardColor2" Changed="Menu_Changed"/>
+                                        </StackPanel>
+                                        <StackPanel x:Name="MenuHeaderColorPanel" Margin="0,0,10,0">
+                                            <TextBlock x:Name="MenuHeaderColorLabel" Text="Header colour" Style="{StaticResource Label}"/>
+                                            <local:ColorBox x:Name="MenuHeaderColor" Changed="Menu_Changed"/>
+                                        </StackPanel>
+                                    </UniformGrid>
+                                </StackPanel>
+                            </Border>
+
+                            <Border x:Name="MenuGridRow" Style="{StaticResource SubCard}" Padding="14,12" Margin="0,0,0,10">
+                                <StackPanel>
+                                    <TextBlock x:Name="MenuGridHead" Text="GRID" Style="{StaticResource GroupHead}"/>
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Margin="0,0,10,0">
+                                            <TextBlock x:Name="MenuColumnsLabel" Text="Columns" Style="{StaticResource Label}"/>
+                                            <TextBox x:Name="MenuColumns" LostFocus="Menu_Changed"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1">
+                                            <TextBlock Text="Tile size in pixels" Style="{StaticResource Label}"/>
+                                            <TextBox x:Name="MenuTileSize" LostFocus="Menu_Changed" ToolTip="Size of each square tile. 0 stretches the tiles to fill the Browser Source instead."/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <CheckBox x:Name="MenuTransparent" Content="See-through background" Click="Menu_Changed" Margin="0,0,0,8"/>
+                                    <StackPanel x:Name="MenuLinesRow">
+                                        <CheckBox x:Name="MenuShowLines" Content="Lines between tiles" Click="Menu_Changed" Margin="0,0,0,8"/>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Margin="0,0,10,0">
+                                                <TextBlock Text="Line colour" Style="{StaticResource Label}"/>
+                                                <local:ColorBox x:Name="MenuLineColor" Changed="Menu_Changed"/>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="1">
+                                                <TextBlock Text="Line thickness in pixels" Style="{StaticResource Label}"/>
+                                                <TextBox x:Name="MenuLineWidth" LostFocus="Menu_Changed"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <Border x:Name="MenuMotionRow" Style="{StaticResource SubCard}" Padding="14,12" Margin="0,0,0,10">
+                                <StackPanel>
+                                    <TextBlock Text="MOTION" Style="{StaticResource GroupHead}"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="140"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Margin="0,0,12,0">
+                                            <TextBlock x:Name="MenuSpeedLabel" Text="Speed" Style="{StaticResource Label}"/>
+                                            <Slider x:Name="MenuSpeed" Minimum="1" Maximum="10" IsSnapToTickEnabled="True" TickFrequency="1" ValueChanged="MenuSpeed_Changed" Margin="0,6,0,0"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                                            <TextBlock Text="Direction" Style="{StaticResource Label}"/>
+                                            <ComboBox x:Name="MenuDirection" SelectionChanged="MenuCombo_Changed"/>
+                                        </StackPanel>
+                                        <StackPanel x:Name="MenuPerViewPanel" Grid.Column="2" Width="110">
+                                            <TextBlock Text="Tiles in the line" Style="{StaticResource Label}"/>
+                                            <TextBox x:Name="MenuPerView" LostFocus="Menu_Changed"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource SubCard}" Padding="14,12">
+                                <StackPanel>
+                                    <TextBlock Text="ON STREAM" Style="{StaticResource GroupHead}"/>
+                                    <CheckBox x:Name="MenuHighlight" Content="Light up a tile when its gift arrives"
+                                              Click="Menu_Changed" ToolTip="The tile glows and pops for a moment when someone sends that gift"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- Live preview: the real board, shrunk to fit and shaped like the Browser Source -->
+                        <StackPanel Grid.Column="1" Width="420" VerticalAlignment="Top">
+                            <Border CornerRadius="10" BorderBrush="{StaticResource LineBrush}" BorderThickness="1" Background="#0B0C12" ClipToBounds="True">
+                                <Grid>
+                                    <wv2:WebView2 x:Name="Preview" Height="236" DefaultBackgroundColor="#0B0C12"/>
+                                    <TextBlock x:Name="PreviewNote" Text="The preview shows once the overlay server is running." Style="{StaticResource Muted}"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Margin="20" Visibility="Collapsed"/>
+                                </Grid>
+                            </Border>
+                            <DockPanel Margin="2,8,0,0">
+                                <Button MinHeight="0" DockPanel.Dock="Right" Content="Refresh" Style="{StaticResource Ghost}" Click="RefreshPreview_Click" Padding="8,3"/>
+                                <TextBlock Text="LIVE PREVIEW" Style="{StaticResource GroupHead}" Margin="0" VerticalAlignment="Center"/>
+                            </DockPanel>
+                            <TextBlock x:Name="MenuSizeHint" Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="2,6,0,0"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Tiles -->
+                    <DockPanel Margin="0,22,0,10">
+                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                            <Button Content="+  Add tiles from events" Style="{StaticResource Primary}" Click="MenuFromEvents_Click" Margin="0,0,6,0"/>
+                            <Button Content="+  Add a custom tile" Click="MenuCustom_Click"/>
+                        </StackPanel>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock x:Name="TilesHead" Text="Tiles" Style="{StaticResource H2}"/>
+                            <TextBlock Text="Click a picture to change it (right-click for more). The order here is the order on stream." Style="{StaticResource Muted}" Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </DockPanel>
                     <TextBlock x:Name="NoTiles" Text="No tiles yet. Press Add tiles from events to build the board from your enabled events." Style="{StaticResource Muted}"/>
+                    <Grid x:Name="TilesHeader" Margin="10,0,10,4" Grid.IsSharedSizeScope="False">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="112"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="PICTURE" Style="{StaticResource GroupHead}" Margin="0"/>
+                        <TextBlock Grid.Column="1" Text="LABEL" Style="{StaticResource GroupHead}" Margin="0"/>
+                        <TextBlock Grid.Column="2" Text="SMALL TEXT" Style="{StaticResource GroupHead}" Margin="8,0,0,0"/>
+                        <TextBlock Grid.Column="3" Text="COLOUR" Style="{StaticResource GroupHead}" Width="150" Margin="8,0,0,0"
+                                   Visibility="{Binding ShowTileColor, RelativeSource={RelativeSource AncestorType=local:OverlaysView}, Converter={StaticResource BoolToVis}}"/>
+                        <TextBlock Grid.Column="4" Text="SIDE" Style="{StaticResource GroupHead}" Width="98" Margin="8,0,0,0"
+                                   Visibility="{Binding ShowTileSide, RelativeSource={RelativeSource AncestorType=local:OverlaysView}, Converter={StaticResource BoolToVis}}"/>
+                    </Grid>
                     <ItemsControl x:Name="TilesList">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border Style="{StaticResource SubCard}" Margin="0,0,0,6" Padding="8">
+                                <Border x:Name="Row" Style="{StaticResource SubCard}" Margin="0,0,0,6" Padding="10,8">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="56"/>
+                                            <ColumnDefinition Width="60"/>
                                             <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="120"/>
-                                            <ColumnDefinition Width="1.4*"/>
+                                            <ColumnDefinition Width="150"/>
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="112"/>
                                         </Grid.ColumnDefinitions>
-                                        <Border Width="44" Height="44" Background="Black" CornerRadius="6" VerticalAlignment="Center" Margin="0,0,12,0">
-                                            <Image Source="{Binding Image}" Stretch="Uniform" Margin="4" RenderOptions.BitmapScalingMode="HighQuality"/>
-                                        </Border>
-                                        <StackPanel Grid.Column="1" Margin="0,0,8,0">
-                                            <TextBlock Text="Label" Style="{StaticResource Label}"/>
-                                            <TextBox Text="{Binding Label, UpdateSourceTrigger=PropertyChanged}" LostFocus="Field_Changed"/>
-                                        </StackPanel>
-                                        <StackPanel Grid.Column="2" Margin="0,0,8,0">
-                                            <TextBlock Text="Small text" Style="{StaticResource Label}"/>
-                                            <TextBox Text="{Binding Subtitle, UpdateSourceTrigger=PropertyChanged}" LostFocus="Field_Changed"/>
-                                        </StackPanel>
-                                        <StackPanel Grid.Column="3" Margin="0,0,8,0">
-                                            <TextBlock Text="Picture (blank = the gift's own picture)" Style="{StaticResource Label}"/>
-                                            <TextBox Text="{Binding ImageUrl, UpdateSourceTrigger=LostFocus}" LostFocus="Field_Changed"/>
-                                        </StackPanel>
-                                        <Button Grid.Column="4" Content="Browse" Style="{StaticResource Small}" Tag="{Binding}" Click="TileBrowse_Click" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
-                                        <StackPanel Grid.Column="5" Orientation="Horizontal" VerticalAlignment="Bottom">
-                                            <Button MinHeight="0" Content="▲" Style="{StaticResource Ghost}" Tag="{Binding}" Click="TileUp_Click" Padding="8,4"/>
-                                            <Button MinHeight="0" Content="▼" Style="{StaticResource Ghost}" Tag="{Binding}" Click="TileDown_Click" Padding="8,4"/>
-                                            <Button MinHeight="0" Content="✕" Style="{StaticResource Ghost}" Foreground="{StaticResource DangerBrush}" Tag="{Binding}" Click="TileRemove_Click" Padding="8,4"/>
+                                        <Button Width="48" Height="48" HorizontalAlignment="Left" Tag="{Binding}" Click="TileBrowse_Click" Cursor="Hand"
+                                                ToolTip="{Binding PictureHint}">
+                                            <Button.Template>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border x:Name="Pic" Background="#07080C" CornerRadius="8" BorderThickness="1" BorderBrush="{StaticResource LineBrush}">
+                                                        <Image Source="{Binding Image}" Stretch="Uniform" Margin="5" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="Pic" Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                            <Button.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Header="Choose a picture file…" Tag="{Binding}" Click="TileBrowse_Click"/>
+                                                    <MenuItem Header="Use a picture from the web…" Tag="{Binding}" Click="TileUrl_Click"/>
+                                                    <MenuItem Header="Use the gift's own picture" Tag="{Binding}" Click="TileResetPicture_Click"/>
+                                                </ContextMenu>
+                                            </Button.ContextMenu>
+                                        </Button>
+                                        <DockPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <Border DockPanel.Dock="Right" CornerRadius="9" Padding="8,2" Margin="8,0,0,0" Background="{StaticResource DangerDimBrush}"
+                                                    Visibility="{Binding IsOff, Converter={StaticResource BoolToVis}}" VerticalAlignment="Center"
+                                                    ToolTip="Its event is switched off, so this tile isn't on the board. Switch the event on in Events.">
+                                                <TextBlock Text="Event off" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource DangerBrush}"/>
+                                            </Border>
+                                            <TextBox Text="{Binding Label, UpdateSourceTrigger=PropertyChanged}" LostFocus="Field_Changed" FontWeight="SemiBold"/>
+                                        </DockPanel>
+                                        <TextBox Grid.Column="2" Text="{Binding Subtitle, UpdateSourceTrigger=PropertyChanged}" LostFocus="Field_Changed" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                        <local:ColorBox Grid.Column="3" Width="150" Margin="8,0,0,0" Text="{Binding Color}" AllowEmpty="True" Changed="Field_Changed" VerticalAlignment="Center"
+                                                        ToolTip="This tile's own card colour, e.g. green for gifts that help and red for ones that hurt. Blank uses the board's."
+                                                        Visibility="{Binding ShowTileColor, RelativeSource={RelativeSource AncestorType=local:OverlaysView}, Converter={StaticResource BoolToVis}}"/>
+                                        <ComboBox Grid.Column="4" Width="98" Margin="8,0,0,0" SelectedValuePath="Tag" SelectedValue="{Binding Side, Mode=TwoWay}" SelectionChanged="TileSide_Changed" VerticalAlignment="Center"
+                                                  ToolTip="Which side of the screen. Auto puts the first half on the left and the rest on the right."
+                                                  Visibility="{Binding ShowTileSide, RelativeSource={RelativeSource AncestorType=local:OverlaysView}, Converter={StaticResource BoolToVis}}">
+                                            <ComboBoxItem Tag="auto" Content="Auto"/>
+                                            <ComboBoxItem Tag="left" Content="Left"/>
+                                            <ComboBoxItem Tag="right" Content="Right"/>
+                                        </ComboBox>
+                                        <StackPanel Grid.Column="5" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                            <Button MinHeight="0" Content="▲" Style="{StaticResource Ghost}" Tag="{Binding}" Click="TileUp_Click" Padding="8,4" ToolTip="Move up"/>
+                                            <Button MinHeight="0" Content="▼" Style="{StaticResource Ghost}" Tag="{Binding}" Click="TileDown_Click" Padding="8,4" ToolTip="Move down"/>
+                                            <Button MinHeight="0" Content="✕" Style="{StaticResource Ghost}" Foreground="{StaticResource DangerBrush}" Tag="{Binding}" Click="TileRemove_Click" Padding="8,4" ToolTip="Remove this tile"/>
                                         </StackPanel>
                                     </Grid>
                                 </Border>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding IsOff}" Value="True">
+                                        <Setter TargetName="Row" Property="Opacity" Value="0.55"/>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
@@ -319,8 +600,8 @@
                     <TextBlock Text="Look" Style="{StaticResource H2}" Margin="0,0,0,10"/>
                     <StackPanel Orientation="Horizontal">
                         <StackPanel Margin="0,0,16,0">
-                            <TextBlock Text="Accent colour (hex)" Style="{StaticResource Label}"/>
-                            <TextBox x:Name="AccentBox" Width="120" FontFamily="Consolas" LostFocus="Style_Changed"/>
+                            <TextBlock Text="Accent colour" Style="{StaticResource Label}"/>
+                            <local:ColorBox x:Name="AccentBox" Width="160" HorizontalAlignment="Left" Changed="Style_Changed"/>
                         </StackPanel>
                         <StackPanel>
                             <TextBlock Text="Font" Style="{StaticResource Label}"/>

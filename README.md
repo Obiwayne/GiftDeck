@@ -1,20 +1,24 @@
 <p align="center">
-  <img src="docs/logo.png" width="112" alt="GiftDeck logo: a gift box with a lightning bolt through it">
+  <img src="docs/logo.png" width="112" alt="MayhemDeck logo: a gift box with a lightning bolt through it">
 </p>
 
-<h1 align="center">GiftDeck</h1>
+<h1 align="center">MayhemDeck</h1>
 
 <p align="center">
-  <b>Turn TikTok LIVE gifts into actions.</b><br>
-  A free, all-in-one Windows control room for TikTok (and Kick) streamers: unlimited gift events,
+  <b>Let your viewers cause mayhem.</b><br>
+  Gifts, likes, follows and chat set off chaos in your games and on your stream.<br>
+  A free, all-in-one Windows control room for TikTok (and Kick) streamers: unlimited events,
   one-click game mods for GTA V and Minecraft, one-button Go LIVE with OBS running in the background,
   overlays, alerts, a Gift Spinner, text to speech and music.
 </p>
 
 <p align="center">
-  <a href="https://github.com/Obiwayne/GiftDeck/releases/latest"><b>⬇&nbsp; Download GiftDeck for Windows</b></a>
+  <a href="https://github.com/Obiwayne/MayhemDeck/releases/latest"><b>⬇&nbsp; Download MayhemDeck for Windows</b></a>
   &nbsp;·&nbsp; free &nbsp;·&nbsp; no accounts, no price plans, no limits
 </p>
+
+<p align="center"><i>MayhemDeck was called GiftDeck. Same app, new name: it grew into much more than gifts.
+  Updating keeps all your settings, events and profiles.</i></p>
 
 <p align="center">
   <img src="docs/screenshots/go-live.png" alt="The Go LIVE control room">
@@ -48,32 +52,32 @@
 ## What it does
 
 **Gift events with no limit.** When a viewer sends a gift, follows, shares, likes, chats or subscribes,
-GiftDeck runs the actions you set: trigger an effect in your game, press a keyboard shortcut, play a
+MayhemDeck runs the actions you set: trigger an effect in your game, press a keyboard shortcut, play a
 sound, show an alert, spin the Gift Spinner, switch an OBS scene, speak text aloud, control Spotify, or
 run a program. Add as many events as you like.
 
 **58 games, set up for you.** The **Games** page is a library you can search and filter. **GTA V**
-and **Minecraft** are set up in one click: GiftDeck finds the game, installs its mods, backs up every
+and **Minecraft** are set up in one click: MayhemDeck finds the game, installs its mods, backs up every
 file it replaces, and loads a ready-made set of events. GTA V gets 416 triggers (every Chaos Mod V
 effect plus vehicles, weapons, money, teleports and more); Minecraft gets its own server on your PC with
 50+ commands and three streamer-vs-viewers mini-games. **7 Days to Die**, **Project Zomboid**,
 **Terraria** and **Left 4 Dead 2** take commands through your own game server's console. 52 more games
 get a set-up guide and key-press ideas.
 
-**One app, OBS in the background.** GiftDeck runs OBS for you, hidden, on a portrait 1080x1920 canvas
-made from your vertical layout. Switch scenes, toggle layers and mix audio from GiftDeck; press
+**One app, OBS in the background.** MayhemDeck runs OBS for you, hidden, on a portrait 1080x1920 canvas
+made from your vertical layout. Switch scenes, toggle layers and mix audio from MayhemDeck; press
 **Edit in OBS** when you want OBS's own window.
 
-**One-button Go LIVE.** GiftDeck opens your TikTok LIVE through your Streamlabs login, gets the stream
+**One-button Go LIVE.** MayhemDeck opens your TikTok LIVE through your Streamlabs login, gets the stream
 key and starts OBS. Change the title or category mid-stream and it restarts the LIVE with the new
 details in about 20 seconds.
 
 **Overlays and alerts.** One **all-in-one overlay** link for TikTok LIVE Studio or OBS shows alerts,
-the Gift Spinner, goals and the top gifters. Alert videos can be plain green-screen clips: GiftDeck
+the Gift Spinner, goals and the top gifters. Alert videos can be plain green-screen clips: MayhemDeck
 removes the green for you. Alerts can **interrupt**: other gifts wait until a jumpscare has played.
 
 **Checks everything before you start.** Every launch opens on a setup screen that walks new users
-through what's missing and waits until OBS and TikTok are connected. Closing GiftDeck shuts OBS down
+through what's missing and waits until OBS and TikTok are connected. Closing MayhemDeck shuts OBS down
 cleanly and puts your own OBS setup back.
 
 ## Screenshots
@@ -92,22 +96,22 @@ cleanly and puts your own OBS setup back.
 
 ## Download and install
 
-1. Go to **[Releases](https://github.com/Obiwayne/GiftDeck/releases/latest)** and download
-   **`GiftDeck-Setup-x.y.z.exe`** (about 80 MB).
+1. Go to **[Releases](https://github.com/Obiwayne/MayhemDeck/releases/latest)** and download
+   **`MayhemDeck-Setup-x.y.z.exe`** (about 80 MB).
 2. Double-click it and click through the installer. It installs just for you, so it doesn't ask for
    an administrator password.
-3. Open **GiftDeck** from the Start menu or Desktop. The setup screen takes it from there.
+3. Open **MayhemDeck** from the Start menu or Desktop. The setup screen takes it from there.
 
-Everything GiftDeck needs to run is inside the installer (including .NET and Node.js). Anything else
+Everything MayhemDeck needs to run is inside the installer (including .NET and Node.js). Anything else
 (OBS, Streamlabs, TikFinity, game mods, a Minecraft server, ffmpeg) is downloaded from its maker's own
 site when you press the button for it, never bundled.
 
-> **"Windows protected your PC"?** GiftDeck isn't code-signed (certificates cost money), so Windows
+> **"Windows protected your PC"?** MayhemDeck isn't code-signed (certificates cost money), so Windows
 > SmartScreen may warn about a new download. Click **More info → Run anyway**. The installer is built
 > from this repository's source by `build-installer.ps1`.
 
 **Updating:** download the new installer and run it. Your settings, events and profiles are kept.
-**Uninstalling:** *Windows Settings → Apps → GiftDeck → Uninstall*. Your settings stay in
+**Uninstalling:** *Windows Settings → Apps → MayhemDeck → Uninstall*. Your settings stay in
 `%APPDATA%\GiftDeck` in case you reinstall; delete that folder to remove them too.
 
 ## What you need
@@ -116,26 +120,26 @@ site when you press the button for it, never bundled.
 |---|---|---|
 | **Windows 10/11 (64-bit)** | everything | |
 | **[OBS Studio](https://obsproject.com)** 31+ | Go LIVE, scenes, preview | the setup screen downloads it for you |
-| **[Aitum Stream Suite](https://aitum.tv)** (OBS plugin) | your vertical (portrait) layout | the setup screen downloads it; GiftDeck turns its vertical scenes into a portrait setup |
-| **[Streamlabs Desktop](https://streamlabs.com)** login | the Go LIVE button | log in once with TikTok; GiftDeck picks up the login and you can close Streamlabs |
-| **TikTok account with Streamlabs LIVE access** | the Go LIVE button | granted by TikTok; GiftDeck tells you whether yours has it |
-| **[TikFinity](https://tikfinity.zerody.one)** | reading **18+** LIVEs | TikTok only sends 18+ chat and gifts to logged-in viewers; GiftDeck installs and runs TikFinity hidden |
+| **[Aitum Stream Suite](https://aitum.tv)** (OBS plugin) | your vertical (portrait) layout | the setup screen downloads it; MayhemDeck turns its vertical scenes into a portrait setup |
+| **[Streamlabs Desktop](https://streamlabs.com)** login | the Go LIVE button | log in once with TikTok; MayhemDeck picks up the login and you can close Streamlabs |
+| **TikTok account with Streamlabs LIVE access** | the Go LIVE button | granted by TikTok; MayhemDeck tells you whether yours has it |
+| **[TikFinity](https://tikfinity.zerody.one)** | reading **18+** LIVEs | TikTok only sends 18+ chat and gifts to logged-in viewers; MayhemDeck installs and runs TikFinity hidden |
 | A game from the **Games** page | game events | GTA V (Legacy, Story Mode), Minecraft: Java Edition, a server console game or a key-press game |
 | Free **[Jamendo](https://devportal.jamendo.com) Client ID** | Music page | optional |
 | **Spotify** Premium + a free developer app | Spotify actions | optional |
 
 ## First start: the setup screen
 
-GiftDeck opens on a setup screen that goes through, in order, only what's still missing:
+MayhemDeck opens on a setup screen that goes through, in order, only what's still missing:
 
 1. **Streamlabs login.** Download and install Streamlabs Desktop (one button), log in with TikTok (the
-   QR code is quickest). GiftDeck spots the login by itself and offers to close Streamlabs.
+   QR code is quickest). MayhemDeck spots the login by itself and offers to close Streamlabs.
 2. **OBS Studio** and 3. **Aitum Stream Suite**: download and install, one button each.
-4. **Portrait OBS.** GiftDeck makes a "GiftDeck Portrait" copy of your vertical scenes (your own OBS
+4. **Portrait OBS.** MayhemDeck makes a "GiftDeck Portrait" copy of your vertical scenes (your own OBS
    setup isn't changed) and from then on runs OBS hidden on it. If your own OBS is open, it asks
    before closing it.
 5. **TikFinity** (for 18+ LIVEs): install it, log in with the QR code, and switch off TikFinity's own
-   Events (GiftDeck runs your events; otherwise gifts would fire twice).
+   Events (MayhemDeck runs your events; otherwise gifts would fire twice).
 6. **Your TikTok username**, filled in from your Streamlabs login.
 7. **Ready check.** Waits until OBS and your LIVE reader are connected, then opens the app.
 
@@ -144,15 +148,15 @@ itself, and half-finished files are deleted, so you can just press the button ag
 cancel the Streamlabs login if you change your mind.
 
 Someone who's already set up only sees the ready check for a few seconds. **Stream Setup** has the same
-steps as a checklist, plus the choice of how GiftDeck reads your LIVE:
+steps as a checklist, plus the choice of how MayhemDeck reads your LIVE:
 
-- **The GiftDeck bridge** (no login): fine for normal LIVEs, but TikTok sends no chat or gifts from 18+
+- **The MayhemDeck bridge** (no login): fine for normal LIVEs, but TikTok sends no chat or gifts from 18+
   LIVEs to logged-out viewers.
-- **TikFinity** (logged in): works with 18+ LIVEs. GiftDeck starts it hidden and closes it with GiftDeck.
+- **TikFinity** (logged in): works with 18+ LIVEs. MayhemDeck starts it hidden and closes it with MayhemDeck.
 
 ## Going live
 
-On **Go LIVE**, set the title and category, pick your scene, and press **Go LIVE**. GiftDeck checks OBS
+On **Go LIVE**, set the title and category, pick your scene, and press **Go LIVE**. MayhemDeck checks OBS
 is ready first, then opens the LIVE on TikTok, sends OBS the stream key, starts streaming, and shows
 **✓ TikTok confirms you're live** once TikTok shows it (or a clear warning after 90 seconds). The
 buttons wait while one step is running, so you can't start the same LIVE twice.
@@ -162,31 +166,31 @@ buttons wait while one step is running, so you can't start the same LIVE twice.
 - **No scenes yet?** On the **Scenes** page, **Create starter scenes** makes *Starting Soon*, *Cam + Game*,
   *Just Cam*, *Just Screen*, *Be Right Back* and *Stream Ending* in one click, with your webcam, your
   screen and the all-in-one overlay already placed. It only adds the ones you don't have.
-- **Change the title or category while live:** TikTok can't edit a running LIVE, so GiftDeck offers
+- **Change the title or category while live:** TikTok can't edit a running LIVE, so MayhemDeck offers
   **Restart LIVE with these details**: it ends the LIVE and opens a new one straight away. Viewers have
-  to rejoin; GiftDeck's own totals keep counting.
+  to rejoin; MayhemDeck's own totals keep counting.
 - **TTS on/muted** next to the Go LIVE button, and the music player.
 - **If sending stops:** when OBS stops streaming by itself, Go LIVE says *Not sending* and offers
-  **Start sending again**. If GiftDeck's OBS closes mid-LIVE, GiftDeck starts it again and carries on
+  **Start sending again**. If MayhemDeck's OBS closes mid-LIVE, MayhemDeck starts it again and carries on
   sending to the same LIVE. The vertical relay to TikTok restarts itself too.
-- **End LIVE** stops OBS and closes the LIVE. If TikTok doesn't answer, press it again. Closing GiftDeck
-  while you're LIVE asks first. Closing it shows *Shutting down GiftDeck* until OBS has closed and your
+- **End LIVE** stops OBS and closes the LIVE. If TikTok doesn't answer, press it again. Closing MayhemDeck
+  while you're LIVE asks first. Closing it shows *Shutting down MayhemDeck* until OBS has closed and your
   own OBS setup is back.
 
-> **Mature audience (18+)** limits who can see your LIVE, and means GiftDeck has to read it through TikFinity.
+> **Mature audience (18+)** limits who can see your LIVE, and means MayhemDeck has to read it through TikFinity.
 
 ## Games: one-click mods
 
 Open **Games** to see a library of 58 games. Type in **Search games or genres**, or pick a filter:
 
 - **Ready to go:** GTA V and Minecraft. One-click mods (or a server) and ready-made presets.
-- **Server console:** 7 Days to Die, Project Zomboid, Terraria and Left 4 Dead 2. GiftDeck sends admin
+- **Server console:** 7 Days to Die, Project Zomboid, Terraria and Left 4 Dead 2. MayhemDeck sends admin
   commands to your own game server.
 - **Key presses:** 52 games. Gifts press the game's own keys.
 
 Cover art comes from each game's Steam store image. It's downloaded once and kept on your PC.
 
-For **Ready to go** games, click the game and press **Install**. GiftDeck finds the game, downloads each
+For **Ready to go** games, click the game and press **Install**. MayhemDeck finds the game, downloads each
 mod from its maker, **backs up every file it replaces** and refuses to change anything while the game is
 running. **Uninstall** puts the folder back exactly as it was. An **Installed** tag shows on games that are
 set up (including mods you installed yourself). Nothing changes until you press Install or pick a preset.
@@ -195,8 +199,8 @@ set up (including mods you installed yourself). Nothing changes until you press 
 
 Installs Script Hook V, Script Hook V .NET, **Chaos Mod V (GiftDeck build)** and the **GiftDeck GTA script**:
 
-- **416 triggers:** all 369 Chaos Mod effects (GiftDeck can start any of them, even ones switched off for
-  random picks) plus 47 of GiftDeck's own: spawn any vehicle, weapons, money, wanted level, attackers,
+- **416 triggers:** all 369 Chaos Mod effects (MayhemDeck can start any of them, even ones switched off for
+  random picks) plus 47 of MayhemDeck's own: spawn any vehicle, weapons, money, wanted level, attackers,
   moto cops, animals, jail cage, ramps, teleports, skydive, drunk, earthquake and more.
 - In game: a green *GiftDeck GTA ready* greeting, **F10** menu (connection, pause, test any command), and
   an on-screen note of who sent what.
@@ -207,7 +211,7 @@ Installs Script Hook V, Script Hook V .NET, **Chaos Mod V (GiftDeck build)** and
 
 ### Minecraft (Java Edition)
 
-GiftDeck sets up and runs a **Minecraft server on your PC** (PaperMC, the right Java downloaded if
+MayhemDeck sets up and runs a **Minecraft server on your PC** (PaperMC, the right Java downloaded if
 needed, the EULA accepted only by you). Join it at `localhost`; gifts summon mobs with the viewer's name,
 drop TNT, strike lightning, change the weather, give items and effects.
 
@@ -225,13 +229,13 @@ ready-made preset, and the server panel has start/stop buttons.
 ### Server console games
 
 These games run on a dedicated server (on your PC or a rented one), and you join it like any
-multiplayer game. GiftDeck sends admin commands to that server. Each game's page has:
+multiplayer game. MayhemDeck sends admin commands to that server. Each game's page has:
 
 - a **How to set it up** guide for the server,
 - a connection card: server address, port, password and your player name, with **Test connection**,
 - the list of **Commands** to use in an event with **Run a game command**.
 
-| Game | How GiftDeck connects | Default port | Example commands |
+| Game | How MayhemDeck connects | Default port | Example commands |
 |---|---|---|---|
 | **7 Days to Die** | telnet console | 8081 | spawn zombies, screamer scouts, wandering horde, air drop |
 | **Project Zomboid** | RCON | 27015 | spawn a horde, helicopter, gunshot, thunderstorm |
@@ -290,7 +294,7 @@ click into your game. Test events show their alerts but don't change goals, time
 
 ## Overlays, alerts and the Gift Spinner
 
-GiftDeck serves overlay pages at `http://localhost:21300`. Use **Copy URL** or **Add to OBS** (which
+MayhemDeck serves overlay pages at `http://localhost:21300`. Use **Copy URL** or **Add to OBS** (which
 creates the Browser Source for you, sound included):
 
 - **All-in-one overlay** (recommended): one link, added once to TikTok LIVE Studio (*Add source → Link*)
@@ -303,6 +307,18 @@ creates the Browser Source for you, sound included):
   (Common, Uncommon, Rare, Epic, Legendary) right in the event editor.
 - **Goal bars, counters, countdown timers** viewers extend with gifts, the **gift menu board**, a
   **gift list** and a **top 3 gifters** strip, all built from your events and live stats.
+- **Gift menu board styles:** show viewers what each gift does the way you like. Pick a **Quick style**
+  or set it up yourself:
+  - **Layout:** a **Grid**, **Side columns** down both edges of the screen (the middle stays clear for
+    the game), a **Carousel** strip that scrolls right to left, or a **Ticker** line that rolls up to the
+    next gifts every few seconds.
+  - **Tile look:** **Classic** dark tiles, bright **Cards**, or **Clean** (just the picture and outlined
+    text over the game).
+  - Give tiles their own colour (green for gifts that help, red for ones that hurt), choose which side
+    each one sits on, add a big title like *FOLLOW TO BARREL ROLL*, and set the speed and direction.
+  - **Light up a tile when its gift arrives:** the tile glows and pops the moment someone sends it.
+
+![Gift menu board styles: side cards, side icons, a neon grid and a carousel](docs/screenshots/board-styles.png)
 
 ## Text to speech
 
@@ -314,7 +330,7 @@ the menu shows *Text to speech (muted)* so you don't forget).
 
 **Reading chat** stays calm on a busy LIVE: commands (`!like this`) aren't read, links are read as
 "a link", each viewer is read at most once every 4 seconds, and when chat is faster than the voice new
-messages are skipped so it keeps up. If you pick a Google voice before adding the key, GiftDeck speaks
+messages are skipped so it keeps up. If you pick a Google voice before adding the key, MayhemDeck speaks
 with the Windows voice instead (the page tells you).
 
 ## Kick
@@ -351,7 +367,7 @@ page.
 flowchart LR
     TT[TikTok LIVE] -- chat, gifts --> RD[Bridge or TikFinity]
     KK[Kick] -- public chat feed --> GD
-    RD -- ws://localhost:21214 / 21213 --> GD[GiftDeck]
+    RD -- ws://localhost:21214 / 21213 --> GD[MayhemDeck]
     GD -- GameLink ws://127.0.0.1:21216 --> MODS[Game mods<br/>Chaos Mod, GiftDeck GTA]
     GD -- RCON --> MC[Minecraft server]
     GD -- RCON / telnet / REST --> SRV[Your game server]
@@ -362,11 +378,11 @@ flowchart LR
 ```
 
 - **Reading your LIVE:** the bundled bridge ([TikTok-Live-Connector](https://github.com/zerodytrash/TikTok-Live-Connector))
-  reads a public LIVE without logging in; for 18+ LIVEs GiftDeck listens to TikFinity's local feed instead.
-- **GameLink:** game mods connect to GiftDeck on `ws://127.0.0.1:21216`, send their list of commands,
+  reads a public LIVE without logging in; for 18+ LIVEs MayhemDeck listens to TikFinity's local feed instead.
+- **GameLink:** game mods connect to MayhemDeck on `ws://127.0.0.1:21216`, send their list of commands,
   and run the ones your events trigger. The protocol is in `docs/v2.1/plan.md`.
-- **OBS engine:** GiftDeck starts OBS hidden on its portrait setup, restarts it if it's closed, and puts
-  your own OBS scene collection and profile back when GiftDeck closes.
+- **OBS engine:** MayhemDeck starts OBS hidden on its portrait setup, restarts it if it's closed, and puts
+  your own OBS scene collection and profile back when MayhemDeck closes.
 - **Go LIVE** uses the same Streamlabs API as Streamlabs Desktop to open and close the LIVE.
 
 ## Your data and keys
@@ -376,7 +392,7 @@ flowchart LR
 - In the app, tokens, stream keys, client IDs and passwords show as dots until you click the eye button.
 - The files in `%APPDATA%\GiftDeck` are plain JSON. Anyone with access to your Windows account can read
   them, so don't share that folder.
-- If a settings or events file can't be read (after a crash, say), GiftDeck keeps the old file aside,
+- If a settings or events file can't be read (after a crash, say), MayhemDeck keeps the old file aside,
   untouched, as `<name>.unreadable-<date>`, and tells you where. `log.txt` rolls over to `log.old.txt`
   at 5 MB.
 
@@ -386,7 +402,7 @@ flowchart LR
 |---|---|
 | No chat or gifts on an **18+** LIVE | Choose **TikFinity** under *Stream Setup → Reading your LIVE*, and log in to TikFinity. |
 | Gifts fire twice | TikFinity's own Events are also on. Switch them off in TikFinity. |
-| Sidebar says **OBS: error** | Hover it for the reason. GiftDeck restarts OBS if it's closed; *Stream Setup → OBS engine* shows more. |
+| Sidebar says **OBS: error** | Hover it for the reason. MayhemDeck restarts OBS if it's closed; *Stream Setup → OBS engine* shows more. |
 | Closing OBS while editing | Fine: its X puts it back in the background. **Done editing** on Scenes does the same. |
 | **⚠ TikTok isn't showing you as LIVE after 90 seconds** | Check the TikTok app. Make sure LIVE Studio isn't also live on the same account. |
 | GTA: nothing happens | Games → GTA V should say **Connected in game**. Story Mode only, prologue finished, BattlEye off. |
@@ -397,7 +413,7 @@ flowchart LR
 | Screen capture is black in *Just Screen* / *Cam + Game* | It only draws while the scene is live or previewed, so switch to it. On a laptop, open *Windows Settings → System → Display → Graphics*, add OBS and pick the graphics card your screen runs on. |
 | **Some saved files couldn't be read** at start-up | The message lists where the old files were kept (in `%APPDATA%\GiftDeck`, ending `.unreadable-<date>`). Those settings or events started over empty; the kept copy is the file as it was. |
 
-GiftDeck's own log is at `%APPDATA%\GiftDeck\log.txt`.
+MayhemDeck's own log is at `%APPDATA%\GiftDeck\log.txt`.
 
 ## Building from source
 
@@ -405,13 +421,13 @@ For developers. You need the [.NET 8 SDK](https://dotnet.microsoft.com/download/
 [Node.js](https://nodejs.org).
 
 ```powershell
-git clone https://github.com/Obiwayne/GiftDeck.git
-cd GiftDeck
-dotnet build -c Debug                      # bin\Debug\net8.0-windows\GiftDeck.exe
+git clone https://github.com/Obiwayne/MayhemDeck.git
+cd MayhemDeck
+dotnet build -c Debug                      # bin\Debug\net8.0-windows\MayhemDeck.exe
 
 # The downloadable installer (also needs Inno Setup 6: winget install JRSoftware.InnoSetup)
 powershell -ExecutionPolicy Bypass -File build-installer.ps1 -Version 2.1.0
-#   -> build\GiftDeck-Setup-2.1.0.exe: self-contained GiftDeck + the bridge with its own Node.js
+#   -> build\MayhemDeck-Setup-2.1.0.exe: self-contained MayhemDeck + the bridge with its own Node.js
 ```
 
 Game mods are separate projects:
@@ -430,13 +446,13 @@ Test harnesses are under `tests/` and `tools/`. The only NuGet packages are `Sys
 ## Project layout
 
 ```
-GiftDeck/
+MayhemDeck/
 ├─ Services/        TikTok/Kick feeds, rules engine, OBS engine + obs-websocket, Go LIVE (Streamlabs),
 │                   GameLink, game packs installer, Minecraft server + RCON, game server consoles, overlays, spinner, alerts, TTS
 ├─ Views/           the pages: Dashboard, Go LIVE, Scenes, Stream Setup, Games, Events, Profiles, Overlays, ...
 ├─ Overlays/        the HTML overlay pages served to OBS / TikTok LIVE Studio
 ├─ Packs/           game packs: catalog.json, pack.json, command lists, presets, bundled mods (gta5, minecraft)
-├─ mods/            source of GiftDeck's own game mods (GTA script, Minecraft plugin)
+├─ mods/            source of MayhemDeck's own game mods (GTA script, Minecraft plugin)
 ├─ bridge/          bridge.js: reads your TikTok LIVE (Node)
 ├─ docs/            screenshots and design notes (docs/v2.1)
 ├─ tests/, tools/   test harnesses and developer tools
@@ -445,7 +461,7 @@ GiftDeck/
 
 ## Disclaimer
 
-GiftDeck is an independent project, **not affiliated with or endorsed by TikTok, ByteDance, Kick,
+MayhemDeck is an independent project, **not affiliated with or endorsed by TikTok, ByteDance, Kick,
 Streamlabs, OBS, Aitum, TikFinity, Rockstar Games, Take-Two, Mojang, Microsoft, Google, Jamendo or
 Spotify**. Reading a LIVE, opening a LIVE through Streamlabs, the Google voices and Kick's chat feed
 rely on unofficial interfaces that can change or stop working at any time. Game mods are for single-player
@@ -454,7 +470,7 @@ rely on unofficial interfaces that can change or stop working at any time. Game 
 ## Credits and licence
 
 - [TikTok-Live-Connector](https://github.com/zerodytrash/TikTok-Live-Connector) (MIT) and [ws](https://github.com/websockets/ws) (MIT)
-- [Chaos Mod V](https://github.com/gta-chaos-mod/ChaosModV) (GPL-3); GiftDeck's build is at
+- [Chaos Mod V](https://github.com/gta-chaos-mod/ChaosModV) (GPL-3); MayhemDeck's build is at
   [Obiwayne/ChaosModV-GiftDeck](https://github.com/Obiwayne/ChaosModV-GiftDeck)
 - [Script Hook V](http://www.dev-c.com/gtav/scripthookv/) by Alexander Blade (downloaded from dev-c.com, not redistributed)
   and [Script Hook V .NET](https://github.com/scripthookvdotnet/scripthookvdotnet)
@@ -464,4 +480,4 @@ rely on unofficial interfaces that can change or stop working at any time. Game 
 - [ffmpeg](https://ffmpeg.org), downloaded on request from [gyan.dev](https://www.gyan.dev/ffmpeg/builds/) (not bundled)
 - Music from [Jamendo](https://www.jamendo.com) (each track's own Creative Commons licence applies)
 
-GiftDeck, the GiftDeck GTA script and the GiftDeck Games plugin are released under the [MIT licence](LICENSE).
+MayhemDeck, the GiftDeck GTA script and the GiftDeck Games plugin are released under the [MIT licence](LICENSE).

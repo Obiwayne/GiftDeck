@@ -27,24 +27,24 @@ public partial class StreamSetupView
 
         bool hasName = !string.IsNullOrWhiteSpace(s.BridgeUsername);
         steps.Add(new Step(hasName, "TikTok username",
-            hasName ? "GiftDeck reads @" + s.BridgeUsername.Trim().TrimStart('@') + "'s LIVE." : "Type the username you stream from, or log in to Streamlabs below and GiftDeck fills it in.",
+            hasName ? "MayhemDeck reads @" + s.BridgeUsername.Trim().TrimStart('@') + "'s LIVE." : "Type the username you stream from, or log in to Streamlabs below and MayhemDeck fills it in.",
             false, hasName ? Array.Empty<(string, Action, bool)>() : new[] { ("Enter username", (Action)(() => { AccountCard.BringIntoView(); UsernameBox.Focus(); }), false) }));
 
         bool hasToken = !string.IsNullOrWhiteSpace(t.Token);
         steps.Add(new Step(hasToken, "Streamlabs login (for Go LIVE)",
             hasToken ? (string.IsNullOrWhiteSpace(t.AccountUsername) ? "Logged in." : "Logged in as @" + t.AccountUsername + ".")
-                     : "Lets GiftDeck open your LIVE and get its stream key. Nothing to install: you log in to Streamlabs in your browser with your TikTok account.",
+                     : "Lets MayhemDeck open your LIVE and get its stream key. Nothing to install: you log in to Streamlabs in your browser with your TikTok account.",
             false, hasToken ? Array.Empty<(string, Action, bool)>() : new[] { ("Log in with TikTok", (Action)(() => { TokenCard.BringIntoView(); StartLogin(); }), true) }));
 
         bool obsReady = s.ObsManaged && ObsHost.PortraitExists();
         steps.Add(new Step(obsReady, "OBS set up",
-            obsReady ? "GiftDeck runs OBS hidden on your portrait canvas." : "Install OBS Studio (obsproject.com), then let GiftDeck make its portrait 1080x1920 setup.",
+            obsReady ? "MayhemDeck runs OBS hidden on your portrait canvas." : "Install OBS Studio (obsproject.com), then let MayhemDeck make its portrait 1080x1920 setup.",
             false, obsReady ? Array.Empty<(string, Action, bool)>() : new[] { ("Set up portrait OBS", (Action)(() => { EngineCard.BringIntoView(); SetUpPortrait_Click(SetUpPortraitButton, null); }), true) }));
 
         if (!mature && !useTf)
         {
             steps.Add(new Step(false, "TikFinity (only for 18+ LIVEs)",
-                "Not needed: your LIVE isn't set to 18+, so GiftDeck reads chat and gifts by itself. If you turn on 18+, TikTok only sends chat and gifts to logged-in viewers, and GiftDeck then needs TikFinity.",
+                "Not needed: your LIVE isn't set to 18+, so MayhemDeck reads chat and gifts by itself. If you turn on 18+, TikTok only sends chat and gifts to logged-in viewers, and MayhemDeck then needs TikFinity.",
                 Optional: true));
         }
         else
@@ -53,19 +53,19 @@ public partial class StreamSetupView
             bool installed = TikFinityInstaller.Installed;
             string installDetail = _installing ? _installText ?? "Starting…"
                 : installed ? "Installed."
-                : why + "TikTok only sends 18+ chat and gifts to logged-in viewers, so GiftDeck reads them through TikFinity (free). GiftDeck downloads it from TikFinity's own site."
+                : why + "TikTok only sends 18+ chat and gifts to logged-in viewers, so MayhemDeck reads them through TikFinity (free). MayhemDeck downloads it from TikFinity's own site."
                   + (_installError != null ? "\nLast try: " + _installError : "");
             steps.Add(new Step(installed, "Install TikFinity", installDetail, false,
                 installed || _installing ? Array.Empty<(string, Action, bool)>() : new[] { ("Install TikFinity (about 95 MB)", (Action)InstallTikFinity, true) }));
 
             steps.Add(new Step(useTf, "Read your LIVE through TikFinity",
-                useTf ? "GiftDeck starts TikFinity for you and listens to it." : "Switch \"Reading your LIVE\" to TikFinity.",
+                useTf ? "MayhemDeck starts TikFinity for you and listens to it." : "Switch \"Reading your LIVE\" to TikFinity.",
                 false, useTf || !installed ? Array.Empty<(string, Action, bool)>() : new[] { ("Use TikFinity", (Action)UseTikFinity, true) }));
 
             bool running = TikFinityService.IsProcessRunning();
             bool connected = useTf && Hub.TikFinity.Connected;
             steps.Add(new Step(connected, "TikFinity running",
-                connected ? "Connected to TikFinity." : !useTf ? "Waits for the step above." : running ? "TikFinity is starting; connecting…" : "GiftDeck starts it within a few seconds.",
+                connected ? "Connected to TikFinity." : !useTf ? "Waits for the step above." : running ? "TikFinity is starting; connecting…" : "MayhemDeck starts it within a few seconds.",
                 false));
 
             bool confirmed = s.TikFinityConfirmed;
@@ -74,7 +74,7 @@ public partial class StreamSetupView
             if (!confirmed) confirmButtons.Add(("Done", (Action)(() => { s.TikFinityConfirmed = true; Hub.SaveSettings(); UpdateChecklist(); }), true));
             steps.Add(new Step(confirmed, "Log in to TikFinity and turn off its Events",
                 confirmed ? "Done. (TikFinity keeps you logged in.)"
-                          : "In TikFinity, log in with the TikTok account you stream from. If Google sign-in is blocked there, pick another way TikTok offers. Then switch off everything on TikFinity's Events tab: GiftDeck runs your events, and leaving TikFinity's on makes gifts fire twice.",
+                          : "In TikFinity, log in with the TikTok account you stream from. If Google sign-in is blocked there, pick another way TikTok offers. Then switch off everything on TikFinity's Events tab: MayhemDeck runs your events, and leaving TikFinity's on makes gifts fire twice.",
                 false, confirmButtons.ToArray()));
         }
 
@@ -83,7 +83,7 @@ public partial class StreamSetupView
         ChecklistCount.Text = $"{done} of {required.Count} done";
         ChecklistIntro.Text = done == required.Count
             ? "Everything's set up. ✓"
-            : "What GiftDeck still needs before your first LIVE. Each step ticks itself off.";
+            : "What MayhemDeck still needs before your first LIVE. Each step ticks itself off.";
 
         ChecklistPanel.Children.Clear();
         foreach (var st in steps) ChecklistPanel.Children.Add(Row(st));

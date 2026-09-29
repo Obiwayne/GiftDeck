@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>GiftDeck alerts</title>
+<title>MayhemDeck alerts</title>
 <style>
   :root { --accent: #7C5CFF; --font: 'Segoe UI'; }
   body { margin: 0; background: transparent; font-family: var(--font), 'Segoe UI', sans-serif; color: #fff; overflow: hidden; }
@@ -50,7 +50,7 @@
     w.style.justifyContent = /left$/i.test(pos) ? 'flex-start' : /right$/i.test(pos) ? 'flex-end' : 'center';
     w.style.padding = '3%';
   }
-  // A custom alert: GiftDeck has already filled in {user}, {gift} and {count}; media is a picture or a video.
+  // A custom alert: MayhemDeck has already filled in {user}, {gift} and {count}; media is a picture or a video.
   function customAlert(a, onFail) {
     const el = document.createElement('div');
     el.className = 'alert custom in' + (a.fullScreen ? ' full' : '');

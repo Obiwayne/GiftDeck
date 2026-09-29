@@ -170,11 +170,23 @@ public class OverlayService
             transparent = Config.Menu.Transparent,
             headerColor = Config.Menu.HeaderColor,
             font = Config.Menu.Font,
+            layout = Config.Menu.Layout ?? "grid",
+            look = Config.Menu.Look ?? "classic",
+            cardColor = Config.Menu.CardColor,
+            cardColor2 = Config.Menu.CardColor2,
+            textColor = Config.Menu.TextColor,
+            outline = Config.Menu.TextOutline,
+            speed = Math.Clamp(Config.Menu.Speed, 1, 10),
+            direction = Config.Menu.Direction ?? "",
+            perView = Math.Clamp(Config.Menu.PerView, 1, 12),
+            highlight = Config.Menu.Highlight,
             tiles = Config.Menu.Tiles.Where(TileVisible).Select(t => new
             {
                 id = t.Id,
                 label = t.Label,
                 subtitle = t.Subtitle,
+                color = System.Text.RegularExpressions.Regex.IsMatch(t.Color ?? "", "^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$") ? (t.Color.StartsWith("#") ? t.Color : "#" + t.Color) : "",
+                side = t.Side ?? "auto",
                 kind = TileKind(t),
                 image = string.IsNullOrEmpty(ResolveTileImage(t)) ? "" : "/tile-image/" + t.Id,
             }),
@@ -435,6 +447,15 @@ public class OverlayService
     }
 
     public void PushState() => Broadcast?.Invoke(StateJson());
+
+    // Events that just fired: their tiles on the gift menu board light up ({"type":"tile","id":…}).
+    public void OnFired(IEnumerable<Rule> fired)
+    {
+        if (!Config.Menu.Highlight) return;
+        foreach (var r in fired)
+            foreach (var t in Config.Menu.Tiles.Where(t => t.RuleId == r.Id && TileVisible(t)))
+                Broadcast?.Invoke(JsonSerializer.Serialize(new { type = "tile", id = t.Id }));
+    }
 
     void PushAlert(string kind, LiveEvent e, string image)
     {

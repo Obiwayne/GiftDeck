@@ -152,7 +152,7 @@
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="120"/>
                                                         <ColumnDefinition Width="70"/>
-                                                        <ColumnDefinition Width="90"/>
+                                                        <ColumnDefinition Width="128"/>
                                                         <ColumnDefinition Width="64"/>
                                                         <ColumnDefinition Width="Auto"/>
                                                         <ColumnDefinition Width="Auto"/>
@@ -161,7 +161,7 @@
                                                     <TextBox Grid.Column="1" Text="{Binding Label, UpdateSourceTrigger=PropertyChanged}" LostFocus="Field_Changed" Margin="0,0,6,0" ToolTip="What viewers see on the wheel"/>
                                                     <ComboBox Grid.Column="2" ItemsSource="{x:Static local:StreamToolsPanel.RarityList}" SelectedItem="{Binding Rarity}" SelectionChanged="Entry_Changed" Margin="0,0,6,0"/>
                                                     <TextBox Grid.Column="3" Text="{Binding Weight, UpdateSourceTrigger=LostFocus}" LostFocus="Entry_Changed" Margin="0,0,6,0" ToolTip="Weight: how often it comes up compared with the others. 0 = the tier's usual weight (Common 50, Uncommon 25, Rare 15, Epic 8, Legendary 2)."/>
-                                                    <TextBox Grid.Column="4" Text="{Binding Color, UpdateSourceTrigger=LostFocus}" LostFocus="Field_Changed" FontFamily="Consolas" Margin="0,0,6,0" ToolTip="Colour on the wheel, like #FF4488. Blank = the tier's colour."/>
+                                                    <local:ColorBox Grid.Column="4" Text="{Binding Color}" AllowEmpty="True" Changed="Field_Changed" Margin="0,0,6,0" ToolTip="Colour on the wheel. Blank = the tier's colour."/>
                                                     <TextBlock Grid.Column="5" Text="{Binding ChanceText}" Style="{StaticResource Muted}" VerticalAlignment="Center" ToolTip="Chance of landing on this prize"/>
                                                     <Button Grid.Column="6" Content="{Binding ActionsText}" Style="{StaticResource Small}" Tag="{Binding}" Click="EntryActions_Click" Margin="0,0,6,0" MinWidth="86"/>
                                                     <Button Grid.Column="7" MinHeight="0" Content="✕" Style="{StaticResource Ghost}" Foreground="{StaticResource DangerBrush}" Tag="{Binding}" Click="RemoveEntry_Click" Padding="8,4" ToolTip="Remove this prize"/>
@@ -251,9 +251,8 @@
                                         <CheckBox Content="Remove green background" IsChecked="{Binding KeyGreen}" Click="Field_Changed" VerticalAlignment="Center" Margin="0,0,14,0"
                                                   ToolTip="For green-screen videos (WebM or MP4): the green goes see-through on stream, so only what's in front of it shows. The video's own sound still plays."/>
                                         <StackPanel Orientation="Horizontal" IsEnabled="{Binding KeyGreen}">
-                                            <Border Width="22" Height="22" CornerRadius="4" Background="{Binding KeyColor, FallbackValue=Transparent}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1" Margin="0,0,6,0" VerticalAlignment="Center"/>
-                                            <TextBox Text="{Binding KeyColor, UpdateSourceTrigger=LostFocus}" Width="104" FontFamily="Consolas" LostFocus="Field_Changed" VerticalAlignment="Center"
-                                                     ToolTip="The colour to remove, like #00FF00 (green) or #0000FF (blue). Blank = take it from the video's corners."/>
+                                            <local:ColorBox Text="{Binding KeyColor}" AllowEmpty="True" Width="140" Changed="Field_Changed" VerticalAlignment="Center"
+                                                            ToolTip="The colour to remove, usually green. Blank = take it from the video's corners."/>
                                             <Button Content="Pick from video" Style="{StaticResource Small}" Tag="{Binding}" Click="PickKeyColor_Click" Margin="6,0,16,0" VerticalAlignment="Center"
                                                     ToolTip="Reads the colour from the corners of the video's first frame"/>
                                             <TextBlock Text="Strength" Style="{StaticResource Muted}" VerticalAlignment="Center" Margin="0,0,6,0"/>

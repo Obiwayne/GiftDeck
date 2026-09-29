@@ -63,8 +63,8 @@ public partial class StreamSetupView : UserControl
         var r = Reader;
         ReaderHelp.Text = r switch
         {
-            "page" => "GiftDeck opens your LIVE in its own TikTok page, logged in as you, muted and out of sight, whenever you're live. Nothing else to install or run, and it works with 18+ LIVEs.",
-            "tikfinity" => "GiftDeck listens to TikFinity's feed (needed for 18+ LIVEs). TikFinity has to be installed and logged in to your TikTok account, with its own Events switched off; GiftDeck starts it for you, hidden in the background.",
+            "page" => "MayhemDeck opens your LIVE in its own TikTok page, logged in as you, muted and out of sight, whenever you're live. Nothing else to install or run, and it works with 18+ LIVEs.",
+            "tikfinity" => "MayhemDeck listens to TikFinity's feed (needed for 18+ LIVEs). TikFinity has to be installed and logged in to your TikTok account, with its own Events switched off; MayhemDeck starts it for you, hidden in the background.",
             _ => "The bridge connects to your LIVE by itself without logging in. TikTok doesn't send chat or gifts to logged-out viewers of 18+ LIVEs, so use TikFinity if your LIVE is 18+.",
         };
         TikTokLoginButton.Visibility = r == "page" ? Visibility.Visible : Visibility.Collapsed;
@@ -135,18 +135,18 @@ public partial class StreamSetupView : UserControl
         string status, detail;
         if (!managed)
         {
-            status = "GiftDeck isn't running OBS";
-            detail = running ? "OBS is open; you run it yourself." : "OBS isn't open. Tick the box above to let GiftDeck run it.";
+            status = "MayhemDeck isn't running OBS";
+            detail = running ? "OBS is open; you run it yourself." : "OBS isn't open. Tick the box above to let MayhemDeck run it.";
         }
         else if (!running)
         {
             status = "OBS isn't running";
-            detail = ObsHost.PortraitExists() ? "GiftDeck starts it when it opens, and when you Go LIVE." : "Click Set up portrait OBS to make the portrait canvas first.";
+            detail = ObsHost.PortraitExists() ? "MayhemDeck starts it when it opens, and when you Go LIVE." : "Click Set up portrait OBS to make the portrait canvas first.";
         }
         else
         {
             status = visible ? "OBS is running (window showing)" : "OBS is running hidden ✓";
-            detail = (ours ? "Started by GiftDeck. " : "Opened outside GiftDeck, so GiftDeck won't close it. ")
+            detail = (ours ? "Started by MayhemDeck. " : "Opened outside MayhemDeck, so MayhemDeck won't close it. ")
                      + (Hub.Obs.Connected ? "Connected." : "Connecting…")
                      + (visible ? " Minimize it to hide it again; closing it stops OBS." : "");
         }
@@ -172,8 +172,8 @@ public partial class StreamSetupView : UserControl
         Hub.Settings.ObsManaged = ManagedBox.IsChecked == true;
         Hub.SaveSettings();
         EngineSay(Hub.Settings.ObsManaged
-            ? "GiftDeck will start OBS hidden next time it opens (or when you Go LIVE)."
-            : "GiftDeck won't start or close OBS any more. Go LIVE uses the Vertical canvas settings below again.", "MutedBrush");
+            ? "MayhemDeck will start OBS hidden next time it opens (or when you Go LIVE)."
+            : "MayhemDeck won't start or close OBS any more. Go LIVE uses the Vertical canvas settings below again.", "MutedBrush");
         UpdateEngine();
     }
 
@@ -207,19 +207,19 @@ public partial class StreamSetupView : UserControl
     internal static bool ConfirmPortraitSetup()
     {
         var ask = ObsHost.IsRunning
-            ? "GiftDeck will close OBS, make a \"GiftDeck Portrait\" scene collection and profile (1080x1920) from your current setup, and open OBS again hidden on them. Your own scenes aren't changed.\n\nContinue?"
-            : "GiftDeck will make a \"GiftDeck Portrait\" scene collection and profile (1080x1920) from your current OBS setup, and start OBS hidden on them. Your own scenes aren't changed.\n\nContinue?";
-        return MessageBox.Show(ask, "GiftDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes;
+            ? "MayhemDeck will close OBS, make a \"GiftDeck Portrait\" scene collection and profile (1080x1920) from your current setup, and open OBS again hidden on them. Your own scenes aren't changed.\n\nContinue?"
+            : "MayhemDeck will make a \"GiftDeck Portrait\" scene collection and profile (1080x1920) from your current OBS setup, and start OBS hidden on them. Your own scenes aren't changed.\n\nContinue?";
+        return MessageBox.Show(ask, "MayhemDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes;
     }
 
     // What to tell the user when "Set up portrait OBS" fails. The technical reason goes to the log only.
     internal static string PortraitFailureMessage(Exception ex, bool obsWasRunning)
     {
         if (obsWasRunning && !ObsHost.IsRunning)
-            return "GiftDeck closed OBS but couldn't finish setting up portrait OBS. Your own scenes aren't changed. Open OBS again if you need it, or try Set up portrait OBS again.";
+            return "MayhemDeck closed OBS but couldn't finish setting up portrait OBS. Your own scenes aren't changed. Open OBS again if you need it, or try Set up portrait OBS again.";
         // GiftDeck's own reasons (e.g. OBS is live right now) are already written for the user.
         if (ex is InvalidOperationException) return ex.Message;
-        return "GiftDeck couldn't set up portrait OBS. Your own scenes aren't changed. Make sure OBS has at least one scene in the Vertical canvas, then try again.";
+        return "MayhemDeck couldn't set up portrait OBS. Your own scenes aren't changed. Make sure OBS has at least one scene in the Vertical canvas, then try again.";
     }
 
     void ShowObs_Click(object sender, RoutedEventArgs e)
@@ -269,7 +269,7 @@ public partial class StreamSetupView : UserControl
         var mine = Clean(Tt.State.AccountUsername);
         var watching = Clean(Hub.Settings.BridgeUsername);
         bool differs = mine.Length > 0 && watching.Length > 0 && !string.Equals(mine, watching, StringComparison.OrdinalIgnoreCase);
-        UsernameNote.Text = differs ? $"This isn't the account you're logged in with (@{mine}). GiftDeck will read @{watching}'s LIVE." : "";
+        UsernameNote.Text = differs ? $"This isn't the account you're logged in with (@{mine}). MayhemDeck will read @{watching}'s LIVE." : "";
         UsernameNote.Visibility = differs ? Visibility.Visible : Visibility.Collapsed;
         UpdateChecklist();
     }
@@ -356,7 +356,7 @@ public partial class StreamSetupView : UserControl
                 if (string.IsNullOrWhiteSpace(Hub.Settings.BridgeUsername))
                 {
                     SetUsername(Clean(a.Username));
-                    AccountText.Text += $" GiftDeck will read @{Clean(a.Username)}'s LIVE.";
+                    AccountText.Text += $" MayhemDeck will read @{Clean(a.Username)}'s LIVE.";
                 }
             }
             UpdateUsernameNote();

@@ -12,7 +12,7 @@
             <Button DockPanel.Dock="Right" Content="+  New event" Style="{StaticResource Primary}" Click="New_Click" VerticalAlignment="Top"/>
             <StackPanel>
                 <TextBlock Text="Events" Style="{StaticResource H1}"/>
-                <TextBlock Text="When something happens on your LIVE, GiftDeck does what you set here. Add as many as you like." Style="{StaticResource Muted}" Margin="0,4,0,0"/>
+                <TextBlock Text="When something happens on your LIVE, MayhemDeck does what you set here. Add as many as you like." Style="{StaticResource Muted}" Margin="0,4,0,0"/>
             </StackPanel>
         </DockPanel>
 

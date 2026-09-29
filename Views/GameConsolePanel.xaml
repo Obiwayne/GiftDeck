@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:GiftDeck.Views"
              Loaded="Panel_Loaded" Unloaded="Panel_Unloaded">
-    <!-- How GiftDeck reaches a "console" game's server: where it is, its password, and a test.
+    <!-- How MayhemDeck reaches a "console" game's server: where it is, its password, and a test.
          Hosted by the Games page; talks to the game's ConsoleTarget (Services\GameLink\ConsoleTarget.cs). -->
     <StackPanel>
         <DockPanel Margin="0,0,0,14">

@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <Reference Include="GiftDeck">
-      <HintPath>$(GiftDeckBuild)\GiftDeck.dll</HintPath>
+      <HintPath>$(GiftDeckBuild)\MayhemDeck.dll</HintPath>
     </Reference>
     <PackageReference Include="System.Speech" Version="8.0.0" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2792.45" />

@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>GiftDeck Gift Spinner</title>
+<title>MayhemDeck Gift Spinner</title>
 <style>
   :root { --accent: #7C5CFF; --font: 'Segoe UI'; --win: #F59E0B; --size: 560px; }
   html, body { height: 100%; }
@@ -145,7 +145,7 @@
     document.documentElement.style.setProperty('--font', "'" + s.style.font + "'");
     // ?id=any (the all-in-one page): show whichever spinner spins; the first one in between.
     const sp = (s.spinners || []).find(x => x.id === wantId) || (!wantId || wantId === 'any' ? (s.spinners || [])[0] : null);
-    if (!sp) { $('who').innerHTML = '<span class="empty">No spinner set up in GiftDeck</span>'; setEntries([]); return; }
+    if (!sp) { $('who').innerHTML = '<span class="empty">No spinner set up in MayhemDeck</span>'; setEntries([]); return; }
     myId = sp.id; hideIdle = !!sp.hideWhenIdle || GD.param('idle') === 'hide';
     if (!spinning) { setEntries(sp.entries); if ($('who').querySelector('.empty')) $('who').textContent = ''; }
     idle();

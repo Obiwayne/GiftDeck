@@ -37,7 +37,7 @@
         <Border x:Name="OfflinePanel" Grid.Row="1" Style="{StaticResource Card}" VerticalAlignment="Top" Visibility="Collapsed">
             <StackPanel>
                 <TextBlock Text="OBS isn't connected" Style="{StaticResource H2}" Margin="0,0,0,6"/>
-                <TextBlock Style="{StaticResource Muted}" Margin="0,0,0,12" Text="Open OBS and GiftDeck will connect by itself. Your scenes, layers and audio will show up here."/>
+                <TextBlock Style="{StaticResource Muted}" Margin="0,0,0,12" Text="Open OBS and MayhemDeck will connect by itself. Your scenes, layers and audio will show up here."/>
                 <Button Content="Connection settings" HorizontalAlignment="Left" Click="ObsSettings_Click"/>
             </StackPanel>
         </Border>

@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:GiftDeck.Views"
              PreviewKeyDown="View_PreviewKeyDown">
     <!-- The game library: search, tier filters and a grid of cover tiles; clicking one opens its page.
-         A game's page depends on its tier: "ready" (mods or a server GiftDeck installs, plus presets),
+         A game's page depends on its tier: "ready" (mods or a server MayhemDeck installs, plus presets),
          "console" (set-up guide, connection card, its commands) or "keys" (set-up guide, key ideas).
          Tiles and the rows inside the cards are built in code (GamesView.xaml.cs, GameCatalogTile.cs). -->
     <UserControl.Resources>
@@ -81,7 +81,7 @@
                     <StackPanel>
                         <TextBlock Text="Games" Style="{StaticResource H1}"/>
                         <TextBlock Style="{StaticResource Muted}" Margin="0,4,0,0"
-                                   Text="Pick a game to see how GiftDeck works with it: one-click installs, a server console, or the game's own keys."/>
+                                   Text="Pick a game to see how MayhemDeck works with it: one-click installs, a server console, or the game's own keys."/>
                     </StackPanel>
                 </DockPanel>
 
@@ -98,7 +98,7 @@
                         </RadioButton>
                         <RadioButton x:Name="ChipReady" Style="{StaticResource Chip}" Tag="ready" Checked="Chip_Checked"
                                      AutomationProperties.Name="Show games that are ready to go"
-                                     ToolTip="GiftDeck installs everything and has ready-made events">
+                                     ToolTip="MayhemDeck installs everything and has ready-made events">
                             <StackPanel Orientation="Horizontal">
                                 <Ellipse Width="7" Height="7" Fill="#7C5CFF" VerticalAlignment="Center" Margin="0,1,8,0"/>
                                 <TextBlock Text="Ready to go" Style="{StaticResource ChipText}"/>

@@ -49,7 +49,7 @@ public class PackInstaller
     {
         var running = RunningProcesses(_pack);
         if (running.Count > 0)
-            throw new Exception($"Close {_pack.Name} first ({string.Join(", ", running)} is running). GiftDeck can't change the game's files while it's open.");
+            throw new Exception($"Close {_pack.Name} first ({string.Join(", ", running)} is running). MayhemDeck can't change the game's files while it's open.");
     }
 
     // ---- Install ----
@@ -58,7 +58,7 @@ public class PackInstaller
     // couldn't download (see ManualDownloadNeeded).
     public async Task<PackInstallRecord> InstallAsync(string gameFolder, IDictionary<string, string> manualFiles = null)
     {
-        if (!GameLocator.IsGameFolder(_pack, gameFolder)) throw new Exception($"GiftDeck can't find {_pack.Name}. Choose its folder first.");
+        if (!GameLocator.IsGameFolder(_pack, gameFolder)) throw new Exception($"MayhemDeck can't find {_pack.Name}. Choose its folder first.");
         gameFolder = Path.GetFullPath(gameFolder);
         RequireClosed();
 
@@ -142,7 +142,7 @@ public class PackInstaller
         var entry = record.Files.FirstOrDefault(f => SamePath(f.Path, rel));
         if (entry != null) return entry; // written by an earlier install: its original is already backed up
         var target = Path.Combine(gameFolder, rel);
-        if (Directory.Exists(target)) throw new Exception($"{rel} is a folder in the game folder; GiftDeck won't replace it.");
+        if (Directory.Exists(target)) throw new Exception($"{rel} is a folder in the game folder; MayhemDeck won't replace it.");
         entry = new InstalledFile { Path = rel, Component = component };
         if (File.Exists(target))
         {
@@ -172,7 +172,7 @@ public class PackInstaller
 
     public Task UninstallAsync() => Task.Run(() =>
     {
-        var record = LoadRecord(_pack.Id) ?? throw new Exception("GiftDeck hasn't installed anything for " + _pack.Name + ".");
+        var record = LoadRecord(_pack.Id) ?? throw new Exception("MayhemDeck hasn't installed anything for " + _pack.Name + ".");
         var game = record.GameFolder;
         var data = DataDir(_pack.Id);
         if (!Directory.Exists(game))

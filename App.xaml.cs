@@ -37,7 +37,8 @@ public partial class App : Application
     static System.Diagnostics.Process OtherGiftDeck()
     {
         int me = Environment.ProcessId;
-        return System.Diagnostics.Process.GetProcessesByName("GiftDeck").FirstOrDefault(p => p.Id != me);
+        return System.Diagnostics.Process.GetProcessesByName("MayhemDeck").Concat(System.Diagnostics.Process.GetProcessesByName("GiftDeck"))
+            .FirstOrDefault(p => p.Id != me);
     }
 
     [System.Runtime.InteropServices.DllImport("user32.dll")] static extern bool ShowWindow(IntPtr hWnd, int cmd);
@@ -48,7 +49,7 @@ public partial class App : Application
         ShutdownMode = ShutdownMode.OnExplicitShutdown; // closing the note mustn't end this GiftDeck
         var note = new Window
         {
-            Title = "GiftDeck",
+            Title = "MayhemDeck",
             Width = 380, SizeToContent = SizeToContent.Height,
             WindowStartupLocation = WindowStartupLocation.CenterScreen,
             ResizeMode = ResizeMode.NoResize,
@@ -58,7 +59,7 @@ public partial class App : Application
                 Margin = new Thickness(22, 18, 22, 20),
                 Children =
                 {
-                    new System.Windows.Controls.TextBlock { Text = "GiftDeck is still closing", FontSize = 15, FontWeight = FontWeights.SemiBold, Foreground = (System.Windows.Media.Brush)FindResource("TextBrush") },
+                    new System.Windows.Controls.TextBlock { Text = "MayhemDeck is still closing", FontSize = 15, FontWeight = FontWeights.SemiBold, Foreground = (System.Windows.Media.Brush)FindResource("TextBrush") },
                     new System.Windows.Controls.TextBlock { Text = "It's shutting down OBS and putting your own OBS setup back. It will open again by itself in a moment.", TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 6, 0, 0), Foreground = (System.Windows.Media.Brush)FindResource("MutedBrush") },
                 },
             },
@@ -92,7 +93,7 @@ public partial class App : Application
                     SetForegroundWindow(other.MainWindowHandle);
                 }
                 else
-                    MessageBox.Show("The previous GiftDeck still hasn't closed. Wait a little, or end GiftDeck in Task Manager, then open it again.", "GiftDeck", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("The previous MayhemDeck still hasn't closed. Wait a little, or end MayhemDeck in Task Manager, then open it again.", "MayhemDeck", MessageBoxButton.OK, MessageBoxImage.Information);
                 Shutdown();
             }
         };
@@ -104,7 +105,7 @@ public partial class App : Application
         DispatcherUnhandledException += (s, a) =>
         {
             Log.Write("Unhandled error: " + a.Exception);
-            MessageBox.Show(a.Exception.Message, "GiftDeck ran into a problem", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show(a.Exception.Message, "MayhemDeck ran into a problem", MessageBoxButton.OK, MessageBoxImage.Warning);
             a.Handled = true;
         };
         AppDomain.CurrentDomain.UnhandledException += (s, a) => Log.Write("Fatal error: " + a.ExceptionObject);

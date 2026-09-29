@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>GiftDeck goal</title>
+<title>MayhemDeck goal</title>
 <style>
   :root { --accent: #7C5CFF; --font: 'Segoe UI'; }
   body { margin: 0; background: transparent; font-family: var(--font), 'Segoe UI', sans-serif; color: #fff; overflow: hidden; }
@@ -33,7 +33,7 @@
     document.documentElement.style.setProperty('--accent', s.style.accent);
     document.documentElement.style.setProperty('--font', "'" + s.style.font + "'");
     const g = s.goals.find(x => x.id === id) || s.goals[0];
-    if (!g) { $('title').textContent = 'No goal set up in GiftDeck'; return; }
+    if (!g) { $('title').textContent = 'No goal set up in MayhemDeck'; return; }
     const pct = Math.min(100, Math.round(100 * g.progress / g.target));
     $('title').textContent = g.title;
     $('nums').textContent = g.progress.toLocaleString() + ' / ' + g.target.toLocaleString();

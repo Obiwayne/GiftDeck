@@ -49,8 +49,8 @@ public partial class StreamDetailsPanel : UserControl
                        + (s.LiveMature ? " · 18+" : "");
         bool differs = TitleBox.Text.Trim() != s.LiveTitle || (s.CategoryName ?? "") != s.LiveCategoryName || s.Mature != s.LiveMature;
         LiveHelp.Text = differs
-            ? "TikTok can't change a LIVE while it's running. To use the new details, GiftDeck ends this LIVE and starts a new one straight away (about 20 seconds). Viewers have to rejoin, and TikTok's likes and viewer count start again; GiftDeck's own totals keep counting."
-            : "To change the title, category or 18+ while LIVE, edit them above. GiftDeck can then restart the LIVE with them.";
+            ? "TikTok can't change a LIVE while it's running. To use the new details, MayhemDeck ends this LIVE and starts a new one straight away (about 20 seconds). Viewers have to rejoin, and TikTok's likes and viewer count start again; MayhemDeck's own totals keep counting."
+            : "To change the title, category or 18+ while LIVE, edit them above. MayhemDeck can then restart the LIVE with them.";
         LiveNow.Foreground = (System.Windows.Media.Brush)FindResource(differs ? "WarnBrush" : "TextBrush");
         RestartRow.Visibility = differs ? Visibility.Visible : Visibility.Collapsed;
     }

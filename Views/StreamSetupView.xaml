@@ -23,7 +23,7 @@
             <Border x:Name="AccountCard" Style="{StaticResource Card}" Margin="0,0,0,14">
                 <StackPanel>
                     <TextBlock Text="Your TikTok account" Style="{StaticResource H2}" Margin="0,0,0,4"/>
-                    <TextBlock Text="The username whose LIVE GiftDeck reads chat, gifts and viewer counts from (the part after @ in your profile link)." Style="{StaticResource Muted}" Margin="0,0,0,10"/>
+                    <TextBlock Text="The username whose LIVE MayhemDeck reads chat, gifts and viewer counts from (the part after @ in your profile link)." Style="{StaticResource Muted}" Margin="0,0,0,10"/>
                     <TextBlock Text="TikTok username" Style="{StaticResource Label}"/>
                     <TextBox x:Name="UsernameBox" LostFocus="Username_Changed" local:Placeholder.Text="yourname"/>
                     <TextBlock x:Name="UsernameNote" Foreground="{StaticResource WarnBrush}" TextWrapping="Wrap" Margin="0,8,0,0" Visibility="Collapsed"/>
@@ -34,10 +34,10 @@
             <Border x:Name="ReaderCard" Style="{StaticResource Card}" Margin="0,0,0,14">
                 <StackPanel>
                     <TextBlock Text="Reading your LIVE" Style="{StaticResource H2}" Margin="0,0,0,4"/>
-                    <TextBlock Text="Where GiftDeck gets your chat, gifts, likes and viewer counts from." Style="{StaticResource Muted}" Margin="0,0,0,10"/>
+                    <TextBlock Text="Where MayhemDeck gets your chat, gifts, likes and viewer counts from." Style="{StaticResource Muted}" Margin="0,0,0,10"/>
                     <ComboBox x:Name="ReaderBox" Width="420" HorizontalAlignment="Left" SelectionChanged="Reader_Changed" Margin="0,0,0,8">
-                        <ComboBoxItem Tag="page" Content="GiftDeck's TikTok page (logged in, works with 18+)"/>
-                        <ComboBoxItem Tag="bridge" Content="The GiftDeck bridge (no login; no chat on 18+ LIVEs)"/>
+                        <ComboBoxItem Tag="page" Content="MayhemDeck's TikTok page (logged in, works with 18+)"/>
+                        <ComboBoxItem Tag="bridge" Content="The MayhemDeck bridge (no login; no chat on 18+ LIVEs)"/>
                         <ComboBoxItem Tag="tikfinity" Content="TikFinity"/>
                     </ComboBox>
                     <TextBlock x:Name="ReaderHelp" Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,0,0,10"/>
@@ -60,7 +60,7 @@
             <Border x:Name="KickCard" Style="{StaticResource Card}" Margin="0,0,0,14">
                 <StackPanel>
                     <TextBlock Text="Kick" Style="{StaticResource H2}" Margin="0,0,0,4"/>
-                    <TextBlock Text="Streaming on Kick too? GiftDeck can read your Kick chat, follows, subs and Kicks gifts and run the same events as TikTok. Nothing to log in to, and GiftDeck never writes in your Kick chat." Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,0,0,10"/>
+                    <TextBlock Text="Streaming on Kick too? MayhemDeck can read your Kick chat, follows, subs and Kicks gifts and run the same events as TikTok. Nothing to log in to, and MayhemDeck never writes in your Kick chat." Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,0,0,10"/>
                     <CheckBox x:Name="KickEnabledBox" Content="Read my Kick channel as well" Click="KickEnabled_Changed" Margin="0,0,0,10"/>
                     <TextBlock Text="Kick channel name (the part after kick.com/)" Style="{StaticResource Label}"/>
                     <TextBox x:Name="KickChannelBox" Width="320" HorizontalAlignment="Left" LostFocus="KickChannel_Changed" KeyDown="KickChannel_KeyDown" local:Placeholder.Text="yourname"/>
@@ -78,8 +78,8 @@
                 <StackPanel>
                     <TextBlock Text="OBS engine" Style="{StaticResource H2}" Margin="0,0,0,4"/>
                     <TextBlock Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,0,0,10"
-                               Text="GiftDeck runs OBS for you in the background on a portrait 1080x1920 canvas, so what OBS sends is exactly your TikTok layout. Your own OBS scenes and profile are left as they are and come back when GiftDeck closes."/>
-                    <CheckBox x:Name="ManagedBox" Content="Let GiftDeck run OBS (start it hidden when GiftDeck opens, close it when GiftDeck closes)" Click="Managed_Changed" Margin="0,0,0,10"/>
+                               Text="MayhemDeck runs OBS for you in the background on a portrait 1080x1920 canvas, so what OBS sends is exactly your TikTok layout. Your own OBS scenes and profile are left as they are and come back when MayhemDeck closes."/>
+                    <CheckBox x:Name="ManagedBox" Content="Let MayhemDeck run OBS (start it hidden when MayhemDeck opens, close it when MayhemDeck closes)" Click="Managed_Changed" Margin="0,0,0,10"/>
                     <Border Style="{StaticResource SubCard}" Margin="0,0,0,10">
                         <StackPanel>
                             <TextBlock x:Name="EngineStatus" FontWeight="SemiBold"/>
@@ -100,7 +100,7 @@
                     <TextBlock Text="Vertical canvas" Style="{StaticResource H2}" Margin="0,0,0,8"/>
                     <CheckBox x:Name="VerticalBox" Content="Send the Aitum Vertical canvas (your TikTok layout) instead of OBS's main canvas" Click="Details_Changed" Margin="0,0,0,10"/>
                     <TextBlock Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,0,0,8"
-                               Text="One-time setup in OBS: in Aitum Stream Suite's Outputs, edit the &quot;Vertical Stream&quot; output, choose Custom, and enter the server and stream key below. They never change; GiftDeck forwards that stream to each new LIVE's key for you."/>
+                               Text="One-time setup in OBS: in Aitum Stream Suite's Outputs, edit the &quot;Vertical Stream&quot; output, choose Custom, and enter the server and stream key below. They never change; MayhemDeck forwards that stream to each new LIVE's key for you."/>
                     <TextBlock Text="Server" Style="{StaticResource Label}"/>
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                         <TextBox x:Name="RelayServerBox" IsReadOnly="True" Width="320" FontFamily="Consolas"/>
@@ -129,7 +129,7 @@
             <Border x:Name="TokenCard" Style="{StaticResource Card}">
                 <StackPanel>
                     <TextBlock Text="Streamlabs TikTok token" Style="{StaticResource H2}" Margin="0,0,0,4"/>
-                    <TextBlock Text="Lets GiftDeck open and close your TikTok LIVE and get its stream key. Log in once with your TikTok account through Streamlabs in your browser (Google sign-in works there). Your account needs Streamlabs TikTok LIVE access." Style="{StaticResource Muted}" Margin="0,0,0,10"/>
+                    <TextBlock Text="Lets MayhemDeck open and close your TikTok LIVE and get its stream key. Log in once with your TikTok account through Streamlabs in your browser (Google sign-in works there). Your account needs Streamlabs TikTok LIVE access." Style="{StaticResource Muted}" Margin="0,0,0,10"/>
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                         <Button x:Name="LoginButton" Content="Log in with TikTok" Style="{StaticResource Primary}" Click="Login_Click" Margin="0,0,6,0"/>
                         <Button Content="Import from Stream Key Generator" Style="{StaticResource Ghost}" Click="Import_Click" Margin="0,0,6,0"/>

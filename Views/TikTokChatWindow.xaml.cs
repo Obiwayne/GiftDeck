@@ -97,7 +97,7 @@ public partial class TikTokChatWindow : Window
         cw.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.Media);
         cw.AddWebResourceRequestedFilter("*.flv*", CoreWebView2WebResourceContext.All);
         cw.AddWebResourceRequestedFilter("*.m3u8*", CoreWebView2WebResourceContext.All);
-        cw.WebResourceRequested += (_, e) => e.Response = env.CreateWebResourceResponse(null, 403, "Not needed in GiftDeck", "");
+        cw.WebResourceRequested += (_, e) => e.Response = env.CreateWebResourceResponse(null, 403, "Not needed in MayhemDeck", "");
     }
 
     // Sends one message to the bridge over its local WebSocket, connecting when needed.
@@ -203,7 +203,7 @@ public partial class TikTokChatWindow : Window
             var result = await Web.CoreWebView2.ExecuteScriptAsync(SendScript(text));
             var r = JsonDocument.Parse(result).RootElement;
             var status = r.TryGetProperty("status", out var st) ? st.GetString() : "error";
-            if (status == "sent") { Log.Write("Chat message sent from GiftDeck"); return null; }
+            if (status == "sent") { Log.Write("Chat message sent from MayhemDeck"); return null; }
             if (status == "offline") return "Your LIVE isn't on, so there's no chat to send to.";
             await Task.Delay(700);
         }

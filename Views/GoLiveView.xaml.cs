@@ -99,18 +99,18 @@ public partial class GoLiveView : UserControl
         if (!Tt.Live || UseVertical || !Hub.Obs.KeepSending) { _obsRestarting = false; return; }
         if (Hub.Engine.Restarting)
         {
-            if (!_obsRestarting) Log.Write("OBS closed during the LIVE; waiting for GiftDeck to start it again");
+            if (!_obsRestarting) Log.Write("OBS closed during the LIVE; waiting for MayhemDeck to start it again");
             _obsRestarting = true;
             _sending = false;
             _lost = true;
             _confirmed = false;
-            Status.Text = "OBS closed during the LIVE. GiftDeck is starting it again and will carry on sending…";
+            Status.Text = "OBS closed during the LIVE. MayhemDeck is starting it again and will carry on sending…";
         }
         else if (_obsRestarting)
         {
             _obsRestarting = false;
             if (!Hub.Obs.Connected)
-                Status.Text = "OBS closed during the LIVE and GiftDeck couldn't start it again. " + (Hub.Engine.LastError ?? "") + " Press Start sending again, or End LIVE.";
+                Status.Text = "OBS closed during the LIVE and MayhemDeck couldn't start it again. " + (Hub.Engine.LastError ?? "") + " Press Start sending again, or End LIVE.";
         }
         else if (_sending && Managed && Hub.Engine.LastError != null && !Hub.Obs.Connected && !ObsHost.IsRunning)
         {
@@ -131,7 +131,7 @@ public partial class GoLiveView : UserControl
         {
             _sending = true;
             _lost = false;
-            Status.Text = "OBS closed during the LIVE; GiftDeck started it again and it's sending to the LIVE again.";
+            Status.Text = "OBS closed during the LIVE; MayhemDeck started it again and it's sending to the LIVE again.";
             Log.Write("Sending to the LIVE again after OBS was restarted");
             _ = ConfirmOnTikTokAsync();
         }
@@ -201,8 +201,8 @@ public partial class GoLiveView : UserControl
             LiveTimer.Text = $"{(int)t.TotalHours:00}:{t.Minutes:00}:{t.Seconds:00}";
             if (!_pulsing) { _pulse.Begin(); _pulsing = true; }
 
-            if (relayDown) { VerifyText.Text = "✖ Not sending: the relay to TikTok stopped. GiftDeck is restarting it…"; VerifyText.Foreground = (Brush)FindResource("DangerBrush"); }
-            else if (obsDown) { VerifyText.Text = "✖ Not sending: OBS closed. GiftDeck is starting it again…"; VerifyText.Foreground = (Brush)FindResource("DangerBrush"); }
+            if (relayDown) { VerifyText.Text = "✖ Not sending: the relay to TikTok stopped. MayhemDeck is restarting it…"; VerifyText.Foreground = (Brush)FindResource("DangerBrush"); }
+            else if (obsDown) { VerifyText.Text = "✖ Not sending: OBS closed. MayhemDeck is starting it again…"; VerifyText.Foreground = (Brush)FindResource("DangerBrush"); }
             else if (confirmed) { VerifyText.Text = "\u2713 TikTok confirms you're live"; VerifyText.Foreground = (Brush)FindResource("SuccessBrush"); }
             else if (_sending) { VerifyText.Text = "Sending\u2026 waiting for TikTok to show the LIVE"; VerifyText.Foreground = (Brush)FindResource("WarnBrush"); }
             else { VerifyText.Text = "\u2716 Not sending: OBS isn't streaming to this LIVE. Press Start sending again, or End LIVE."; VerifyText.Foreground = (Brush)FindResource("DangerBrush"); }
@@ -210,7 +210,7 @@ public partial class GoLiveView : UserControl
             var liveCategory = s.LiveTitle != null ? s.LiveCategoryName : s.CategoryName;
             LiveDetail.Text = opened
                 ? $"\"{(string.IsNullOrEmpty(liveTitle) ? "LIVE" : liveTitle)}\"" + (string.IsNullOrEmpty(liveCategory) ? "" : " \u00b7 " + liveCategory)
-                : "Started outside GiftDeck (e.g. TikTok LIVE Studio)";
+                : "Started outside MayhemDeck (e.g. TikTok LIVE Studio)";
             if (ServerBox.Text != (s.Server ?? "")) ServerBox.Text = s.Server ?? "";
             if (KeyBox.Text != (s.Key ?? "")) KeyBox.Text = s.Key ?? "";
         }
@@ -224,7 +224,7 @@ public partial class GoLiveView : UserControl
             if (_pulsing) { _pulse.Stop(); RecDot.Opacity = 1; _pulsing = false; }
             VerifyText.Text = "Not live";
             VerifyText.Foreground = (Brush)FindResource("TextBrush");
-            LiveDetail.Text = BridgeService.NeedsUsername ? "Set your TikTok username on the Stream Setup page so GiftDeck can read your LIVE." :
+            LiveDetail.Text = BridgeService.NeedsUsername ? "Set your TikTok username on the Stream Setup page so MayhemDeck can read your LIVE." :
                 string.IsNullOrEmpty(s.Title) ? "Set the title and category below." : $"Next LIVE: \"{s.Title}\"" + (string.IsNullOrEmpty(s.CategoryName) ? "" : " \u00b7 " + s.CategoryName);
         }
     }
@@ -285,7 +285,7 @@ public partial class GoLiveView : UserControl
         if (!Hub.Obs.Connected)
         {
             PreviewImage.Source = null;
-            PreviewHint.Text = Managed ? "OBS isn't running. GiftDeck starts it for you; see OBS engine on the Stream Setup page." : "OBS isn't connected. Open OBS and GiftDeck will connect by itself.";
+            PreviewHint.Text = Managed ? "OBS isn't running. MayhemDeck starts it for you; see OBS engine on the Stream Setup page." : "OBS isn't connected. Open OBS and MayhemDeck will connect by itself.";
             PreviewSource.Text = "";
             await Task.Delay(1000);
             return;
@@ -412,7 +412,7 @@ public partial class GoLiveView : UserControl
         catch (Exception ex) { Log.Write("OBS isn't ready: " + ex.Message); }
         if (Hub.Obs.Connected) return null;
         return Managed
-            ? "GiftDeck couldn't start OBS. Check OBS engine on the Stream Setup page, then try again."
+            ? "MayhemDeck couldn't start OBS. Check OBS engine on the Stream Setup page, then try again."
             : "OBS isn't connected. Open OBS (with Tools, WebSocket Server Settings switched on), then try again.";
     }
 
@@ -420,11 +420,11 @@ public partial class GoLiveView : UserControl
     static string Explain(Exception ex, string what)
     {
         if (ex is System.Net.Http.HttpRequestException || ex is TaskCanceledException)
-            return $"GiftDeck couldn't reach Streamlabs to {what}. Check your internet connection and try again.";
+            return $"MayhemDeck couldn't reach Streamlabs to {what}. Check your internet connection and try again.";
         var m = (ex.Message ?? "").Trim();
         if (m.StartsWith("Streamlabs answered") || m.StartsWith("Streamlabs sent") || m.StartsWith("TikTok did not"))
             return $"Streamlabs couldn't {what} just now. Try again in a minute.";
-        return m.Length == 0 ? $"GiftDeck couldn't {what}. Try again." : m.EndsWith(".") ? m : m + ".";
+        return m.Length == 0 ? $"MayhemDeck couldn't {what}. Try again." : m.EndsWith(".") ? m : m + ".";
     }
 
     // Points OBS at the LIVE's server and key and starts sending.
@@ -474,10 +474,10 @@ public partial class GoLiveView : UserControl
         if (!Tt.Live) return;
         var next = "\u201c" + (string.IsNullOrWhiteSpace(s.Title) ? "LIVE" : s.Title.Trim()) + "\u201d"
                    + (string.IsNullOrEmpty(s.CategoryName) ? "" : " \u00b7 " + s.CategoryName) + (s.Mature ? " \u00b7 18+" : "");
-        var ask = "Restart your LIVE as " + next + "?\n\nGiftDeck ends this LIVE and starts the new one straight away (about 20 seconds). "
-                  + "Viewers have to rejoin, and TikTok's likes and viewer count start again. Your GiftDeck totals keep counting.";
-        if (_busy) { Status.Text = "Wait for GiftDeck to finish with the LIVE, then try the restart again."; return; }
-        if (MessageBox.Show(ask, "GiftDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
+        var ask = "Restart your LIVE as " + next + "?\n\nMayhemDeck ends this LIVE and starts the new one straight away (about 20 seconds). "
+                  + "Viewers have to rejoin, and TikTok's likes and viewer count start again. Your MayhemDeck totals keep counting.";
+        if (_busy) { Status.Text = "Wait for MayhemDeck to finish with the LIVE, then try the restart again."; return; }
+        if (MessageBox.Show(ask, "MayhemDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
         if (_busy || !Tt.Live) return;
 
         _busy = true;
@@ -601,7 +601,7 @@ public partial class GoLiveView : UserControl
     async void EndLive_Click(object sender, RoutedEventArgs e)
     {
         if (_busy) return;
-        if (MessageBox.Show("End the LIVE on TikTok and stop streaming in OBS?", "GiftDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
+        if (MessageBox.Show("End the LIVE on TikTok and stop streaming in OBS?", "MayhemDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
         if (_busy) return;
         _busy = true;
         UpdateLive();
