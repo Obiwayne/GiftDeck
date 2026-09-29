@@ -11,7 +11,7 @@
   body { margin: 0; background: transparent; overflow: hidden; color-scheme: normal; }
   #safe { position: absolute; inset: 0; }
   body.room #safe { top: 8%; bottom: 18%; }   /* the TikTok app's own buttons and chat sit here */
-  .zone { position: absolute; display: flex; flex-direction: column; }
+  .zone { position: absolute; display: flex; flex-direction: column; gap: 10px; }
   .z-topLeft { top: 0; left: 0; align-items: flex-start; }
   .z-top { top: 0; left: 0; right: 0; align-items: center; }
   .z-topRight { top: 0; right: 0; align-items: flex-end; }
@@ -121,17 +121,32 @@
         st.top = (/^top/.test(sp) ? 0 : /^bottom/.test(sp) ? H - h : (H - h) / 2) + 'px';
         continue;
       }
-      const iw = w / z;
-      let ih;
-      if (f.kind === 'board' && !(m.tileSize > 0) && (!m.layout || m.layout === 'grid')) {
-        // The grid board stretches to fill its page, so give it square tiles plus the header.
-        // (The carousel and ticker size themselves from the width, so they are measured.)
+      // Parts along a top or bottom edge get at most about half the screen, the side ones most of it,
+      // so one big part can't cover the rest.
+      const maxH = /^(top|bottom)/.test(f.spot) && !/^(left|right)$/.test(f.spot) ? H * 0.45 : H * 0.8;
+      let nw = w / z, nh, k = z;   // the page's own size, and how much it's scaled on screen
+      if (f.kind === 'board' && (!m.layout || m.layout === 'grid')) {
         const cols = m.columns || 5, rows = Math.max(1, Math.ceil(((m.tiles || []).length || 1) / cols));
-        ih = iw / cols * rows + (m.title ? 52 : 0);
-      } else ih = measure(f.frame) || 1;
-      s.width = iw + 'px'; s.height = ih + 'px'; s.transform = 'scale(' + z + ')';
-      f.wrap.style.width = w + 'px'; f.wrap.style.height = Math.ceil(ih * z) + 'px';
+        if (m.tileSize > 0) {
+          // Fixed tile size: the board is exactly as big as its tiles, so show it whole, shrunk to fit the part.
+          const gap = m.showLines === false ? 0 : (m.lineWidth || 2);
+          nw = cols * (m.tileSize + gap);
+          nh = measure(f.frame) || (m.tileSize * 0.25 + 14 + rows * (m.tileSize + gap));
+          k = w / nw;
+        } else {
+          // Stretched tiles fill their page, so give it square tiles plus the header.
+          nh = nw / cols * rows + (m.title ? 52 : 0);
+        }
+      } else nh = measure(f.frame) || 1;
+      if (nh * k > maxH) k = maxH / nh;   // too tall: shrink the whole part, keeping its shape
+      s.width = nw + 'px'; s.height = nh + 'px'; s.transform = 'scale(' + k + ')';
+      f.wrap.style.width = Math.ceil(nw * k) + 'px'; f.wrap.style.height = Math.ceil(nh * k) + 'px';
     }
+    // The corners start below what runs along the top edge (and above what runs along the bottom),
+    // so a gift list in the top left doesn't sit under the top gifters and goals.
+    const top = zones.top.offsetHeight, bottom = zones.bottom.offsetHeight;
+    zones.topLeft.style.top = zones.topRight.style.top = (top ? top + 10 : 0) + 'px';
+    zones.bottomLeft.style.bottom = zones.bottomRight.style.bottom = (bottom ? bottom + 10 : 0) + 'px';
   }
 
   function forward(raw) {
