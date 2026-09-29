@@ -26,11 +26,29 @@ public static class StarterScenes
         public List<string> Notes { get; } = new List<string>();
     }
 
-    public static async Task<Result> CreateAsync(IProgress<string> progress, ObsService obs = null)
+    // What each one is, for the picker.
+    public static string Describe(string name) => name switch
+    {
+        Starting => "A title card to show while you get ready.",
+        CamGame => "Your webcam on top, your game or screen below.",
+        JustCam => "Only your webcam, filling the screen.",
+        JustScreen => "Only your game or screen, no webcam.",
+        Brb => "A title card for when you step away.",
+        Ending => "A thank-you card to finish your LIVE on.",
+        _ => "",
+    };
+
+    // only: the scenes to make (null = every one that's missing). Scenes that already exist are never touched.
+    public static async Task<Result> CreateAsync(IProgress<string> progress, ObsService obs = null, IEnumerable<string> only = null)
     {
         obs ??= Hub.Obs;
         var result = new Result();
         var todo = Missing(await obs.GetScenesAsync());
+        if (only != null)
+        {
+            var wanted = new HashSet<string>(only, StringComparer.OrdinalIgnoreCase);
+            todo = todo.Where(wanted.Contains).ToList();
+        }
         if (todo.Count == 0) return result;
 
         var (w, h) = await obs.GetCanvasSizeAsync();

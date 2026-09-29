@@ -285,11 +285,14 @@ public partial class ScenesView : UserControl
     async void Starter_Click(object sender, RoutedEventArgs e)
     {
         if (_makingStarters || !Hub.Obs.Connected) return;
+        // Pick which ones first: someone may only want a Be Right Back card.
+        var picker = new StarterScenesDialog(Window.GetWindow(this), _scenes.Select(s => s.Name));
+        if (picker.ShowDialog() != true || picker.Selected.Count == 0) return;
         _makingStarters = true;
         StarterButton.IsEnabled = false;
         try
         {
-            var r = await StarterScenes.CreateAsync(new Progress<string>(t => StarterText.Text = t));
+            var r = await StarterScenes.CreateAsync(new Progress<string>(t => StarterText.Text = t), only: picker.Selected);
             Status.Text = r.Created.Count == 0
                 ? "You already have all the starter scenes."
                 : $"Made {r.Created.Count} {(r.Created.Count == 1 ? "scene" : "scenes")}: {string.Join(", ", r.Created)}. Use Edit in OBS to change anything in them.";
