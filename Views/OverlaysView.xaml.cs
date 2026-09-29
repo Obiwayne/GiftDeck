@@ -73,6 +73,7 @@ public partial class OverlaysView : UserControl
 
     async Task StartPreview()
     {
+        PreviewNote.Visibility = Hub.Web.Running ? Visibility.Collapsed : Visibility.Visible;
         if (_previewReady || !Hub.Web.Running) return;
         try
         {
@@ -83,7 +84,6 @@ public partial class OverlaysView : UserControl
             Preview.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false;
             Preview.CoreWebView2.Settings.IsStatusBarEnabled = false;
             Preview.CoreWebView2.Settings.AreDevToolsEnabled = false;
-            Preview.Source = new Uri(Hub.Web.BaseUrl + "/overlay/menu");
             _previewReady = true;
             FitPreview();
         }
@@ -94,34 +94,29 @@ public partial class OverlaysView : UserControl
     }
 
     // Scales the page so the whole board fits the preview box.
+    // The preview box takes the board's shape (a tall box for side columns, a wide one for a strip) and the
+    // helper page shows the real board at its real size, shrunk to fit, so nothing is cut off.
+    string _previewUrl;
+
     void FitPreview()
     {
+        var (w, h) = BoardSize(Hub.Overlays.Config.Menu);
+        Preview.Height = Math.Clamp(420.0 * h / w, 150, 560);
         if (!_previewReady) return;
-        var m = Hub.Overlays.Config.Menu;
+        var url = $"{Hub.Web.BaseUrl}/overlay/preview?src=/overlay/menu&w={w}&h={h}";
+        if (url == _previewUrl) return;
+        _previewUrl = url;
+        Preview.Source = new Uri(url);
+    }
+
+    // The size the board needs in a Browser Source.
+    static (int W, int H) BoardSize(MenuConfig m)
+    {
+        if (m.Layout is "sides" or "carousel" or "ticker" || m.TileSize <= 0) return LayoutSize(m);
         int cols = Math.Clamp(m.Columns, 1, 12);
         int gap = m.ShowLines ? Math.Clamp(m.LineWidth, 1, 20) : 0;
-        int tiles = Math.Max(1, Hub.Overlays.VisibleTileCount);
-        int rows = (int)Math.Ceiling(tiles / (double)cols);
-        double boardW, boardH;
-        var (lw, lh) = LayoutSize(m);
-        if (m.Layout is "sides" or "carousel" or "ticker")
-        {
-            boardW = lw;
-            boardH = lh;
-        }
-        else if (m.TileSize > 0)
-        {
-            boardW = cols * (m.TileSize + gap);
-            boardH = m.TileSize * 0.22 * 1.15 + 14 + rows * (m.TileSize + gap);
-        }
-        else
-        {
-            boardW = 1250;
-            boardH = 700;
-        }
-        double zoom = Math.Min(Math.Min(400.0 / boardW, 420.0 / boardH), 1.0);
-        Preview.Height = Math.Clamp(boardH * zoom, 120, 420);
-        Preview.ZoomFactor = zoom;
+        int rows = (int)Math.Ceiling(Math.Max(1, Hub.Overlays.VisibleTileCount) / (double)cols);
+        return (cols * (m.TileSize + gap), (int)(m.TileSize * 0.22 * 1.15 + 14 + rows * (m.TileSize + gap)));
     }
 
     void UpdateSizeHint()
@@ -148,7 +143,7 @@ public partial class OverlaysView : UserControl
     async void RefreshPreview_Click(object sender, RoutedEventArgs e)
     {
         if (!_previewReady) { await StartPreview(); return; }
-        Preview.Reload();
+        _previewUrl = null;
         FitPreview();
     }
 
@@ -168,9 +163,14 @@ public partial class OverlaysView : UserControl
         CountdownsList.ItemsSource = cfg.Countdowns.ToList();
         NoGoals.Visibility = cfg.Goals.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
         NoCountdowns.Visibility = cfg.Countdowns.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+        foreach (var t in cfg.Menu.Tiles) t.IsOff = !Hub.Overlays.TileVisible(t);
         TilesList.ItemsSource = null;
         TilesList.ItemsSource = cfg.Menu.Tiles.ToList();
         NoTiles.Visibility = cfg.Menu.Tiles.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+        TilesHeader.Visibility = cfg.Menu.Tiles.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+        int off = cfg.Menu.Tiles.Count(t => t.IsOff);
+        TilesHead.Text = cfg.Menu.Tiles.Count == 0 ? "Tiles" : $"Tiles ({cfg.Menu.Tiles.Count - off} on the board" + (off > 0 ? $", {off} with the event off)" : ")");
+        FitPreview();
     }
 
     // Gift menu board
@@ -221,6 +221,25 @@ public partial class OverlaysView : UserControl
     void TileDown_Click(object sender, RoutedEventArgs e) { var t = Of<MenuTile>(sender); if (t != null) Hub.Overlays.MoveTile(t, 1); }
     void TileRemove_Click(object sender, RoutedEventArgs e) { var t = Of<MenuTile>(sender); if (t != null) Hub.Overlays.RemoveTile(t); }
 
+    void TileUrl_Click(object sender, RoutedEventArgs e)
+    {
+        var t = Of<MenuTile>(sender);
+        if (t == null) return;
+        var url = PromptWindow.Ask(Window.GetWindow(this), "Web address of the picture (https://…)", t.ImageUrl.StartsWith("http") ? t.ImageUrl : "", "Use it");
+        if (url == null) return;
+        if (url.Length > 0 && !url.StartsWith("http://") && !url.StartsWith("https://")) { Status.Text = "That isn't a web address: it has to start with https://"; return; }
+        t.ImageUrl = url;
+        Hub.Overlays.Touch();
+    }
+
+    void TileResetPicture_Click(object sender, RoutedEventArgs e)
+    {
+        var t = Of<MenuTile>(sender);
+        if (t == null) return;
+        t.ImageUrl = "";
+        Hub.Overlays.Touch();
+    }
+
     void TileBrowse_Click(object sender, RoutedEventArgs e)
     {
         var t = Of<MenuTile>(sender);
@@ -234,7 +253,7 @@ public partial class OverlaysView : UserControl
     void CopyMenu_Click(object sender, RoutedEventArgs e) => Copy(Url("/overlay/menu"));
     async void ObsMenu_Click(object sender, RoutedEventArgs e)
     {
-        var (w, h) = LayoutSize(Hub.Overlays.Config.Menu);
+        var (w, h) = BoardSize(Hub.Overlays.Config.Menu);
         await AddToObs("GiftDeck gift menu", Url("/overlay/menu"), w, h);
     }
 
@@ -253,6 +272,24 @@ public partial class OverlaysView : UserControl
     {
         box.SelectedItem = box.Items.OfType<ComboBoxItem>().FirstOrDefault(i => (string)i.Tag == tag) ?? box.Items.OfType<ComboBoxItem>().FirstOrDefault();
     }
+
+    // The quick style a layout and look match (so its chip shows as picked), or null.
+    static string PresetFor(string layout, string look) => (layout, look) switch
+    {
+        ("grid" or "", "classic") => "grid",
+        ("grid", "cards") => "neongrid",
+        ("sides", "cards") => "sidecards",
+        ("sides", "clean") => "sideicons",
+        ("carousel", _) => "carousel",
+        ("ticker", _) => "ticker",
+        _ => null,
+    };
+
+    // The tile list's Colour and Side columns only show when the style uses them.
+    public static readonly DependencyProperty ShowTileColorProperty = DependencyProperty.Register(nameof(ShowTileColor), typeof(bool), typeof(OverlaysView));
+    public static readonly DependencyProperty ShowTileSideProperty = DependencyProperty.Register(nameof(ShowTileSide), typeof(bool), typeof(OverlaysView));
+    public bool ShowTileColor { get => (bool)GetValue(ShowTileColorProperty); set => SetValue(ShowTileColorProperty, value); }
+    public bool ShowTileSide { get => (bool)GetValue(ShowTileSideProperty); set => SetValue(ShowTileSideProperty, value); }
 
     static string TagOf(ComboBox box) => (box.SelectedItem as ComboBoxItem)?.Tag as string ?? "";
 
@@ -298,6 +335,13 @@ public partial class OverlaysView : UserControl
         MenuColumnsLabel.Text = layout == "carousel" ? "Tiles across" : "Columns";
         MenuHeaderColorLabel.Text = layout == "carousel" ? "Bar colour" : "Header colour";
         MenuTransparent.Visibility = grid ? Visibility.Visible : Visibility.Collapsed;
+        MenuGridHead.Text = grid ? "GRID" : "TILES ACROSS THE STRIP";
+        MenuHeaderColorPanel.Visibility = grid || layout == "carousel" ? Visibility.Visible : Visibility.Collapsed;
+        MenuColorsGroup.Visibility = look == "cards" || MenuHeaderColorPanel.Visibility == Visibility.Visible ? Visibility.Visible : Visibility.Collapsed;
+        ShowTileColor = look == "cards";
+        ShowTileSide = layout == "sides";
+        foreach (var chip in PresetPanel.Children.OfType<RadioButton>())
+            chip.IsChecked = (string)chip.Tag == PresetFor(layout, look);
         MenuMotionRow.Visibility = moving ? Visibility.Visible : Visibility.Collapsed;
         MenuPerViewPanel.Visibility = layout == "ticker" ? Visibility.Visible : Visibility.Collapsed;
         MenuSpeedLabel.Text = layout == "ticker" ? "How often it rolls" : "Speed";

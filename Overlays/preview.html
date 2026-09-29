@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>GiftDeck preview</title>
+<style>
+  /* GiftDeck's own previews: shows an overlay page at its real Browser Source size, shrunk to fit this window.
+     The checks show through where the overlay is see-through, as they would over the game. */
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #0B0C12; }
+  #f { position: absolute; left: 0; top: 0; border: 0; transform-origin: 0 0;
+       background: repeating-conic-gradient(#171923 0% 25%, #11131b 0% 50%) 0 0 / 48px 48px; }
+</style>
+</head>
+<body>
+<iframe id="f" title="Overlay preview"></iframe>
+<script>
+  const q = new URLSearchParams(location.search);
+  const w = Math.max(100, Math.min(4000, +q.get('w') || 1080));
+  const h = Math.max(100, Math.min(4000, +q.get('h') || 1920));
+  const src = q.get('src') || '/overlay/menu';
+  const f = document.getElementById('f');
+  if (/^\/overlay\/[a-z]+/.test(src)) {
+    f.style.width = w + 'px';
+    f.style.height = h + 'px';
+    f.src = src;
+  }
+  // The page can start at no size at all (a hidden or still-opening preview), so fit again whenever it changes.
+  function fit() {
+    const W = document.documentElement.clientWidth, H = document.documentElement.clientHeight;
+    if (!W || !H) return;
+    const z = Math.min(W / w, H / h);
+    f.style.transform = 'translate(' + (W - w * z) / 2 + 'px,' + (H - h * z) / 2 + 'px) scale(' + z + ')';
+  }
+  addEventListener('resize', fit);
+  new ResizeObserver(fit).observe(document.documentElement);
+  fit();
+</script>
+</body>
+</html>

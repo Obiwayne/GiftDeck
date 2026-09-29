@@ -98,6 +98,7 @@ public class OverlayServer
             else if (path.StartsWith("/overlay/giftlist")) page = "giftlist.html";
             else if (path.StartsWith("/overlay/strip")) page = "strip.html";
             else if (path.StartsWith("/overlay/all")) page = "all.html";
+            else if (path.StartsWith("/overlay/preview")) page = "preview.html";
             else if (path == "/") page = "index.html";
 
             if (page == null)

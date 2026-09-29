@@ -134,8 +134,17 @@ public class MenuTile : Observable
     public string ImageUrl
     {
         get => _imageUrl;
-        set { _imageUrl = value ?? ""; _image = null; _loading = false; Raise(nameof(ImageUrl)); Raise(nameof(Image)); }
+        set { _imageUrl = value ?? ""; _image = null; _loading = false; Raise(nameof(ImageUrl)); Raise(nameof(Image)); Raise(nameof(PictureHint)); }
     }
+
+    // For the Overlays page: what the picture is now, shown when you point at it.
+    [JsonIgnore]
+    public string PictureHint => "Click to choose a picture (right-click for more).\nNow: " + (_imageUrl.Length == 0 ? "the gift's own picture" : _imageUrl);
+
+    // For the Overlays page: the tile's event is switched off, so it isn't on the board.
+    bool _isOff;
+    [JsonIgnore]
+    public bool IsOff { get => _isOff; set { if (_isOff == value) return; _isOff = value; Raise(nameof(IsOff)); } }
 
     System.Windows.Media.ImageSource _image;
     bool _loading;

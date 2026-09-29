@@ -35,6 +35,8 @@
   .pic .emoji { font-size: 56px; font-family: 'Segoe UI Emoji', sans-serif; line-height: 1; }
   .label { font-size: 22px; line-height: 1.1; text-transform: uppercase; text-align: center; margin-top: 4px; text-shadow: 0 2px 4px rgba(0,0,0,.7); flex: none; color: var(--text); }
   .sub { font-size: 14px; opacity: .8; text-transform: uppercase; margin-top: 2px; font-family: 'Segoe UI', sans-serif; font-weight: 600; flex: none; color: var(--text); }
+  .filler { background: #000; }
+  body.transparent .filler, body.look-clean .filler, body.nolines .filler { background: transparent; }
   .empty { grid-column: 1 / -1; display: flex; align-items: center; justify-content: center; font-family: 'Segoe UI', sans-serif; font-size: 20px; color: #bbb; background: #000; }
 
   /* ---- Looks (grid and the other layouts) ---- */
@@ -228,7 +230,9 @@
       setVar('--pop', 1.12);
       $('head').textContent = m.title || '';
       if (!m.tiles.length) { $('grid').innerHTML = '<div class="empty">Add tiles on the Overlays page in GiftDeck</div>'; return; }
-      $('grid').innerHTML = m.tiles.map(t => tileHtml(t, m, v)).join('');
+      // Fill out the last row, so the gaps there match the page instead of showing the line colour.
+      const cols = Math.max(1, m.columns || 5), spare = (cols - m.tiles.length % cols) % cols;
+      $('grid').innerHTML = m.tiles.map(t => tileHtml(t, m, v)).join('') + '<div class="filler"></div>'.repeat(spare);
       return;
     }
     $('grid').innerHTML = ''; $('head').textContent = '';
