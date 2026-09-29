@@ -171,6 +171,19 @@
     }
     return fs;
   }
+  // Strip titles: one line, shrunk to the width, and never more than about a third of the page's height.
+  // (Inside the all-in-one overlay the page is as tall as its content, so there it may take two lines.)
+  function fitTitle(title, m, W) {
+    if (!m.title) return;
+    const max = Math.min(W * .085, 120, GD.embedded ? 120 : Math.max(24, innerHeight * .3));
+    fit(title, max, 18, GD.embedded ? 2 : 1);
+  }
+  // As its own Browser Source a strip must fit the page's height: the room left under the title.
+  // Inside the all-in-one overlay the width decides (that page is as tall as its content), so no limit there.
+  function roomUnder(title) {
+    if (GD.embedded) return Infinity;
+    return innerHeight - (title && title.textContent ? title.offsetHeight : 0) - 6;
+  }
   // Fit every tile's label (and coin line) once per tile id; repeated copies get the same size.
   function fitTiles(root, s) {
     const done = {};
@@ -278,11 +291,12 @@
   }
 
   // ---- Carousel: a banner strip whose tiles scroll sideways round and round ----
-  function renderCarousel(m, v) {
+  function renderCarousel(m, v, limit) {
     const W = innerWidth, n = m.tiles.length;
     let w, g;
     if (m.tileSize > 0) { w = m.tileSize; g = Math.max(4, Math.round(w * .07)); }
     else { const unit = W / clamp(m.columns || 5, 1, 12); g = Math.max(4, Math.round(unit * .07)); w = Math.floor(unit - g); }
+    if (limit && w > limit) { w = limit; g = Math.max(4, Math.round(w * .07)); }
     const p = Math.round(w * .09), unit = w + g;
     setVar('--pop', 1.1);
     // Repeat the tiles until one set is wider than the page, then show two sets back to back:
@@ -295,8 +309,10 @@
     $('alt').innerHTML = '<div class="strip" style="--s:' + w + 'px"><div class="title-big">' + esc(m.title || '') + '</div>' +
       '<div class="bar" style="padding:' + p + 'px 0"><div class="track">' + tiles + '</div></div></div>';
     const title = $('alt').querySelector('.title-big');
-    if (m.title) fit(title, Math.min(W * .085, 120), 24, 2);
+    fitTitle(title, m, W);
     fitTiles($('alt'), w);
+    const fits = Math.floor((roomUnder(title) - 2 * (m.lineWidth || 2)) / 1.18);
+    if (!limit && fits < w) return renderCarousel(m, v, Math.max(40, fits));
     const pps = 30 + (clamp(m.speed || 5, 1, 10) - 1) * 30;   // 30..300 px a second
     const frames = [{ transform: 'translateX(0)' }, { transform: 'translateX(' + -setW + 'px)' }];
     if (m.direction === 'right') frames.reverse();
@@ -304,11 +320,12 @@
   }
 
   // ---- Ticker: one line of tiles that rolls up to the next ones every few seconds ----
-  function renderTicker(m, v) {
+  function renderTicker(m, v, limit) {
     const W = innerWidth, per = clamp(m.perView || 4, 1, 12), n = m.tiles.length;
     let w, h, g;
     if (m.tileSize > 0) { w = h = m.tileSize; g = Math.max(4, Math.round(w * .07)); }
     else { const unit = W / per; g = Math.max(4, Math.round(unit * .06)); w = Math.floor(unit - g); h = Math.min(w, Math.round(Math.min(W, 1080 * 1.5) * .3)); }
+    if (limit && h > limit) { h = limit; if (m.tileSize > 0) { w = limit; g = Math.max(4, Math.round(w * .07)); } }
     const s = Math.min(w, h), p = Math.round(s * .08), lineH = h + 2 * p;
     setVar('--pop', 1.1);
     const pages = [];
@@ -319,7 +336,9 @@
     $('alt').innerHTML = '<div class="strip" style="--s:' + s + 'px"><div class="title-big">' + esc(m.title || '') + '</div>' +
       '<div class="tick" style="height:' + lineH + 'px;width:' + width + '"><div class="roll">' + pages.map(lineHtml).join('') + '</div></div></div>';
     const title = $('alt').querySelector('.title-big');
-    if (m.title) fit(title, Math.min(W * .085, 120), 24, 2);
+    fitTitle(title, m, W);
+    const fits = Math.floor(roomUnder(title) / 1.16);
+    if (!limit && fits < h) return renderTicker(m, v, Math.max(40, fits));
     const roll = $('alt').querySelector('.roll');
     fitTiles(roll, s);
     const lines = [...roll.children];
