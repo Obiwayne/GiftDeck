@@ -81,15 +81,15 @@
                                 </Grid.ColumnDefinitions>
                                 <StackPanel x:Name="MenuCardColorPanel" Margin="0,0,10,0">
                                     <TextBlock Text="Card colour" Style="{StaticResource Label}"/>
-                                    <TextBox x:Name="MenuCardColor" FontFamily="Consolas" LostFocus="Menu_Changed" ToolTip="Hex colour, e.g. #7C3AED. A tile's own colour (in its row below) wins."/>
+                                    <local:ColorBox x:Name="MenuCardColor" Changed="Menu_Changed" ToolTip="The cards' colour. A tile's own colour (in its row below) wins."/>
                                 </StackPanel>
                                 <StackPanel x:Name="MenuCardColor2Panel" Grid.Column="1" Margin="0,0,10,0">
                                     <TextBlock Text="Fades into" Style="{StaticResource Label}"/>
-                                    <TextBox x:Name="MenuCardColor2" FontFamily="Consolas" LostFocus="Menu_Changed"/>
+                                    <local:ColorBox x:Name="MenuCardColor2" Changed="Menu_Changed"/>
                                 </StackPanel>
                                 <StackPanel Grid.Column="2">
                                     <TextBlock Text="Text colour" Style="{StaticResource Label}"/>
-                                    <TextBox x:Name="MenuTextColor" FontFamily="Consolas" LostFocus="Menu_Changed"/>
+                                    <local:ColorBox x:Name="MenuTextColor" Changed="Menu_Changed"/>
                                 </StackPanel>
                             </Grid>
                             <Grid x:Name="MenuMotionRow" Margin="0,0,0,10">
@@ -121,7 +121,7 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="90"/>
                                     <ColumnDefinition Width="110"/>
-                                    <ColumnDefinition Width="110"/>
+                                    <ColumnDefinition Width="150"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Margin="0,0,10,0">
@@ -134,7 +134,7 @@
                                 </StackPanel>
                                 <StackPanel Grid.Column="2" Margin="0,0,10,0">
                                     <TextBlock x:Name="MenuHeaderColorLabel" Text="Header colour" Style="{StaticResource Label}"/>
-                                    <TextBox x:Name="MenuHeaderColor" FontFamily="Consolas" LostFocus="Menu_Changed"/>
+                                    <local:ColorBox x:Name="MenuHeaderColor" Changed="Menu_Changed"/>
                                 </StackPanel>
                                 <StackPanel Grid.Column="3">
                                     <TextBlock Text="Font" Style="{StaticResource Label}"/>
@@ -148,7 +148,7 @@
                             <StackPanel x:Name="MenuLinesRow" Orientation="Horizontal">
                                 <CheckBox x:Name="MenuShowLines" Content="Grid lines between tiles" Click="Menu_Changed" Margin="0,0,20,0" VerticalAlignment="Center"/>
                                 <TextBlock Text="Line colour" Style="{StaticResource Label}" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                                <TextBox x:Name="MenuLineColor" Width="100" FontFamily="Consolas" LostFocus="Menu_Changed" Margin="0,0,16,0"/>
+                                <local:ColorBox x:Name="MenuLineColor" Width="140" Changed="Menu_Changed" Margin="0,0,16,0"/>
                                 <TextBlock Text="Thickness px" Style="{StaticResource Label}" VerticalAlignment="Center" Margin="0,0,6,0"/>
                                 <TextBox x:Name="MenuLineWidth" Width="60" LostFocus="Menu_Changed"/>
                             </StackPanel>
@@ -182,7 +182,7 @@
                                             <ColumnDefinition Width="120"/>
                                             <ColumnDefinition Width="1.4*"/>
                                             <ColumnDefinition Width="Auto"/>
-                                            <ColumnDefinition Width="92"/>
+                                            <ColumnDefinition Width="128"/>
                                             <ColumnDefinition Width="92"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
@@ -204,8 +204,8 @@
                                         <Button Grid.Column="4" Content="Browse" Style="{StaticResource Small}" Tag="{Binding}" Click="TileBrowse_Click" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
                                         <StackPanel Grid.Column="5" Margin="0,0,8,0">
                                             <TextBlock Text="Colour" Style="{StaticResource Label}"/>
-                                            <TextBox Text="{Binding Color, UpdateSourceTrigger=LostFocus}" FontFamily="Consolas" LostFocus="Field_Changed"
-                                                     ToolTip="This tile's own card colour, e.g. #16A34A for green or #DC2626 for red. Blank uses the board's."/>
+                                            <local:ColorBox Text="{Binding Color}" AllowEmpty="True" Changed="Field_Changed"
+                                                            ToolTip="This tile's own card colour, e.g. green for gifts that help and red for ones that hurt. Blank uses the board's."/>
                                         </StackPanel>
                                         <StackPanel Grid.Column="6" Margin="0,0,8,0">
                                             <TextBlock Text="Side" Style="{StaticResource Label}"/>
@@ -409,8 +409,8 @@
                     <TextBlock Text="Look" Style="{StaticResource H2}" Margin="0,0,0,10"/>
                     <StackPanel Orientation="Horizontal">
                         <StackPanel Margin="0,0,16,0">
-                            <TextBlock Text="Accent colour (hex)" Style="{StaticResource Label}"/>
-                            <TextBox x:Name="AccentBox" Width="120" FontFamily="Consolas" LostFocus="Style_Changed"/>
+                            <TextBlock Text="Accent colour" Style="{StaticResource Label}"/>
+                            <local:ColorBox x:Name="AccentBox" Width="160" HorizontalAlignment="Left" Changed="Style_Changed"/>
                         </StackPanel>
                         <StackPanel>
                             <TextBlock Text="Font" Style="{StaticResource Label}"/>
