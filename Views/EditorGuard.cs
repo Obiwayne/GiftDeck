@@ -53,7 +53,7 @@ sealed class EditorGuard
     void OnClosing(object sender, CancelEventArgs e)
     {
         if (_window.DialogResult == true || !_dirty) return;
-        var answer = MessageBox.Show(_window, "You have changes that aren't saved. Close without saving them?",
+        var answer = AppDialog.Show(_window, "You have changes that aren't saved. Close without saving them?",
             "Discard changes?", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
         if (answer != MessageBoxResult.Yes) e.Cancel = true;
     }

@@ -50,7 +50,7 @@ public partial class ProfilesView : UserControl
         Run(() =>
         {
             var created = P.Create(name);
-            if (MessageBox.Show(Owner, $"Switch to \"{created}\" now? It starts empty: add events on the Events page.", "MayhemDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (AppDialog.Show(Owner, $"Switch to \"{created}\" now? It starts empty: add events on the Events page.", "MayhemDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 Dispatcher.BeginInvoke(() => (Owner as MainWindow)?.SwitchProfile(created));
         }, $"Created \"{name}\".");
     }
@@ -74,7 +74,7 @@ public partial class ProfilesView : UserControl
     void Delete_Click(object sender, RoutedEventArgs e)
     {
         var name = Name(sender);
-        if (MessageBox.Show(Owner, $"Delete the \"{name}\" profile and all its events and overlays? Export it first if you might want it back.", "MayhemDeck", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes) return;
+        if (AppDialog.Show(Owner, $"Delete the \"{name}\" profile and all its events and overlays? Export it first if you might want it back.", "MayhemDeck", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes) return;
         Run(() => P.Delete(name), $"Deleted \"{name}\".");
     }
 

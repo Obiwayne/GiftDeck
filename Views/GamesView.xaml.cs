@@ -1064,7 +1064,7 @@ public partial class GamesView : UserControl
     {
         var p = _selected;
         if (p == null || _busyPack != null || _status?.Installed == null) return;
-        if (MessageBox.Show(Window.GetWindow(this),
+        if (AppDialog.Show(Window.GetWindow(this),
                 $"Remove {p.Name}'s mods from {_status.Installed.GameFolder}?\n\nMayhemDeck deletes the files it put there and puts back any file they replaced. Your profiles and events stay.",
                 "MayhemDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
         _busyPack = p;
@@ -1098,7 +1098,7 @@ public partial class GamesView : UserControl
         var name = Packs.ImportedProfile(p, preset);
         if (name != null)
         {
-            var answer = MessageBox.Show(owner,
+            var answer = AppDialog.Show(owner,
                 $"You already have this preset as the \"{name}\" profile.\n\nYes: switch to it (with any changes you made).\nNo: add a fresh copy as a new profile.",
                 "MayhemDeck", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
             if (answer == MessageBoxResult.Cancel) return;

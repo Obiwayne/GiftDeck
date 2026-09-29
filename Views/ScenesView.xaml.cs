@@ -297,7 +297,7 @@ public partial class ScenesView : UserControl
                 ? "You already have all the starter scenes."
                 : $"Made {r.Created.Count} {(r.Created.Count == 1 ? "scene" : "scenes")}: {string.Join(", ", r.Created)}. Use Edit in OBS to change anything in them.";
             if (r.Notes.Count > 0)
-                MessageBox.Show(Window.GetWindow(this), string.Join("\n\n", r.Notes), "Starter scenes", MessageBoxButton.OK, MessageBoxImage.Information);
+                AppDialog.Show(Window.GetWindow(this), string.Join("\n\n", r.Notes), "Starter scenes", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         catch (Exception ex)
         {

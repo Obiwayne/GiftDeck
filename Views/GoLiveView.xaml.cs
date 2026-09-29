@@ -477,7 +477,7 @@ public partial class GoLiveView : UserControl
         var ask = "Restart your LIVE as " + next + "?\n\nMayhemDeck ends this LIVE and starts the new one straight away (about 20 seconds). "
                   + "Viewers have to rejoin, and TikTok's likes and viewer count start again. Your MayhemDeck totals keep counting.";
         if (_busy) { Status.Text = "Wait for MayhemDeck to finish with the LIVE, then try the restart again."; return; }
-        if (MessageBox.Show(ask, "MayhemDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
+        if (AppDialog.Show(ask, "MayhemDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
         if (_busy || !Tt.Live) return;
 
         _busy = true;
@@ -601,7 +601,7 @@ public partial class GoLiveView : UserControl
     async void EndLive_Click(object sender, RoutedEventArgs e)
     {
         if (_busy) return;
-        if (MessageBox.Show("End the LIVE on TikTok and stop streaming in OBS?", "MayhemDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
+        if (AppDialog.Show("End the LIVE on TikTok and stop streaming in OBS?", "MayhemDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
         if (_busy) return;
         _busy = true;
         UpdateLive();

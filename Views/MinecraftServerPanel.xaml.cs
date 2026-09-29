@@ -222,7 +222,7 @@ public partial class MinecraftServerPanel : UserControl
                 return;
             }
             if (Server.IsInstalled && installed.Version != build.Version &&
-                MessageBox.Show(Window.GetWindow(this),
+                AppDialog.Show(Window.GetWindow(this),
                     $"Change the server from Minecraft {installed.Version} to {build.Version}?\n\nYour world is kept. Minecraft can bring a world up to a newer version, but a world opened on a newer version can't go back to an older one.",
                     "MayhemDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                 return;
@@ -246,7 +246,7 @@ public partial class MinecraftServerPanel : UserControl
 
     async Task<bool> OfferJavaAsync(int min, IProgress<InstallProgress> progress)
     {
-        if (MessageBox.Show(Window.GetWindow(this),
+        if (AppDialog.Show(Window.GetWindow(this),
                 $"This Minecraft version needs Java {min} or newer.\n\nDownload Eclipse Temurin Java (free, about 55 MB) into MayhemDeck's folder now? It isn't installed system-wide and only MayhemDeck's server uses it.",
                 "MayhemDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
         {
@@ -298,7 +298,7 @@ public partial class MinecraftServerPanel : UserControl
 
     async void Stop_Click(object sender, RoutedEventArgs e)
     {
-        if (MessageBox.Show(Window.GetWindow(this), "Stop the Minecraft server? Anyone on it is disconnected, and gift commands stop working until it's started again.",
+        if (AppDialog.Show(Window.GetWindow(this), "Stop the Minecraft server? Anyone on it is disconnected, and gift commands stop working until it's started again.",
                 "Stop server", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) != MessageBoxResult.Yes) return;
         ShowError(null);
         StopButton.IsEnabled = false;
@@ -393,7 +393,7 @@ public partial class MinecraftServerPanel : UserControl
 
     async void GameReset_Click(object sender, RoutedEventArgs e)
     {
-        if (MessageBox.Show(Window.GetWindow(this), "Start this mini-game over? The current round's progress is lost.",
+        if (AppDialog.Show(Window.GetWindow(this), "Start this mini-game over? The current round's progress is lost.",
                 "Start over", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) != MessageBoxResult.Yes) return;
         await RunGameCommand($"gdg {ChosenGame} reset");
     }

@@ -93,7 +93,7 @@ public partial class App : Application
                     SetForegroundWindow(other.MainWindowHandle);
                 }
                 else
-                    MessageBox.Show("The previous MayhemDeck still hasn't closed. Wait a little, or end MayhemDeck in Task Manager, then open it again.", "MayhemDeck", MessageBoxButton.OK, MessageBoxImage.Information);
+                    Views.AppDialog.Show("The previous MayhemDeck still hasn't closed. Wait a little, or end MayhemDeck in Task Manager, then open it again.", "MayhemDeck", MessageBoxButton.OK, MessageBoxImage.Information);
                 Shutdown();
             }
         };
@@ -105,7 +105,7 @@ public partial class App : Application
         DispatcherUnhandledException += (s, a) =>
         {
             Log.Write("Unhandled error: " + a.Exception);
-            MessageBox.Show(a.Exception.Message, "MayhemDeck ran into a problem", MessageBoxButton.OK, MessageBoxImage.Warning);
+            Views.AppDialog.Show(a.Exception.Message, "MayhemDeck ran into a problem", MessageBoxButton.OK, MessageBoxImage.Warning);
             a.Handled = true;
         };
         AppDomain.CurrentDomain.UnhandledException += (s, a) => Log.Write("Fatal error: " + a.ExceptionObject);

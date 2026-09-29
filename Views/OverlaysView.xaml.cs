@@ -484,7 +484,7 @@ public partial class OverlaysView : UserControl
     async void ObsCounter_Click(object sender, RoutedEventArgs e) { var c = Of<CounterRow>(sender); if (c != null) await AddToObs("MayhemDeck counter: " + c.Label, Url("/overlay/counter/" + c.Metric), 400, 100); }
     void ResetStats_Click(object sender, RoutedEventArgs e)
     {
-        if (MessageBox.Show("Reset this stream's totals to zero? Goals keep their progress.", "MayhemDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
+        if (AppDialog.Show("Reset this stream's totals to zero? Goals keep their progress.", "MayhemDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
         Hub.Overlays.ResetStats();
     }
 

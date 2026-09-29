@@ -123,7 +123,7 @@ public partial class StreamToolsPanel : UserControl
     {
         var s = Of<Spinner>(sender);
         if (s == null) return;
-        if (MessageBox.Show($"Remove the spinner \"{s.Name}\" and its other prizes? Events on it move to the first spinner.", "MayhemDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
+        if (AppDialog.Show($"Remove the spinner \"{s.Name}\" and its other prizes? Events on it move to the first spinner.", "MayhemDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
         Hub.Overlays.RemoveSpinner(s);
     }
 
@@ -191,7 +191,7 @@ public partial class StreamToolsPanel : UserControl
     {
         var a = Of<AlertDef>(sender);
         if (a == null) return;
-        if (MessageBox.Show($"Remove the alert \"{a.Name}\"? Events that show it will skip it.", "MayhemDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
+        if (AppDialog.Show($"Remove the alert \"{a.Name}\"? Events that show it will skip it.", "MayhemDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
         Hub.Overlays.RemoveCustomAlert(a);
     }
 

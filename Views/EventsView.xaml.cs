@@ -114,7 +114,7 @@ public partial class EventsView : UserControl
 
     void DeleteRule(Rule rule)
     {
-        if (MessageBox.Show(Window.GetWindow(this), $"Delete \"{rule.Name}\"? This can't be undone.", "Delete event", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) != MessageBoxResult.Yes) return;
+        if (AppDialog.Show(Window.GetWindow(this), $"Delete \"{rule.Name}\"? This can't be undone.", "Delete event", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) != MessageBoxResult.Yes) return;
         Hub.Rules.Rules.Remove(rule);
         Hub.Rules.Save();
     }

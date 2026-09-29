@@ -1,0 +1,40 @@
+<Window x:Class="GiftDeck.Views.AppDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MayhemDeck" WindowStyle="None" AllowsTransparency="True" ResizeMode="NoResize"
+        Background="#B8080910" ShowInTaskbar="False" FontFamily="Segoe UI"
+        TextOptions.TextFormattingMode="Display" UseLayoutRounding="True">
+    <!-- MayhemDeck's own message box: darkens the app, with a card in the middle. -->
+    <Grid x:Name="Backdrop">
+        <Border x:Name="Card" Style="{StaticResource Card}" Padding="0" Width="480" Margin="24"
+                HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="40" ShadowDepth="8" Opacity="0.6"/>
+            </Border.Effect>
+            <Border.RenderTransform>
+                <TranslateTransform x:Name="CardShift"/>
+            </Border.RenderTransform>
+            <DockPanel>
+                <Border DockPanel.Dock="Bottom" BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0" Padding="20,14">
+                    <StackPanel x:Name="Buttons" Orientation="Horizontal" HorizontalAlignment="Right"/>
+                </Border>
+                <Grid Margin="22,22,22,18">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Border x:Name="IconDisc" Width="40" Height="40" CornerRadius="20" VerticalAlignment="Top" Margin="0,0,16,0">
+                        <TextBlock x:Name="IconGlyph" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="18"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <StackPanel Grid.Column="1">
+                        <TextBlock x:Name="TitleText" FontSize="17" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,1,0,6"/>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="420">
+                            <TextBlock x:Name="MessageText" Style="{StaticResource Muted}" FontSize="13.5" TextWrapping="Wrap" LineHeight="20"/>
+                        </ScrollViewer>
+                    </StackPanel>
+                </Grid>
+            </DockPanel>
+        </Border>
+    </Grid>
+</Window>

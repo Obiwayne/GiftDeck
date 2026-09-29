@@ -45,7 +45,7 @@ public partial class MainWindow : Window
         lock (Storage.Unreadable) files = Storage.Unreadable.Skip(_unreadableShown).ToArray();
         if (files.Length == 0) return;
         _unreadableShown += files.Length;
-        MessageBox.Show(this, "MayhemDeck couldn't read some of its saved files, so those settings or events started over empty. "
+        Views.AppDialog.Show(this, "MayhemDeck couldn't read some of its saved files, so those settings or events started over empty. "
             + "The old files were kept, untouched, here:\n\n" + string.Join("\n", files)
             + "\n\nThis can happen after a crash or when a profile comes from a newer MayhemDeck.",
             "Some saved files couldn't be read", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -137,7 +137,7 @@ public partial class MainWindow : Window
     {
         if (name == Hub.Profiles.Active || SwitchOverlay.Busy) { RefreshProfiles(); return; }
         bool live = Hub.TikTok.Live || (Hub.TikFinity.Connected && Hub.TikFinity.TikTokLive == true);
-        if (live && MessageBox.Show(this, $"You're LIVE. Switch to \"{name}\" now? Gifts will start doing what that profile says straight away.",
+        if (live && Views.AppDialog.Show(this, $"You're LIVE. Switch to \"{name}\" now? Gifts will start doing what that profile says straight away.",
                 "MayhemDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
         {
             RefreshProfiles(); // put the dropdown back
@@ -322,7 +322,7 @@ public partial class MainWindow : Window
         e.Cancel = true;
         if (_shuttingDown) return; // the close button again while it's already shutting down
         bool live = Hub.TikTok.Live || (Hub.TikFinity.Connected && Hub.TikFinity.TikTokLive == true);
-        if (live && MessageBox.Show(this, "You're LIVE. Close MayhemDeck anyway?\n\nGifts will stop doing anything, and a LIVE MayhemDeck opened stays open on TikTok until it's ended. To end it first, press End LIVE on the Go LIVE page.",
+        if (live && Views.AppDialog.Show(this, "You're LIVE. Close MayhemDeck anyway?\n\nGifts will stop doing anything, and a LIVE MayhemDeck opened stays open on TikTok until it's ended. To end it first, press End LIVE on the Go LIVE page.",
                 "Close MayhemDeck while LIVE?", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) != MessageBoxResult.Yes)
             return;
         _shuttingDown = true;

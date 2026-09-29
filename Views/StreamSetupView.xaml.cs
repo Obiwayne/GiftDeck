@@ -209,7 +209,7 @@ public partial class StreamSetupView : UserControl
         var ask = ObsHost.IsRunning
             ? "MayhemDeck will close OBS, make a \"GiftDeck Portrait\" scene collection and profile (1080x1920) from your current setup, and open OBS again hidden on them. Your own scenes aren't changed.\n\nContinue?"
             : "MayhemDeck will make a \"GiftDeck Portrait\" scene collection and profile (1080x1920) from your current OBS setup, and start OBS hidden on them. Your own scenes aren't changed.\n\nContinue?";
-        return MessageBox.Show(ask, "MayhemDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes;
+        return AppDialog.Show(ask, "MayhemDeck", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes;
     }
 
     // What to tell the user when "Set up portrait OBS" fails. The technical reason goes to the log only.
